@@ -26,11 +26,11 @@
 </script>
 <div class="layout">
   {#if $isLoggedIn}
-    <div class="sidebar">
+    <div id="sidebar" class="sidebar">
       <Sidebar/>
     </div>
   {/if}
-  <div class="main-content">
+  <div id="main-content" class="main-content">
     <slot/>
   </div>
 </div>
