@@ -21,10 +21,14 @@
   import RedirectLogin from '$lib/components/RedirectLogin.svelte';
   import Input from '$lib/components/Input.svelte';
   import { onDestroy } from 'svelte';
+  import { each } from 'svelte/internal';
 
   const dbCollection = "users-client";
   const uid = $loggedInUser.uid;
   let transactions = [];
+  let selectedTransactionId;
+  let selectedTransaction = {};
+  let transactionDetailView = false;
   let notFound = false;
   let notFoundMessage = "No se encontraron registros";
   let loading = false;
@@ -78,6 +82,8 @@
   }
 
   const fetchByDayButton = async() => {
+    transactionDetailView = false;
+    selectedTransaction = {};
     //transactions = [];
     const curr = new Date;
     const today = new Date(curr.setDate(curr.getDate())).setHours(0,0,0,0); // Sets Date to today day at 00:00
@@ -101,6 +107,8 @@
   }
 
   const fetchByWeekButton = async() => {
+    transactionDetailView = false;
+    selectedTransaction = {};
     const curr = new Date;
     const firstDay = new Date(curr.setDate(curr.getDate() - curr.getDay()+1)).setHours(0,0,0,0);
     const lastDay = new Date(curr.setDate(curr.getDate() - curr.getDay()+7)).setHours(0,0,0,0);
@@ -123,6 +131,8 @@
   }
 
   const fetchByMonthButton = async() => {
+    transactionDetailView = false;
+    selectedTransaction = {};
     //transactions = [];
     const curr = new Date;
     const currentMonth = new Date(curr.setMonth(curr.getMonth(), 1)).setHours(0,0,0,0); // Sets Date to actual month day 1 at 00:00
@@ -143,7 +153,8 @@
   }
 
   const fetchByDateRange = async() => {
-    
+    transactionDetailView = false;
+    selectedTransaction = {};
     var pattern = /(\d{4})\-(\d{2})\-(\d{2})/; // String pattern replace for date
     const startRange = new Date(dateRangeStart.replace(pattern,'$2-$3-$1')).setHours(0,0,0,0);//Sets the date pattern and time to 00:00
     const endRange = new Date(dateRangeEnd.replace(pattern,'$2-$3-$1')).setHours(23,59,59,59);//Sets the date pattern and time to 23:59
@@ -179,6 +190,7 @@
   }
 
 </script>
+
 {#if $isLoggedIn}
   <div class="transactions">
     <div class="transaction-form">
@@ -215,26 +227,63 @@
           </h1>
         </div>
         {:else}
-          <div class="transaction-tables">
-            {#each transactions as transaction}
-              <table class="table-content">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Total</th>
-                    <th>Estatus</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>{transaction.id}</td>
-                    <td>{transaction.total}</td>
-                    <td>{transaction.status}</td>
-                  </tr>
-                </tbody>
-              </table>
-            {/each}
-          </div>
+          {#if !transactionDetailView}
+            <div class="transaction-tables">
+              {#each transactions as transaction}
+                <table class="table-content">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Total</th>
+                      <th>Estatus</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{transaction.id}</td>
+                      <td>{transaction.total}</td>
+                      <td>{transaction.status}</td>
+                      <td>
+                        <button 
+                          on:click|preventDefault={() => (selectedTransaction = transaction)}
+                          on:click|preventDefault={() => (transactionDetailView = true)}
+                        >
+                          Detalles
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              {/each}
+            </div>
+            {:else}
+              <div class="transaction-details">
+                <button
+                  on:click|preventDefault={() => (selectedTransaction = {})}
+                  on:click|preventDefault={() => (transactionDetailView = false)}
+                >
+                  Regresar
+                </button>
+                <table class="table-content">
+                  <h1>Detalles de transacción</h1>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Total</th>
+                      <th>Estatus</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{selectedTransaction.id}</td>
+                      <td>{selectedTransaction.total}</td>
+                      <td>{selectedTransaction.status}</td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+          {/if}
       {/if}
     </div>
   </div>
