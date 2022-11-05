@@ -174,6 +174,8 @@
   }
 
   const fetchByTicketId = async() => {
+    transactionDetailView = false;
+    selectedTransaction = {};
     //console.log(ticketId)
     const q = query(
       collection(db, dbCollection, uid, "transactions"), 
