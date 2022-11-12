@@ -44,7 +44,9 @@
           </div>
           <div class="avatar-container">
             <div class="avatar">
-              <img alt="imagen" src="https://api.lorem.space/image/face?hash=33791" />
+              <a href="/profile">
+                <img alt="imagen" src="https://api.lorem.space/image/face?hash=33791" />
+              </a>
             </div>
           </div>
           {#each options as option}

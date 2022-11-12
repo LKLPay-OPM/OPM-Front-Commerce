@@ -20,6 +20,7 @@
   import { db } from "$lib/firebase";
   import RedirectLogin from '$lib/components/RedirectLogin.svelte';
   import Input from '$lib/components/Input.svelte';
+  import Map from '$lib/components/Map.svelte';
   import { onDestroy } from 'svelte';
   import { each } from 'svelte/internal';
 
@@ -54,7 +55,7 @@
     uid: uid,
     cardNumber: "",
     date: Timestamp.now(),
-    location: new GeoPoint(90, 90),
+    location: new GeoPoint(20.677034, -103.346984),
     total: parseFloat(0),
     status: "pending"
   }
@@ -190,7 +191,7 @@
     transactionFound();
     //console.log(transactions)
   }
-
+  
 </script>
 
 {#if $isLoggedIn}
@@ -273,6 +274,7 @@
                       <th>ID</th>
                       <th>Total</th>
                       <th>Estatus</th>
+                      <th>Localización</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -280,10 +282,20 @@
                       <td>{selectedTransaction.id}</td>
                       <td>{selectedTransaction.total}</td>
                       <td>{selectedTransaction.status}</td>
-                      <td></td>
+                      <td>
+                        <a 
+                          target="_blank" rel="noopener noreferrer" 
+                          href={`https://www.google.com/maps/place/${selectedTransaction.location._lat}+${selectedTransaction.location._long}`}
+                        >
+                          Ver en Maps
+                        </a>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
+                <!-- <div>
+                  <Map location={selectedTransaction.location}/>
+                </div> -->
               </div>
           {/if}
       {/if}
