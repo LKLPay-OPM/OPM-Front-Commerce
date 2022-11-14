@@ -26,9 +26,9 @@
 </script>
 <div class="layout">
   {#if $isLoggedIn}
-    <div id="sidebar" class="sidebar">
+    <aside id="sidebar" class="sidebar">
       <Sidebar/>
-    </div>
+    </aside>
   {/if}
   <div id="main-content" class="main-content">
     <slot/>

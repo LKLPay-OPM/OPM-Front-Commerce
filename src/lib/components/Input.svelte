@@ -4,6 +4,7 @@
     export let id = "";
     export let placeholder = "";
     export let value = "";
+    export let accept = "";
 
     const onInput = e => (value = e.target.value);
 </script>
@@ -12,5 +13,5 @@
     <label class="label" for={id}>
         <span class="label-text">{label}</span>
     </label>
-    <input {type} {placeholder} {id} {value} on:input={onInput} class="input input-bordered">
+    <input {type} {placeholder} {id} {value} on:input={onInput} class="input input-bordered" {accept}>
 </div>

@@ -33,7 +33,7 @@ export const login = async(email, password) => {
           if (docSnap.exists()) {
           try {
                 const user = docSnap.data()
-                //console.log({user})
+                console.log({user})
                 loggedInUser.set(user);
                 //sessionStorage.setItem("userData", user);
               } catch (error) {
@@ -65,6 +65,7 @@ export const registerUser = async(email, password, data) => {
       // Signed in
       const id = userCredential.user.uid;
       const user = userCredential.user;
+      data.uid = id;
       delete data.password;
       try {
           createUser(id, data);
