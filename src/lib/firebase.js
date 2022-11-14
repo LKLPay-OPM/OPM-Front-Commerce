@@ -7,12 +7,12 @@ import { getAuth, setPersistence, inMemoryPersistence } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDOA-JCMCpzb0rYyzXXiT57PvJglZQktHk",
-  authDomain: "lkl-pay.firebaseapp.com",
-  projectId: "lkl-pay",
-  storageBucket: "lkl-pay.appspot.com",
-  messagingSenderId: "155580648632",
-  appId: "1:155580648632:web:453884f42d573563b3784d"
+  apiKey: "AIzaSyCgi9IrqxAmE-aD9vdk2Br9mOinsodS8z8",
+  authDomain: "lklpay.firebaseapp.com",
+  projectId: "lklpay",
+  storageBucket: "lklpay.appspot.com",
+  messagingSenderId: "160088283136",
+  appId: "1:160088283136:web:55c870724b263a652fa0e5"
 };
 
 // Initialize Firebase

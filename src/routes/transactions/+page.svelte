@@ -68,7 +68,7 @@
       uid: uid,
       cardNumber: "",
       date: Timestamp.now(),
-      location: new GeoPoint(90, 90),
+      location: new GeoPoint(20.677034, -103.346984),
       total: parseFloat(0),
       status: "pending"
     }
