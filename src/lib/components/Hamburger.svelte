@@ -6,11 +6,11 @@
 on:click|preventDefault={() => open = !open}
 on:click|preventDefault={
 	() => open ? 
-		document.getElementById("sidebar").style.width = "30%" : document.getElementById("main-content").style.width = "5%"
+		document.getElementById("sidebar").style.width = "20vw" : document.getElementById("main-content").style.width = "5vw"
 }
 on:click|preventDefault={
 	() => open ? 
-		document.getElementById("main-content").style.marginLeft = "30%" : document.getElementById("main-content").style.marginLeft = "5%"
+		document.getElementById("main-content").style.marginLeft = "20vw" : document.getElementById("main-content").style.marginLeft = "5vw"
 }
 >
 	<svg width=32 height=24>

@@ -21,8 +21,9 @@
   import RedirectLogin from '$lib/components/RedirectLogin.svelte';
   import Input from '$lib/components/Input.svelte';
   import Map from '$lib/components/Map.svelte';
-  import { onDestroy } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { each } from 'svelte/internal';
+  import { generatePDF, generateCSV, generateXLSX } from '$lib/hooks/exportDataToFile.js';
 
   const dbCollection = "users-client";
   const uid = $loggedInUser.uid;
@@ -36,20 +37,6 @@
 
   let dateRangeStart, dateRangeEnd, ticketId;
 
-  /* const fetchTransactions = onSnapshot(
-    collection(db, dbCollection, uid, "transactions"),
-    (snapshot) => {
-      transactions = snapshot.docs.map((doc) => {
-        return {...doc.data()};
-      });
-      let transactionsList = transactions;
-    },
-    (err) => {
-      throw new Error(err);
-    }
-  );
-  onDestroy(fetchTransactions); */
-
   let transactionForm = {
     id: parseFloat(0),
     uid: uid,
@@ -59,6 +46,10 @@
     total: parseFloat(0),
     status: "pending"
   }
+
+  onMount(async () => {
+		await fetchByDayButton()
+	});
 
   const handleCreateTransaction = async() => {
     await setDoc(doc(db, dbCollection, uid, "transactions", transactionForm.id.toString()), transactionForm);
@@ -191,6 +182,37 @@
     transactionFound();
     //console.log(transactions)
   }
+
+  const sortObject = (data) => {
+    const transactionsNew = data.map(element => {
+      return {
+        date: element.date.toDate().toLocaleDateString(),
+        id: element.id,
+        status: element.status,
+        total: element.total
+      }
+    })
+    return transactionsNew;
+  }
+
+  const exportDataToPDF = async() => {
+    //alert("PDF")
+    generatePDF(transactions)
+  }
+
+  const exportDataToExcel = async() => {
+    // alert("Excel")
+    const data = sortObject(transactions);
+    // console.log(data)
+    generateXLSX(data);
+  }
+
+  const exportDataToCSV = async() => {
+    // alert("CSV")
+    const data = sortObject(transactions);
+    // console.log(data)
+    generateCSV(data)
+  }
   
 </script>
 
@@ -257,12 +279,18 @@
                     </tr>
                   </tbody>
                 </table>
-              {/each}
+                {/each}
+                {#if transactions.length > 0}
+                  <div class="export-buttons">
+                    <Input on:click={exportDataToPDF} label="Exportar a PDF" id="pdf-export" type="button" className="button" icon=""/>
+                    <Input on:click={exportDataToExcel} label="Exportar a Excel" id="excel-export" type="button" className="button" icon=""/>
+                    <Input on:click={exportDataToCSV} label="Exportar a CSV" id="csv-export" type="button" className="button" icon=""/>
+                  </div>
+                {/if}
             </div>
             {:else}
               <div class="transaction-details">
                 <button
-                  on:click|preventDefault={() => (selectedTransaction = {})}
                   on:click|preventDefault={() => (transactionDetailView = false)}
                 >
                   Regresar
@@ -339,6 +367,11 @@
   .date-range-input {
     display: flex;
     flex-direction: column;
+  }
+
+  .export-buttons {
+    display: flex;
+    flex-direction: row;
   }
 
   .transaction-tables {

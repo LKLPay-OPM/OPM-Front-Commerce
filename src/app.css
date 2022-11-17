@@ -9,19 +9,24 @@ body {
 .layout {
   display: flex;
   flex-direction: row;
+  /* position: relative; */
 }
 
 .sidebar {
   display: flex;
   flex-direction: column;
-  width: 30vw;
+  width: 20vw;
   min-height: 100vh;
   background-color: #f2f2f2;
+  /* position:absolute; */
+  /* position: fixed; */
 }
 
 .main-content {
-  width: 70vw;
+  width: 80vw;
   height: 100vh;
+  /* position:absolute; */
+  /* position: relative; */
 }
 
 /* Styles for Login, Register and Forgot Pass forms */
@@ -65,32 +70,4 @@ body {
   margin: 1rem;
   width: 50%;
   align-self: center;
-}
-
-.form-control {
-  display: flex;
-  flex-direction: column
-}
-
-.label {
-  display: flex;
-  -webkit-user-select: none;
-          user-select: none;
-  align-items: center;
-  justify-content: space-between
-}
-
-.label-text {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
-
-.input {
-  flex-shrink: 1;
-  height: 1.25rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  line-height: 2;
 }
