@@ -73,6 +73,7 @@
   display: inline-block;
   font-size: 1px;
   cursor: pointer;
+  max-width: 50px;
 }
 
 .button input {
