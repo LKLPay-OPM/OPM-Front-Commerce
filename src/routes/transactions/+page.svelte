@@ -24,6 +24,7 @@
   import { onDestroy, onMount } from 'svelte';
   import { each } from 'svelte/internal';
   import { generatePDF, generateCSV, generateXLSX } from '$lib/hooks/exportDataToFile.js';
+  import { updateTransactionStatus } from '$lib/hooks/updates.js'
 
   const dbCollection = "users-client";
   const uid = $loggedInUser.uid;
@@ -52,6 +53,7 @@
 	});
 
   const handleCreateTransaction = async() => {
+    transactionForm.total = parseFloat(transactionForm.total)
     await setDoc(doc(db, dbCollection, uid, "transactions", transactionForm.id.toString()), transactionForm);
     //console.log(transactionForm);
     transactionForm = {
@@ -213,6 +215,15 @@
     // console.log(data)
     generateCSV(data)
   }
+
+  const reverseTransaction = async(transaction) => {
+    // transaction.total = parseFloat(transaction.total);
+    transaction.status = "refund";
+    // console.log(transaction)
+    await updateTransactionStatus(transaction);
+    transactionDetailView = false;
+    fetchByDayButton();
+  }
   
 </script>
 
@@ -321,6 +332,7 @@
                     </tr>
                   </tbody>
                 </table>
+                <Input on:click={reverseTransaction(selectedTransaction)} label="Reembolsar" id="csv-export" type="button" className="button" icon=""/>
                 <!-- <div>
                   <Map location={selectedTransaction.location}/>
                 </div> -->

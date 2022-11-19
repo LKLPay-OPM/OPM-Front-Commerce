@@ -44,7 +44,7 @@ on:click|preventDefault={
 	}
 	
 	button {
-		z-index: 20;
+		z-index: 0;
 	}
 	
 	.open svg {

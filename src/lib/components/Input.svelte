@@ -73,7 +73,7 @@
   display: inline-block;
   font-size: 1px;
   cursor: pointer;
-  max-width: 50px;
+  max-width: fit-content;
 }
 
 .button input {
@@ -84,5 +84,9 @@
 	color: darkgray;
 	font-size: 0.875rem;
   line-height: 1.25rem;
+}
+
+.modal-toggle {
+  display: none;
 }
 </style>
