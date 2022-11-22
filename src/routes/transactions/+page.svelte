@@ -239,25 +239,21 @@
     </div>
     <div class="transactions-view">
       <div class="transaction-search-bar">
-        <Input label="Buscar por ticket:" id="ticket-id-search" bind:value={ticketId} type="text"/>
-        {#if ticketId != ""}
-          <button on:click|preventDefault={fetchByTicketId} class="btn btn-auth-form">Buscar</button>
-        {/if}
+        <Input label="Buscar por ticket:" id="ticket-id-search" bind:value={ticketId} type="text" icon=""/>
+        <Input on:click={fetchByTicketId} label="" id="by-ticketId-button" type="button" className="button {ticketId != "" ? '' : 'disabled'}" icon="search"/>
       </div>
       <div class="transaction-options">
-        <button on:click|preventDefault={fetchByDayButton} class="btn btn-auth-form">Por Día</button>
-        <button on:click|preventDefault={fetchByWeekButton} class="btn btn-auth-form">Por Semana</button>
-        <button on:click|preventDefault={fetchByMonthButton} class="btn btn-auth-form">Por Mes</button>
+        <Input on:click={fetchByDayButton} label="Por Día" id="by-day-button" type="button" className="button" icon=""/>
+        <Input on:click={fetchByWeekButton} label="Por Semana" id="by-week-button" type="button" className="button" icon=""/>
+        <Input on:click={fetchByMonthButton} label="Por Mes" id="by-month-button" type="button" className="button" icon=""/>
         <div class="date-range-input">
           <Input label="Fecha Inicial" id="date-range-start" bind:value={dateRangeStart} type="date"/>
           <Input label="Fecha Final" id="date-range-end" bind:value={dateRangeEnd} type="date"/> 
         </div>
-        {#if dateRangeStart != "" && dateRangeEnd != ""}
-          <button on:click|preventDefault={fetchByDateRange} class="btn btn-auth-form">Buscar</button>
-        {/if}
+        <Input on:click={fetchByDateRange} label="Buscar " id="by-range-button" type="button" className="button {dateRangeStart != "" && dateRangeEnd != "" ? '' : 'disabled'}" icon="search"/>
       </div>
       {#if notFound}
-        <div>
+        <div class="not-found">
           <h1>
             {notFoundMessage}
           </h1>
@@ -348,19 +344,25 @@
 
 <style>
   .transactions {
-    display: flex;
+    /* display: flex;
     flex-direction: column;
-    width: 90%;
-    justify-content: right;
+    width: 100%;
+    justify-content: right; */
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
   }
   .transaction-form {
+    display: flex;
     margin: 2rem;
-    width: 80%;
+    /* width: 50%; */
+    justify-content: center;
   }
 
   .transactions-view {
     display: flex;
-    width: 80%;
+    width: 100%;
     flex-direction: column;
   }
 
@@ -373,12 +375,13 @@
 
   .transaction-options {
     display: flex;
+    justify-content: center;
     flex-direction: row;
   }
 
   .date-range-input {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
   }
 
   .export-buttons {
@@ -386,8 +389,15 @@
     flex-direction: row;
   }
 
-  .transaction-tables {
+  .not-found {
+    display: flex;
     justify-content: center;
+  }
+  .transaction-tables {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
   }
 
   .table-content {

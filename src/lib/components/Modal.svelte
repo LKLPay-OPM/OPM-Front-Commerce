@@ -16,6 +16,7 @@
   <button on:click={open}>Open</button>
 </slot>
 {#if $isOpen}
+<div class="container">
   <div class="modal" >
     <div class="backdrop" on:click={close} on:keydown={keydown}/>
     <div class="content-wrapper">
@@ -31,22 +32,33 @@
         <!-- fallback -->
       </slot>
     </div>
-
   </div>
+</div>
 {/if}
 
 <style>
-  div.modal {
-    position: fixed;
+  div.container {
+    /* position: relative;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh;
-
+    height: 100vh; */
     display: flex;
     justify-content: center;
     align-items: center;
     opacity: 1;
+  }
+  div.modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    z-index: 2;
   }
   div.modal:not(:focus-within) {
     transition: opacity 0.1ms;
@@ -57,6 +69,7 @@
     position: absolute;
     width: 100vw;
     height: 100%;
+    z-index: 1;
   }
   div.content-wrapper {
     z-index: 10;

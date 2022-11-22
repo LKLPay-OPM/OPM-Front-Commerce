@@ -36,6 +36,7 @@ export const updateTransactionStatus = async(transactionData) => {
 
 export const updateUserInfo = async(userInfo) => {
   const id = userInfo.uid;
+  delete userInfo.uid;
   try {
     await updateDoc(doc(db, "users-client", id), userInfo)
     // loggedInUser.update({email: newEmail})
@@ -59,6 +60,7 @@ export const updateUserInfo = async(userInfo) => {
   }
 }
 
+
 const docType = (type) => {
   const dataTypes = {
     "image/jpeg" : {
@@ -73,6 +75,27 @@ const docType = (type) => {
   }
 
   return dataTypes[type].typeName;
+}
+
+export const updateUserAvatar = async(data) => {
+  const uid = data.uid;
+  const avatar = data.avatar
+  const fileType = data.fileType;
+  const storage = getStorage();
+  const avatarRef = ref(storage, `avatars/${uid}/avatar.${docType(fileType)}`);
+  try {
+    uploadBytes(avatarRef, avatar, { contentType: fileType }).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((downloadURL) => {
+        delete data.fileType;
+        data.avatar = downloadURL;
+        updateUserInfo(data);
+        // console.log(data)
+        // console.log('File available at', downloadURL);
+      });
+    });
+  } catch (error) {
+    
+  }
 }
 
 const updateUserBankAccountDocument = async(bankAccountInfo) => {

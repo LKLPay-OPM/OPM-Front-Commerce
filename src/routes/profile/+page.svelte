@@ -1,9 +1,11 @@
 <script>
   import { isLoggedIn, loggedInUser } from '$lib/stores';
   import { changeEmail, changePassword } from '$lib/hooks/auth.js'
-  import { updateUserInfo } from '$lib/hooks/updates.js'
+  import { updateUserInfo, updateUserAvatar } from '$lib/hooks/updates.js'
   import Input from '$lib/components/Input.svelte';
   import Modal from '$lib/components/Modal.svelte';
+  import Icons from '$lib/components/Icons.svelte'
+  import noUser from '$lib/assets/no_user.png';
 
   let userData = {
     uid: $loggedInUser?.uid || "",
@@ -17,6 +19,7 @@
   let emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
   let currPassword ="", newPass = "", newEmail = "", repeatPassword = "";
+  let avatar = "";
 
   const handleChangeUserInfo = async() => {
     console.log(userData);
@@ -36,6 +39,20 @@
     currPassword =""; 
     newPass = ""; 
     repeatPassword = "";
+  }
+
+  const handleUpdateProfilePic = async() => {
+    const uid = userData.uid;
+    const picture = document.getElementById('file').files[0]
+    const fileType = document.getElementById('file').files[0].type;
+
+    let profileData = {};
+    profileData.uid = uid;
+    profileData.avatar = picture;
+    profileData.fileType = fileType;
+    await updateUserAvatar(profileData)
+    // console.log(profileData)
+    profileData = {};
   }
 
 </script>
@@ -59,9 +76,13 @@
   </div>
   <div class="modal-buttons" slot="footer" let:store={{close}}>
     <Input on:click={close} label="Cerrar" id="close-modal-button" type="button" className="button" icon=""/>
-    {#if userData.name != "" &&userData.lastName != "" && userData.businessName != "" && userData.businessAddress != ""}
-      <Input on:click={close} on:click={() => handleChangeUserInfo()} label="Guardar" id="save-modal-button" type="button" className="button" icon=""/>
-    {/if}
+    <Input on:click={close} on:click={() => handleChangeUserInfo()} label="Guardar" id="save-modal-button" type="button" 
+      className="button {
+        userData.name != "" && 
+        userData.lastName != "" && 
+        userData.businessName != "" && 
+        userData.businessAddress != "" ? '' : 'disabled'}" 
+      icon=""/>
   </div>
 </Modal>
 
@@ -82,9 +103,12 @@
   </div>
   <div class="modal-buttons" slot="footer" let:store={{close}}>
     <Input on:click={close} label="Cerrar" id="close-modal-button" type="button" className="button" icon=""/>
-    {#if newEmail.match(emailPattern) && currPassword != ""}
-      <Input on:click={close} on:click={() => handleChangeEmail(currPassword, newEmail)} label="Guardar" id="save-modal-button" type="button" className="button" icon=""/>
-    {/if}
+    <Input on:click={close} on:click={() => handleChangeEmail(currPassword, newEmail)} label="Guardar" id="save-modal-button" type="button" 
+      className="button
+      {
+        newEmail.match(emailPattern) && 
+        currPassword != "" ? '' : 'disabled'}" 
+      icon=""/>
   </div>
 </Modal>
 
@@ -106,13 +130,18 @@
   </div>
   <div class="modal-buttons" slot="footer" let:store={{close}}>
     <Input on:click={close} label="Cerrar" id="close-modal-button" type="button" className="button" icon=""/>
-    {#if currPassword != "" && newPass != "" && repeatPassword != "" && newPass == repeatPassword}
-      <Input on:click={close} on:click={() => handleChangePassword(currPassword, newPass)} label="Guardar" id="save-modal-button" type="button" className="button" icon=""/>
-    {/if}
+    <Input on:click={close} on:click={() => handleChangePassword(currPassword, newPass)} label="Guardar" id="save-modal-button" type="button" 
+      className="button {
+        currPassword != "" &&
+        newPass != "" &&
+        repeatPassword != "" &&
+        newPass == repeatPassword ? '' : 'disabled'
+      }" 
+      icon=""/>
   </div>
 </Modal>
 
-<div>
+<div class="container">
   {#if $loggedInUser}
     <div class="content">
       <div class="title">
@@ -120,7 +149,14 @@
       </div>
       <div class="avatar-container">
         <div class="avatar">
-          <img alt="imagen" src="https://api.lorem.space/image/face?hash=33791" />
+          <img class="avatar-img" alt="imagen" src="{$loggedInUser.avatar ? $loggedInUser.avatar : noUser}" />
+          <label for="file">
+            <input id="file" type="file" on:change={handleUpdateProfilePic} accept="image/jpeg, image/png"/>
+            <div class="avatar-content">
+              <span class="avatar-icon"><Icons name="camera-fill" width="24" height="24"/></span>
+              <span class="avatar-text">Cambiar Foto</span>
+            </div>
+          </label>
         </div>
       </div>
       <div class="user-name">
@@ -130,9 +166,9 @@
     <div class="display-user-info">
       <!-- <label for="edit-user-info">Editar Información</label> -->
       <div class="user-general-info">
-        <b>ID de Usuario:</b> {userData.uid}
-        <b>Nombre del Negocio:</b> {userData.businessName}
-        <b>Dirección del Negocio:</b> {userData.businessAddress}
+        <span><b>ID de Usuario:</b> {userData.uid}</span>
+        <span><b>Nombre del Negocio:</b> {userData.businessName}</span>
+        <span><b>Dirección del Negocio:</b> {userData.businessAddress}</span>
         <Input on:click={open} label="Editar" id="edit-user-info" type="checkbox" className="button" icon=""/>
       </div>
       <div>
@@ -148,21 +184,31 @@
 </div>
 
 <style>
-  .avatar-container {
+/* ========================================== */
+.container {
+  width: 100%;
+}
+.title {
+  display: flex;
+  justify-content: center;
+}
+.title h1 {
+  font-size: xx-large;
+}
+.avatar-container {
   display: flex;
   width: 100%;
   justify-content: center;
   margin-top: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: .5rem;
 }
-
 .avatar {
-  /* position: relative; */
-  display: inline-flex;
-  width: 4rem;
-  cursor: pointer;
-  justify-content: center;
-  align-content: center;
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #111;
 }
 .avatar img {
   height: 100%;
@@ -170,6 +216,42 @@
   border-radius: 50%;
   object-fit: cover;
   justify-content: center;
+  cursor: pointer;
+}
+.avatar:hover .avatar-img {
+  opacity: .5;
+}
+.avatar-content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  opacity: 0;
+  transition: opacity .2s ease-in-out;
+}
+.avatar:hover .avatar-content {
+  opacity: 1;
+  cursor: pointer;
+}
+.avatar-text {
+  text-transform: uppercase;
+  font-size: 12px;
+  width: 50%;
+  text-align: center;
+  cursor: pointer;
+}
+
+.avatar-icon {
+  color: white;
+}
+.avatar input {
+  display: none;
 }
 
 .content {
@@ -181,13 +263,9 @@
 .user-name{
   display: flex;
   justify-content: center;
+  font-size: x-large;
+  margin-bottom: 2rem;
 }
-
-.title{
-  display: flex;
-  justify-content: center;
-}
-
 .display-user-info{
   display: flex;
   justify-content: center;

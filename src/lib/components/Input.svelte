@@ -74,6 +74,7 @@
   font-size: 1px;
   cursor: pointer;
   max-width: fit-content;
+  transition: all 0.5s ease;
 }
 
 .button input {
@@ -87,6 +88,16 @@
 }
 
 .modal-toggle {
+  display: none;
+}
+
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.profile-pic-upload {
   display: none;
 }
 </style>

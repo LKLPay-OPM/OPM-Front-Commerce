@@ -3,6 +3,7 @@ import { loggedInUser, isLoggedIn, userId} from '$lib/stores.js'
 import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { redirect } from '@sveltejs/kit';
 import { goto } from "$app/navigation";
+import { browser } from '$app/environment';
 import { 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword,
@@ -25,6 +26,10 @@ export const login = async(email, password) => {
       await signInWithEmailAndPassword(auth, email, password)
       .then( async (userCredential) => {
           // Signed in
+          if(browser){
+            goto("/home");
+            // window.location.href = '/home';
+          }
           const user = userCredential.user;
           const id = user.uid;
           isLoggedIn.update(() => true)
@@ -44,7 +49,10 @@ export const login = async(email, password) => {
                 throw new Error(error);
               }
           }
-          goto("/home");
+          /* if(browser){
+            goto("/home");
+            // window.location.href = '/home';
+          } */
       })
       .catch((error) => {
           const errorCode = error.code;
@@ -58,6 +66,10 @@ export const logout = async() => {
     // Sign-out successful.
     //loggedInUser.set({})
     //goto('/')
+    if(browser){
+      goto("/");
+      // window.location.href = '/';
+    }
   }).catch((error) => {
     // An error happened.
   });

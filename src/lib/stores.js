@@ -29,9 +29,7 @@ export function booleanStore(initial) {
 		toggle: () => update((n) => !n),
 	}
 }
-/// Svelte
-/* export const loggedInUser = writable(JSON.parse(sessionStorage.getItem("userData")) || {});
-loggedInUser.subscribe((val) => sessionStorage.setItem("userData", val))
-export const isLoggedIn = writable<boolean>(sessionStorage.getItem("isLoggedIn") || false);
-isLoggedIn.subscribe((val) => sessionStorage.setItem("isLoggedIn", val))
-export const userId = (""); */
+
+/* type NavigationState = "loading" | "loaded" | null;
+
+export default writable<NavigationState>(null); */

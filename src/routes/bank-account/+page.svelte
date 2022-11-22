@@ -91,11 +91,9 @@
   </div>
 </Modal>
 
-<div>
-  <div class="content">
-    <div class="title">
-      <h1>Cuenta de Banco</h1>
-    </div>
+<div class="content">
+  <div class="title">
+    <h1>Cuenta de Banco</h1>
   </div>
   {#if $loggedInUser.bankAccountInfo }
   <div class="data">
@@ -140,6 +138,7 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
+  width: 100%;
 }
 
 .title{
@@ -155,6 +154,7 @@
 
 .data {
   display: flex;
+  text-align: center;
   justify-content: center;
   align-items: center;
   flex-direction: column;
