@@ -3,41 +3,52 @@
 
   const store = booleanStore(false)
   const { isOpen, open, close } = store
-  function keydown(e) {
-    // e.stopPropagation()
-    if (e.keyCode == 27) {
-      close
-    }
+  let dialog;
+
+  export const show = () => {
+    dialog.showModal();
+  }
+  export const closeModal = () => {
+    dialog.close();
   }
 </script>
 
-<slot name="trigger" {open}>
+<slot name="trigger">
   <!-- fallback trigger to open the modal -->
-  <button on:click={open}>Open</button>
+  <!-- <button on:click={open}>Open</button> -->
 </slot>
-{#if $isOpen}
-<div class="container">
-  <div class="modal" >
-    <div class="backdrop" on:click={close} on:keydown={keydown}/>
+<div class="modal-container">
+  <dialog bind:this={dialog}>
     <div class="content-wrapper">
-      <slot name="header" {store}>
-        <!-- fallback -->
-      </slot>
-
-      <div class="content">
-        <slot name="content" {store} />
+      <div class="header">
+        <slot name="header"/>
       </div>
-
-      <slot name="footer" {store}>
-        <!-- fallback -->
-      </slot>
+      <div class="content">
+        <slot name="content"/>
+      </div>
+      <div class="footer">
+        <slot name="footer"/>
+      </div>
     </div>
-  </div>
+  </dialog>
 </div>
-{/if}
 
 <style>
-  div.container {
+  dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  dialog {
+    margin: auto;
+    padding: 0;
+    position: fixed;
+    inset: 0;
+  }
+  div.modal-container {
     /* position: relative;
     top: 0;
     left: 0;
@@ -48,30 +59,8 @@
     align-items: center;
     opacity: 1;
   }
-  div.modal {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 1;
-    z-index: 2;
-  }
-  div.modal:not(:focus-within) {
-    transition: opacity 0.1ms;
-    opacity: 0.99;
-  }
-  div.backdrop {
-    background-color: rgba(0, 0, 0, 0.4);
-    position: absolute;
-    width: 100vw;
-    height: 100%;
-    z-index: 1;
-  }
-  div.content-wrapper {
+
+  .content-wrapper {
     z-index: 10;
     max-width: 70vw;
     border-radius: 0.3rem;
@@ -79,9 +68,19 @@
     overflow: hidden;
 		padding: 1rem;
   }
-
-  div.content {
+  .header {
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+  }
+  .content {
     max-height: 50vh;
     overflow: auto;
+    margin: 15px;
+  }
+
+  .footer{
+    display: flex;
+    justify-content: center;
   }
 </style>

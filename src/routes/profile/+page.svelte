@@ -20,6 +20,7 @@
 
   let currPassword ="", newPass = "", newEmail = "", repeatPassword = "";
   let avatar = "";
+  let modalInfo, modalEmail, modalPass;
 
   const handleChangeUserInfo = async() => {
     console.log(userData);
@@ -55,13 +56,22 @@
     profileData = {};
   }
 
+  const show = (option) => {
+    // console.log(option)
+    option.show();
+  }
+
+  const closeModal = (option) => {  
+    option.closeModal();
+  }
+
 </script>
 
 <!-- MODAL UPDATE GENERAL INFO -->
-<Modal>
-  <div slot="trigger" let:open>
-    <Input on:click={open} label="Editar" id="edit-user-info" type="checkbox" className="modal-toggle" icon=""/>
-  </div>
+<Modal bind:this={modalInfo}>
+  <!-- <div slot="trigger">
+    <Input on:click={show(modalInfo)} label="Editar" id="editUserInfo" type="checkbox" className="modal-toggle" icon=""/>
+  </div> -->
   <div slot="header">
     <h1>Editar Información</h1>
   </div>
@@ -69,14 +79,14 @@
     <p>
       A continuación, ingresa los datos solicitados
     </p>
-    <Input label="Nombre: " id="edit-name-textField" bind:value={userData.name} type="text" className="texField" icon=""/>
-    <Input label="Apellido(s): " id="edit-lastName-textField" bind:value={userData.lastName} type="text" className="texField" icon=""/>
-    <Input label="Nombre del Negocio: " id="edit-businessName-textField" bind:value={userData.businessName} type="text" className="texField" icon=""/>
-    <Input label="Dirección: " id="edit-businessAddress-textField" bind:value={userData.businessAddress} type="text" className="texField" icon=""/>
+    <Input label="Nombre: " id="editNametextField" bind:value={userData.name} type="text" className="texField" icon=""/>
+    <Input label="Apellido(s): " id="editLastNameTextField" bind:value={userData.lastName} type="text" className="texField" icon=""/>
+    <Input label="Nombre del Negocio: " id="editBusinessNameTextField" bind:value={userData.businessName} type="text" className="texField" icon=""/>
+    <Input label="Dirección: " id="editBusinessAddressTextField" bind:value={userData.businessAddress} type="text" className="texField" icon=""/>
   </div>
-  <div class="modal-buttons" slot="footer" let:store={{close}}>
-    <Input on:click={close} label="Cerrar" id="close-modal-button" type="button" className="button" icon=""/>
-    <Input on:click={close} on:click={() => handleChangeUserInfo()} label="Guardar" id="save-modal-button" type="button" 
+  <div class="modal-buttons" slot="footer">
+    <Input on:click={closeModal(modalInfo)} label="Cerrar" id="buttonCloseModalInfo" type="button" className="button" icon=""/>
+    <Input on:click={closeModal(modalInfo)} on:click={() => handleChangeUserInfo()} label="Guardar" id="buttonSaveModalInfo" type="button" 
       className="button {
         userData.name != "" && 
         userData.lastName != "" && 
@@ -87,10 +97,7 @@
 </Modal>
 
 <!-- MODAL UPDATE EMAIL -->
-<Modal>
-  <div slot="trigger" let:open>
-    <Input on:click={open} label="Editar" id="edit-email" type="checkbox" className="modal-toggle" icon=""/>
-  </div>
+<Modal bind:this={modalEmail}>
   <div slot="header">
     <h1>Editar Correo</h1>
   </div>
@@ -98,12 +105,12 @@
     <p>
       A continuación, ingresa los datos solicitados
     </p>
-    <Input label="Nuevo Correo: " id="edit-email-textField" bind:value={newEmail} type="email" className="texField" icon=""/>
-    <Input label="Contraseña Actual: " id="edit-pass-textField" bind:value={currPassword} type="password" className="texField" icon=""/>
+    <Input label="Nuevo Correo: " id="editEmailTextField" bind:value={newEmail} type="email" className="texField" icon=""/>
+    <Input label="Contraseña Actual: " id="editEmailCurrPassTextField" bind:value={currPassword} type="password" className="texField" icon=""/>
   </div>
-  <div class="modal-buttons" slot="footer" let:store={{close}}>
-    <Input on:click={close} label="Cerrar" id="close-modal-button" type="button" className="button" icon=""/>
-    <Input on:click={close} on:click={() => handleChangeEmail(currPassword, newEmail)} label="Guardar" id="save-modal-button" type="button" 
+  <div class="modal-buttons" slot="footer">
+    <Input on:click={closeModal(modalEmail)} label="Cerrar" id="buttonCloseModalEmail" type="button" className="button" icon=""/>
+    <Input on:click={closeModal(modalEmail)} on:click={() => handleChangeEmail(currPassword, newEmail)} label="Guardar" id="buttonSaveModalEmail" type="button" 
       className="button
       {
         newEmail.match(emailPattern) && 
@@ -113,10 +120,7 @@
 </Modal>
 
 <!-- MODAL UPDATE PASSWORD -->
-<Modal>
-  <div slot="trigger" let:open>
-    <Input on:click={open} label="Editar" id="edit-password" type="checkbox" className="modal-toggle" icon=""/>
-  </div>
+<Modal bind:this={modalPass}>
   <div slot="header">
     <h1>Cambiar Contraseña</h1>
   </div>
@@ -124,13 +128,13 @@
     <p>
       A continuación, ingresa los datos solicitados
     </p>
-    <Input label="Contraseña Actual: " id="edit-pass-curr-textField" bind:value={currPassword} type="password" className="texField" icon=""/>
-    <Input label="Contraseña Nueva: " id="edit-pass-new-textField" bind:value={newPass} type="password" className="texField" icon=""/>
-    <Input label="Repite Contraseña Nueva: " id="edit-pass-new2-textField" bind:value={repeatPassword} type="password" className="texField" icon=""/>
+    <Input label="Contraseña Actual: " id="editPassCurrTextField" bind:value={currPassword} type="password" className="texField" icon=""/>
+    <Input label="Contraseña Nueva: " id="editPassNewTextField" bind:value={newPass} type="password" className="texField" icon=""/>
+    <Input label="Repite Contraseña Nueva: " id="editPassNewRepeatTextField" bind:value={repeatPassword} type="password" className="texField" icon=""/>
   </div>
-  <div class="modal-buttons" slot="footer" let:store={{close}}>
-    <Input on:click={close} label="Cerrar" id="close-modal-button" type="button" className="button" icon=""/>
-    <Input on:click={close} on:click={() => handleChangePassword(currPassword, newPass)} label="Guardar" id="save-modal-button" type="button" 
+  <div class="modal-buttons" slot="footer">
+    <Input on:click={closeModal(modalPass)} label="Cerrar" id="buttonCloseModalPass" type="button" className="button" icon=""/>
+    <Input on:click={closeModal(modalPass)} on:click={() => handleChangePassword(currPassword, newPass)} label="Guardar" id="buttonSaveModalPass" type="button" 
       className="button {
         currPassword != "" &&
         newPass != "" &&
@@ -164,20 +168,20 @@
       </div>
     </div>
     <div class="display-user-info">
-      <!-- <label for="edit-user-info">Editar Información</label> -->
+      <!-- <label for="editUserInfo">Editar Información</label> -->
       <div class="user-general-info">
         <span><b>ID de Usuario:</b> {userData.uid}</span>
         <span><b>Nombre del Negocio:</b> {userData.businessName}</span>
         <span><b>Dirección del Negocio:</b> {userData.businessAddress}</span>
-        <Input on:click={open} label="Editar" id="edit-user-info" type="checkbox" className="button" icon=""/>
+        <Input on:click={show(modalInfo)} label="Editar" id="buttonEditUserInfo" type="checkbox" className="button" icon=""/>
       </div>
       <div>
         <b>Correo:</b> {$loggedInUser.email}
-        <Input on:click={open} label="Editar" id="edit-email" type="checkbox" className="button" icon=""/>
+        <Input on:click={show(modalEmail)} label="Editar" id="buttonEditEmail" type="button" className="button" icon=""/>
       </div>
       <div>
         <b>Contraseña</b>
-        <Input on:click={open} label="Editar" id="edit-password" type="checkbox" className="button" icon=""/>
+        <Input on:click={show(modalPass)} label="Editar" id="buttonEditPassword" type="button" className="button" icon=""/>
       </div>
     </div>
   {/if}

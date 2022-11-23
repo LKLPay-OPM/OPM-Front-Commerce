@@ -13,6 +13,7 @@
   }
 
   let formINE = "", formCLABE = "", formBankStatement = "";
+  let modalBankInfo;
   /* let bankDataDelivered = false;
 
   onMount(async () => {
@@ -65,13 +66,18 @@
 
     return dataStatus[status].status;
   }
+
+  const showModal = (option) => {
+    option.show();
+  }
+
+  const closeModal = (option) => {  
+    option.closeModal();
+  }
 </script>
 
 <!-- MODAL UPDATE BANK ACCOUNT INFO -->
-<Modal>
-  <div slot="trigger" let:open>
-    <Input on:click={open} label="Editar" id="edit-bankAccount-info" type="checkbox" className="modal-toggle" icon=""/>
-  </div>
+<Modal bind:this={modalBankInfo}>
   <div slot="header">
     <h1>Modificar Cuenta de Banco</h1>
   </div>
@@ -79,14 +85,14 @@
     <p>
       A continuación, ingresa los datos solicitados
     </p>
-    <Input label="CLABE:" id="form-clabe" bind:value={formCLABE} type="text"/>
-    <Input label="INE:" id="form-ine" bind:value={formINE} class="button" type="file" accept="image/*,.pdf"/>
-    <Input label="Estado de Cuenta:" id="form-bank-statement" bind:value={formBankStatement} class="button" type="file" accept="image/*,.pdf"/>
+    <Input label="CLABE:" id="formClabe" bind:value={formCLABE} type="text"/>
+    <Input label="INE:" id="formIne" bind:value={formINE} class="button" type="file" accept="image/*,.pdf"/>
+    <Input label="Estado de Cuenta:" id="formBankStatement" bind:value={formBankStatement} class="button" type="file" accept="image/*,.pdf"/>
   </div>
-  <div class="modal-buttons" slot="footer" let:store={{close}}>
-    <Input on:click={close} label="Cerrar" id="close-modal-button" type="button" className="button" icon=""/>
+  <div class="modal-buttons" slot="footer">
+    <Input on:click={closeModal(modalBankInfo)} label="Cerrar" id="buttonCloseModalBankInfo" type="button" className="button" icon=""/>
     {#if formCLABE != "" && formINE != "" && formBankStatement != ""}
-      <Input on:click={close} on:click={() => handleCreateBankAccount()} label="Guardar" id="save-modal-button" type="button" className="button" icon=""/>
+      <Input on:click={closeModal(modalBankInfo)} on:click={() => handleCreateBankAccount()} label="Guardar" id="buttonSaveModalBankInfo" type="button" className="button" icon=""/>
     {/if}
   </div>
 </Modal>
@@ -115,7 +121,7 @@
     <div>
       <b>Estado: </b> {bankAccountDataStatus($loggedInUser.bankAccountInfo?.status)}
     </div>
-    <Input on:click={open} label="Editar" id="edit-bankAccount-info" type="checkbox" className="button" icon=""/>
+    <Input on:click={showModal(modalBankInfo)} label="Editar" id="edit-bankAccount-info" type="checkbox" className="button" icon=""/>
   </div>
   {:else}
   <div>
