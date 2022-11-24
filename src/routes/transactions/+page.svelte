@@ -21,8 +21,10 @@
   import RedirectLogin from '$lib/components/RedirectLogin.svelte';
   import Input from '$lib/components/Input.svelte';
   import Map from '$lib/components/Map.svelte';
-  import { onDestroy } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { each } from 'svelte/internal';
+  import { generatePDF, generateCSV, generateXLSX } from '$lib/hooks/exportDataToFile.js';
+  import { updateTransactionStatus } from '$lib/hooks/updates.js'
 
   const dbCollection = "users-client";
   const uid = $loggedInUser.uid;
@@ -36,20 +38,6 @@
 
   let dateRangeStart, dateRangeEnd, ticketId;
 
-  /* const fetchTransactions = onSnapshot(
-    collection(db, dbCollection, uid, "transactions"),
-    (snapshot) => {
-      transactions = snapshot.docs.map((doc) => {
-        return {...doc.data()};
-      });
-      let transactionsList = transactions;
-    },
-    (err) => {
-      throw new Error(err);
-    }
-  );
-  onDestroy(fetchTransactions); */
-
   let transactionForm = {
     id: parseFloat(0),
     uid: uid,
@@ -60,7 +48,12 @@
     status: "pending"
   }
 
+  onMount(async () => {
+		await fetchByDayButton()
+	});
+
   const handleCreateTransaction = async() => {
+    transactionForm.total = parseFloat(transactionForm.total)
     await setDoc(doc(db, dbCollection, uid, "transactions", transactionForm.id.toString()), transactionForm);
     //console.log(transactionForm);
     transactionForm = {
@@ -191,6 +184,46 @@
     transactionFound();
     //console.log(transactions)
   }
+
+  const sortObject = (data) => {
+    const transactionsNew = data.map(element => {
+      return {
+        date: element.date.toDate().toLocaleDateString(),
+        id: element.id,
+        status: element.status,
+        total: element.total
+      }
+    })
+    return transactionsNew;
+  }
+
+  const exportDataToPDF = async() => {
+    //alert("PDF")
+    generatePDF(transactions)
+  }
+
+  const exportDataToExcel = async() => {
+    // alert("Excel")
+    const data = sortObject(transactions);
+    // console.log(data)
+    generateXLSX(data);
+  }
+
+  const exportDataToCSV = async() => {
+    // alert("CSV")
+    const data = sortObject(transactions);
+    // console.log(data)
+    generateCSV(data)
+  }
+
+  const reverseTransaction = async(transaction) => {
+    // transaction.total = parseFloat(transaction.total);
+    transaction.status = "refund";
+    // console.log(transaction)
+    await updateTransactionStatus(transaction);
+    transactionDetailView = false;
+    fetchByDayButton();
+  }
   
 </script>
 
@@ -206,25 +239,21 @@
     </div>
     <div class="transactions-view">
       <div class="transaction-search-bar">
-        <Input label="Buscar por ticket:" id="ticket-id-search" bind:value={ticketId} type="text"/>
-        {#if ticketId != ""}
-          <button on:click|preventDefault={fetchByTicketId} class="btn btn-auth-form">Buscar</button>
-        {/if}
+        <Input label="Buscar por ticket:" id="ticket-id-search" bind:value={ticketId} type="text" icon=""/>
+        <Input on:click={fetchByTicketId} label="" id="by-ticketId-button" type="button" className="button {ticketId != "" ? '' : 'disabled'}" icon="search"/>
       </div>
       <div class="transaction-options">
-        <button on:click|preventDefault={fetchByDayButton} class="btn btn-auth-form">Por Día</button>
-        <button on:click|preventDefault={fetchByWeekButton} class="btn btn-auth-form">Por Semana</button>
-        <button on:click|preventDefault={fetchByMonthButton} class="btn btn-auth-form">Por Mes</button>
+        <Input on:click={fetchByDayButton} label="Por Día" id="by-day-button" type="button" className="button" icon=""/>
+        <Input on:click={fetchByWeekButton} label="Por Semana" id="by-week-button" type="button" className="button" icon=""/>
+        <Input on:click={fetchByMonthButton} label="Por Mes" id="by-month-button" type="button" className="button" icon=""/>
         <div class="date-range-input">
           <Input label="Fecha Inicial" id="date-range-start" bind:value={dateRangeStart} type="date"/>
           <Input label="Fecha Final" id="date-range-end" bind:value={dateRangeEnd} type="date"/> 
         </div>
-        {#if dateRangeStart != "" && dateRangeEnd != ""}
-          <button on:click|preventDefault={fetchByDateRange} class="btn btn-auth-form">Buscar</button>
-        {/if}
+        <Input on:click={fetchByDateRange} label="Buscar " id="by-range-button" type="button" className="button {dateRangeStart != "" && dateRangeEnd != "" ? '' : 'disabled'}" icon="search"/>
       </div>
       {#if notFound}
-        <div>
+        <div class="not-found">
           <h1>
             {notFoundMessage}
           </h1>
@@ -257,12 +286,18 @@
                     </tr>
                   </tbody>
                 </table>
-              {/each}
+                {/each}
+                {#if transactions.length > 0}
+                  <div class="export-buttons">
+                    <Input on:click={exportDataToPDF} label="Exportar a PDF" id="pdf-export" type="button" className="button" icon=""/>
+                    <Input on:click={exportDataToExcel} label="Exportar a Excel" id="excel-export" type="button" className="button" icon=""/>
+                    <Input on:click={exportDataToCSV} label="Exportar a CSV" id="csv-export" type="button" className="button" icon=""/>
+                  </div>
+                {/if}
             </div>
             {:else}
               <div class="transaction-details">
                 <button
-                  on:click|preventDefault={() => (selectedTransaction = {})}
                   on:click|preventDefault={() => (transactionDetailView = false)}
                 >
                   Regresar
@@ -293,6 +328,7 @@
                     </tr>
                   </tbody>
                 </table>
+                <Input on:click={reverseTransaction(selectedTransaction)} label="Reembolsar" id="csv-export" type="button" className="button" icon=""/>
                 <!-- <div>
                   <Map location={selectedTransaction.location}/>
                 </div> -->
@@ -308,19 +344,25 @@
 
 <style>
   .transactions {
-    display: flex;
+    /* display: flex;
     flex-direction: column;
-    width: 90%;
-    justify-content: right;
+    width: 100%;
+    justify-content: right; */
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
   }
   .transaction-form {
+    display: flex;
     margin: 2rem;
-    width: 80%;
+    /* width: 50%; */
+    justify-content: center;
   }
 
   .transactions-view {
     display: flex;
-    width: 80%;
+    width: 100%;
     flex-direction: column;
   }
 
@@ -333,16 +375,29 @@
 
   .transaction-options {
     display: flex;
+    justify-content: center;
     flex-direction: row;
   }
 
   .date-range-input {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
   }
 
-  .transaction-tables {
+  .export-buttons {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .not-found {
+    display: flex;
     justify-content: center;
+  }
+  .transaction-tables {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
   }
 
   .table-content {

@@ -1,32 +1,54 @@
 <script>
-  import { isLoggedIn, loggedInUser, bankDataDelivered, bankAccountData } from '$lib/stores';
+  import { isLoggedIn, loggedInUser } from '$lib/stores';
+  import { updateUserBankAccountInfo } from '$lib/hooks/updates.js'
   import Input from '$lib/components/Input.svelte';
+  import Modal from '$lib/components/Modal.svelte';
+  import { onMount } from 'svelte';
 
   let bankAccountInfo = {
-    CLABE: "",
-    INE: "",
+    clabe: "",
+    ine: "",
     bankStatement: "",
     status: "pending"
   }
 
   let formINE = "", formCLABE = "", formBankStatement = "";
+  let modalBankInfo;
+  /* let bankDataDelivered = false;
 
-  const handleCreateBankAccount = () => {
-    const INE = URL.createObjectURL(
-      document.getElementById('form-INE').files[0]
-    )
-    const bankStatement = URL.createObjectURL(
+  onMount(async () => {
+    if ($loggedInUser.bankAccountInfo) {
+      bankDataDelivered = true;
+    }
+	}); */
+
+  const handleCreateBankAccount = async() => {
+    bankAccountInfo.uid = $loggedInUser.uid;
+    
+    const ine = document.getElementById('form-ine').files[0]
+    const bankStatement = document.getElementById('form-bank-statement').files[0]
+    /* const ine = URL.createObjectURL(
+      document.getElementById('form-ine').files[0]
+    ) */
+    const ineType = document.getElementById('form-ine').files[0].type;
+    const bankStatementType = document.getElementById('form-bank-statement').files[0].type;
+    /* const bankStatement = URL.createObjectURL(
       document.getElementById('form-bank-statement').files[0]
-    )
+    ) */
 
-    bankAccountInfo.CLABE = formCLABE;
-    bankAccountInfo.INE = INE;
+    bankAccountInfo.clabe = formCLABE;
+    bankAccountInfo.ine = ine;
     bankAccountInfo.bankStatement = bankStatement;
+    bankAccountInfo.ineType = ineType;
+    bankAccountInfo.bankStatementType = bankStatementType;
+
 
     formINE = "", formCLABE = "", formBankStatement = "";
-    bankDataDelivered.update(() => true)
-    bankAccountData.set(bankAccountInfo)
-    //console.table(bankAccountInfo)
+    // bankDataDelivered.update(() => true)
+
+    await updateUserBankAccountInfo(bankAccountInfo)
+    // bankAccountData.set(bankAccountInfo)
+    // console.log(bankAccountInfo)
   }
 
   const bankAccountDataStatus = (status) => {
@@ -44,41 +66,69 @@
 
     return dataStatus[status].status;
   }
+
+  const showModal = (option) => {
+    option.show();
+  }
+
+  const closeModal = (option) => {  
+    option.closeModal();
+  }
 </script>
 
-<div>
-  <div class="content">
-    <div class="title">
-      <h1>Cuenta de Banco</h1>
-    </div>
+<!-- MODAL UPDATE BANK ACCOUNT INFO -->
+<Modal bind:this={modalBankInfo}>
+  <div slot="header">
+    <h1>Modificar Cuenta de Banco</h1>
   </div>
-  {#if $bankDataDelivered}
+  <div slot="content">
+    <p>
+      A continuación, ingresa los datos solicitados
+    </p>
+    <Input label="CLABE:" id="formClabe" bind:value={formCLABE} type="text"/>
+    <Input label="INE:" id="formIne" bind:value={formINE} class="button" type="file" accept="image/*,.pdf"/>
+    <Input label="Estado de Cuenta:" id="formBankStatement" bind:value={formBankStatement} class="button" type="file" accept="image/*,.pdf"/>
+  </div>
+  <div class="modal-buttons" slot="footer">
+    <Input on:click={closeModal(modalBankInfo)} label="Cerrar" id="buttonCloseModalBankInfo" type="button" className="button" icon=""/>
+    {#if formCLABE != "" && formINE != "" && formBankStatement != ""}
+      <Input on:click={closeModal(modalBankInfo)} on:click={() => handleCreateBankAccount()} label="Guardar" id="buttonSaveModalBankInfo" type="button" className="button" icon=""/>
+    {/if}
+  </div>
+</Modal>
+
+<div class="content">
+  <div class="title">
+    <h1>Cuenta de Banco</h1>
+  </div>
+  {#if $loggedInUser.bankAccountInfo }
   <div class="data">
     <div>
-      <b>CLABE: </b> {$bankAccountData.CLABE}
+      <b>CLABE: </b> {$loggedInUser.bankAccountInfo?.clabe}
     </div>
     <div>
       <b>INE: </b>
-      {#if $bankAccountData.INE != ""}
-        <a href={$bankAccountData.INE} target="_blank" rel="noopener noreferrer">Ver Documento</a>
+      {#if $loggedInUser.bankAccountInfo?.ine != ""}
+        <a href={$loggedInUser.bankAccountInfo?.ine} target="_blank" rel="noopener noreferrer">Ver Documento</a>
       {/if}
     </div>
     <div>
       <b>Estado de Cuenta: </b>
-      {#if $bankAccountData.bankStatement != ""}
-        <a href={$bankAccountData.bankStatement} target="_blank" rel="noopener noreferrer">Ver Documento</a>
+      {#if $loggedInUser.bankAccountInfo?.bankStatement != ""}
+        <a href={$loggedInUser.bankAccountInfo?.bankStatement} target="_blank" rel="noopener noreferrer">Ver Documento</a>
       {/if}
     </div>
     <div>
-      <b>Estado: </b> {bankAccountDataStatus($bankAccountData.status)}
+      <b>Estado: </b> {bankAccountDataStatus($loggedInUser.bankAccountInfo?.status)}
     </div>
+    <Input on:click={showModal(modalBankInfo)} label="Editar" id="edit-bankAccount-info" type="checkbox" className="button" icon=""/>
   </div>
   {:else}
   <div>
     <div class="bank-account-form">
       <form on:submit|preventDefault={handleCreateBankAccount} class="card-body">
-        <Input label="CLABE:" id="form-CLABE" bind:value={formCLABE} type="text"/>
-        <Input label="INE:" id="form-INE" bind:value={formINE} type="file" accept="image/*,.pdf"/>
+        <Input label="CLABE:" id="form-clabe" bind:value={formCLABE} type="text"/>
+        <Input label="INE:" id="form-ine" bind:value={formINE} type="file" accept="image/jpeg, image/png, .pdf"/>
         <Input label="Estado de Cuenta:" id="form-bank-statement" bind:value={formBankStatement} type="file" accept="image/*,.pdf"/>
         {#if formCLABE != "" && formINE != "" && formBankStatement != ""}
           <button type="submit" class="btn btn-auth-form">Guardar Datos</button>
@@ -94,6 +144,7 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
+  width: 100%;
 }
 
 .title{
@@ -109,6 +160,7 @@
 
 .data {
   display: flex;
+  text-align: center;
   justify-content: center;
   align-items: center;
   flex-direction: column;
