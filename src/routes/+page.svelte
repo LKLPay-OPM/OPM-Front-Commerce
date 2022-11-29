@@ -19,7 +19,18 @@
   <form on:submit|preventDefault={handleLogin} class="card-body">
       <Input label="Email:" id="login-email" bind:value={loginData.email} type="email"/>
       <Input label="Password:" id="login-password" bind:value={loginData.password} type="password"/>
-      <button type="submit" class="btn btn-auth-form">Iniciar Sesión</button>
+      <div class="btn-layout">
+        <Input 
+          label="Iniciar Sesión" 
+          id="loginButton" 
+          type="submit" 
+          className="button {
+            loginData.email != "" &&
+            loginData.password != "" ?
+            "" : "disabled"
+          }" 
+          icon=""/>
+      </div>
       <div class="auth-form-text">
         <a href="/forgot-pass">Olvidé mi contraseña.</a>
       </div>
@@ -28,3 +39,11 @@
     ¿No tienes una cuenta?. <a href="/register">Regístrate</a>
   </div>
 </div>
+
+<style>
+  .btn-layout {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+  }
+</style>

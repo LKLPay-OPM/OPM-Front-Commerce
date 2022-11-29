@@ -16,7 +16,7 @@
     const sidebarOptions = () => {
       const optionList = [
         {name: 'Inicio', path: '/home', icon: 'home-outline'},
-        {name: 'Transacciones', path: '/transactions', icon: 'bank-card-line'},
+        {name: 'Mis Ventas', path: '/transactions', icon: 'bank-card-line'},
         {name: 'Cuenta Bancaria', path: '/bank-account', icon: 'bank-line'},
       ]
       return options = optionList;

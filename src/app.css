@@ -224,6 +224,8 @@ body {
   width: calc(100% - 240px);
   transition: all 0.5s ease;
   padding: 12px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .sidebar.close ~ .main-section{
   left: 78px;
@@ -274,6 +276,12 @@ body {
   }
 }
 
+.page-title {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 /* Styles for Login, Register and Forgot Pass forms */
 .auth-form-container {
   display: flex;
@@ -315,4 +323,29 @@ body {
   margin: 1rem;
   width: 50%;
   align-self: center;
+}
+
+/**
+* Divider CSS
+*/
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1rem;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 3px solid #000;
+}
+
+.divider:not(:empty)::before {
+  margin-right: .25em;
+}
+
+.divider:not(:empty)::after {
+  margin-left: .25em;
 }

@@ -102,7 +102,10 @@ const updateUserBankAccountDocument = async(bankAccountInfo) => {
   const uid = bankAccountInfo.uid;
   try {
     // Try to create/update user bankAccountInfo in DB
-    await updateDoc(doc(db, "users-client", uid), {bankAccountInfo})
+    await updateDoc(doc(db, "users-client", uid), {
+      statusBankAccountInfo: 'delivered',
+      bankAccountInfo
+    })
     // Retrieve logged in user data from db
     const docRef = doc(db, "users-client", uid);
     const docSnap = await getDoc(docRef);

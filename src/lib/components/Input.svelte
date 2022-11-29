@@ -87,6 +87,37 @@
   line-height: 1.25rem;
 }
 
+.text-button label {
+  /* background-color: darkslateblue; */
+	display: flex;
+  -webkit-user-select: none;
+          user-select: none;
+  align-items: center;
+  justify-content: space-between;
+	cursor: pointer;
+  border: none;
+  /* padding: .5rem 1.5rem; */
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1px;
+  /* cursor: pointer; */
+  width: fit-content;
+  /* max-width: fit-content; */
+  transition: all 0.5s ease;
+}
+
+.text-button input {
+	display: none;
+}
+
+.text-button label .label-text {
+	color: darkslateblue;
+	font-size: 1.25rem;
+  line-height: 1.25rem;
+  cursor: pointer;
+}
+
 .modal-toggle {
   display: none;
 }

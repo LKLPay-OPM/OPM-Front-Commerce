@@ -9,10 +9,10 @@
     clabe: "",
     ine: "",
     bankStatement: "",
-    status: "pending"
   }
 
-  let formINE = "", formCLABE = "", formBankStatement = "";
+  let formINE, formCLABE = "", formBankStatement = [];
+  let files = [];
   let modalBankInfo;
   /* let bankDataDelivered = false;
 
@@ -24,7 +24,6 @@
 
   const handleCreateBankAccount = async() => {
     bankAccountInfo.uid = $loggedInUser.uid;
-    
     const ine = document.getElementById('form-ine').files[0]
     const bankStatement = document.getElementById('form-bank-statement').files[0]
     /* const ine = URL.createObjectURL(
@@ -61,7 +60,10 @@
       },
       rejected: {
         status: "Rechazada"
-      }
+      },
+      delivered: {
+        status: "Enviada"
+      },
     }
 
     return dataStatus[status].status;
@@ -85,9 +87,9 @@
     <p>
       A continuación, ingresa los datos solicitados
     </p>
-    <Input label="CLABE:" id="formClabe" bind:value={formCLABE} type="text"/>
-    <Input label="INE:" id="formIne" bind:value={formINE} class="button" type="file" accept="image/*,.pdf"/>
-    <Input label="Estado de Cuenta:" id="formBankStatement" bind:value={formBankStatement} class="button" type="file" accept="image/*,.pdf"/>
+    <Input label="CLABE:" id="form-clabe" bind:value={formCLABE} type="text"/>
+    <Input label="INE:" id="form-ine" bind:value={formINE} class="button" type="file" accept="image/*,.pdf"/>
+    <Input label="Estado de Cuenta:" id="form-bank-statement" bind:value={formBankStatement} class="button" type="file" accept="image/*,.pdf"/>
   </div>
   <div class="modal-buttons" slot="footer">
     <Input on:click={closeModal(modalBankInfo)} label="Cerrar" id="buttonCloseModalBankInfo" type="button" className="button" icon=""/>
@@ -101,7 +103,7 @@
   <div class="title">
     <h1>Cuenta de Banco</h1>
   </div>
-  {#if $loggedInUser.bankAccountInfo }
+  {#if $loggedInUser?.statusBankAccountInfo != 'pending' }
   <div class="data">
     <div>
       <b>CLABE: </b> {$loggedInUser.bankAccountInfo?.clabe}
@@ -119,7 +121,7 @@
       {/if}
     </div>
     <div>
-      <b>Estado: </b> {bankAccountDataStatus($loggedInUser.bankAccountInfo?.status)}
+      <b>Estado: </b> {bankAccountDataStatus($loggedInUser?.statusBankAccountInfo)}
     </div>
     <Input on:click={showModal(modalBankInfo)} label="Editar" id="edit-bankAccount-info" type="checkbox" className="button" icon=""/>
   </div>

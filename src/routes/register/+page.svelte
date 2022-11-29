@@ -14,6 +14,7 @@
     password: "",
     name: "",
     lastName: "",
+    statusBankAccountInfo: "pending",
   }
 
   const handleRegister = async () => {
