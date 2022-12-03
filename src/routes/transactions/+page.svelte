@@ -20,6 +20,7 @@
   import { db } from "$lib/firebase";
   import RedirectLogin from '$lib/components/RedirectLogin.svelte';
   import Input from '$lib/components/Input.svelte';
+  import Loader from '$lib/components/Loader.svelte';
   import Map from '$lib/components/Map.svelte';
   import { onDestroy, onMount } from 'svelte';
   import { each } from 'svelte/internal';
@@ -37,6 +38,16 @@
   let loading = false;
 
   let dateRangeStart, dateRangeEnd, ticketId;
+  let pdfData, print = true;
+  let salesTotal = 0;
+
+  const localeParam = {
+    language: 'es-MX',
+    currency: {
+      style: 'currency',
+      currency: 'MXN'
+    }
+  }
 
   let transactionForm = {
     id: parseFloat(0),
@@ -73,11 +84,13 @@
     }else{
       notFound = false;
     }
+    loading = false;
   }
 
   const fetchByDayButton = async() => {
     transactionDetailView = false;
     selectedTransaction = {};
+    loading = true;
     //transactions = [];
     const curr = new Date;
     const today = new Date(curr.setDate(curr.getDate())).setHours(0,0,0,0); // Sets Date to today day at 00:00
@@ -103,6 +116,7 @@
   const fetchByWeekButton = async() => {
     transactionDetailView = false;
     selectedTransaction = {};
+    loading = true;
     const curr = new Date;
     const firstDay = new Date(curr.setDate(curr.getDate() - curr.getDay()+1)).setHours(0,0,0,0);
     const lastDay = new Date(curr.setDate(curr.getDate() - curr.getDay()+7)).setHours(0,0,0,0);
@@ -127,6 +141,7 @@
   const fetchByMonthButton = async() => {
     transactionDetailView = false;
     selectedTransaction = {};
+    loading = true;
     //transactions = [];
     const curr = new Date;
     const currentMonth = new Date(curr.setMonth(curr.getMonth(), 1)).setHours(0,0,0,0); // Sets Date to actual month day 1 at 00:00
@@ -149,6 +164,7 @@
   const fetchByDateRange = async() => {
     transactionDetailView = false;
     selectedTransaction = {};
+    loading = true;
     var pattern = /(\d{4})\-(\d{2})\-(\d{2})/; // String pattern replace for date
     const startRange = new Date(dateRangeStart.replace(pattern,'$2-$3-$1')).setHours(0,0,0,0);//Sets the date pattern and time to 00:00
     const endRange = new Date(dateRangeEnd.replace(pattern,'$2-$3-$1')).setHours(23,59,59,59);//Sets the date pattern and time to 23:59
@@ -170,6 +186,7 @@
   const fetchByTicketId = async() => {
     transactionDetailView = false;
     selectedTransaction = {};
+    loading = true;
     //console.log(ticketId)
     const q = query(
       collection(db, dbCollection, uid, "transactions"), 
@@ -191,7 +208,7 @@
         date: element.date.toDate().toLocaleDateString(),
         id: element.id,
         status: element.status,
-        total: element.total
+        total: parseInt(element.total)
       }
     })
     return transactionsNew;
@@ -199,7 +216,7 @@
 
   const exportDataToPDF = async() => {
     //alert("PDF")
-    generatePDF(transactions)
+    generatePDF(transactions, $loggedInUser)
   }
 
   const exportDataToExcel = async() => {
@@ -228,65 +245,87 @@
 </script>
 
 {#if $isLoggedIn}
-  <div class="transactions">
-    <div class="transaction-form">
-      <form on:submit|preventDefault={handleCreateTransaction} class="card-body">
-        <Input label="ID:" id="transaction-id" bind:value={transactionForm.id} type="number"/>
-        <Input label="Card Number:" id="transaction-card-number" bind:value={transactionForm.cardNumber} type="text"/>
-        <Input label="Total:" id="transaction-total" bind:value={transactionForm.total} type="number"/>
-        <button type="submit" class="btn btn-auth-form">Guardar Transacción</button>
-      </form>
+  {#if loading == true}
+    <Loader/>
+    {:else}
+    <div class="page-title">
+      <h1>Mis Ventas</h1>
     </div>
-    <div class="transactions-view">
-      <div class="transaction-search-bar">
-        <Input label="Buscar por ticket:" id="ticket-id-search" bind:value={ticketId} type="text" icon=""/>
-        <Input on:click={fetchByTicketId} label="" id="by-ticketId-button" type="button" className="button {ticketId != "" ? '' : 'disabled'}" icon="search"/>
+    <div class="transactions">
+      <div class="transaction-form">
+        <form on:submit|preventDefault={handleCreateTransaction} class="card-body">
+          <Input label="ID:" id="transaction-id" bind:value={transactionForm.id} type="number"/>
+          <Input label="Card Number:" id="transaction-card-number" bind:value={transactionForm.cardNumber} type="text"/>
+          <Input label="Total:" id="transaction-total" bind:value={transactionForm.total} type="number"/>
+          <button type="submit" class="btn btn-auth-form">Guardar Transacción</button>
+        </form>
       </div>
-      <div class="transaction-options">
-        <Input on:click={fetchByDayButton} label="Por Día" id="by-day-button" type="button" className="button" icon=""/>
-        <Input on:click={fetchByWeekButton} label="Por Semana" id="by-week-button" type="button" className="button" icon=""/>
-        <Input on:click={fetchByMonthButton} label="Por Mes" id="by-month-button" type="button" className="button" icon=""/>
-        <div class="date-range-input">
-          <Input label="Fecha Inicial" id="date-range-start" bind:value={dateRangeStart} type="date"/>
-          <Input label="Fecha Final" id="date-range-end" bind:value={dateRangeEnd} type="date"/> 
+      <div class="transactions-view">
+        <div class="transaction-search-bar">
+          <Input label="Buscar por ticket:" id="ticket-id-search" bind:value={ticketId} type="text" icon=""/>
+          <Input on:click={fetchByTicketId} label="" id="by-ticketId-button" type="button" className="button {ticketId != "" ? '' : 'disabled'}" icon="search"/>
         </div>
-        <Input on:click={fetchByDateRange} label="Buscar " id="by-range-button" type="button" className="button {dateRangeStart != "" && dateRangeEnd != "" ? '' : 'disabled'}" icon="search"/>
-      </div>
-      {#if notFound}
-        <div class="not-found">
-          <h1>
-            {notFoundMessage}
-          </h1>
+        <div class="transaction-options">
+          <div class="fetch-data-buttons">
+            <Input on:click={fetchByDayButton} label="Por Día" id="by-day-button" type="button" className="button" icon=""/>
+            <Input on:click={fetchByWeekButton} label="Por Semana" id="by-week-button" type="button" className="button" icon=""/>
+            <Input on:click={fetchByMonthButton} label="Por Mes" id="by-month-button" type="button" className="button" icon=""/>
+          </div>
+          <div class="date-range-input">
+            <Input label="Fecha Inicial" id="date-range-start" bind:value={dateRangeStart} type="date"/>
+            <Input label="Fecha Final" id="date-range-end" bind:value={dateRangeEnd} type="date"/> 
+          </div>
+          <div>
+            <Input on:click={fetchByDateRange} label="Buscar " id="by-range-button" type="button" className="button {dateRangeStart != "" && dateRangeEnd != "" ? '' : 'disabled'}" icon="search"/>
+          </div>
         </div>
-        {:else}
-          {#if !transactionDetailView}
-            <div class="transaction-tables">
-              {#each transactions as transaction}
-                <table class="table-content">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Total</th>
-                      <th>Estatus</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{transaction.id}</td>
-                      <td>{transaction.total}</td>
-                      <td>{transaction.status}</td>
-                      <td>
-                        <button 
-                          on:click|preventDefault={() => (selectedTransaction = transaction)}
-                          on:click|preventDefault={() => (transactionDetailView = true)}
-                        >
-                          Detalles
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                {/each}
+        {#if notFound}
+          <div class="not-found">
+            <h1>
+              {notFoundMessage}
+            </h1>
+          </div>
+          {:else}
+            {#if !transactionDetailView}
+              <div class="transaction-tables">
+                <div bind:this={pdfData} id="pdfTable" class="table-container">
+                  <table class="table-content">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Total</th>
+                        <th>Estatus</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {#each transactions as transaction}
+                        <tr>
+                          <td>
+                            <Input
+                              id='detailsTicket{transaction.id}'
+                              title="Ver Detalles"
+                              on:click={() => (selectedTransaction = transaction)}
+                              on:click={() => (transactionDetailView = true)}
+                              label={transaction.id} type="button" className="text-button" icon=""/>
+                          </td>
+                          <td>{parseFloat(transaction.total).toLocaleString(localeParam.language, localeParam.currency)}</td>
+                          <td>{transaction.status}</td>
+                        </tr>
+                      {/each}
+                        <tr>
+                          <td><b>Total Ventas</b></td>
+                          <td>
+                            {
+                              transactions.reduce((prev, curr) => prev + parseInt(curr.total), 0)
+                              .toLocaleString(localeParam.language, localeParam.currency)
+                            }
+                          </td>
+                        </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="divider"> Exportar </div>
                 {#if transactions.length > 0}
                   <div class="export-buttons">
                     <Input on:click={exportDataToPDF} label="Exportar a PDF" id="pdf-export" type="button" className="button" icon=""/>
@@ -294,16 +333,15 @@
                     <Input on:click={exportDataToCSV} label="Exportar a CSV" id="csv-export" type="button" className="button" icon=""/>
                   </div>
                 {/if}
-            </div>
-            {:else}
+              {:else}
               <div class="transaction-details">
-                <button
-                  on:click|preventDefault={() => (transactionDetailView = false)}
-                >
-                  Regresar
-                </button>
+                <div class="return">
+                  <Input on:click={() => (transactionDetailView = false)} label="Regresar" id="detailsReturnButton" type="button" className="button" icon=""/>
+                </div>
+                <div class="page-title">
+                  <h2>Detalles de transacción</h2>
+                </div>
                 <table class="table-content">
-                  <h1>Detalles de transacción</h1>
                   <thead>
                     <tr>
                       <th>ID</th>
@@ -315,7 +353,7 @@
                   <tbody>
                     <tr>
                       <td>{selectedTransaction.id}</td>
-                      <td>{selectedTransaction.total}</td>
+                      <td>{parseFloat(selectedTransaction.total).toLocaleString(localeParam.language, localeParam.currency)}</td>
                       <td>{selectedTransaction.status}</td>
                       <td>
                         <a 
@@ -333,10 +371,11 @@
                   <Map location={selectedTransaction.location}/>
                 </div> -->
               </div>
-          {/if}
-      {/if}
+            {/if}
+        {/if}
+      </div>
     </div>
-  </div>
+  {/if}
   {:else}
   <RedirectLogin/>
 {/if}
@@ -379,16 +418,29 @@
     flex-direction: row;
   }
 
+  .fetch-data-buttons {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+  }
+
   .date-range-input {
     display: flex;
     flex-direction: row;
   }
 
+  @media (max-width: 1060px) {
+    .fetch-data-buttons {
+      flex-direction: column;
+      transition: all 0.5s ease;
+    }
+  }
+
   .export-buttons {
     display: flex;
     flex-direction: row;
+    justify-content: center;
   }
-
   .not-found {
     display: flex;
     justify-content: center;
@@ -400,10 +452,21 @@
     flex-direction: column;
   }
 
+  .table-container {
+    width: 100%;
+  }
+
   .table-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    width: 100%;
+    /* border-bottom: 1px solid; */
+    border-collapse: collapse;
+    padding: 1rem 1rem;
+  }
+
+  .table-content th, .table-content td {
+    text-align: center;
+    border-bottom: 1px solid;
+    padding: .5rem .5rem;
   }
 
 </style>
