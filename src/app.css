@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Raleway';
 }
 
 body {
@@ -213,7 +213,6 @@ body {
   height: 100vh;
   width: 100vw;
   transition: all 0.5s ease;
-  padding: 12px;
 }
   
 .main-section{

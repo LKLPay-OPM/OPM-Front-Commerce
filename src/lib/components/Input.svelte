@@ -11,7 +11,7 @@
     const onInput = e => (value = e.target.value);
 </script>
 
-<div class={`form-control ${className}`}>
+<div class={`${className}`}>
     <label class="label" for={id}>
         <span class="label-text">
           {label}
@@ -20,22 +20,108 @@
           {/if}
         </span>
     </label>
-    <input on:click {type} {placeholder} {id} {value} on:input={onInput} class={`input input-bordered`} {accept}>
+    <input on:click {type} {placeholder} {id} {value} on:input={onInput}  {accept}>
 </div>
 
 <style>
-.form-control {
-  display: flex;
-  flex-direction: column
-}
 
-.label {
-  display: flex;
-  -webkit-user-select: none;
-          user-select: none;
-  align-items: center;
-  justify-content: space-between
-}
+  .txtField label {
+    margin-top: 1rem;
+    font-size: .8125rem;
+    font-weight: 700;
+    line-height: 1.25rem;
+    color: #8B9EB0;
+  }
+  .txtField input {
+    width: 100%;
+    height: 3.125rem;
+    background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+    box-shadow: inset -4px -4px 9px rgba(255, 255, 255, 0.6), inset 4px 4px 14px #A6B4C8;
+    border: none;
+    border-radius: 4px;
+    padding-left: 1.25rem;
+    /* TEXT */
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.125rem;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    color: #113A62;
+  }
+
+  div.btn {
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+    border: none;
+    display: flex;
+    height: 3.375rem;
+    background: linear-gradient(270deg, #50CAFF 0%, #0478FF 100%);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    border-radius: .625rem;
+  }
+
+  .btn label {
+    width: 100%;
+    cursor: pointer;
+    /* TEXT */
+    font-weight: 800;
+    font-size: 1.3125;
+    line-height: 1.25rem;
+    text-align: center;
+    justify-content: center;
+    letter-spacing: -0.4px;
+    color: #FFFFFF;
+  }
+
+  .btn input {
+    display: none;
+  }
+
+  div.btn-disabled {
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+    cursor: not-allowed;
+    pointer-events: none;
+    border: none;
+    display: flex;
+    height: 3.375rem;
+    background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    border-radius: .625rem;
+  }
+
+  .btn-disabled label {
+    width: 100%;
+    cursor: not-allowed;
+    pointer-events: none;
+    /* TEXT */
+    font-weight: 700;
+    font-size: 1.3125;
+    line-height: 1.25rem;
+    text-align: center;
+    justify-content: center;
+    letter-spacing: -0.4px;
+    color: #A6B4C8;
+  }
+
+  .btn-disabled input {
+    display: none;
+  }
+  .form-control {
+    display: flex;
+    flex-direction: column
+  }
+
+  .label {
+    display: flex;
+    -webkit-user-select: none;
+            user-select: none;
+    align-items: center;
+    justify-content: space-between
+  }
 
 .label-text {
   font-size: 0.875rem;
