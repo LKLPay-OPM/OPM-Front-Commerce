@@ -52,21 +52,21 @@
 
   const bankAccountDataStatus = (status) => {
     const dataStatus = {
-      pending: {
-        status: "Pendiente"
+      "pending": {
+        name: "Pendiente"
       },
-      approved: {
-        status: "Aprobada"
+      "approved": {
+        name: "Aprobada"
       },
-      rejected: {
-        status: "Rechazada"
+      "rejected": {
+        name: "Rechazada"
       },
-      delivered: {
-        status: "Enviada"
+      "delivered": {
+        name: "Enviada"
       },
     }
 
-    return dataStatus[status].status;
+    return dataStatus[status].name;
   }
 
   const showModal = (option) => {
@@ -87,9 +87,9 @@
     <p>
       A continuación, ingresa los datos solicitados
     </p>
-    <Input label="CLABE:" id="form-clabe" bind:value={formCLABE} type="text"/>
-    <Input label="INE:" id="form-ine" bind:value={formINE} class="button" type="file" accept="image/*,.pdf"/>
-    <Input label="Estado de Cuenta:" id="form-bank-statement" bind:value={formBankStatement} class="button" type="file" accept="image/*,.pdf"/>
+    <Input label="CLABE:" id="form-clabe" bind:value={formCLABE} type="text" className=""/>
+    <Input label="INE:" id="form-ine" bind:value={formINE} className="" type="file" accept="image/*,.pdf"/>
+    <Input label="Estado de Cuenta:" id="form-bank-statement" bind:value={formBankStatement} className="" type="file" accept="image/*,.pdf"/>
   </div>
   <div class="modal-buttons" slot="footer">
     <Input on:click={closeModal(modalBankInfo)} label="Cerrar" id="buttonCloseModalBankInfo" type="button" className="button" icon=""/>
@@ -103,7 +103,7 @@
   <div class="title">
     <h1>Cuenta de Banco</h1>
   </div>
-  {#if $loggedInUser?.statusBankAccountInfo != 'pending' }
+  {#if $loggedInUser?.statusBankAccountInfo !== 'pending' }
   <div class="data">
     <div>
       <b>CLABE: </b> {$loggedInUser.bankAccountInfo?.clabe}

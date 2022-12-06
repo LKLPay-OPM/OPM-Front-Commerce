@@ -5,7 +5,9 @@
     onSnapshot, 
     collection,
     collectionGroup,
+    getDoc,
     setDoc, 
+    updateDoc,
     doc, 
     Timestamp, 
     GeoPoint,
@@ -16,6 +18,8 @@
     getDocs,
     startAt,
     endAt,
+    arrayUnion,
+    increment
   } from 'firebase/firestore';
   import { db } from "$lib/firebase";
   import RedirectLogin from '$lib/components/RedirectLogin.svelte';
@@ -28,6 +32,7 @@
   import { updateTransactionStatus } from '$lib/hooks/updates.js'
 
   const dbCollection = "users-client";
+  const dbTerminals = "terminals";
   const uid = $loggedInUser.uid;
   let transactions = [];
   let selectedTransactionId;
@@ -49,9 +54,19 @@
     }
   }
 
+  const makeId = (length) => {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+
   let transactionForm = {
-    id: parseFloat(0),
-    uid: uid,
+    uuid: makeId(10),
+    id: "",
     cardNumber: "",
     date: Timestamp.now(),
     location: new GeoPoint(20.677034, -103.346984),
@@ -59,16 +74,55 @@
     status: "pending"
   }
 
+  let terminalData = {
+    serialNumber: "",
+    status: "active"
+  }
+
   onMount(async () => {
 		await fetchByDayButton()
 	});
 
   const handleCreateTransaction = async() => {
+    transactionForm.user = $loggedInUser;
     transactionForm.total = parseFloat(transactionForm.total)
-    await setDoc(doc(db, dbCollection, uid, "transactions", transactionForm.id.toString()), transactionForm);
+    transactionForm.terminal = terminalData
+    const terminalNumber = terminalData.serialNumber;
+    delete transactionForm.user.transactions;
+    
+    // console.log(transactionForm)
+    try {
+      const docRef = doc(db, "terminals", terminalNumber);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+      try {
+            const data = docSnap.data()
+            const statusTerminal = data.status;
+            if (statusTerminal === "active") {
+              try {
+                await setDoc(doc(db, dbCollection, uid, "transactions", transactionForm.id), transactionForm);
+                await setDoc(doc(db, dbTerminals, terminalNumber, "transactions", transactionForm.uuid), transactionForm);
+                await updateDoc(doc(db,dbCollection, uid), {
+                  total: increment(transactionForm.total),
+                  toDeposit: increment(transactionForm.total)
+                });
+              } catch (error) {
+                throw new Error(error)
+              }
+            }else {
+              throw new Error("La terminal está desactivada")
+            }
+          } catch (error) {
+            throw new Error(error);
+          }
+      }
+    } catch (error) {
+      throw new Error(error)
+    }
+    
     //console.log(transactionForm);
     transactionForm = {
-      id: parseFloat(0),
+      id: "",
       uid: uid,
       cardNumber: "",
       date: Timestamp.now(),
@@ -76,6 +130,12 @@
       total: parseFloat(0),
       status: "pending"
     }
+    
+    terminalData = {
+      serialNumber: "",
+      status: "active"
+    }
+    fetchByDayButton()
   }
 
   const transactionFound = () => {
@@ -234,7 +294,7 @@
   }
 
   const reverseTransaction = async(transaction) => {
-    // transaction.total = parseFloat(transaction.total);
+    transaction.total = parseFloat(transaction.total);
     transaction.status = "refund";
     // console.log(transaction)
     await updateTransactionStatus(transaction);
@@ -253,11 +313,25 @@
     </div>
     <div class="transactions">
       <div class="transaction-form">
-        <form on:submit|preventDefault={handleCreateTransaction} class="card-body">
-          <Input label="ID:" id="transaction-id" bind:value={transactionForm.id} type="number"/>
-          <Input label="Card Number:" id="transaction-card-number" bind:value={transactionForm.cardNumber} type="text"/>
-          <Input label="Total:" id="transaction-total" bind:value={transactionForm.total} type="number"/>
-          <button type="submit" class="btn btn-auth-form">Guardar Transacción</button>
+        <form on:submit|preventDefault={handleCreateTransaction}>
+          <div>
+            <span><b>UUID </b>{transactionForm.uuid}</span>
+          </div>
+          <Input label="No. de Serie de la Terminal" id="transaction-id" bind:value={terminalData.serialNumber} className="txt-field normal" type="text"/>
+          <Input label="ID" id="transaction-id" bind:value={transactionForm.id} className="txt-field normal" type="text"/>
+          <Input label="Número de Tarjeta" id="transaction-card-number" bind:value={transactionForm.cardNumber} className="txt-field normal" type="text"/>
+          <Input label="Total" id="transaction-total" bind:value={transactionForm.total} className="txt-field normal" type="number"/>
+          <Input label="Guardar Transacción" id="submit-transaction" bind:value={transactionForm.total} 
+            className={`btn 
+              ${
+                transactionForm.terminalSerialNumber != "" &&
+                transactionForm.id != "" &&
+                transactionForm.cardNumber != "" &&
+                transactionForm.total > 0 ?
+                "" : "btn-disabled"
+              }
+            `} 
+            type="submit"/>
         </form>
       </div>
       <div class="transactions-view">

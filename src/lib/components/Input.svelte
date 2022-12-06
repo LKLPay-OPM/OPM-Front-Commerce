@@ -8,11 +8,12 @@
     export let accept = "";
     export let className = "";
 		export let icon = "";
+    export let title = "";
     const onInput = e => (value = e.target.value);
 </script>
 
 <div class={`${className}`}>
-    <label class="label" for={id}>
+    <label title={title} class="label" for={id}>
         <span class="label-text">
           {label}
           {#if icon != ""}
@@ -25,19 +26,19 @@
 
 <style>
 
-  .txtField label {
+  .txt-field label {
     margin-top: 1rem;
     font-size: .8125rem;
     font-weight: 700;
     line-height: 1.25rem;
     color: #8B9EB0;
   }
-  .txtField input {
+  .txt-field input {
     width: 100%;
     height: 3.125rem;
     background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
     box-shadow: inset -4px -4px 9px rgba(255, 255, 255, 0.6), inset 4px 4px 14px #A6B4C8;
-    border: none;
+    /* border: none; */
     border-radius: 4px;
     padding-left: 1.25rem;
     /* TEXT */
@@ -48,6 +49,24 @@
     align-items: center;
     justify-content: left;
     color: #113A62;
+  }
+
+  /* .txtField input:focus {
+    outline: none;
+  } */
+
+  .normal input {
+    outline: none;
+    border: none;
+  }
+  .valid input {
+    outline-color: #00C48C;
+    border-color: #00C48C;
+  }
+
+  .invalid input {
+    outline-color: #FF0000;
+    border-color: #FF0000;
   }
 
   div.btn {
@@ -141,7 +160,7 @@
 }
 
 .button{
- margin: 10px;  
+ margin: 10px;
 }
  
 .button label {
