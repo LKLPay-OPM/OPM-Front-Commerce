@@ -19,46 +19,44 @@ import {
   updateEmail,
   reauthenticateWithCredential
 } from "firebase/auth";
+import * as functions from 'firebase/functions';
 
 export const login = async(email, password) => {
   setPersistence(auth, browserSessionPersistence)
-  .then( async () => {
-      await signInWithEmailAndPassword(auth, email, password)
-      .then( async (userCredential) => {
-          // Signed in
-          if(browser){
-            goto("/home");
-            // window.location.href = '/home';
-          }
-          const user = userCredential.user;
-          const id = user.uid;
-          isLoggedIn.update(() => true)
-          //sessionStorage.setItem("uid", user.uid);
-          //sessionStorage.setItem("isLoggedIn", true);
-
-          // Retrieve logged in user data from db
-          const docRef = doc(db, "users-client", id);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-          try {
-                const user = docSnap.data()
-                console.log({user})
-                loggedInUser.set(user);
-                //sessionStorage.setItem("userData", user);
-              } catch (error) {
-                throw new Error(error);
-              }
-          }
-          /* if(browser){
-            goto("/home");
-            // window.location.href = '/home';
-          } */
-      })
-      .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-      });
-  })
+  try {
+    await signInWithEmailAndPassword(auth, email, password)
+    .then( async (userCredential) => {
+        // Signed in
+        if(browser){
+          goto("/home");
+        }
+        const user = userCredential.user;
+        const id = user.uid;
+        isLoggedIn.update(() => true)
+  
+        // Retrieve logged in user data from db
+        const docRef = doc(db, "users-client", id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+        try {
+              const user = docSnap.data()
+              console.log({user})
+              loggedInUser.set(user);
+            } catch (error) {
+              throw new Error(error);
+            }
+        }
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      throw new Error(error)
+    });
+    
+  } catch (error) {
+    console.log(error)
+    throw new Error(error)
+  }
 }
 
 export const logout = async() => {

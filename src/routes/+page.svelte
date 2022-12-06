@@ -3,25 +3,48 @@
   import { login } from '$lib/hooks/auth.js';
   import Input from '$lib/components/Input.svelte';
   import Icons from '$lib/components/Icons.svelte';
+  import Logo from '$lib/assets/Logo.png';
 
   let loginData = {
       email: "",
       password: "",
   }
 
+  let error = false;
+  let emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  let passPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+
   const handleLogin = async () => {
+    try {
       const response = await login(loginData.email, loginData.password)
+    } catch (err) {
+      error = true;
+    }
   }
 </script>
 
 <div class="container">
   <div class="content">
+    <div class="logo">
+      <img src={Logo} alt="Company Logo">
+    </div>
     <div class="form">
       <div class="title">Inicio de Sesión</div>
+      <div class={`subtitle ${!error ? "hidden" : ""}`}>Verifica que tus datos sean correctos</div>
       <div class="form-inputs">
         <form on:submit|preventDefault={handleLogin}>
-          <Input label="Correo Electrónico" id="login-email" bind:value={loginData.email} type="email" className={"txtField"}/>
-          <Input label="Contraseña" id="login-password" bind:value={loginData.password} type="password" className={"txtField"}/>
+          <Input 
+            label="Correo Electrónico" 
+            id="login-email" 
+            bind:value={loginData.email} 
+            type="email" 
+            className={`txt-field ${loginData.email.match(emailPattern) /* && !error */ ? "valid" : "invalid"}`}/>
+          <Input 
+            label="Contraseña" 
+            id="login-password" 
+            bind:value={loginData.password} 
+            type="password" 
+            className={`txt-field ${loginData.password.match(passPattern) /* && !error */ ? "valid" : "invalid"}`}/>
           <div class="forgot-pass-link">
             <a href="/forgot-pass">Olvidé mi Contraseña</a>
           </div>
@@ -31,8 +54,8 @@
               id="loginButton" 
               type="submit" 
               className="{
-                loginData.email != "" &&
-                loginData.password != "" ?
+                loginData.email.match(emailPattern) &&
+                loginData.password.match(passPattern) ?
                 "btn" : "btn-disabled"
               }" 
               icon=""/>
@@ -66,10 +89,16 @@
     transform: matrix(1, 0, 0, 1, 0, 0);
   }
 
+  .logo {
+    margin-top: 3.75rem;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+  }
   .form {
     width: 100%;
     height: 100%;
-    padding-top: 10rem;
+    padding-top: 3.125rem;
     padding-bottom: 2rem;
     padding-left: 2.5rem;
     padding-right: 2.5rem;
@@ -84,6 +113,18 @@
     align-items: center;
     justify-content: center;
     color: #8B9EB0;
+  }
+
+  .subtitle {
+    margin-top: 1rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FF0000;
   }
 
   .forgot-pass-link {
@@ -119,7 +160,7 @@
   .form-inputs {
     height: calc(100% - 2rem);
     width: 100%;
-    padding-top: 3rem;
+    margin-top: 3rem;
   }
 
   .btn-layout {
@@ -129,5 +170,10 @@
     width: 100%;
     margin-bottom: 1.125rem;
     margin-top: 1.125rem;
+  }
+
+  .hidden {
+    opacity: 0;
+    pointer-events: none;
   }
 </style>

@@ -56,7 +56,7 @@
         </div>
         <div class="name-job">
           <div class="profile_name">{$loggedInUser?.name} {$loggedInUser?.lastName}</div>
-          <div class="job">{$loggedInUser?.businessName}</div>
+          <div class="job">{$loggedInUser?.businessName ? $loggedInUser?.businessName : ""}</div>
         </div>
         <!-- <i>
           <Icons name="logout-box-line" width="24" height="24"/>

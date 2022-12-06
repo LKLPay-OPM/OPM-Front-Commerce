@@ -1,32 +1,38 @@
 import { auth, db } from "$lib/firebase";
 import { loggedInUser } from '$lib/stores.js'
-import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc, increment } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-  setPersistence,
-  inMemoryPersistence,
-  browserSessionPersistence,
-  browserLocalPersistence,
-  sendPasswordResetEmail,
-  EmailAuthProvider,
-  updatePassword,
-  updateEmail,
-  reauthenticateWithCredential
-} from "firebase/auth";
 
 export const updateTransactionStatus = async(transactionData) => {
   const data = transactionData;
-  const uid = data.uid;
+  const uuid = transactionData.uuid;
+  const terminal = transactionData.terminal.serialNumber;
+  const uid = data.user.uid;
   const id = data.id;
   try {
-    await updateDoc(doc(db, "users-client", uid, "transactions", id), {
-      status: data.status,
-      // total: data.total
-    })
+    try {
+      await updateDoc(doc(db, "users-client", uid, "transactions", id), {
+        status: data.status,
+        // total: data.total
+      })
+    } catch (error) {
+      throw new Error(error)
+    }
+    try {
+      await updateDoc(doc(db, "terminals", terminal, "transactions", uuid), {
+        status: data.status
+      })
+    } catch (error) {
+      throw new Error(error)
+    }
+    try {
+      await updateDoc(doc(db, "users-client", uid), {
+        total: increment(-transactionData.total),
+        toDeposit: increment(-transactionData.total)
+      });
+    } catch (error) {
+      throw new Error(error)
+    }
     alert("Estatus de transacción pendiente de reembolso")
   } catch (error) {
     console.log("Could not update document")
