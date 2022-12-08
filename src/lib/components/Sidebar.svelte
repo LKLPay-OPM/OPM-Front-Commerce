@@ -1,7 +1,7 @@
 <script>
     import { isLoggedIn, loggedInUser } from '$lib/stores.js'
     import { logout } from '$lib/hooks/auth.js'
-    import logo from '$lib/assets/LogoH.png';
+    import logo from '$lib/assets/Logo.png';
     import noUser from '$lib/assets/no_user.png';
     import { page } from '$app/stores';
     import { onMount, afterUpdate } from 'svelte';

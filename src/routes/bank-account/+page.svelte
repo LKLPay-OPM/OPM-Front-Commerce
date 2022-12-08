@@ -1,8 +1,9 @@
 <script>
   import { isLoggedIn, loggedInUser } from '$lib/stores';
-  import { updateUserBankAccountInfo } from '$lib/hooks/updates.js'
+  import { updateUserBankAccountInfo, updateUserInfo } from '$lib/hooks/updates.js'
   import Input from '$lib/components/Input.svelte';
   import Modal from '$lib/components/Modal.svelte';
+  import Radio from '$lib/components/Radio.svelte';
   import { onMount } from 'svelte';
 
   let bankAccountInfo = {
@@ -11,16 +12,32 @@
     bankStatement: "",
   }
 
-  let formINE, formCLABE = "", formBankStatement = [];
+  let formINE = "", formCLABE = "", formBankStatement = "";
   let files = [];
   let modalBankInfo;
-  /* let bankDataDelivered = false;
+  let depositValue = $loggedInUser.depositPreference;
 
-  onMount(async () => {
-    if ($loggedInUser.bankAccountInfo) {
-      bankDataDelivered = true;
+  let depositOptions = [
+    {
+      label: "Diario",
+      value: "daily",
+    },
+    {
+      label: "Semanal",
+      value: "weekly",
+    },
+    {
+      label: "Mensual",
+      value: "monthly",
     }
-	}); */
+  ]
+
+  onMount(() => {
+    if($loggedInUser?.statusBankAccountInfo === 'pending'){
+      showModal(modalBankInfo)
+      // console.log("informacion pendiente")
+    }
+  });
 
   const handleCreateBankAccount = async() => {
     bankAccountInfo.uid = $loggedInUser.uid;
@@ -50,6 +67,35 @@
     // console.log(bankAccountInfo)
   }
 
+  const handleUpdateDepositPreference = async() => {
+    let data = {};
+    data.uid = $loggedInUser.uid;
+    data.depositPreference = depositValue;
+    try {
+      await updateUserInfo(data);
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  const depositPreference = (preference) => {
+    const option = {
+      "daily": {
+        name: "Diario"
+      },
+      "weekly": {
+        name: "Semanal"
+      },
+      "monthly": {
+        name: "Mensual"
+      },
+      "": {
+        name: "Sin Asignar"
+      },
+    }
+    return option[preference].name;
+  }
+
   const bankAccountDataStatus = (status) => {
     const dataStatus = {
       "pending": {
@@ -65,7 +111,6 @@
         name: "Enviada"
       },
     }
-
     return dataStatus[status].name;
   }
 
@@ -93,9 +138,22 @@
   </div>
   <div class="modal-buttons" slot="footer">
     <Input on:click={closeModal(modalBankInfo)} label="Cerrar" id="buttonCloseModalBankInfo" type="button" className="button" icon=""/>
-    {#if formCLABE != "" && formINE != "" && formBankStatement != ""}
-      <Input on:click={closeModal(modalBankInfo)} on:click={() => handleCreateBankAccount()} label="Guardar" id="buttonSaveModalBankInfo" type="button" className="button" icon=""/>
-    {/if}
+    <Input 
+      on:click={closeModal(modalBankInfo)} 
+      on:click={() => handleCreateBankAccount()} 
+      label="Guardar" 
+      id="buttonSaveModalBankInfo" 
+      type="button" 
+      className={`button 
+        ${
+          formCLABE != "" &&
+          formINE != "" && 
+          formBankStatement != "" ?
+          "" : "disabled"
+        }`
+      } 
+      icon=""
+    />
   </div>
 </Modal>
 
@@ -103,20 +161,22 @@
   <div class="title">
     <h1>Cuenta de Banco</h1>
   </div>
-  {#if $loggedInUser?.statusBankAccountInfo !== 'pending' }
   <div class="data">
     <div>
-      <b>CLABE: </b> {$loggedInUser.bankAccountInfo?.clabe}
+      <b>CLABE: </b> {$loggedInUser.bankAccountInfo?.clabe || ""}
+    </div>
+    <div>
+      <b>Depósito: </b> {$loggedInUser.depositPreference ? depositPreference($loggedInUser?.depositPreference) : ""}
     </div>
     <div>
       <b>INE: </b>
-      {#if $loggedInUser.bankAccountInfo?.ine != ""}
+      {#if $loggedInUser.bankAccountInfo?.ine}
         <a href={$loggedInUser.bankAccountInfo?.ine} target="_blank" rel="noopener noreferrer">Ver Documento</a>
       {/if}
     </div>
     <div>
       <b>Estado de Cuenta: </b>
-      {#if $loggedInUser.bankAccountInfo?.bankStatement != ""}
+      {#if $loggedInUser.bankAccountInfo?.bankStatement}
         <a href={$loggedInUser.bankAccountInfo?.bankStatement} target="_blank" rel="noopener noreferrer">Ver Documento</a>
       {/if}
     </div>
@@ -124,7 +184,15 @@
       <b>Estado: </b> {bankAccountDataStatus($loggedInUser?.statusBankAccountInfo)}
     </div>
     <Input on:click={showModal(modalBankInfo)} label="Editar" id="edit-bankAccount-info" type="checkbox" className="button" icon=""/>
+    <div class="radio-options">
+      <Radio bind:options={depositOptions} fontSize={16} legend='Selecciona la periodicidad de tus depósitos' bind:userSelected={depositValue}/>
+      <!-- <p>
+        {depositValue} seleccionado
+      </p> -->
+      <Input on:click={handleUpdateDepositPreference(depositValue)} label="Guardar" id="editDepositPreferenceSaveButton" type="button" className="button" icon=""/>
+    </div>
   </div>
+  <!-- {#if $loggedInUser?.statusBankAccountInfo !== 'pending' }
   {:else}
   <div>
     <div class="bank-account-form">
@@ -132,13 +200,17 @@
         <Input label="CLABE:" id="form-clabe" bind:value={formCLABE} type="text"/>
         <Input label="INE:" id="form-ine" bind:value={formINE} type="file" accept="image/jpeg, image/png, .pdf"/>
         <Input label="Estado de Cuenta:" id="form-bank-statement" bind:value={formBankStatement} type="file" accept="image/*,.pdf"/>
+        <Radio bind:options={depositOptions} fontSize={16} legend='Selecciona la periodicidad de tus depósitos' bind:userSelected={depositValue}/>
+        <p>
+          {depositValue} seleccionado
+        </p>
         {#if formCLABE != "" && formINE != "" && formBankStatement != ""}
           <button type="submit" class="btn btn-auth-form">Guardar Datos</button>
         {/if}
       </form>
     </div>
   </div>
-  {/if}
+  {/if} -->
 </div>
 
 <style>
@@ -168,5 +240,10 @@
   flex-direction: column;
   margin: 2rem;
   padding: 1rem;
+}
+
+.modal-buttons {
+  display: flex;
+  flex-direction: row;
 }
 </style>
