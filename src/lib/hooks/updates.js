@@ -162,14 +162,11 @@ export const updateUserBankAccountInfo = async(bankAccountInfo) => {
         });
       });
     });
-    
-    
     delete bankAccountInfo.ineType;
     delete bankAccountInfo.bankStatementType;
     // console.log(ineURL)
     // console.log(bankStatementURL)
 
-    
   } catch (error) {
     console.log("Could not update document")
     throw new Error(error);

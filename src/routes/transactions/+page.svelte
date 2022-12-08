@@ -75,8 +75,7 @@
   }
 
   let terminalData = {
-    serialNumber: "",
-    status: "active"
+    serialNumber: ""
   }
 
   onMount(async () => {
@@ -86,7 +85,6 @@
   const handleCreateTransaction = async() => {
     transactionForm.user = $loggedInUser;
     transactionForm.total = parseFloat(transactionForm.total)
-    transactionForm.terminal = terminalData
     const terminalNumber = terminalData.serialNumber;
     delete transactionForm.user.transactions;
     
@@ -98,6 +96,7 @@
       try {
             const data = docSnap.data()
             const statusTerminal = data.status;
+            transactionForm.terminal = data;
             if (statusTerminal === "active") {
               try {
                 await setDoc(doc(db, dbCollection, uid, "transactions", transactionForm.id), transactionForm);
@@ -122,6 +121,7 @@
     
     //console.log(transactionForm);
     transactionForm = {
+      uuid: makeId(10),
       id: "",
       uid: uid,
       cardNumber: "",
@@ -133,7 +133,6 @@
     
     terminalData = {
       serialNumber: "",
-      status: "active"
     }
     fetchByDayButton()
   }

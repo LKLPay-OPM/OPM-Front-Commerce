@@ -16,7 +16,11 @@
     password: "",
     name: "",
     lastName: "",
+    firstTimeUser: true,
+    depositPreference: "weekly",
     statusBankAccountInfo: "pending",
+    total: 0,
+    toDeposit: 0,
   }
   let terms = false;
   let confirmPass = "";

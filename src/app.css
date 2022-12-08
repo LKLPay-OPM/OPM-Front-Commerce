@@ -43,7 +43,7 @@ body {
   transition: all 0.3s ease;
 }
 .sidebar .logo-details a img {
-  height: 30px;
+  height: 1.2rem;
 }
 .sidebar.close .logo-details a img {
   display: none;
