@@ -55,15 +55,23 @@
             label="Dirección de correo electrónico" 
             id="register-email" 
             bind:value={registerData.email} 
-            type="email" 
-            className={`txt-field ${registerData.email.match(emailPattern) ? "valid" : "invalid"}`}
+            type="email"
+            placeholder="ejemplo@correo.com"
+            className={`txt-field ${
+              registerData.email === "" ? "normal" :
+              registerData.email !== "" && registerData.email.match(emailPattern)
+              ? "valid" : "invalid"}`}
           />
           <Input 
             label="Contraseña" 
             id="register-password" 
             bind:value={registerData.password} 
-            type="password" 
-            className={`txt-field ${registerData.password.match(passPattern) ? "valid" : "invalid"}`}
+            type="password"
+            placeholder="Contraseña"
+            className={`txt-field ${
+              registerData.password === "" ? "normal" :
+              confirmPass != "" && confirmPass === registerData.password
+              ? "valid" : "invalid"}`}
           />
           <div class="pass-conditions">
             <p class="{registerData.password.match(passPattern) ? "valid":"invalid"}">
@@ -78,8 +86,12 @@
             label="Confirmar Contraseña" 
             id="confirmRegisterPassword" 
             bind:value={confirmPass} 
-            type="password" 
-            className={`txt-field ${confirmPass != "" && confirmPass === registerData.password ? "valid" : "invalid"}`}
+            type="password"
+            placeholder="Contraseña"
+            className={`txt-field ${
+              confirmPass === "" ? "normal" :
+              confirmPass != "" && confirmPass === registerData.password
+              ? "valid" : "invalid"}`}
           />
           <div class="terms">
             <div class="terms-checkbox">

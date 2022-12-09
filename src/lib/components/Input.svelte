@@ -37,7 +37,7 @@
     width: 100%;
     height: 3.125rem;
     background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
-    box-shadow: inset -4px -4px 9px rgba(255, 255, 255, 0.6), inset 4px 4px 14px #A6B4C8;
+    box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0;
     /* border: none; */
     border-radius: 4px;
     padding-left: 1.25rem;
@@ -51,13 +51,21 @@
     color: #113A62;
   }
 
+  .txt-field input::placeholder{
+    color: #D9D9D9;
+  }
+
   /* .txtField input:focus {
     outline: none;
   } */
 
   .normal input {
     outline: none;
-    border: none;
+    background: 
+      linear-gradient(#EFEEF5, #E6E8EF) padding-box,
+      linear-gradient(187deg, #FFFFFF, #D6E3F3) border-box;
+    border-radius: 4px;
+    border: 2px solid transparent;
   }
   .valid input {
     outline-color: #00C48C;
