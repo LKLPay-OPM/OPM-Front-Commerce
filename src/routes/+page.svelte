@@ -1,9 +1,10 @@
 <script>
-  import {loggedInUser} from '$lib/stores.js';
+  import {loggedInUser, isLoggedIn} from '$lib/stores.js';
   import { login } from '$lib/hooks/auth.js';
   import Input from '$lib/components/Input.svelte';
   import Icons from '$lib/components/Icons.svelte';
   import Logo from '$lib/assets/Logo.png';
+  import {goto} from '$app/navigation';
 
   let loginData = {
       email: "",
@@ -17,6 +18,10 @@
   const handleLogin = async () => {
     try {
       const response = await login(loginData.email, loginData.password)
+      .then(() =>{
+        goto('/home')
+        isLoggedIn.update(() => true)
+      })
     } catch (err) {
       error = true;
     }

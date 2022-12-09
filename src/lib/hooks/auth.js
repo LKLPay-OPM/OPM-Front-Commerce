@@ -33,7 +33,6 @@ export const login = async(email, password) => {
         } */
         const user = userCredential.user;
         const id = user.uid;
-        await sendEmailVerification(user);
         // isLoggedIn.update(() => true)
   
         // Retrieve logged in user data from db
@@ -94,6 +93,7 @@ export const registerUser = async(email, password, data) => {
       // Signed in
       const id = userCredential.user.uid;
       const user = userCredential.user;
+      await sendEmailVerification(user);
       data.uid = id;
       try {
           createUser(id, data);
