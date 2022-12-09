@@ -76,7 +76,7 @@
     border: none;
     display: flex;
     height: 3.375rem;
-    background: linear-gradient(270deg, #50CAFF 0%, #0478FF 100%);
+    background: linear-gradient(270deg, #0478FF 0%, #50CAFF 100%);
     box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: .625rem;
   }
@@ -97,6 +97,62 @@
   .btn input {
     display: none;
   }
+  div.btn-success {
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+    border: none;
+    display: flex;
+    height: 3.375rem;
+    background: linear-gradient(270deg, #00C48C 0%, #50FFD5 100%);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    border-radius: .625rem;
+  }
+
+  .btn-success label {
+    width: 100%;
+    cursor: pointer;
+    /* TEXT */
+    font-weight: 800;
+    font-size: 1.3125;
+    line-height: 1.25rem;
+    text-align: center;
+    justify-content: center;
+    letter-spacing: -0.4px;
+    color: #FFFFFF;
+  }
+
+  .btn-success input {
+    display: none;
+  }
+  div.btn-error {
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+    border: none;
+    display: flex;
+    height: 3.375rem;
+    background: linear-gradient(270deg, #FD5353 0%, #FFA450 100%);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    border-radius: .625rem;
+  }
+
+  .btn-error label {
+    width: 100%;
+    cursor: pointer;
+    /* TEXT */
+    font-weight: 800;
+    font-size: 1.3125;
+    line-height: 1.25rem;
+    text-align: center;
+    justify-content: center;
+    letter-spacing: -0.4px;
+    color: #FFFFFF;
+  }
+
+  .btn-error input {
+    display: none;
+  }
 
   div.btn-disabled {
     width: 100%;
@@ -107,7 +163,7 @@
     border: none;
     display: flex;
     height: 3.375rem;
-    background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+    background: linear-gradient(91.36deg, #E6E8EF 0%, #EFEEF5 100%);
     box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: .625rem;
   }

@@ -17,7 +17,8 @@ import {
   EmailAuthProvider,
   updatePassword,
   updateEmail,
-  reauthenticateWithCredential
+  reauthenticateWithCredential,
+  sendEmailVerification
 } from "firebase/auth";
 import * as functions from 'firebase/functions';
 
@@ -27,12 +28,13 @@ export const login = async(email, password) => {
     await signInWithEmailAndPassword(auth, email, password)
     .then( async (userCredential) => {
         // Signed in
-        if(browser){
+        /* if(browser){
           goto("/home");
-        }
+        } */
         const user = userCredential.user;
         const id = user.uid;
-        isLoggedIn.update(() => true)
+        await sendEmailVerification(user);
+        // isLoggedIn.update(() => true)
   
         // Retrieve logged in user data from db
         const docRef = doc(db, "users-client", id);
@@ -73,31 +75,44 @@ export const logout = async() => {
   });
 }
 
+const createUser = async(id, data) => {
+  const pass = data.password
+  delete data.password;
+  await setDoc(doc(db, "users-client", id), data)
+  .then(() => {
+    login(data.email,pass)
+  })
+  .catch((error) => {
+    throw new Error(error)
+  })
+}
+
 export const registerUser = async(email, password, data) => {
-  await createUserWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
+  try {
+    await createUserWithEmailAndPassword(auth, email, password)
+    .then(async(userCredential) => {
       // Signed in
       const id = userCredential.user.uid;
       const user = userCredential.user;
       data.uid = id;
-      delete data.password;
       try {
           createUser(id, data);
       } catch (error) {
           throw new Error(error);
       }
       // ...
-      goto("/");
-  })
-  .catch((error) => {
+      // goto("/");
+    })
+    .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
+      throw new Error(error);
       //alert(errorMessage)
-  });
-}
-
-export const createUser = async(id, data) => {
-  await setDoc(doc(db, "users-client", id), data)
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+  
 }
 
 export const resetPass = async(email) => {
