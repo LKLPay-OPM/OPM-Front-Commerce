@@ -38,13 +38,25 @@
             id="login-email" 
             bind:value={loginData.email} 
             type="email" 
-            className={`txt-field ${loginData.email.match(emailPattern) /* && !error */ ? "valid" : "invalid"}`}/>
+            className={`txt-field ${
+              loginData.email === "" ||
+              loginData.email != "" && loginData.email.match(emailPattern) ||
+              loginData.email != "" && loginData.email.match(emailPattern) && !error ?
+              "normal" : "invalid"}`}
+            placeholder="ejemplo@correo.com"
+          />
           <Input 
             label="Contraseña" 
             id="login-password" 
             bind:value={loginData.password} 
             type="password" 
-            className={`txt-field ${loginData.password.match(passPattern) /* && !error */ ? "valid" : "invalid"}`}/>
+            className={`txt-field ${
+              loginData.password === "" ||
+              loginData.password != "" && loginData.password.match(passPattern) ||
+              loginData.password.match(passPattern) && !error ?
+              "normal" : "invalid"}`}
+            placeholder="contraseña"  
+          />
           <div class="forgot-pass-link">
             <a href="/forgot-pass">Olvidé mi Contraseña</a>
           </div>
