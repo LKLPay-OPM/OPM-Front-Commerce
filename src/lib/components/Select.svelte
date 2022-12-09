@@ -10,8 +10,10 @@
 	export let optionsList = [];
 
 	$: {
-			value = optionsList[index]
+		if(optionsList[index].value){
+			value = optionsList[index].value
 			// console.log(value)
+		}
 	}
 
 	const onChange = e => (value = e.target.value);
@@ -21,9 +23,10 @@
 	<label class="label" for={id}>
 		<span class="label-text">{label}</span>
 	</label>
-	<select {placeholder} bind:value={index} {id}>
+	<select class={index >= 0 ? "option" : "default"} {placeholder} bind:value={index} {id}>
+		<!-- <option class="default" value={0} selected disabled>{label}</option> -->
 		{#each optionsList as item, i}
-				<option value={i}>{item.name}</option>
+				<option class="option" value={i}>{item.name}</option>
 		{/each}
 	</select>
 </div>
@@ -34,7 +37,7 @@
 	.box {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
+		width: 100%;
 	}
 
 	.label {
@@ -46,22 +49,42 @@
 		color: #6F7E8C;
 	}
 
-	.box select {
+	.box select.default {
 		font-weight: 500;
 		font-size: .8125rem;
 		line-height: 1.125rem;
 		color: #8B9EB0;
 		height: 3rem;
-		width: 10.5rem;
+		width: 100%;
 		padding-left: 1.25rem;
 		border: none;
 		outline: none;
+		/* background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+		box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0; */
 		background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
-		box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0;
+		box-shadow: -5px -5px 8px #F2F4F8, 5px 5px 7px rgba(174, 174, 192, 0.5);
 		border-radius: 4px;
 	}
 
-	.box::before {
+	/*  */
+	.box select.option {
+		font-weight: 500;
+		font-size: .8125rem;
+		line-height: 1.125rem;
+		color: #113A62;
+		height: 3rem;
+		width: 100%;
+		padding-left: 1.25rem;
+		border: none;
+		outline: none;
+		/* background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+		box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0; */
+		background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+		box-shadow: -5px -5px 8px #F2F4F8, 5px 5px 7px rgba(174, 174, 192, 0.5);
+		border-radius: 4px;
+	}
+
+	/* .box::before {
   content: "\f13a";
   font-family: FontAwesome;
   position: absolute;
@@ -75,12 +98,21 @@
   color: rgba(255, 255, 255, 0.5);
   background-color: rgba(255, 255, 255, 0.1);
   pointer-events: none;
-}
-	.box select option {
+} */
+	.box select option.default {
 		font-weight: 700;
 		font-size: 1rem;
 		line-height: 1.25rem;
 		color: #6F7E8C;
+		padding: 2rem;
+		margin: 2rem;
+		background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+	}
+	.box select option.option {
+		font-weight: 700;
+		font-size: 1rem;
+		line-height: 1.25rem;
+		color: #113A62;
 		padding: 2rem;
 		margin: 2rem;
 		background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);

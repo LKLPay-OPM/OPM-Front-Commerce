@@ -4,6 +4,7 @@
   const store = booleanStore(false)
   const { isOpen, open, close } = store
   let dialog;
+  export let className;
 
   export const show = () => {
     dialog.showModal();
@@ -18,7 +19,7 @@
   <!-- <button on:click={open}>Open</button> -->
 </slot>
 <div class="modal-container">
-  <dialog bind:this={dialog}>
+  <dialog class={`${className}`} bind:this={dialog}>
     <div class="content-wrapper">
       <div class="header">
         <slot name="header"/>
@@ -34,6 +35,10 @@
 </div>
 
 <style>
+
+  .onboarding-modal {
+    /* width: 800px; */
+  }
   dialog::backdrop {
     background-color: rgba(0, 0, 0, 0.4);
   }
@@ -47,6 +52,10 @@
     padding: 0;
     position: fixed;
     inset: 0;
+    background: #F3F3F3;
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    border-radius: 10px;
+    border: none;
   }
   div.modal-container {
     /* position: relative;
@@ -72,6 +81,12 @@
     margin: 10px;
     display: flex;
     justify-content: center;
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1.25;
+    display: flex;
+    align-items: center;
+    color: #8B9EB0;
   }
   .content {
     max-height: 50vh;
