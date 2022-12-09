@@ -9,8 +9,9 @@
     import Icons from '$lib/components/Icons.svelte';
     import Select from '$lib/components/Select.svelte';
     import RedirectHome from '$lib/components/RedirectHome.svelte';
-    import Logo from '$lib/assets/Logo.png'
-
+    import Logo from '$lib/assets/Logo.png';
+    import SuccessLogo from '$lib/components/Success.svelte';
+    import ErrorLogo from '$lib/components/Error.svelte';
   let registerData = {
     email: "",
     password: "",
@@ -22,16 +23,24 @@
     total: 0,
     toDeposit: 0,
   }
+  let menu = "register"
   let terms = false;
   let confirmPass = "";
   let emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   let passPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/
 
   const handleRegister = async () => {
-      const response = await registerUser(registerData.email, registerData.password, registerData)
+    const response = await registerUser(registerData.email, registerData.password, registerData)
+    .then(() => {
+      menu = "success"
+    })
+    .catch(() => {
+      menu = "error"
+    })
   }
 </script>
 
+{#if menu === "register"}
 <div class="container">
   <div class="content">
     <div class="logo">
@@ -107,6 +116,58 @@
     </div>
   </div>
 </div>
+{:else if menu === "success"}
+<div class="container">
+  <div class="success-content">
+    <div class="logo">
+      <img src={Logo} alt="Company Logo">
+    </div>
+    <div class="form">
+      <div class="title">Bienvenido a LKL Pay</div>
+      <div class="svg">
+        <SuccessLogo/>
+      </div>
+      <div class="subtitle">Ingresa a tu correo para verificar tu cuenta</div>
+      <div class="btn-layout">
+        <Input 
+          label="Ir a mi Escritorio" 
+          id="goToDashboardBtn" 
+          type="button" 
+          className="btn-success" 
+          icon=""
+          on:click={() => (isLoggedIn.update(() => true))}
+          on:click={() => (goto("/home"))}
+        />
+      </div>
+    </div>
+  </div>
+</div>
+{:else if menu === "error"}
+<div class="container">
+  <div class="error-content">
+    <div class="logo">
+      <img src={Logo} alt="Company Logo">
+    </div>
+    <div class="form">
+      <div class="title">Ups, Algo salió mal</div>
+      <div class="svg">
+        <ErrorLogo/>
+      </div>
+      <div class="subtitle">Vamos a intentar crear tu cuenta de nuevo</div>
+      <div class="btn-layout">
+        <Input 
+          label="Reiniciar Registro" 
+          id="returnToRegisterBtn" 
+          type="button" 
+          className="btn-error" 
+          icon=""
+          on:click={() => (menu = "register")}  
+        />
+      </div>
+    </div>
+  </div>
+</div>
+{/if}
 
 <style>
   .container {
@@ -121,6 +182,25 @@
     position: absolute;
     width: 27rem;
     height: 42rem;
+    background: #F3F3F3;
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    border-radius: 10px;
+    transform: matrix(1, 0, 0, 1, 0, 0);
+  }
+
+  .success-content {
+    position: absolute;
+    width: 27rem;
+    height: 34rem;
+    background: #F3F3F3;
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    border-radius: 10px;
+    transform: matrix(1, 0, 0, 1, 0, 0);
+  }
+  .error-content {
+    position: absolute;
+    width: 27rem;
+    height: 34rem;
     background: #F3F3F3;
     box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
@@ -146,6 +226,11 @@
     padding-bottom: 2rem;
     padding-left: 2.5rem;
     padding-right: 2.5rem;
+  }
+
+  .svg {
+    display: flex;
+    justify-content: center;
   }
 
   .title {
