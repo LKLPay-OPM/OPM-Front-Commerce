@@ -61,7 +61,8 @@ export const updateUserInfo = async(userInfo) => {
     }
     alert("Se modificó el documento exitosamente")
   } catch (error) {
-    console.log("Could not update document")
+    alert("No se pudo modificar el documento")
+    // console.log("Could not update document")
     throw new Error(error);
   }
 }

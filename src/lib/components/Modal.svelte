@@ -4,7 +4,7 @@
   const store = booleanStore(false)
   const { isOpen, open, close } = store
   let dialog;
-  export let className;
+  export let className = "";
 
   export const show = () => {
     dialog.showModal();
@@ -38,6 +38,10 @@
 
   .onboarding-modal {
     /* width: 800px; */
+  }
+
+  .modal-medium {
+    width: 30rem;
   }
   dialog::backdrop {
     background-color: rgba(0, 0, 0, 0.4);
