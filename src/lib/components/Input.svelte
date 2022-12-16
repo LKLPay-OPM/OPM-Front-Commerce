@@ -9,7 +9,16 @@
     export let className = "";
 		export let icon = "";
     export let title = "";
-    const onInput = e => (value = e.target.value);
+    export let max = 0;
+    export let min = 0;
+    const onInput = e => {
+      if(isNaN(e.target.value)){
+        value = e.target.value
+      }else {
+        // value = parseFloat(e.target.value).round(2)
+        value = Math.round((e.target.value) * 100) / 100
+      }
+    };
 </script>
 
 <div class={`${className}`}>
@@ -21,7 +30,7 @@
           {/if}
         </span>
     </label>
-    <input on:click {type} {placeholder} {id} {value} on:input={onInput}  {accept}>
+    <input on:click {type} {placeholder} {id} {value} on:input={onInput} {max} {min} {accept}>
 </div>
 
 <style>

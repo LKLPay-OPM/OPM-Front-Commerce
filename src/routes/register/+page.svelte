@@ -22,6 +22,11 @@
     statusBankAccountInfo: "pending",
     total: 0,
     toDeposit: 0,
+    ratesDiscount: {
+      amex: 0,
+      credit: 0,
+      debit: 0
+    }
   }
   let menu = "register"
   let terms = false;

@@ -44,9 +44,9 @@
             bind:value={loginData.email} 
             type="email" 
             className={`txt-field ${
-              loginData.email === "" ||
+              /* loginData.email === "" ||
               loginData.email != "" && loginData.email.match(emailPattern) ||
-              loginData.email != "" && loginData.email.match(emailPattern) && !error ?
+              loginData.email != "" && loginData.email.match(emailPattern) &&  */!error ?
               "normal" : "invalid"}`}
             placeholder="ejemplo@correo.com"
           />
@@ -56,9 +56,9 @@
             bind:value={loginData.password} 
             type="password" 
             className={`txt-field ${
-              loginData.password === "" ||
+              /* loginData.password === "" ||
               loginData.password != "" && loginData.password.match(passPattern) ||
-              loginData.password.match(passPattern) && !error ?
+              loginData.password != "" && loginData.password.match(passPattern) &&  */!error ?
               "normal" : "invalid"}`}
             placeholder="contraseña"  
           />

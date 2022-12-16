@@ -68,23 +68,64 @@
   ]
 
 	let businessLineOptions = [
-    {
-      value: "basic",
-      name: "Básico"
-    },
-    {
-      value: "pro",
-      name: "Profesional"
-    },
-    {
-      value: "physical",
-      name: "Persona Física"
-    },
-    {
-      value: "moral",
-      name: "Persona Moral"
-    }
+    {value:"travelAgency", name: "Agencias de Viajes"},
+    {value: "aggregato", name: "Agregadoras"},
+    {value: "insurers", name:"Aseguradoras"},
+    {value: "charity", name:"Beneficencia"},
+    {value: "collegeAndUniversities", name:"Colegios y Universidades"},
+    {value: "fastFood", name:"Comida Rápida"},
+    {value: "basicEducation", name: "Educación Básica"},
+    {value: "entertainment", name: "Entretenimiento"},
+    {value: "parkings", name: "Estacionamientos"},
+    {value: "pharmacy", name: "Farmacias"},
+    {value: "gasStations", name: "Gasolineras"},
+    {value: "hospitals", name: "Hospitales"},
+    {value: "hotels", name: "Hoteles"},
+    {value: "doctorsAndDentists", name: "Doctores y Dentistas"},
+    {value: "miscellaneous", name: "Miscelánea"},
+    {value: "others", name: "Otros"},
+    {value: "toll", name: "Peaje"},
+    {value: "sparePartsAndHardwareStores", name: "Refacciones y Ferreterías"},
+    {value: "carRental", name: "Renta de Autos"},
+    {value: "restaurants", name: "Restaurantes"},
+    {value: "beautySalons", name: "Salones de Belleza"},
+    {value: "supermarkets", name: "Supermercados"},
+    {value: "telecommunications", name: "Telecomunicaciones"},
+    {value: "airTransport", name: "Transporte Aéreo"},
+    {value: "landPassengerTransport", name: "Transaporte Terrestre de Pasajeros"}
   ]
+
+  /* const getTypesNames = (type) => {
+    // console.log(type)
+    const names = {
+      "travelAgency": {data: "Agencias de Viajes"},
+      "aggregators": {data: "Agregadoras"},
+      "insurers": {data:"Aseguradoras"},
+      "charity": {data:"Beneficencia"},
+      "collegeAndUniversities": {data:"Colegios y Universidades"},
+      "fastFood": {data:"Comida Rápida"},
+      "basicEducation": {data: "Educación Básica"},
+      "entertainment": {data: "Entretenimiento"},
+      "parkings": {data: "Estacionamientos"},
+      "pharmacy": {data: "Farmacias"},
+      "gasStations": {data: "Gasolineras"},
+      "hospitals": {data: "Hospitales"},
+      "hotels": {data: "Hoteles"},
+      "doctorsAndDentists": {data: "Doctores y Dentistas"},
+      "miscellaneous": {data: "Miscelánea"},
+      "others": {data: "Otros"},
+      "toll": {data: "Peaje"},
+      "sparePartsAndHardwareStores": {data: "Refacciones y Ferreterías"},
+      "carRental": {data: "Renta de Autos"},
+      "restaurants": {data: "Restaurantes"},
+      "beautySalons": {data: "Salones de Belleza"},
+      "supermarkets": {data: "Supermercados"},
+      "telecommunications": {data: "Telecomunicaciones"},
+      "airTransport": {data: "Transporte Aéreo"},
+      "landPassengerTransport": {data: "Transaporte Terrestre de Pasajeros"}
+    }
+    return names[type].data;
+  } */
 
 	
 
