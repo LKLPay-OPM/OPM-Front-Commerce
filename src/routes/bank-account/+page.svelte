@@ -230,7 +230,7 @@
         de tus <b>{urgentDepositQty.toLocaleString(localeParam.language, localeParam.currency)}</b> solicitados
       </p>
     {/if}
-    <Input label="Cantidad Solicitada" id="form-clabe" bind:value={urgentDepositQty} type="number" className="txt-field normal" min=0 max={$loggedInUser?.toDeposit}/>
+    <Input label="Cantidad Solicitada" id="form-clabe" bind:value={urgentDepositQty} type="number" className="txt-field normal"/>
   </div>
   <div class="modal-buttons" slot="footer">
     <Input on:click={closeModal(modalUrgentDeposit)} label="Cerrar" id="buttonCloseModalUrgentDeposit" type="button" className="btn" icon=""/>

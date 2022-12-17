@@ -30,6 +30,7 @@
   import { each } from 'svelte/internal';
   import { generatePDF, generateCSV, generateXLSX } from '$lib/hooks/exportDataToFile.js';
   import { updateTransactionStatus } from '$lib/hooks/updates.js'
+  import { fetchUserData } from '$lib/hooks/auth.js'
 
   const dbCollection = "users-client";
   const dbTerminals = "terminals";
@@ -70,7 +71,7 @@
     cardNumber: "",
     date: Timestamp.now(),
     location: new GeoPoint(20.677034, -103.346984),
-    total: parseFloat(0),
+    total: 0,
     status: "pending"
   }
 
@@ -85,7 +86,8 @@
   const handleCreateTransaction = async() => {
     transactionForm.user = $loggedInUser;
     transactionForm.total = parseFloat(transactionForm.total)
-    const terminalNumber = terminalData.serialNumber;
+    transactionForm.id = transactionForm.id.toString();
+    const terminalNumber = terminalData.serialNumber.toString();
     delete transactionForm.user.transactions;
     
     // console.log(transactionForm)
@@ -93,27 +95,37 @@
       const docRef = doc(db, "terminals", terminalNumber);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-      try {
-            const data = docSnap.data()
-            const statusTerminal = data.status;
-            transactionForm.terminal = data;
-            if (statusTerminal === "active") {
-              try {
-                await setDoc(doc(db, dbCollection, uid, "transactions", transactionForm.id), transactionForm);
-                await setDoc(doc(db, dbTerminals, terminalNumber, "transactions", transactionForm.uuid), transactionForm);
+        try {
+          const data = docSnap.data()
+          const statusTerminal = data.status;
+          transactionForm.terminal = data;
+          if (statusTerminal === "active") {
+            try {
+              await setDoc(doc(db, dbCollection, uid, "transactions", transactionForm.id), transactionForm)
+              .then(async() => {
+                await setDoc(doc(db, dbTerminals, terminalNumber, "transactions", transactionForm.uuid), transactionForm)
+              })
+              .then(async() => {
                 await updateDoc(doc(db,dbCollection, uid), {
                   total: increment(transactionForm.total),
                   toDeposit: increment(transactionForm.total)
-                });
-              } catch (error) {
-                throw new Error(error)
-              }
-            }else {
-              throw new Error("La terminal está desactivada")
+                })
+              })
+              .then(async() => {
+                await fetchUserData(uid)
+              })
+              .catch((err) => {
+                throw new Error(err)  
+              })
+            } catch (error) {
+              throw new Error(error)
             }
-          } catch (error) {
-            throw new Error(error);
+          }else {
+            throw new Error("La terminal está desactivada")
           }
+        } catch (error) {
+          throw new Error(error);
+        }
       }
     } catch (error) {
       throw new Error(error)
@@ -127,7 +139,7 @@
       cardNumber: "",
       date: Timestamp.now(),
       location: new GeoPoint(20.677034, -103.346984),
-      total: parseFloat(0),
+      total: 0,
       status: "pending"
     }
     
@@ -320,7 +332,7 @@
           <Input label="ID" id="transaction-id" bind:value={transactionForm.id} className="txt-field normal" type="text"/>
           <Input label="Número de Tarjeta" id="transaction-card-number" bind:value={transactionForm.cardNumber} className="txt-field normal" type="text"/>
           <Input label="Total" id="transaction-total" bind:value={transactionForm.total} className="txt-field normal" type="number"/>
-          <Input label="Guardar Transacción" id="submit-transaction" bind:value={transactionForm.total} 
+          <Input label="Guardar Transacción" id="submit-transaction" 
             className={`btn 
               ${
                 transactionForm.terminalSerialNumber != "" &&

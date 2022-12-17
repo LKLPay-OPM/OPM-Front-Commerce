@@ -9,8 +9,7 @@
     export let className = "";
 		export let icon = "";
     export let title = "";
-    export let max = 0;
-    export let min = 0;
+    
     const onInput = e => {
       if(isNaN(e.target.value)){
         value = e.target.value
@@ -30,7 +29,7 @@
           {/if}
         </span>
     </label>
-    <input on:click {type} {placeholder} {id} {value} on:input={onInput} {max} {min} {accept}>
+    <input on:click {type} {placeholder} {id} {value} on:input={onInput} {accept}>
 </div>
 
 <style>
