@@ -22,31 +22,34 @@ import {
 } from "firebase/auth";
 import * as functions from 'firebase/functions';
 
+export const fetchUserData = async(id) => {
+  // Retrieve logged in user data from db
+  const docRef = doc(db, "users-client", id);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+  try {
+        const user = docSnap.data()
+        console.log({user})
+        loggedInUser.set(user);
+      } catch (error) {
+        throw new Error(error);
+      }
+  }
+}
+
 export const login = async(email, password) => {
   setPersistence(auth, browserSessionPersistence)
   try {
     await signInWithEmailAndPassword(auth, email, password)
     .then( async (userCredential) => {
-        // Signed in
-        if(browser){
-          goto("/home");
-        }
-        const user = userCredential.user;
-        const id = user.uid;
-        // isLoggedIn.update(() => true)
-  
-        // Retrieve logged in user data from db
-        const docRef = doc(db, "users-client", id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-        try {
-              const user = docSnap.data()
-              console.log({user})
-              loggedInUser.set(user);
-            } catch (error) {
-              throw new Error(error);
-            }
-        }
+      // Signed in
+      if(browser){
+        goto("/home");
+      }
+      const user = userCredential.user;
+      const id = user.uid;
+      fetchUserData(id)
+      // isLoggedIn.update(() => true)
     })
     .catch((error) => {
       const errorCode = error.code;
