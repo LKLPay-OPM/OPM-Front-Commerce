@@ -235,7 +235,6 @@ body {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  min-height: 100%;
 }
 .main-section .main-content .bx-menu,
 .main-section .main-content .text{
