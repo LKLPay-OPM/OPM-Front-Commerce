@@ -20,13 +20,29 @@
     firstTimeUser: true,
     depositPreference: "weekly",
     statusBankAccountInfo: "pending",
+    curp: "",
+    rfc: "",
+    accountType: "",
+    businessName: "",
+    businessLine: "",
+    businessAddress: "",
+    outsideNumber: "",
+    insideNumber: "",
+    zipCode: "",
+    state: "",
+    town: "",
+    suburb: "",
+    avatar: "",
+    phone: "",
+    officeHours: "",
+    monthlyAverage: "",
     total: 0,
     toDeposit: 0,
     ratesDiscount: {
       amex: 0,
       credit: 0,
       debit: 0
-    }
+    },
   }
   let menu = "register"
   let terms = false;

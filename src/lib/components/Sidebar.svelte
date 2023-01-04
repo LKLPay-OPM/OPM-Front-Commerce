@@ -18,6 +18,7 @@
         {name: 'Inicio', path: '/home', icon: 'home-outline'},
         {name: 'Mis Ventas', path: '/transactions', icon: 'bank-card-line'},
         {name: 'Cuenta Bancaria', path: '/bank-account', icon: 'bank-line'},
+        {name: 'Créditos', path: '/credits', icon: 'bank-line'},
       ]
       return options = optionList;
     }
