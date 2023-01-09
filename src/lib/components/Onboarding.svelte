@@ -58,18 +58,18 @@
       name: "Profesional"
     },
     {
-      value: "physical",
-      name: "Persona Física"
+      value: "business",
+      name: "Business"
     },
     {
-      value: "moral",
-      name: "Persona Moral"
+      value: "ecommerce",
+      name: "E-Commerce"
     }
   ]
 
 	let businessLineOptions = [
-    {value:"travelAgency", name: "Agencias de Viajes"},
-    {value: "aggregato", name: "Agregadoras"},
+    {value: "travelAgency", name: "Agencias de Viajes"},
+    {value: "aggregators", name: "Agregadoras"},
     {value: "insurers", name:"Aseguradoras"},
     {value: "charity", name:"Beneficencia"},
     {value: "collegeAndUniversities", name:"Colegios y Universidades"},
@@ -130,7 +130,7 @@
 	
 
   const handleUpdateProfile = async() => {
-		console.log(userData)
+		/* console.log(userData)
     userData = {
       uid: $loggedInUser.uid,
       name: "",
@@ -150,8 +150,8 @@
       avatar: "",
       phone: "",
       firstTimeUser: false,
-    }
-    /* await updateUserInfo(userData)
+    } */
+    await updateUserInfo(userData)
     .then(() => {
       success = true;
       userData = {
@@ -174,7 +174,10 @@
         phone: "",
         firstTimeUser: false,
       }
-    }) */
+    })
+    .catch((error) => {
+      throw new Error(error)
+    })
 	}
 
 	const handleUpdateProfilePic = async() => {
@@ -270,7 +273,7 @@
                 <Select bind:value={userData.accountType} label="Tipo de cuenta" defaultText={"Elige una opción"} bind:optionsList={accountTypeOptions}/>
                 <Input placeholder="Ejemplo de Nombre" label="Nombre de tu Empresa" id="businessName" bind:value={userData.businessName} className="txt-field normal" type="text"/>
                 <Select bind:value={userData.businessLine} label="Giro" defaultText={"Elige una opción"} bind:optionsList={businessLineOptions}/>
-                {#if userData.accountType === "physical" || userData.accountType === "moral"}
+                {#if userData.accountType === "business" || userData.accountType === "ecommerce"}
                   <Input placeholder="RFC" label="RFC" id="rfc" bind:value={userData.rfc} className="txt-field normal" type="text"/>
                 {/if}
                 <div class="footer">
@@ -287,8 +290,8 @@
                     ${
                       userData.accountType === "basic" && userData.businessName != "" || 
                       userData.accountType === "pro" && userData.businessName != "" ||
-                      userData.accountType === "physical" && userData.rfc != "" && userData.businessName != "" ||
-                      userData.accountType === "moral" && userData.rfc != "" && userData.businessName != ""
+                      userData.accountType === "business" && userData.rfc != "" && userData.businessName != "" ||
+                      userData.accountType === "ecommerce" && userData.rfc != "" && userData.businessName != ""
                       ? "btn" : "btn-disabled"}
                   `} 
                   icon=""

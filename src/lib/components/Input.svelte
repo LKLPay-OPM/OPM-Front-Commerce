@@ -113,6 +113,46 @@
   .btn input {
     display: none;
   }
+
+  div.btn-plain {
+    align-content: center;
+    justify-content: center;
+    border: none;
+    display: flex;
+    height: 2.5rem;
+    width: 100%;
+    background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+    box-shadow: -5px -5px 8px #F2F4F8, 5px 5px 7px rgba(174, 174, 192, 0.5);
+    border-radius: 5px;
+  }
+
+  .btn-plain label {
+    width: 100%;
+    cursor: pointer;
+    /* TEXT */
+    font-weight: 800;
+    font-size: 1.3125;
+    line-height: 1.25rem;
+    text-align: center;
+    justify-content: center;
+    letter-spacing: -0.4px;
+    color: #8C9FB1;
+  }
+
+  .btn-plain input {
+    display: none;
+  }
+
+  div.btn-round {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+  }
+  div.btn-square {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 5px;
+  }
   div.btn-success {
     width: 100%;
     align-content: center;
@@ -300,7 +340,6 @@
 }
 
 .disabled {
-  opacity: 0.6;
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -308,4 +347,6 @@
 .profile-pic-upload {
   display: none;
 }
+
+
 </style>

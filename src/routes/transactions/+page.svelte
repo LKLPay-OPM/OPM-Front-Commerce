@@ -25,6 +25,8 @@
   import RedirectLogin from '$lib/components/RedirectLogin.svelte';
   import Input from '$lib/components/Input.svelte';
   import Loader from '$lib/components/Loader.svelte';
+  import Modal from '$lib/components/Modal.svelte';
+  import DatePicker from '$lib/components/DatePicker.svelte';
   import Map from '$lib/components/Map.svelte';
   import { onDestroy, onMount } from 'svelte';
   import { each } from 'svelte/internal';
@@ -42,8 +44,10 @@
   let notFound = false;
   let notFoundMessage = "No se encontraron registros";
   let loading = false;
+  let date = new Date;
+  let active = "day"
 
-  let dateRangeStart, dateRangeEnd, ticketId;
+  let dateRangeStart, dateRangeEnd, ticketId, modalDateFilter;
   let pdfData, print = true;
   let salesTotal = 0;
 
@@ -159,6 +163,7 @@
   }
 
   const fetchByDayButton = async() => {
+    active = "day";
     transactionDetailView = false;
     selectedTransaction = {};
     loading = true;
@@ -185,6 +190,7 @@
   }
 
   const fetchByWeekButton = async() => {
+    active = "week"
     transactionDetailView = false;
     selectedTransaction = {};
     loading = true;
@@ -210,6 +216,7 @@
   }
 
   const fetchByMonthButton = async() => {
+    active = "month"
     transactionDetailView = false;
     selectedTransaction = {};
     loading = true;
@@ -244,24 +251,24 @@
       collection(db, dbCollection, uid, "transactions"),
       orderBy('date', 'desc'),
       startAt(Timestamp.fromDate(new Date(endRange))), endAt(Timestamp.fromDate(new Date(startRange))),
-      limit(10)
+      // limit(10)
     );
     const querySnapshot = await getDocs(q);
     transactions = querySnapshot.docs.map((doc) => {
       return {...doc.data()}
     });
     transactionFound();
-    //console.log(transactions)
+    // console.log(transactions)
   }
 
   const fetchByTicketId = async() => {
     transactionDetailView = false;
     selectedTransaction = {};
     loading = true;
-    //console.log(ticketId)
+    const ticket = ticketId.toString();
     const q = query(
       collection(db, dbCollection, uid, "transactions"), 
-      where('id', '==', ticketId),
+      where('id', '==', ticket),
       orderBy('date', 'desc'),
       limit(1)
     );
@@ -270,7 +277,7 @@
       return {...doc.data()}
     });
     transactionFound();
-    //console.log(transactions)
+    console.log(transactions)
   }
 
   const sortObject = (data) => {
@@ -312,58 +319,125 @@
     transactionDetailView = false;
     fetchByDayButton();
   }
+
+  const getMonthName = (month) => {
+    const monthsArray = {
+      0: {value: "Enero"},
+      1: {value: "Febrero"},
+      2: {value: "Marzo"},
+      3: {value: "Abril"},
+      4: {value: "Mayo"},
+      5: {value: "Junio"},
+      6: {value: "Julio"},
+      7: {value: "Agosto"},
+      8: {value: "Septiembre"},
+      9: {value: "Octubre"},
+      10: {value: "Noviembre"},
+      11: {value: "Diciembre"},
+    }
+
+    return monthsArray[month].value
+  }
+
+  const showModal = (option) => {
+    option.show();
+  }
+
+  const closeModal = (option) => {  
+    option.closeModal();
+  }
   
 </script>
+
+<!-- MODAL URGENT DEPOSIT -->
+<Modal className={`modal-medium`} bind:this={modalDateFilter}>
+  <div slot="header">
+    <h1>Por Fechas</h1>
+  </div>
+  <div slot="content">
+    <div class="date-range-input">
+      
+      <DatePicker label="Del" id="date-range-start" bind:value={dateRangeStart}/>
+      <DatePicker label="Al" id="date-range-end" bind:value={dateRangeEnd}/>
+      <!-- <Input label="Del" id="date-range-start" bind:value={dateRangeStart} type="date" className="form-date"/> -->
+      <!-- <Input label="Al" id="date-range-end" bind:value={dateRangeEnd} type="date" className="form-date"/>  -->
+    </div>
+  </div>
+  <div class="modal-buttons" slot="footer">
+    <Input on:click={closeModal(modalDateFilter)} label="Cerrar" id="buttonCloseModalUrgentDeposit" type="button" className="btn-plain" icon=""/>
+    <Input 
+      on:click={closeModal(modalDateFilter)} 
+      on:click={() => fetchByDateRange()} 
+      label="Filtrar" 
+      id="buttonSaveModalUrgentDeposit" 
+      type="button" 
+      className={`btn-plain
+        ${
+          dateRangeStart != "" && dateRangeEnd != "" 
+          ? "" : "disabled"
+        }`
+      } 
+      icon=""
+    />
+  </div>
+</Modal>
 
 {#if $isLoggedIn}
   {#if loading == true}
     <Loader/>
     {:else}
-    <div class="page-title">
-      <h1>Mis Ventas</h1>
-    </div>
     <div class="transactions">
-      <div class="transaction-form">
-        <form on:submit|preventDefault={handleCreateTransaction}>
-          <div>
-            <span><b>UUID </b>{transactionForm.uuid}</span>
+      <div class="top">
+        <div class="top__left">
+          <div class="page-title">
+            <h1>Ventas</h1>
           </div>
-          <Input label="No. de Serie de la Terminal" id="transaction-id" bind:value={terminalData.serialNumber} className="txt-field normal" type="text"/>
-          <Input label="ID" id="transaction-id" bind:value={transactionForm.id} className="txt-field normal" type="text"/>
-          <Input label="Número de Tarjeta" id="transaction-card-number" bind:value={transactionForm.cardNumber} className="txt-field normal" type="text"/>
-          <Input label="Total" id="transaction-total" bind:value={transactionForm.total} className="txt-field normal" type="number"/>
-          <Input label="Guardar Transacción" id="submit-transaction" 
-            className={`btn 
-              ${
-                transactionForm.terminalSerialNumber != "" &&
-                transactionForm.id != "" &&
-                transactionForm.cardNumber != "" &&
-                transactionForm.total > 0 ?
-                "" : "btn-disabled"
-              }
-            `} 
-            type="submit"/>
-        </form>
+          <div class="buttons">
+            <Input on:click={showModal(modalDateFilter)} label="Filtrar " id="openModalDateFilter" type="button" className="btn-plain" icon=""/>
+            {#if transactionDetailView}
+              <Input on:click={() => (transactionDetailView = false)} label="Regresar" id="detailsReturnButton" type="button" className="btn-plain" icon=""/>
+            {/if}
+          </div>
+        </div>
+        <div class="top__midle">
+          <div>
+            <p>
+              {date.getDate()} de {getMonthName(date.getMonth())} del {date.getFullYear()}
+            </p>
+          </div>
+          <div class="button-group">
+            <button on:click={fetchByDayButton} class={`button ${active === "day" ? "button-active" : ""}`} type="button">Día</button>
+            <button on:click={fetchByWeekButton} class={`button ${active === "week" ? "button-active" : ""}`} type="button">Semana</button>
+            <button on:click={fetchByMonthButton} class={`button ${active === "month" ? "button-active" : ""}`} type="button">Mes</button>
+          </div>
+          <div class="card-group">
+            <div class="card">
+              <div><p>Ventas Totales</p></div>
+              <div><span>{$loggedInUser.total.toLocaleString(localeParam.language, localeParam.currency)}</span></div>
+            </div>
+            <div class="card">
+              <div><p>Comisiones por Dispersar</p></div>
+              <div><span>{$loggedInUser.toDeposit.toLocaleString(localeParam.language, localeParam.currency)}</span></div>
+            </div>
+            <div class="card">
+              <div><p>Comisiones Cobradas</p></div>
+              <div><span>{($loggedInUser?.toDeposit - $loggedInUser?.totalCommissions).toLocaleString(localeParam.language, localeParam.currency)}</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="top__right">
+          <div class="transaction-search-bar">
+            <Input placeholder="Buscar por ticket" id="ticket-id-search" bind:value={ticketId} className="txt-field normal" type="text" icon=""/>
+            <Input on:click={fetchByTicketId} label="" id="byTicketId-button" type="button" className="btn-plain btn-round {ticketId != "" ? '' : 'disabled'}" icon="search"/>
+          </div>
+          <div class="export-buttons">
+            <Input on:click={exportDataToCSV} label="" id="csv-export" type="button" className="btn-plain btn-square {transactions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/>
+            <Input on:click={exportDataToPDF} label="" id="pdf-export" type="button" className="btn-plain btn-square {transactions.length > 0 ? '' : 'disabled'}" icon="xls-fill"/>
+            <Input on:click={exportDataToExcel} label="" id="excel-export" type="button" className="btn-plain btn-square {transactions.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/>
+          </div>
+        </div>
       </div>
       <div class="transactions-view">
-        <div class="transaction-search-bar">
-          <Input label="Buscar por ticket:" id="ticket-id-search" bind:value={ticketId} type="text" icon=""/>
-          <Input on:click={fetchByTicketId} label="" id="by-ticketId-button" type="button" className="button {ticketId != "" ? '' : 'disabled'}" icon="search"/>
-        </div>
-        <div class="transaction-options">
-          <div class="fetch-data-buttons">
-            <Input on:click={fetchByDayButton} label="Por Día" id="by-day-button" type="button" className="button" icon=""/>
-            <Input on:click={fetchByWeekButton} label="Por Semana" id="by-week-button" type="button" className="button" icon=""/>
-            <Input on:click={fetchByMonthButton} label="Por Mes" id="by-month-button" type="button" className="button" icon=""/>
-          </div>
-          <div class="date-range-input">
-            <Input label="Fecha Inicial" id="date-range-start" bind:value={dateRangeStart} type="date"/>
-            <Input label="Fecha Final" id="date-range-end" bind:value={dateRangeEnd} type="date"/> 
-          </div>
-          <div>
-            <Input on:click={fetchByDateRange} label="Buscar " id="by-range-button" type="button" className="button {dateRangeStart != "" && dateRangeEnd != "" ? '' : 'disabled'}" icon="search"/>
-          </div>
-        </div>
         {#if notFound}
           <div class="not-found">
             <h1>
@@ -377,14 +451,17 @@
                   <table class="table-content">
                     <thead>
                       <tr>
-                        <th>ID</th>
-                        <th>Total</th>
-                        <th>Estatus</th>
+                        <th>Fecha</th>
+                        <th>ID Transacción</th>
+                        <th>Cobro</th>
+                        <th>Comisión</th>
+                        <th>Dispersión</th>
                       </tr>
                     </thead>
                     <tbody>
                       {#each transactions as transaction}
                         <tr>
+                          <td>{transaction.date.toDate().getDate()} {getMonthName(transaction.date.toDate().getMonth())} {transaction.date.toDate().getFullYear()} - {transaction.date.toDate().toLocaleTimeString()}</td>
                           <td>
                             <Input
                               id='detailsTicket{transaction.id}'
@@ -394,11 +471,13 @@
                               label={transaction.id} type="button" className="text-button" icon=""/>
                           </td>
                           <td>{parseFloat(transaction.total).toLocaleString(localeParam.language, localeParam.currency)}</td>
-                          <td>{transaction.status}</td>
+                          <td>{parseFloat(transaction.commission).toLocaleString(localeParam.language, localeParam.currency)}</td>
+                          <td>{parseFloat(transaction.dispersion).toLocaleString(localeParam.language, localeParam.currency)}</td>
                         </tr>
                       {/each}
                         <tr>
-                          <td><b>Total Ventas</b></td>
+                          <td><b>Totales</b></td>
+                          <td></td>
                           <td>
                             {
                               transactions.reduce((prev, curr) => prev + parseInt(curr.total), 0)
@@ -410,48 +489,46 @@
                   </table>
                 </div>
               </div>
-              <div class="divider"> Exportar </div>
-                {#if transactions.length > 0}
-                  <div class="export-buttons">
-                    <Input on:click={exportDataToPDF} label="Exportar a PDF" id="pdf-export" type="button" className="button" icon=""/>
-                    <Input on:click={exportDataToExcel} label="Exportar a Excel" id="excel-export" type="button" className="button" icon=""/>
-                    <Input on:click={exportDataToCSV} label="Exportar a CSV" id="csv-export" type="button" className="button" icon=""/>
-                  </div>
-                {/if}
+              <!-- <div class="divider"> Exportar </div> -->
               {:else}
               <div class="transaction-details">
-                <div class="return">
-                  <Input on:click={() => (transactionDetailView = false)} label="Regresar" id="detailsReturnButton" type="button" className="button" icon=""/>
-                </div>
                 <div class="page-title">
                   <h2>Detalles de transacción</h2>
                 </div>
-                <table class="table-content">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Total</th>
-                      <th>Estatus</th>
-                      <th>Localización</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{selectedTransaction.id}</td>
-                      <td>{parseFloat(selectedTransaction.total).toLocaleString(localeParam.language, localeParam.currency)}</td>
-                      <td>{selectedTransaction.status}</td>
-                      <td>
-                        <a 
-                          target="_blank" rel="noopener noreferrer" 
-                          href={`https://www.google.com/maps/place/${selectedTransaction.location._lat}+${selectedTransaction.location._long}`}
-                        >
-                          Ver en Maps
-                        </a>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <Input on:click={reverseTransaction(selectedTransaction)} label="Reembolsar" id="csv-export" type="button" className="button" icon=""/>
+                <div class="table-container">
+                  <table class="table-content">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Total</th>
+                        <th>Estatus</th>
+                        <th>Localización</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>{selectedTransaction.id}</td>
+                        <td>{parseFloat(selectedTransaction.total).toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td>{selectedTransaction.status}</td>
+                        <td>
+                          <a 
+                            target="_blank" rel="noopener noreferrer" 
+                            href={`https://www.google.com/maps/place/${selectedTransaction.location._lat}+${selectedTransaction.location._long}`}
+                          >
+                            Ver en Maps
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="details-footer">
+                  <div class="details-buttons">
+                    <div class="reverse-button">
+                      <Input on:click={reverseTransaction(selectedTransaction)} label="Reembolsar" id="reverseTransaction" type="button" className="btn-plain" icon=""/>
+                    </div>
+                  </div>
+                </div>
                 <!-- <div>
                   <Map location={selectedTransaction.location}/>
                 </div> -->
@@ -477,6 +554,187 @@
     flex-direction: column;
     width: 100%;
   }
+  
+  .top {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+  }
+
+  .top__left .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .top__midle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .top__midle :has(p) {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 20px;
+    text-align: center;
+    /* Text */
+    color: #113A62;
+  }
+
+  .button-group {
+    /* Component 1 */
+    box-sizing: border-box;
+    /* Auto layout */
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 6px;
+    width: 134px;
+    height: 38px;
+    /* Nue Fill */
+    background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+    /* container effect */
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    border-radius: 10px;
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    border: 1px solid #FFFFFF
+  }
+
+  .button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 4px;
+    gap: 10px;
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    outline:none;
+    border: none;
+    cursor: pointer;
+
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 14px;
+    /* identical to box height */
+
+
+    /* text-placeholder */
+
+    color: #8C9FB1;
+
+
+    /* Inside auto layout */
+
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+  }
+
+  .button:first-child {
+    border-radius: 5px 0px 0px 5px;
+    border-right: none;
+  }
+  .button:last-child {
+    border-right: none;
+    border-radius: 0px 5px 5px 0px;
+  }
+
+  .button-active {
+    height: 22px;
+    background: linear-gradient(317.7deg, rgba(0, 0, 0, 0.2) 0%, rgba(255, 255, 255, 0.2) 105.18%), #007AFF;
+    background-blend-mode: soft-light, normal;
+    /* inner blue */
+    box-shadow: inset -5px -5px 8px rgba(56, 151, 255, 0.75), inset 5px 5px 7px rgba(29, 79, 133, 0.5);
+
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 14px;
+    /* identical to box height */
+    display: flex;
+    align-items: center;
+    color: #FFFFFF;
+    mix-blend-mode: normal;
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+  
+  }
+
+  .card-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: 24px;
+
+    width: 610px;
+    height: 88px;
+
+
+    /* Inside auto layout */
+
+    flex: none;
+    order: 2;
+    flex-grow: 0;
+  }
+
+  .card-group .card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    gap: 16px;
+    width: 166px;
+    height: 88px;
+    /* Nue Fill */
+    background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+    /* out */
+    box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
+    border-radius: 10px;
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+  }
+
+  .card-group .card :has(p) {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    text-align: center;
+    /* text-placeholder */
+    color: #8C9FB1;
+  }
+
+  .card-group .card :has(span) {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 20px;
+    text-align: center;
+    /* Text */
+    color: #113A62;
+  }
+
   .transaction-form {
     display: flex;
     margin: 2rem;
@@ -494,7 +752,8 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    margin: 1rem;
+    align-items: center;
+    gap: 1rem;
   }
 
   .transaction-options {
@@ -512,6 +771,7 @@
   .date-range-input {
     display: flex;
     flex-direction: row;
+    justify-content: center;
   }
 
   @media (max-width: 1060px) {
@@ -525,6 +785,8 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0rem;
   }
   .not-found {
     display: flex;
@@ -538,20 +800,68 @@
   }
 
   .table-container {
+    display: flex;
+    justify-content: center;
     width: 100%;
   }
 
   .table-content {
-    width: 100%;
+    /* width: 46.875rem; */
+    width: 70%;
     /* border-bottom: 1px solid; */
     border-collapse: collapse;
     padding: 1rem 1rem;
   }
-
-  .table-content th, .table-content td {
-    text-align: center;
-    border-bottom: 1px solid;
-    padding: .5rem .5rem;
+  
+  .table-content thead {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 18px;
+    text-align: left;
+    /* text-placeholder */
+    color: #8C9FB1;
+    height: 2.375rem;
   }
 
+  .table-content td {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 18px;
+    color: #000000;
+    text-align: center;
+    border-bottom: 1px solid #8C9FB1;
+    padding: .5rem .5rem;
+    text-align: left;
+  }
+
+  .modal-buttons{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .details-footer {
+    margin: 1rem 0rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .details-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .reverse-button {
+    display: flex;
+    width: 10rem;
+  }
 </style>

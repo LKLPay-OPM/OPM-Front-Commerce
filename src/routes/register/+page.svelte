@@ -37,6 +37,7 @@
     officeHours: "",
     monthlyAverage: "",
     total: 0,
+    totalCommissions: 0,
     toDeposit: 0,
     ratesDiscount: {
       amex: 0,
