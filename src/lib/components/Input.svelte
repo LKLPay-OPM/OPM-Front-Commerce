@@ -29,7 +29,7 @@
           {/if}
         </span>
     </label>
-    <input on:click {type} {placeholder} {id} {value} on:input={onInput} {accept}>
+    <input on:click {type} {placeholder} {id} {value} on:input={onInput} {accept} multiple>
 </div>
 
 <style>

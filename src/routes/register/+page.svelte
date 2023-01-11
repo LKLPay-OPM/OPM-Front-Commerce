@@ -6,6 +6,7 @@
     import { registerUser } from '$lib/hooks/auth.js'
     import Input from '$lib/components/Input.svelte';
     import Checkbox from '$lib/components/Checkbox.svelte';
+    import { Timestamp } from 'firebase/firestore';
     import Icons from '$lib/components/Icons.svelte';
     import Select from '$lib/components/Select.svelte';
     import RedirectHome from '$lib/components/RedirectHome.svelte';
@@ -19,6 +20,7 @@
     lastName: "",
     firstTimeUser: true,
     depositPreference: "weekly",
+    depositDate: Timestamp.now(),
     statusBankAccountInfo: "pending",
     curp: "",
     rfc: "",

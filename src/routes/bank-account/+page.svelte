@@ -17,7 +17,7 @@
 
   let bankAccountInfo = {
     clabe: "",
-    ine: "",
+    ine: [],
     bankStatement: "",
   }
 
@@ -64,7 +64,10 @@
 
   const handleCreateBankAccount = async() => {
     bankAccountInfo.uid = $loggedInUser.uid;
-    const ine = document.getElementById('form-ine').files[0]
+    let ine = document.getElementById('form-ine')
+    for(var i = 0; i < ine.files.length; i++){
+      bankAccountInfo.ine.push(ine.files[i])
+    }
     const bankStatement = document.getElementById('form-bank-statement').files[0]
     /* const ine = URL.createObjectURL(
       document.getElementById('form-ine').files[0]
@@ -76,7 +79,7 @@
     ) */
 
     bankAccountInfo.clabe = formCLABE;
-    bankAccountInfo.ine = ine;
+    // bankAccountInfo.ine = ine;
     bankAccountInfo.bankStatement = bankStatement;
     bankAccountInfo.ineType = ineType;
     bankAccountInfo.bankStatementType = bankStatementType;
