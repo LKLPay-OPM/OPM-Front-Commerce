@@ -399,8 +399,8 @@
             {/if}
           </div>
         </div>
-        <div class="top__midle">
-          <div>
+        <div class="top__middle">
+          <div class="date">
             <p>
               {date.getDate()} de {getMonthName(date.getMonth())} del {date.getFullYear()}
             </p>
@@ -440,9 +440,9 @@
       <div class="transactions-view">
         {#if notFound}
           <div class="not-found">
-            <h1>
+            <b>
               {notFoundMessage}
-            </h1>
+            </b>
           </div>
           {:else}
             {#if !transactionDetailView}
@@ -489,14 +489,85 @@
                   </table>
                 </div>
               </div>
-              <!-- <div class="divider"> Exportar </div> -->
               {:else}
               <div class="transaction-details">
-                <div class="page-title">
-                  <h2>Detalles de transacción</h2>
+                <div class="details__top">
+                  <b>Recibo #{selectedTransaction.id}</b>
+                  <p>
+                    {selectedTransaction.date.toDate().getDate()} de {getMonthName(selectedTransaction.date.toDate().getMonth())} del {selectedTransaction.date.toDate().getFullYear()} a las {selectedTransaction.date.toDate().toLocaleTimeString()}
+                  </p>
                 </div>
-                <div class="table-container">
-                  <table class="table-content">
+                <div class="details__middle">
+                  <div class="details-left">
+                    <div class="title">Datos</div>
+                    <div class="item">
+                      <b>Referencia</b>
+                      <p>{selectedTransaction.uuid}</p>
+                    </div>
+                    <div class="item">
+                      <b>TVR</b>
+                      <p>0000000000</p>
+                    </div>
+                    <div class="item">
+                      <b>AID</b>
+                      <p></p>
+                    </div>
+                    <div class="item">
+                      <b>TSI</b>
+                      <p></p>
+                    </div>
+                    <div class="item">
+                      <b>Tipo de Tarjeta</b>
+                      <p>MASTERCARD</p>
+                    </div>
+                  </div>
+                  <div class="details-center">
+                    <div class="details-card">
+                      <div class="details-card__top">
+                        <b>Detalle de Venta</b>
+                      </div>
+                      <div class="details-card__middle">
+                        <div class="item">
+                          <b>Tarjeta Utilizada</b>
+                          <p></p>
+                        </div>
+                        <div class="item">
+                          <b>Tipo de Tarjeta</b>
+                          <p></p>
+                        </div>
+                        <div class="item">
+                          <b>Total de la Venta</b>
+                          <p>{selectedTransaction.total.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                        </div>
+                      </div>
+                      <div class="details-card__bottom">
+                        <div class="item">
+                          <b>Comisión Lkl Pay</b>
+                          <p>{selectedTransaction.commission}</p>
+                          <span>{`(${(selectedTransaction.commission/selectedTransaction.total)*100})`}</span>
+                        </div>
+                        <div class="item">
+                          <b>Comisión por Operación</b>
+                          <p><!-- {`(${selectedTransaction.total})`} -->()</p>
+                          <span></span>
+                        </div>
+                        <div class="item">
+                          <b>Total a Dispersión</b>
+                          <p>{selectedTransaction.dispersion}</p>
+                          <span></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-buttons">
+                      <div class="reverse-button">
+                        <Input on:click={reverseTransaction(selectedTransaction)} label="Reembolsar" id="reverseTransaction" type="button" className="btn-plain" icon=""/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="details-right">
+
+                  </div>
+                  <!-- <table class="table-content">
                     <thead>
                       <tr>
                         <th>ID</th>
@@ -520,18 +591,8 @@
                         </td>
                       </tr>
                     </tbody>
-                  </table>
+                  </table> -->
                 </div>
-                <div class="details-footer">
-                  <div class="details-buttons">
-                    <div class="reverse-button">
-                      <Input on:click={reverseTransaction(selectedTransaction)} label="Reembolsar" id="reverseTransaction" type="button" className="btn-plain" icon=""/>
-                    </div>
-                  </div>
-                </div>
-                <!-- <div>
-                  <Map location={selectedTransaction.location}/>
-                </div> -->
               </div>
             {/if}
         {/if}
@@ -558,7 +619,7 @@
   .top {
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     margin-bottom: 2.5rem;
   }
 
@@ -568,7 +629,7 @@
     gap: 1rem;
   }
 
-  .top__midle {
+  .top__middle {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -576,11 +637,11 @@
     gap: 1rem;
   }
 
-  .top__midle :has(p) {
+  .top__middle .date p {
     font-style: normal;
     font-weight: 700;
-    font-size: 20px;
-    line-height: 20px;
+    font-size: 1.25rem;/* 20px */
+    line-height: 1.25rem;/* 20px */
     text-align: center;
     /* Text */
     color: #113A62;
@@ -715,7 +776,7 @@
     flex-grow: 0;
   }
 
-  .card-group .card :has(p) {
+  .card-group .card p {
     font-style: normal;
     font-weight: 700;
     font-size: 16px;
@@ -725,7 +786,7 @@
     color: #8C9FB1;
   }
 
-  .card-group .card :has(span) {
+  .card-group .card span {
     font-style: normal;
     font-weight: 700;
     font-size: 24px;
@@ -774,13 +835,6 @@
     justify-content: center;
   }
 
-  @media (max-width: 1060px) {
-    .fetch-data-buttons {
-      flex-direction: column;
-      transition: all 0.5s ease;
-    }
-  }
-
   .export-buttons {
     display: flex;
     flex-direction: row;
@@ -791,6 +845,15 @@
   .not-found {
     display: flex;
     justify-content: center;
+  }
+  .not-found b {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1.25rem;/* 20px */
+    line-height: 1.25rem;/* 20px */
+    text-align: center;
+    /* Text */
+    color: #113A62;
   }
   .transaction-tables {
     display: flex;
@@ -846,6 +909,148 @@
     gap: 1rem;
   }
 
+  .transaction-details {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .details__top {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .details__top b{
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.25rem;
+    color: #113A62;
+  }
+  .details__top p{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.25rem;
+    color: #8C9FB1;
+  }
+
+  .details__middle {
+    width: 100%;
+    display: flex;
+    gap: 2rem;
+    justify-content: space-evenly;
+  }
+
+  .details__middle .details-left .title {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.125rem;
+    color: #113A62;
+  }
+
+  .details__middle .details-left .item b {
+    font-style: normal;
+    font-weight: 500;
+    font-size: .8125rem;/* 13px */
+    line-height: .875rem;/* 14px */
+    color: #8C9FB1;
+  }
+  .details__middle .details-left .item p {
+    font-style: normal;
+    font-weight: 700;
+    font-size: .875rem;/* 14px */
+    line-height: .875rem;/* 14px */
+    color: #8C9FB1;
+  }
+
+  .details__middle .details-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;/* 16px */
+    gap: 2rem;/* 32px */
+    width: 26.75rem;/* 428px */
+    height: 13.125rem;/* 210px */
+    /* Fill Container */
+    background: #F3F3F3;
+    /* container effect */
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    border-radius: 10px;
+  }
+
+  .details__middle .details-center .details-card .details-card__top b{
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1.25rem;/* 20px */
+    line-height: 1.125rem;/* 18px */
+    color: #113A62;
+  }
+  .details__middle .details-center .details-card .details-card__middle{
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+  }
+  .details__middle .details-center .details-card .details-card__middle .item b{
+    font-style: normal;
+    font-weight: 500;
+    font-size: .8125rem;/* 13px */
+    line-height: 1.125rem;/* 18px */
+    color: #113A62;
+  }
+
+  .details__middle .details-center .details-card .details-card__middle .item p{
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1.25rem;/* 20px */
+    line-height: 1.125rem;/* 18px */
+    color: #113A62;
+  }
+  .details__middle .details-center .details-card .details-card__bottom{
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+  }
+  .details__middle .details-center .details-card .details-card__bottom .item b{
+    font-style: normal;
+    font-weight: 500;
+    font-size: .8125rem;/* 13px */
+    line-height: 1.125rem;/* 18px */
+    color: #8C9FB1;
+  }
+
+  .details__middle .details-center .details-card .details-card__bottom .item p{
+    font-style: normal;
+    font-weight: 700;
+    font-size: .875rem;/* 14px */
+    line-height: 1.125rem;/* 18px */
+    color: #113A62;
+    text-align: center;
+  }
+
+  .details__middle .details-center .details-card .details-card__bottom .item span{
+    display: flex; 
+    justify-content: center;
+    font-style: normal;
+    font-weight: 500;
+    font-size: .625rem;/* 10px */
+    line-height: .875rem;/* 14px */
+    color: #8C9FB1;
+  }
+
+  .details__middle .details-center .card-buttons {
+    width: 100%;
+    display: flex;
+    margin-top: 2rem;
+  }
+  .details__middle .details-center .card-buttons .reverse-button {
+    display: flex;
+    width: 10rem;
+  }
   .details-footer {
     margin: 1rem 0rem;
     width: 100%;
@@ -860,8 +1065,4 @@
     width: 100%;
   }
 
-  .reverse-button {
-    display: flex;
-    width: 10rem;
-  }
 </style>

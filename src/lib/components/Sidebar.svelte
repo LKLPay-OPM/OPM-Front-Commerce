@@ -15,8 +15,8 @@
   
     const sidebarOptions = () => {
       const optionList = [
-        {name: 'Inicio', path: '/home', icon: 'home-outline'},
-        {name: 'Mis Ventas', path: '/transactions', icon: 'bank-card-line'},
+        {name: 'Inicio', path: '/home', icon: 'home-fill'},
+        {name: 'Mis Ventas', path: '/transactions', icon: 'sales-fill'},
         {name: 'Cuenta Bancaria', path: '/bank-account', icon: 'bank-line'},
         {name: 'Créditos', path: '/credits', icon: 'bank-line'},
         {name: 'Nueva Venta', path: '/new-sale', icon: 'bank-card-line'},
@@ -101,5 +101,5 @@
   {/if} -->
   
 <style>
-
+  
 </style>
