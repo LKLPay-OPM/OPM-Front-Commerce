@@ -1,5 +1,5 @@
 <script>
-    import { isLoggedIn, loggedInUser } from '$lib/stores.js'
+    import { isLoggedIn, loggedInUser, linkSelected } from '$lib/stores.js'
     import { logout } from '$lib/hooks/auth.js'
     import logo from '$lib/assets/Logo.png';
     import noUser from '$lib/assets/no_user.png';
@@ -23,7 +23,7 @@
       ]
       return options = optionList;
     }
-  
+
     afterUpdate(async () => {
       if($isLoggedIn === true){
         sidebarOptions()
@@ -64,13 +64,17 @@
       </a>
       <ul class="nav-links">
         {#each options as option}
-        <li>
+        <li 
+          on:click={() => {
+            $linkSelected = option.name
+          }} 
+          on:keypress={(e) => e.key === 'Enter' ? $linkSelected = option.name : $linkSelected = $linkSelected} class="{$linkSelected === option.name ? "active-link_name" : ""}">
           <a href={option.path}>
-            <i>
+            <i class="{$linkSelected === option.name ? "active-link_name" : ""}">
               <Icons name={option.icon} width="24" height="24"/>
             </i>
             <!-- <i class='bx bx-grid-alt'></i> -->
-            <span class="link_name">{option.name}</span>
+            <span class="{$linkSelected === option.name ? "active-link_name" : "link_name"}">{option.name}</span>
           </a>
           <ul class="sub-menu blank">
             <li><a class="link_name" href={option.path}>{option.name}</a></li>

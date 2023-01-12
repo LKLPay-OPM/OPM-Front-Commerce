@@ -247,7 +247,7 @@
 <!-- MODAL FETCH BY DATE RANGE -->
 <Modal className={`modal-medium`} bind:this={modalDateFilter}>
   <div slot="header">
-    <h1>Por Fechas</h1>
+    <p>Por Fechas</p>
   </div>
   <div slot="content">
     <div class="date-range-input">

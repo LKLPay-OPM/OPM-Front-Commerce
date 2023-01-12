@@ -73,7 +73,7 @@
     <Input on:click={show(modalInfo)} label="Editar" id="editUserInfo" type="checkbox" className="modal-toggle" icon=""/>
   </div> -->
   <div slot="header">
-    <h1>Editar Información</h1>
+    <p>Editar Información</p>
   </div>
   <div slot="content">
     <p>
@@ -99,7 +99,7 @@
 <!-- MODAL UPDATE EMAIL -->
 <Modal bind:this={modalEmail}>
   <div slot="header">
-    <h1>Editar Correo</h1>
+    <p>Editar Correo</p>
   </div>
   <div slot="content">
     <p>
@@ -122,7 +122,7 @@
 <!-- MODAL UPDATE PASSWORD -->
 <Modal bind:this={modalPass}>
   <div slot="header">
-    <h1>Cambiar Contraseña</h1>
+    <p>Cambiar Contraseña</p>
   </div>
   <div slot="content">
     <p>
