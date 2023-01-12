@@ -184,7 +184,7 @@
 <!-- MODAL UPDATE BANK ACCOUNT INFO -->
 <Modal className={"modal-medium"} bind:this={modalBankInfo}>
   <div slot="header">
-    <h1>Modificar Cuenta de Banco</h1>
+    <p>Modificar Cuenta de Banco</p>
   </div>
   <div slot="content">
     <p>

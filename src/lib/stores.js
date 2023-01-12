@@ -30,6 +30,7 @@ export function booleanStore(initial) {
 	}
 }
 
+export const linkSelected = writable('Inicio');
 /* type NavigationState = "loading" | "loaded" | null;
 
 export default writable<NavigationState>(null); */

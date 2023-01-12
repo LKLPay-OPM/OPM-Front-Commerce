@@ -66,8 +66,22 @@ body {
 }
 .sidebar .nav-links li:hover{
   background: #113A62;
+  color: #8B9EB0;
+}
+.sidebar .active-link_name li:hover{
+  color: #8B9EB0;
 }
 .sidebar .nav-links li i{
+  height: 50px;
+  min-width: 4.875rem;/* 78px */
+  text-align: center;
+  line-height: 50px;
+  color: #8B9EB0;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.sidebar .nav-links li:hover i.active-link_name{
   height: 50px;
   min-width: 4.875rem;/* 78px */
   text-align: center;
@@ -89,7 +103,21 @@ body {
   color: #8B9EB0;
   transition: all 0.4s ease;
 }
+.sidebar .nav-links li a .active-link_name{
+  font-weight: 700;
+  color: #113A62;
+  transition: all 0.4s ease;
+}
+.sidebar .nav-links li:hover a .active-link_name{
+  font-weight: 700;
+  color: #8B9EB0;
+  transition: all 0.4s ease;
+}
 .sidebar.close .nav-links li a .link_name{
+  opacity: 0;
+  pointer-events: none;
+}
+.sidebar.close .nav-links li a span.active-link_name{
   opacity: 0;
   pointer-events: none;
 }

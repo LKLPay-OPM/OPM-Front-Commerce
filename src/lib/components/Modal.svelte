@@ -45,7 +45,6 @@
   * {
     box-sizing: border-box;
   }
-
   dialog {
     margin: auto;
     padding: 0;
@@ -81,11 +80,11 @@
     display: flex;
     justify-content: center;
     font-weight: 700;
-    font-size: 2rem;
-    line-height: 1.25;
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.25rem; /* 20px */
     display: flex;
     align-items: center;
-    color: #8B9EB0;
+    color: #113A62;
   }
   .content {
     max-height: 50vh;
