@@ -35,11 +35,6 @@
 </div>
 
 <style>
-
-  .onboarding-modal {
-    /* width: 800px; */
-  }
-
   .modal-medium {
     width: 30rem;
   }

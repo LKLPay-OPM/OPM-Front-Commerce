@@ -50,11 +50,9 @@
           <img src={logo} alt="Company Logo">
         </a>
       </div>
-      <div class="profile-details">
+      <a href="/profile" class="profile-details">
         <div class="profile-content">
-          <a href="/profile">
-            <img src="{$loggedInUser.avatar ? $loggedInUser.avatar : noUser}" alt="profileImg">
-          </a>
+          <img src="{$loggedInUser.avatar ? $loggedInUser.avatar : noUser}" alt="profileImg">
         </div>
         <div class="name-job">
           <div class="profile_name">{$loggedInUser?.name} {$loggedInUser?.lastName}</div>
@@ -63,7 +61,7 @@
         <!-- <i>
           <Icons name="logout-box-line" width="24" height="24"/>
         </i> -->
-      </div>
+      </a>
       <ul class="nav-links">
         {#each options as option}
         <li>
