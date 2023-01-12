@@ -50,7 +50,12 @@
           <img src={logo} alt="Company Logo">
         </a>
       </div>
-      <a href="/profile" class="profile-details">
+      <a on:click={() => {
+          $linkSelected = "Perfil"
+        }} 
+        on:keypress={(e) => e.key === 'Enter' ? $linkSelected = "Perfil" : $linkSelected = $linkSelected} 
+        href="/profile" class="profile-details"
+      >
         <div class="profile-content">
           <img src="{$loggedInUser.avatar ? $loggedInUser.avatar : noUser}" alt="profileImg">
         </div>
