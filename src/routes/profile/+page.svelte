@@ -212,7 +212,7 @@
   height: 150px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: #111;
+  background-color: #113A62;
 }
 .avatar img {
   height: 100%;

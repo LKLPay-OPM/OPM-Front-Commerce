@@ -20,7 +20,7 @@ body {
   top: 0;
   left: 0;
   height: 100%;
-  width: 240px;
+  width: 15rem;/* 240px */
   background: #F3F3F3;
   z-index: 100;
   transition: all 0.5s ease;
@@ -34,7 +34,7 @@ body {
 }
 .sidebar .logo-details i{
   height: 50px;
-  min-width: 78px;
+  min-width: 4.875rem;/* 78px */
   text-align: center;
   line-height: 50px;
   color: #8B9EB0;
@@ -65,11 +65,11 @@ body {
   transition: all 0.4s ease;
 }
 .sidebar .nav-links li:hover{
-  background: #1d1b31;
+  background: #113A62;
 }
 .sidebar .nav-links li i{
   height: 50px;
-  min-width: 78px;
+  min-width: 4.875rem;/* 78px */
   text-align: center;
   line-height: 50px;
   color: #8B9EB0;
@@ -96,7 +96,7 @@ body {
 .sidebar .nav-links li .sub-menu{
   padding: 6px 6px 14px 80px;
   margin-top: -10px;
-  background: #1d1b31;
+  background: #113A62;
   display: none;
 }
 .sidebar .nav-links li.showMenu .sub-menu{
@@ -151,8 +151,6 @@ body {
   transform: translateY(-50%);
 }
 .sidebar .profile-details{
-  /* position: fixed; */
-  /* bottom: 0; */
   width: 13.75rem;/* 220px */
   display: flex;
   align-items: center;
@@ -162,12 +160,13 @@ body {
   overflow: hidden;
   box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
   border-radius: 6px;
+  text-decoration: none;
 }
 .sidebar.close .profile-details{
   background: none;
 }
 .sidebar.close .profile-details{
-  width: 78px;
+  width: 4.875rem;/* 78px */
 }
 .sidebar .profile-details .profile-content{
   display: flex;
