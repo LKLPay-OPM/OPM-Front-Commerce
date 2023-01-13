@@ -2,6 +2,7 @@
   import { isLoggedIn, loggedInUser } from '$lib/stores';
   import { updateUserBankAccountInfo, updateUserInfo } from '$lib/hooks/updates.js'
   import { fetchRates } from '$lib/hooks/rates.js'
+  import { Timestamp } from 'firebase/firestore';
   import Input from '$lib/components/Input.svelte';
   import Modal from '$lib/components/Modal.svelte';
   import Radio from '$lib/components/Radio.svelte';
@@ -25,6 +26,7 @@
   let files = [];
   let modalBankInfo, modalUrgentDeposit;
   let depositValue = $loggedInUser.depositPreference;
+  let multiple = true;
 
   let rates;
   let rateLklPay, rateNatural, ratesBusinessType, rateUrgentDispersion;
@@ -97,6 +99,7 @@
     let data = {};
     data.uid = $loggedInUser.uid;
     data.depositPreference = depositValue;
+    data.depositDateReference = Timestamp.now();
     try {
       await updateUserInfo(data);
     } catch (error) {
@@ -191,7 +194,7 @@
       A continuación, ingresa los datos solicitados
     </p>
     <Input label="CLABE:" id="form-clabe" bind:value={formCLABE} type="text" className="txt-field normal"/>
-    <Input label="INE:" id="form-ine" bind:value={formINE} className="" type="file" accept="image/*,.pdf"/>
+    <Input label="INE:" id="form-ine" bind:value={formINE} className="" type="file" accept="image/*,.pdf" multiple/>
     <Input label="Estado de Cuenta:" id="form-bank-statement" bind:value={formBankStatement} className="" type="file" accept="image/*,.pdf"/>
   </div>
   <div class="modal-buttons" slot="footer">
@@ -280,7 +283,10 @@
     <div class="data-row">
       <b>INE: </b>
       {#if $loggedInUser.bankAccountInfo?.ine}
-        <a href={$loggedInUser.bankAccountInfo?.ine} target="_blank" rel="noopener noreferrer">Ver Documento</a>
+        <a href={$loggedInUser.bankAccountInfo?.ine[0]} target="_blank" rel="noopener noreferrer">Ver Documento</a>
+        {#if $loggedInUser.bankAccountInfo?.ine.length > 1}
+          <a href={$loggedInUser.bankAccountInfo?.ine[1]} target="_blank" rel="noopener noreferrer">Ver Documento</a>
+        {/if}
       {/if}
     </div>
     <div class="data-row">

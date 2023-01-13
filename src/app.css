@@ -15,6 +15,7 @@ body {
   /* position: relative; */
 }
 
+/* Sidebar */
 .sidebar {
   position: fixed;
   top: 0;
@@ -72,22 +73,32 @@ body {
   color: #8B9EB0;
 }
 .sidebar .nav-links li i{
-  height: 50px;
+  height: 3.125rem;/* 50px */
   min-width: 4.875rem;/* 78px */
   text-align: center;
-  line-height: 50px;
+  line-height: 3.75rem;/* 60px */
   color: #8B9EB0;
-  font-size: 20px;
+  font-size: 1.25rem;/* 20px */
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.sidebar .nav-links li:hover i{
+  height: 3.125rem;/* 50px */
+  min-width: 4.875rem;/* 78px */
+  text-align: center;
+  line-height: 3.125rem;/* 50px */
+  color: #8B9EB0;
+  font-size: 1.25rem;/* 20px */
   cursor: pointer;
   transition: all 0.3s ease;
 }
 .sidebar .nav-links li:hover i.active-link_name{
-  height: 50px;
+  height: 3.125rem;/* 50px */
   min-width: 4.875rem;/* 78px */
   text-align: center;
-  line-height: 50px;
+  line-height: 3.125rem;/* 50px */
   color: #8B9EB0;
-  font-size: 20px;
+  font-size: 1.25rem;/* 20px */
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -103,13 +114,22 @@ body {
   color: #8B9EB0;
   transition: all 0.4s ease;
 }
+.sidebar .nav-links li:hover a .link_name{
+  font-weight: 700;
+  font-size: 1rem;/* 16px */
+  line-height: 1.25rem;/* 20px */
+  color: #8B9EB0;
+  transition: all 0.4s ease;
+}
 .sidebar .nav-links li a .active-link_name{
   font-weight: 700;
+  font-size: .8125rem;/* 13px */
   color: #113A62;
   transition: all 0.4s ease;
 }
 .sidebar .nav-links li:hover a .active-link_name{
   font-weight: 700;
+  font-size: 1rem;/* 16px */
   color: #8B9EB0;
   transition: all 0.4s ease;
 }

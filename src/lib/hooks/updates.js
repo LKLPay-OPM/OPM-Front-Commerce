@@ -136,33 +136,54 @@ const updateUserBankAccountDocument = async(bankAccountInfo) => {
 
 export const updateUserBankAccountInfo = async(bankAccountInfo) => {
   const uid = bankAccountInfo.uid;
-  const ine = bankAccountInfo.ine;
+  const ineOne = bankAccountInfo.ine[0];
+  const ineTwo = bankAccountInfo.ine[1];
+  console.log(ineOne)
   const ineType = bankAccountInfo.ineType;
   const bankStatement = bankAccountInfo.bankStatement;
   const bankStatementType = bankAccountInfo.bankStatementType;
   const storage = getStorage();
-  const storageRefINE = ref(storage, `bank-account/${uid}/ine.${docType(ineType)}`);
+  const storageRefINEOne = ref(storage, `bank-account/${uid}/ine_1.${docType(ineType)}`);
+  const storageRefINETwo = ref(storage, `bank-account/${uid}/ine_2.${docType(ineType)}`);
   const storageRefBankStatement = ref(storage, `bank-account/${uid}/bank-statement.${docType(bankStatementType)}`);
   
   /*  */
   try {
-    uploadBytes(storageRefINE, ine, { contentType: ineType }).then((snapshot) => {
-      // console.log(snapshot)
-      getDownloadURL(snapshot.ref).then((downloadURL) => {
-        bankAccountInfo.ine = downloadURL;
-        // console.log('File available at', downloadURL);
-        // console.log(bankAccountInfo.ine)
-        uploadBytes(storageRefBankStatement, bankStatement, { contentType: bankStatementType }).then((snap) => {
-          getDownloadURL(snap.ref).then((downloadURL) => {
-            bankAccountInfo.bankStatement = downloadURL;
-            // console.log('File available at', downloadURL);
-            // console.log(bankAccountInfo.bankStatement)
-            // console.log(bankAccountInfo)
-            updateUserBankAccountDocument(bankAccountInfo)
+    if(bankAccountInfo.ine.length > 1){
+      uploadBytes(storageRefINEOne, ineOne, { contentType: ineType }).then((snapshot) => {
+        getDownloadURL(snapshot.ref).then((downloadURL) => {
+          bankAccountInfo.ine[0] = downloadURL;
+          // console.log('File available at', downloadURL);
+          uploadBytes(storageRefINETwo, ineTwo, { contentType: ineType }).then((snap) => {
+            getDownloadURL(snap.ref).then((downloadURL) => {
+              bankAccountInfo.ine[1] = downloadURL;
+              // console.log('File available at', downloadURL);
+              uploadBytes(storageRefBankStatement, bankStatement, { contentType: bankStatementType }).then((snap) => {
+                getDownloadURL(snap.ref).then((downloadURL) => {
+                  bankAccountInfo.bankStatement = downloadURL;
+                  // console.log('File available at', downloadURL);
+                  updateUserBankAccountDocument(bankAccountInfo)
+                });
+              });
+            });
           });
         });
       });
-    });
+    }else{
+      uploadBytes(storageRefINEOne, ineOne, { contentType: ineType }).then((snapshot) => {
+        getDownloadURL(snapshot.ref).then((downloadURL) => {
+          bankAccountInfo.ine[0] = downloadURL;
+          // console.log('File available at', downloadURL);
+          uploadBytes(storageRefBankStatement, bankStatement, { contentType: bankStatementType }).then((snap) => {
+            getDownloadURL(snap.ref).then((downloadURL) => {
+              bankAccountInfo.bankStatement = downloadURL;
+              // console.log('File available at', downloadURL);
+              updateUserBankAccountDocument(bankAccountInfo)
+            });
+          });
+        });
+      });
+    }
     delete bankAccountInfo.ineType;
     delete bankAccountInfo.bankStatementType;
     // console.log(ineURL)
