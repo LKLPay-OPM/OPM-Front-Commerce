@@ -9,6 +9,7 @@
     export let className = "";
 		export let icon = "";
     export let title = "";
+    export let multiple = false;
     
     const onInput = e => {
       if(isNaN(e.target.value)){
@@ -29,7 +30,7 @@
           {/if}
         </span>
     </label>
-    <input on:click {type} {placeholder} {id} {value} on:input={onInput} {accept} multiple>
+    <input on:click {type} {placeholder} {id} {value} on:input={onInput} {accept} {multiple}>
 </div>
 
 <style>

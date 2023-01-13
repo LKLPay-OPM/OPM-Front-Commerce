@@ -20,7 +20,7 @@
     lastName: "",
     firstTimeUser: true,
     depositPreference: "weekly",
-    depositDate: Timestamp.now(),
+    depositDateReference: Timestamp.now(),
     statusBankAccountInfo: "pending",
     curp: "",
     rfc: "",
