@@ -14,6 +14,7 @@
     import SuccessLogo from '$lib/components/Success.svelte';
     import ErrorLogo from '$lib/components/Error.svelte';
   let registerData = {
+    uid: "",
     email: "",
     password: "",
     name: "",
@@ -53,7 +54,39 @@
   let emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   let passPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/
 
-  const handleRegister = async () => {
+  $: {
+    console.log(registerData.email)
+  } 
+
+  const makeId = (length) => {
+    var result           = '';
+    var characters       = '0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+
+  const stringSum = (string) => {
+    let sum = string;
+    while(sum >= 10){
+      sum = sum.toString()
+      .split('')
+      .map(x => parseInt(x))
+      .reduce((x,y) => x + y)
+    }
+    return sum;
+  }
+
+  const handleRegister = async() => {
+    const id = makeId(7)
+    let sum = stringSum(id)
+    // registerData.uid = id+sum;
+    // console.log(registerData.uid)
+    // console.log(registerData.uid.split('', 7)) //Gets the first 7 chars of string
+    // console.log(registerData.uid.slice(-1)) //Gets the last char of string
+
     const response = await registerUser(registerData.email, registerData.password, registerData)
     .then(() => {
       menu = "success"

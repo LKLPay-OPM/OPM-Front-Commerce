@@ -43,9 +43,9 @@ export const login = async(email, password) => {
     await signInWithEmailAndPassword(auth, email, password)
     .then( async (userCredential) => {
       // Signed in
-      if(browser){
+      /* if(browser){
         goto("/home");
-      }
+      } */
       const user = userCredential.user;
       const id = user.uid;
       fetchUserData(id)
