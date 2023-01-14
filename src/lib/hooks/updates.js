@@ -138,7 +138,7 @@ export const updateUserBankAccountInfo = async(bankAccountInfo) => {
   const uid = bankAccountInfo.uid;
   const ineOne = bankAccountInfo.ine[0];
   const ineTwo = bankAccountInfo.ine[1];
-  console.log(ineOne)
+  // console.log(ineOne)
   const ineType = bankAccountInfo.ineType;
   const bankStatement = bankAccountInfo.bankStatement;
   const bankStatementType = bankAccountInfo.bankStatementType;

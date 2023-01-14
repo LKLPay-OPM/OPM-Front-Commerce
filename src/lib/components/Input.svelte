@@ -1,36 +1,40 @@
 <script>
 	import Icons from '$lib/components/Icons.svelte';
-    export let label = "";
-    export let type = "";
-    export let id = "";
-    export let placeholder = "";
-    export let value = "";
-    export let accept = "";
-    export let className = "";
-		export let icon = "";
-    export let title = "";
-    export let multiple = false;
-    
-    const onInput = e => {
+  export let label = "";
+  export let type = "";
+  export let id = "";
+  export let placeholder = "";
+  export let value = "";
+  export let accept = "";
+  export let className = "";
+  export let icon = "";
+  export let title = "";
+  export let multiple = false;
+  
+  const onInput = e => {
+    if(type != "number"){
+      value = e.target.value
+    }else{
       if(isNaN(e.target.value)){
         value = e.target.value
       }else {
         // value = parseFloat(e.target.value).round(2)
         value = Math.round((e.target.value) * 100) / 100
       }
-    };
+    }
+  };
 </script>
 
 <div class={`${className}`}>
-    <label title={title} class="label" for={id}>
-        <span class="label-text">
-          {label}
-          {#if icon != ""}
-            <Icons name={icon} width="24" height="24"/>
-          {/if}
-        </span>
-    </label>
-    <input on:click {type} {placeholder} {id} {value} on:input={onInput} {accept} {multiple}>
+  <label title={title} class="label" for={id}>
+      <span class="label-text">
+        {label}
+        {#if icon != ""}
+          <Icons name={icon} width="24" height="24"/>
+        {/if}
+      </span>
+  </label>
+  <input on:click {type} {placeholder} {id} {value} on:input={onInput} {accept} {multiple}>
 </div>
 
 <style>
