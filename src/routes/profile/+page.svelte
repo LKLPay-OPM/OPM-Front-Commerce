@@ -10,7 +10,8 @@
   let userData = {
     uid: $loggedInUser?.uid || "",
     name: $loggedInUser?.name || "",
-    lastName: $loggedInUser?.lastName || "",
+    firstLastName: $loggedInUser?.firstLastName || "",
+    secondLastName: $loggedInUser?.secondLastName || "",
     businessName: $loggedInUser?.businessName || "",
     businessAddress: $loggedInUser?.businessAddress || "",
     email: $loggedInUser?.email || "",
@@ -80,7 +81,7 @@
       A continuación, ingresa los datos solicitados
     </p>
     <Input label="Nombre: " id="editNametextField" bind:value={userData.name} type="text" className="texField" icon=""/>
-    <Input label="Apellido(s): " id="editLastNameTextField" bind:value={userData.lastName} type="text" className="texField" icon=""/>
+    <Input label="Apellido(s): " id="editLastNameTextField" bind:value={userData.firstLastName} type="text" className="texField" icon=""/>
     <Input label="Nombre del Negocio: " id="editBusinessNameTextField" bind:value={userData.businessName} type="text" className="texField" icon=""/>
     <Input label="Dirección: " id="editBusinessAddressTextField" bind:value={userData.businessAddress} type="text" className="texField" icon=""/>
   </div>
@@ -89,7 +90,7 @@
     <Input on:click={closeModal(modalInfo)} on:click={() => handleChangeUserInfo()} label="Guardar" id="buttonSaveModalInfo" type="button" 
       className="button {
         userData.name != "" && 
-        userData.lastName != "" && 
+        userData.firstLastName != "" && 
         userData.businessName != "" && 
         userData.businessAddress != "" ? '' : 'disabled'}" 
       icon=""/>
@@ -164,7 +165,7 @@
         </div>
       </div>
       <div class="user-name">
-        {$loggedInUser.name} {$loggedInUser.lastName}  
+        {$loggedInUser.name} {$loggedInUser.firstLastName}  
       </div>
     </div>
     <div class="display-user-info">

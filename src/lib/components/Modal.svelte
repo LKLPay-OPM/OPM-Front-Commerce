@@ -69,7 +69,7 @@
 
   .content-wrapper {
     z-index: 10;
-    max-width: 70vw;
+    /* max-width: 70vw; */
     border-radius: 0.3rem;
     background-color: white;
     overflow: hidden;

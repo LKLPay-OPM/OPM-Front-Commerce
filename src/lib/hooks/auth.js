@@ -1,5 +1,5 @@
 import { auth, db } from "$lib/firebase";
-import { loggedInUser, isLoggedIn, userId} from '$lib/stores.js'
+import { loggedInUser, isLoggedIn, userId, linkSelected} from '$lib/stores.js'
 import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { redirect } from '@sveltejs/kit';
 import { goto } from "$app/navigation";
@@ -68,6 +68,7 @@ export const logout = async() => {
     // Sign-out successful.
     //loggedInUser.set({})
     //goto('/')
+    linkSelected.set('Inicio')
     if(browser){
       goto("/");
       // window.location.href = '/';

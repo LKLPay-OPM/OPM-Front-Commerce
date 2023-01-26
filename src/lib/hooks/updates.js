@@ -1,5 +1,5 @@
 import { auth, db } from "$lib/firebase";
-import { loggedInUser } from '$lib/stores.js'
+import { loggedInUser, onboardingSuccess } from '$lib/stores.js'
 import { doc, setDoc, getDoc, updateDoc, increment } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -33,7 +33,7 @@ export const updateTransactionStatus = async(transactionData) => {
     } catch (error) {
       throw new Error(error)
     }
-    alert("Estatus de transacción pendiente de reembolso")
+    // alert("Estatus de transacción pendiente de reembolso")
   } catch (error) {
     console.log("Could not update document")
     throw new Error(error);
@@ -53,15 +53,16 @@ export const updateUserInfo = async(userInfo) => {
     try {
           const user = docSnap.data()
           console.log({user})
+          onboardingSuccess.set(true);
           loggedInUser.set(user);
           //sessionStorage.setItem("userData", user);
         } catch (error) {
           throw new Error(error);
         }
     }
-    alert("Se modificó el documento exitosamente")
+    // alert("Se modificó el documento exitosamente")
   } catch (error) {
-    alert("No se pudo modificar el documento")
+    // alert("No se pudo modificar el documento")
     // console.log("Could not update document")
     throw new Error(error);
   }
@@ -105,87 +106,24 @@ export const updateUserAvatar = async(data) => {
   }
 }
 
-const updateUserBankAccountDocument = async(bankAccountInfo) => {
-  const uid = bankAccountInfo.uid;
-  try {
-    // Try to create/update user bankAccountInfo in DB
-    await updateDoc(doc(db, "users-client", uid), {
-      statusBankAccountInfo: 'delivered',
-      bankAccountInfo
-    })
-    // Retrieve logged in user data from db
-    const docRef = doc(db, "users-client", uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-    try {
-          const user = docSnap.data()
-          console.log({user})
-          loggedInUser.set(user);
-          //sessionStorage.setItem("userData", user);
-        } catch (error) {
-          throw new Error(error);
-        }
-    }
-    // console.log(bankAccountInfo)
-    alert("Se modificó el documento exitosamente")
-  } catch (error) {
-    console.log("Could not update document")
-    throw new Error(error);
-  }
-}
-
-export const updateUserBankAccountInfo = async(bankAccountInfo) => {
-  const uid = bankAccountInfo.uid;
-  const ineOne = bankAccountInfo.ine[0];
-  const ineTwo = bankAccountInfo.ine[1];
-  // console.log(ineOne)
-  const ineType = bankAccountInfo.ineType;
-  const bankStatement = bankAccountInfo.bankStatement;
-  const bankStatementType = bankAccountInfo.bankStatementType;
+export const updateUserBankAccountInfo = async(data) => {
+  const uid = data.uid;
+  const bankStatement = data.bankAccountInfo.bankStatement;
+  const bankStatementType = data.bankAccountInfo.bankStatementType;
+  delete data.bankAccountInfo.bankStatementType;
   const storage = getStorage();
-  const storageRefINEOne = ref(storage, `bank-account/${uid}/ine_1.${docType(ineType)}`);
-  const storageRefINETwo = ref(storage, `bank-account/${uid}/ine_2.${docType(ineType)}`);
   const storageRefBankStatement = ref(storage, `bank-account/${uid}/bank-statement.${docType(bankStatementType)}`);
   
   /*  */
   try {
-    if(bankAccountInfo.ine.length > 1){
-      uploadBytes(storageRefINEOne, ineOne, { contentType: ineType }).then((snapshot) => {
-        getDownloadURL(snapshot.ref).then((downloadURL) => {
-          bankAccountInfo.ine[0] = downloadURL;
-          // console.log('File available at', downloadURL);
-          uploadBytes(storageRefINETwo, ineTwo, { contentType: ineType }).then((snap) => {
-            getDownloadURL(snap.ref).then((downloadURL) => {
-              bankAccountInfo.ine[1] = downloadURL;
-              // console.log('File available at', downloadURL);
-              uploadBytes(storageRefBankStatement, bankStatement, { contentType: bankStatementType }).then((snap) => {
-                getDownloadURL(snap.ref).then((downloadURL) => {
-                  bankAccountInfo.bankStatement = downloadURL;
-                  // console.log('File available at', downloadURL);
-                  updateUserBankAccountDocument(bankAccountInfo)
-                });
-              });
-            });
-          });
-        });
+    uploadBytes(storageRefBankStatement, bankStatement, { contentType: bankStatementType }).then((snap) => {
+      getDownloadURL(snap.ref).then((downloadURL) => {
+        data.bankAccountInfo.bankStatement = downloadURL;
+        data.statusBankAccountInfo = "delivered"
+        // console.log('File available at', downloadURL);
+        updateUserInfo(data)
       });
-    }else{
-      uploadBytes(storageRefINEOne, ineOne, { contentType: ineType }).then((snapshot) => {
-        getDownloadURL(snapshot.ref).then((downloadURL) => {
-          bankAccountInfo.ine[0] = downloadURL;
-          // console.log('File available at', downloadURL);
-          uploadBytes(storageRefBankStatement, bankStatement, { contentType: bankStatementType }).then((snap) => {
-            getDownloadURL(snap.ref).then((downloadURL) => {
-              bankAccountInfo.bankStatement = downloadURL;
-              // console.log('File available at', downloadURL);
-              updateUserBankAccountDocument(bankAccountInfo)
-            });
-          });
-        });
-      });
-    }
-    delete bankAccountInfo.ineType;
-    delete bankAccountInfo.bankStatementType;
+    });
     // console.log(ineURL)
     // console.log(bankStatementURL)
 
@@ -195,4 +133,62 @@ export const updateUserBankAccountInfo = async(bankAccountInfo) => {
   }
   // console.log(bankAccountInfo)
   // updateUserBankAccountDocument(bankAccountInfo)
+}
+
+export const updateUserIne = async(data) => {
+  if(data.bankAccountInfo.ineFront != "" && data.bankAccountInfo.ineBack != ""){
+    const uid = data.uid;
+    const ineFront = data.bankAccountInfo.ineFront;
+    const ineBack = data.bankAccountInfo.ineBack;
+    // console.log(ineOne)
+    const ineFrontType = data.bankAccountInfo.ineFrontType;
+    const ineBackType = data.bankAccountInfo.ineBackType;
+    delete data.bankAccountInfo.ineFrontType;
+    delete data.bankAccountInfo.ineBackType;
+    const storage = getStorage();
+    const storageRefINEFront = ref(storage, `bank-account/${uid}/ine_front.${docType(ineFrontType)}`);
+    const storageRefINEBack = ref(storage, `bank-account/${uid}/ine_back.${docType(ineBackType)}`);
+    
+    /*  */
+    try {
+      uploadBytes(storageRefINEFront, ineFront, { contentType: ineFrontType }).then((snapshot) => {
+        getDownloadURL(snapshot.ref).then((downloadURL) => {
+          data.bankAccountInfo.ineFront = downloadURL;
+          // console.log('File available at', downloadURL);
+          uploadBytes(storageRefINEBack, ineBack, { contentType: ineBackType }).then((snap) => {
+            getDownloadURL(snap.ref).then((downloadURL) => {
+              data.bankAccountInfo.ineBack = downloadURL;
+              if(data.bankAccountInfo.bankStatement != ""){
+                try {
+                  // console.log(data)
+                  updateUserBankAccountInfo(data)
+                } catch (error) {
+                  throw new Error(error)
+                }
+              }else{
+                data.bankAccountInfo.bankStatement = "";
+                try {
+                  updateUserInfo(data);
+                } catch (error) {
+                  throw new Error(error)
+                }
+              }
+            });
+          });
+        });
+      });
+  
+    } catch (error) {
+      console.log("Could not update document")
+      throw new Error(error);
+    }
+    // console.log(bankAccountInfo)
+    // updateUserBankAccountDocument(bankAccountInfo)
+  }else{
+    try {
+      updateUserInfo(data);
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
 }

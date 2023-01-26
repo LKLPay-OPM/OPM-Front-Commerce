@@ -1,7 +1,7 @@
 <script>
   import { isLoggedIn, loggedInUser } from '$lib/stores';
-  import { updateUserBankAccountInfo, updateUserInfo } from '$lib/hooks/updates.js'
-  import { fetchRates } from '$lib/hooks/rates.js'
+  import { updateUserBankAccountInfo, updateUserInfo, updateUserIne} from '$lib/hooks/updates.js'
+  import { fetchRates } from '$lib/hooks/rates.js';
   import { Timestamp } from 'firebase/firestore';
   import Input from '$lib/components/Input.svelte';
   import Modal from '$lib/components/Modal.svelte';
@@ -16,13 +16,16 @@
     }
   }
 
+  let userData = {};
+
   let bankAccountInfo = {
     clabe: "",
-    ine: [],
+    ineFront: "",
+    ineBack: "",
     bankStatement: "",
   }
 
-  let formINE = "", formCLABE = "", formBankStatement = "";
+  let formINEFront = "", formINEBack = "", formCLABE = "", formBankStatement = "";
   let files = [];
   let modalBankInfo, modalUrgentDeposit;
   let depositValue = $loggedInUser.depositPreference;
@@ -65,32 +68,39 @@
   }
 
   const handleCreateBankAccount = async() => {
-    bankAccountInfo.uid = $loggedInUser.uid;
-    let ine = document.getElementById('form-ine')
-    for(var i = 0; i < ine.files.length; i++){
-      bankAccountInfo.ine.push(ine.files[i])
-    }
+    userData.uid = $loggedInUser.uid;
+    const ineFront = document.getElementById('buttonIneFront').files[0]
+    const ineBack = document.getElementById('buttonIneBack').files[0]
     const bankStatement = document.getElementById('form-bank-statement').files[0]
     /* const ine = URL.createObjectURL(
       document.getElementById('form-ine').files[0]
     ) */
-    const ineType = document.getElementById('form-ine').files[0].type;
+    const ineFrontType = document.getElementById('buttonIneFront').files[0].type;
+    const ineBackType = document.getElementById('buttonIneBack').files[0].type;
     const bankStatementType = document.getElementById('form-bank-statement').files[0].type;
+
     /* const bankStatement = URL.createObjectURL(
       document.getElementById('form-bank-statement').files[0]
-    ) */
+      ) */
+      
+      bankAccountInfo.clabe = formCLABE;
+      // bankAccountInfo.ine = ine;
+      bankAccountInfo.ineFront = ineFront;
+      bankAccountInfo.ineFrontType = ineFrontType;
+      bankAccountInfo.ineBack = ineBack;
+      bankAccountInfo.ineBackType = ineBackType;
+      bankAccountInfo.bankStatement = bankStatement;
+      bankAccountInfo.bankStatementType = bankStatementType;
 
-    bankAccountInfo.clabe = formCLABE;
-    // bankAccountInfo.ine = ine;
-    bankAccountInfo.bankStatement = bankStatement;
-    bankAccountInfo.ineType = ineType;
-    bankAccountInfo.bankStatementType = bankStatementType;
+      userData.bankAccountInfo = bankAccountInfo;
 
 
-    formINE = "", formCLABE = "", formBankStatement = "";
+    formINEFront = "", formINEBack = "", formCLABE = "", formBankStatement = "";
     // bankDataDelivered.update(() => true)
 
-    await updateUserBankAccountInfo(bankAccountInfo)
+    // console.log(userData)
+    await updateUserIne(userData)
+    // await updateUserBankAccountInfo(bankAccountInfo)
     // bankAccountData.set(bankAccountInfo)
     // console.log(bankAccountInfo)
   }
@@ -194,8 +204,19 @@
       A continuación, ingresa los datos solicitados
     </p>
     <Input label="CLABE:" id="form-clabe" bind:value={formCLABE} type="text" className="txt-field normal"/>
-    <Input label="INE:" id="form-ine" bind:value={formINE} className="" type="file" accept="image/*,.pdf" multiple/>
-    <Input label="Estado de Cuenta:" id="form-bank-statement" bind:value={formBankStatement} className="" type="file" accept="image/*,.pdf"/>
+    <div class="modal-row">
+      <div class="row-title">INE</div>
+      <div class="buttons">
+        <Input label="Frente" id="buttonIneFront" bind:value={formINEFront} className="{formINEFront != "" ? "btn-success" : "btn-plain"}"  type="file" accept="image/*,.pdf"/>
+        <Input label="Vuelta" id="buttonIneBack" bind:value={formINEBack} className="{formINEBack != "" ? "btn-success" : "btn-plain"}" type="file" accept="image/*,.pdf"/>
+      </div>
+    </div>
+    <div class="modal-row">
+      <div class="row-title">Estado de Cuenta</div>
+      <div class="buttons">
+        <Input label="Estado de Cuenta" id="form-bank-statement" bind:value={formBankStatement} className="{formBankStatement != "" ? "btn-success" : "btn-plain"}" type="file" accept="image/*,.pdf"/>
+      </div>
+    </div>
   </div>
   <div class="modal-buttons" slot="footer">
     <Input on:click={closeModal(modalBankInfo)} label="Cerrar" id="buttonCloseModalBankInfo" type="button" className="btn" icon=""/>
@@ -208,7 +229,8 @@
       className={` 
         ${
           formCLABE != "" &&
-          formINE != "" && 
+          formINEFront != "" && 
+          formINEBack != "" && 
           formBankStatement != "" ?
           "btn" : "btn-disabled"
         }`
@@ -282,11 +304,9 @@
     </div>
     <div class="data-row">
       <b>INE: </b>
-      {#if $loggedInUser.bankAccountInfo?.ine}
-        <a href={$loggedInUser.bankAccountInfo?.ine[0]} target="_blank" rel="noopener noreferrer">Ver Documento</a>
-        {#if $loggedInUser.bankAccountInfo?.ine.length > 1}
-          <a href={$loggedInUser.bankAccountInfo?.ine[1]} target="_blank" rel="noopener noreferrer">Ver Documento</a>
-        {/if}
+      {#if $loggedInUser.bankAccountInfo?.ineFront}
+      <a href={$loggedInUser.bankAccountInfo?.ineFront} target="_blank" rel="noopener noreferrer">INE Frente</a>
+      <a href={$loggedInUser.bankAccountInfo?.ineBack} target="_blank" rel="noopener noreferrer">INE Vuelta</a>
       {/if}
     </div>
     <div class="data-row">
@@ -357,5 +377,29 @@
   gap: 1rem;
   display: flex;
   flex-direction: row;
+}
+
+.modal-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-row .row-title {
+  font-size: .8125rem;
+  font-weight: 700;
+  line-height: 1.25rem;
+  color: #8B9EB0;
+  text-align: center;
+  margin-top: 1rem;
+}
+.modal-row .buttons {
+  display: inherit;
+  width: 90%;
+  height: 2.5rem;/* 40px */
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 </style>
