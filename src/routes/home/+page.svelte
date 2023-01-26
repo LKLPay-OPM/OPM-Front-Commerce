@@ -1,5 +1,5 @@
 <script>
-	import { isLoggedIn, loggedInUser } from '$lib/stores';
+	import { isLoggedIn, loggedInUser, onboardingSuccess } from '$lib/stores';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import Loader from '$lib/components/Loader.svelte'
@@ -25,7 +25,9 @@
 
 
 {#if $isLoggedIn === true}
-	{#if $loggedInUser.firstTimeUser == true}
+	{#if 
+		$loggedInUser.firstTimeUser == true || $onboardingSuccess == true
+	}
 		<Onboarding/>
 		{:else}
 		<div class="content">

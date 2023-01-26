@@ -18,7 +18,8 @@
     email: "",
     password: "",
     name: "",
-    lastName: "",
+    firstLastName: "",
+    secondLastName: "",
     firstTimeUser: true,
     depositPreference: "weekly",
     depositDateReference: Timestamp.now(),
@@ -54,10 +55,6 @@
   let emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   let passPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/
 
-  $: {
-    console.log(registerData.email)
-  } 
-
   const makeId = (length) => {
     var result           = '';
     var characters       = '0123456789';
@@ -82,6 +79,10 @@
   const handleRegister = async() => {
     const id = makeId(7)
     let sum = stringSum(id)
+    const uid = id+sum;
+    console.log("ID: ",id)
+    console.log("Validador: ", sum)
+    console.log("User ID: ", uid)
     // registerData.uid = id+sum;
     // console.log(registerData.uid)
     // console.log(registerData.uid.split('', 7)) //Gets the first 7 chars of string

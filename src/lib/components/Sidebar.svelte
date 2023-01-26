@@ -1,5 +1,5 @@
 <script>
-    import { isLoggedIn, loggedInUser, linkSelected } from '$lib/stores.js'
+    import { isLoggedIn, loggedInUser, linkSelected,sidebar } from '$lib/stores.js'
     import { logout } from '$lib/hooks/auth.js'
     import logo from '$lib/assets/Logo.png';
     import noUser from '$lib/assets/no_user.png';
@@ -17,6 +17,7 @@
       const optionList = [
         {name: 'Inicio', path: '/home', icon: 'home-fill'},
         {name: 'Mis Ventas', path: '/transactions', icon: 'sales-fill'},
+        {name: 'Depósitos', path: '/dispersions', icon: 'sales-fill'},
         {name: 'Cuenta Bancaria', path: '/bank-account', icon: 'bank-line'},
         {name: 'Créditos', path: '/credits', icon: 'bank-line'},
         {name: 'Nueva Venta', path: '/new-sale', icon: 'bank-card-line'},
@@ -32,17 +33,17 @@
       }
       });
 
-      let sidebar = true;
+      // let sidebar = true;
   </script>
   
-  <div class="sidebar {sidebar ? '' : 'close'}">
+  <div class="sidebar {$sidebar ? '' : 'close'}">
     <div class="sidebar-start">
       <div class="logo-details">
         <!-- <i class='bx bxl-c-plus-plus'></i> -->
         <!-- <span class="logo_name">Lkl Pay</span> -->
         <i 
-          on:click={() => sidebar = !sidebar}
-          on:keydown={() => sidebar = !sidebar}
+          on:click={() => $sidebar = !$sidebar}
+          on:keydown={() => $sidebar = !$sidebar}
         >
           <Icons name="menu-lines" width="24" height="24"/>
         </i>
@@ -60,7 +61,7 @@
           <img src="{$loggedInUser.avatar ? $loggedInUser.avatar : noUser}" alt="profileImg">
         </div>
         <div class="name-job">
-          <div class="profile_name">{$loggedInUser?.name} {$loggedInUser?.lastName}</div>
+          <div class="profile_name">{$loggedInUser?.name || ""} {$loggedInUser?.firstLastName || ""}</div>
           <div class="job">{$loggedInUser?.businessName ? $loggedInUser?.businessName : ""}</div>
         </div>
         <!-- <i>

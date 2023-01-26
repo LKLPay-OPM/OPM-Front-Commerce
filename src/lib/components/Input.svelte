@@ -10,6 +10,7 @@
   export let icon = "";
   export let title = "";
   export let multiple = false;
+  export let disabled = false;
   
   const onInput = e => {
     if(type != "number"){
@@ -34,7 +35,7 @@
         {/if}
       </span>
   </label>
-  <input on:click {type} {placeholder} {id} {value} on:input={onInput} {accept} {multiple}>
+  <input on:click {type} {placeholder} {id} {value} on:input={onInput} {accept} {multiple} {disabled}>
 </div>
 
 <style>
@@ -53,11 +54,11 @@
     box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0;
     /* border: none; */
     border-radius: 4px;
-    padding-left: 1.25rem;
+    padding-left: 1.25rem;/* 20px */
     /* TEXT */
     font-weight: 500;
-    font-size: 1rem;
-    line-height: 1.125rem;
+    font-size: .8125rem;/* 13px */
+    line-height: 1.125rem;/* 18px */
     display: flex;
     align-items: center;
     justify-content: left;
@@ -65,6 +66,70 @@
   }
 
   .txt-field input::placeholder{
+    font-weight: 500;
+    font-size: .8125rem;/* 13px */
+    line-height: 1.125rem;/* 18px */
+    color: #D9D9D9;
+  }
+  .disabled-txt-field label {
+    margin-top: 1rem;
+    font-size: .8125rem;
+    font-weight: 700;
+    line-height: 1.25rem;
+    color: #8B9EB0;
+  }
+  .disabled-txt-field input {
+    width: 100%;
+    height: 3.125rem;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    padding-left: 1.25rem;
+    /* TEXT */
+    font-weight: 500;
+    font-size: 1.25rem;/* 20px */
+    line-height: 1.125rem;/* 18px */
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    color: #113A62;
+  }
+
+  .disabled-txt-field input::placeholder{
+    font-weight: 500;
+    font-size: .8125rem;/* 13px */
+    line-height: 1.125rem;/* 18px */
+    color: #D9D9D9;
+  }
+  .txt-field-slim label {
+    margin-top: 1rem;
+    font-size: .8125rem;
+    font-weight: 700;
+    line-height: 1.25rem;
+    color: #8B9EB0;
+  }
+  .txt-field-slim input {
+    width: 100%;
+    height: 2.125rem;
+    background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+    box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0;
+    /* border: none; */
+    border-radius: 4px;
+    padding-left: 1.25rem;
+    /* TEXT */
+    font-weight: 500;
+    font-size: .8125rem;/* 13px */
+    line-height: 1.125rem;/* 18px */
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    color: #113A62;
+  }
+
+  .txt-field-slim input::placeholder{
+    font-weight: 500;
+    font-size: .8125rem;/* 13px */
+    line-height: 1.125rem;/* 18px */
     color: #D9D9D9;
   }
 
@@ -124,7 +189,8 @@
     justify-content: center;
     border: none;
     display: flex;
-    height: 2.5rem;
+    /* height: 2.5rem; */
+    height: 100%;
     width: 100%;
     background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
     box-shadow: -5px -5px 8px #F2F4F8, 5px 5px 7px rgba(174, 174, 192, 0.5);
@@ -165,6 +231,34 @@
     border: none;
     display: flex;
     height: 3.375rem;
+    background: linear-gradient(270deg, #00C48C 0%, #50FFD5 100%);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    border-radius: .625rem;
+  }
+
+  .btn-success label {
+    width: 100%;
+    cursor: pointer;
+    /* TEXT */
+    font-weight: 800;
+    font-size: 1.3125;
+    line-height: 1.25rem;
+    text-align: center;
+    justify-content: center;
+    letter-spacing: -0.4px;
+    color: #FFFFFF;
+  }
+
+  .btn-success input {
+    display: none;
+  }
+  div.btn-success {
+    width: 100%;
+    height: 100%;
+    align-content: center;
+    justify-content: center;
+    border: none;
+    display: flex;
     background: linear-gradient(270deg, #00C48C 0%, #50FFD5 100%);
     box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: .625rem;

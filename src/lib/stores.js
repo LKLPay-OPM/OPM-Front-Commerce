@@ -31,6 +31,8 @@ export function booleanStore(initial) {
 }
 
 export const linkSelected = writable('Inicio');
+export const sidebar = writable(true);
+export const onboardingSuccess = writable(false);
 /* type NavigationState = "loading" | "loaded" | null;
 
 export default writable<NavigationState>(null); */
