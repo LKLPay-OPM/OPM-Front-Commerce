@@ -43,6 +43,7 @@
     total: 0,
     totalCommissions: 0,
     toDeposit: 0,
+    dispersions: [],
     ratesDiscount: {
       amex: 0,
       credit: 0,

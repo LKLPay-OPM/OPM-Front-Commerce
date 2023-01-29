@@ -20,7 +20,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 6px;
+    padding: .625rem;/* 10px */
     /* Nue Fill */
     background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
     /* container effect */
@@ -28,7 +28,6 @@
     border-radius: 10px;
     /* Inside auto layout */
     flex: none;
-    order: 1;
     flex-grow: 0;
     border: 1px solid #FFFFFF
   }
@@ -38,8 +37,8 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 4px;
-    gap: 10px;
+    padding: .5rem;/* 8px */
+    gap: .625rem;/* 10px */
     /* Inside auto layout */
     flex: none;
     order: 0;
@@ -71,7 +70,7 @@
   }
 
   .button-active {
-    height: 22px;
+    height: 100%;
     background: linear-gradient(317.7deg, rgba(0, 0, 0, 0.2) 0%, rgba(255, 255, 255, 0.2) 105.18%), #007AFF;
     background-blend-mode: soft-light, normal;
     /* inner blue */

@@ -5,11 +5,14 @@
 	export let value = "";
 	export let index = 0;
 	export let classList = "";
+	export let selectedItem = "";
 
 	export let defaultText = "";
 	export let optionsList = [];
 
 	$: {
+		// console.log(optionsList)
+		// console.log(value)
 		if(optionsList[index].value){
 			value = optionsList[index].value
 			// console.log(value)
@@ -26,7 +29,7 @@
 	<select class={index >= 0 ? "option" : "default"} {placeholder} bind:value={index} {id}>
 		<!-- <option class="default" value={0} selected disabled>{label}</option> -->
 		{#each optionsList as item, i}
-				<option class="option" value={i}>{item.name}</option>
+				<option selected={item.name === selectedItem} class="option" value={i}>{item.name}</option>
 		{/each}
 	</select>
 </div>
