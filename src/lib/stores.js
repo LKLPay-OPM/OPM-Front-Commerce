@@ -29,9 +29,14 @@ export function booleanStore(initial) {
 		toggle: () => update((n) => !n),
 	}
 }
-
-export const linkSelected = writable('Inicio');
-export const sidebar = writable(true);
+export const linkSelected = writable(browser && sessionStorage.getItem("selectedTab") || "Inicio");
+linkSelected.subscribe(
+	(val) => browser && (sessionStorage.selectedTab = val)
+)
+export const sidebar = writable(browser && (JSON.parse(sessionStorage.getItem("sidebarState"))));
+sidebar.subscribe(
+	(val) => browser && (sessionStorage.sidebarState = val)
+)
 export const onboardingSuccess = writable(false);
 /* type NavigationState = "loading" | "loaded" | null;
 

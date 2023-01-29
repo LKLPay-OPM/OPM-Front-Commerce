@@ -287,7 +287,7 @@
     <div class="data-row">
       <b>Pendiente de Depósito: </b> 
       <p>
-        {$loggedInUser?.toDeposit.toLocaleString(localeParam.language, localeParam.currency) || ""}
+        {$loggedInUser.toDeposit?.toLocaleString(localeParam.language, localeParam.currency) || ""}
       </p>
       <Input
         id='triggerModalUrgentDeposit'
@@ -316,7 +316,7 @@
       {/if}
     </div>
     <div class="data-row">
-      <b>Estado: </b> {bankAccountDataStatus($loggedInUser?.statusBankAccountInfo)}
+      <b>Estado: </b> {$loggedInUser.statusBankAccountInfo ? bankAccountDataStatus($loggedInUser?.statusBankAccountInfo) : ""}
     </div>
     <div class="footer">
       <Input on:click={showModal(modalBankInfo)} label="Editar" id="edit-bankAccount-info" type="checkbox" className="btn" icon=""/>

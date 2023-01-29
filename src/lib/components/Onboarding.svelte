@@ -76,7 +76,7 @@
 
 	let businessLineOptions = [
     {value: "travelAgency", name: "Agencias de Viajes"},
-    {value: "aggregators", name: "Agregadoras"},
+    // {value: "aggregators", name: "Agregadoras"},
     {value: "insurers", name:"Aseguradoras"},
     {value: "charity", name:"Beneficencia"},
     {value: "collegeAndUniversities", name:"Colegios y Universidades"},
@@ -170,7 +170,7 @@
       userData.bankAccountInfo.ineBackType = ineBackType;
     }
     if(userData.accountType === "1"){
-      userData.businessLine = "basic"
+      userData.businessLine = "aggregators"
     }
     // console.log(userData)
     await updateUserIne(userData)
@@ -185,7 +185,7 @@
         rfc: "",
         accountType: "",
         businessName: "",
-        businessLine: "basic",
+        businessLine: "aggregators",
         businessAddress: "",
         outsideNumber: "",
         insideNumber: "",
@@ -306,7 +306,7 @@
                 <Input placeholder="Ejemplo de Nombre" label="Nombre (s)" id="businessName" bind:value={userData.name} className="txt-field-slim normal" type="text"/>
                 <div class="row">
                   <div class="element">
-                    <Input placeholder="Apellido" label="Primer Apellido" id="firstLastNameName" bind:value={userData.firstLastName} className="txt-field-slim normal" type="text"/>
+                    <Input placeholder="Apellido" label="Primer Apellido" id="firstLastName" bind:value={userData.firstLastName} className="txt-field-slim normal" type="text"/>
                   </div>
                   <div class="element">
                     <Input placeholder="Apellido" label="Segundo Apellido" id="secondLastName" bind:value={userData.secondLastName} className="txt-field-slim normal" type="text"/>
@@ -398,7 +398,9 @@
               </div>
               <div class="inputs">
                 <div class="row">
-                  <Input placeholder="ASDF1234567T1" label="RFC" id="rfc" bind:value={userData.rfc} className="txt-field normal" type="text"/>
+                  {#if userData.accountType != "1"}
+                    <Input placeholder="ASDF1234567T1" label="RFC" id="rfc" bind:value={userData.rfc} className="txt-field normal" type="text"/>
+                  {/if}
                   <Input placeholder="014320605732769900" label="CLABE" id="businessCLABE" bind:value={userData.bankAccountInfo.clabe} className="txt-field normal" type="text"/>
                 </div>
                 <div class="row-title">

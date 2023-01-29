@@ -581,7 +581,7 @@
                   <tr>
                     <th>Fecha</th>
                     <th>ID Transacción</th>
-                    <th>Totasl Cobrado</th>
+                    <th>Total Cobrado</th>
                     <th>Comisión</th>
                     <th>Saldo a Depositar</th>
                     <th>

@@ -48,7 +48,7 @@
     color: #8B9EB0;
   }
   .txt-field input {
-    width: 100%;
+    width: -webkit-fill-available;
     height: 3.125rem;
     background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
     box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0;
@@ -79,15 +79,16 @@
     color: #8B9EB0;
   }
   .disabled-txt-field input {
-    width: 100%;
-    height: 3.125rem;
     background: transparent;
     border: none;
+    outline: none;
+    width: -webkit-fill-available;
+    height: 100%;
     border-radius: 4px;
-    padding-left: 1.25rem;
+    /* padding-left: 1.25rem; */
     /* TEXT */
     font-weight: 500;
-    font-size: 1.25rem;/* 20px */
+    font-size: 1rem;/* 16px */
     line-height: 1.125rem;/* 18px */
     display: flex;
     align-items: center;
@@ -109,8 +110,9 @@
     color: #8B9EB0;
   }
   .txt-field-slim input {
-    width: 100%;
-    height: 2.125rem;
+    width: -webkit-fill-available;
+    min-height: 2.125rem;/* 34px */
+    height: 2.125rem;/* 34px */
     background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
     box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0;
     /* border: none; */
@@ -192,6 +194,7 @@
     /* height: 2.5rem; */
     height: 100%;
     width: 100%;
+    max-width: 20rem;
     background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
     box-shadow: -5px -5px 8px #F2F4F8, 5px 5px 7px rgba(174, 174, 192, 0.5);
     border-radius: 5px;
