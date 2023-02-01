@@ -1,5 +1,5 @@
 <script>
-    import { isLoggedIn, loggedInUser, linkSelected,sidebar } from '$lib/stores.js'
+    import { isLoggedIn, loggedInUser, linkSelected, sidebar } from '$lib/stores.js'
     import { logout } from '$lib/hooks/auth.js'
     import logo from '$lib/assets/Logo.png';
     import noUser from '$lib/assets/no_user.png';
@@ -18,11 +18,27 @@
         {name: 'Inicio', path: '/home', icon: 'home-fill'},
         {name: 'Mis Ventas', path: '/transactions', icon: 'sales-fill'},
         {name: 'Depósitos', path: '/dispersions', icon: 'sales-fill'},
+        {name: 'Depósito Urgente', path: '/urgent-dispersion', icon: 'sales-fill'},
         {name: 'Cuenta Bancaria', path: '/bank-account', icon: 'bank-line'},
         {name: 'Créditos', path: '/credits', icon: 'bank-line'},
         {name: 'Nueva Venta', path: '/new-sale', icon: 'bank-card-line'},
       ]
-      return options = optionList;
+
+      const optionListBusiness = [
+        {name: 'Inicio', path: '/home', icon: 'home-fill'},
+        {name: 'Mis Ventas', path: '/transactions', icon: 'sales-fill'},
+        {name: 'Depósitos', path: '/dispersions', icon: 'sales-fill'},
+        {name: 'Depósito Urgente', path: '/urgent-dispersion', icon: 'sales-fill'},
+        {name: 'Cuenta Bancaria', path: '/bank-account', icon: 'bank-line'},
+        {name: 'Sucursales', path: '/branch-office', icon: 'bank-line'},
+        {name: 'Créditos', path: '/credits', icon: 'bank-line'},
+        {name: 'Nueva Venta', path: '/new-sale', icon: 'bank-card-line'},
+      ]
+      if($loggedInUser.accountType === "3"){
+        return options = optionListBusiness;
+      }else{
+        return options = optionList;
+      }
     }
 
     afterUpdate(async () => {
@@ -91,6 +107,22 @@
     </div>
     <div class="sidebar-bottom">
       <ul class="nav-links">
+        <li
+          on:click={() => {
+            $linkSelected = "Ayuda"
+          }}
+          on:keypress={(e) => e.key === 'Enter' ? $linkSelected = "Perfil" : $linkSelected = $linkSelected}
+        >
+          <a href="/home#help">
+            <i class="{$linkSelected === "Ayuda" ? "active-link_name" : ""}">
+              <Icons name="help" width="24" height="24"/>
+            </i>
+            <span class="{$linkSelected === "Ayuda" ? "active-link_name" : "link_name"}">Ayuda</span>
+          </a>
+          <ul class="sub-menu blank">
+            <li><a class="link_name" href="/home#help">Ayuda</a></li>
+          </ul>
+        </li>
         <li>
           <a href="/" on:click={logout}>
             <i>

@@ -1,5 +1,5 @@
 <script>
-  import { isLoggedIn, loggedInUser, redirectBankProfile } from '$lib/stores';
+  import { isLoggedIn, loggedInUser, redirectUrgentDispersions } from '$lib/stores';
   import Loader from '$lib/components/Loader.svelte';
   import { updateUserBankAccountInfo, updateUserInfo, updateUserIne} from '$lib/hooks/updates.js'
   import { fetchRates } from '$lib/hooks/rates.js';
@@ -188,8 +188,8 @@
   }
 
   onMount(() => {
-    $redirectBankProfile = true;
-    goto('/profile');
+    $redirectUrgentDispersions = true;
+    goto('/dispersions');
     /* fetchDBRates();
     if($loggedInUser?.statusBankAccountInfo === 'pending'){
       showModal(modalBankInfo)

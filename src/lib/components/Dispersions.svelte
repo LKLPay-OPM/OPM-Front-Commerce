@@ -11,7 +11,7 @@
     endAt,
   } from 'firebase/firestore';
   import { db } from "$lib/firebase";
-  import { loggedInUser } from '$lib/stores';
+  import { loggedInUser, redirectUrgentDispersions } from '$lib/stores';
   import Input from '$lib/components/Input.svelte';
   import IconInput from '$lib/components/IconInput.svelte';
   import Modal from '$lib/components/Modal.svelte';
@@ -40,11 +40,25 @@
   let active = "day";
   let terms = false;
 
-  let dateRangeStart, dateRangeEnd, ticketId, modalDateFilter, modalClarification, modalImmediateDeposit;
+  let dateRangeStart, dateRangeEnd, ticketId, modalDateFilter, modalClarification, modalDetailClarification, modalImmediateDeposit;
   let pdfData, print = true;
   let rates;
   /* let rateLklPay, rateNatural, ratesBusinessType, rateUrgentDispersion = 0;
   let urgentDepositQty = 0; */
+
+  selectedDispersion = {
+    date: Timestamp.now(),
+    id: "123",
+    total: 13115.00,
+    dispersion: 12548.50,
+    commission: 532.50,
+    afterDispersion: 0,
+    type: 1,
+    reference: 6326701,
+    tracking: "IACH2GJ05YW9MV",
+    clabe: "646-180-1737-4237822-7",
+    transactions: 37
+  }
 
   let clarificationsList = [
     {name: "Opción 1", value: "option1"},
@@ -54,6 +68,10 @@
   ]
 
   let clarification = {
+    type: "",
+    description: "",
+  }
+  let detailClarification = {
     type: "",
     description: "",
   }
@@ -111,7 +129,7 @@
   const fetchByDayButton = async() => {
     active = "day";
     dispersionDetailView = false;
-    selectedDispersion = {};
+    // selectedDispersion = {};
     loading = true;
     dispersions = [...$loggedInUser.dispersions];
     if(dispersions.length <= 0){
@@ -146,7 +164,7 @@
   const fetchByWeekButton = async() => {
     active = "week";
     dispersionDetailView = false;
-    selectedDispersion = {};
+    // selectedDispersion = {};
     loading = true;
     dispersions = [...$loggedInUser.dispersions];
     if(dispersions.length <= 0){
@@ -183,7 +201,7 @@
   const fetchByMonthButton = async() => {
     active = "month";
     dispersionDetailView = false;
-    selectedDispersion = {};
+    // selectedDispersion = {};
     loading = true;
     dispersions = [...$loggedInUser.dispersions];
     if(dispersions.length <= 0){
@@ -222,7 +240,7 @@
   const fetchByDateRange = async() => {
     active = "range";
     dispersionDetailView = false;
-    selectedDispersion = {};
+    // selectedDispersion = {};
     loading = true;
     dispersions = [...$loggedInUser.dispersions];
     if(dispersions.length <= 0){
@@ -261,7 +279,7 @@
   const fetchByTicketId = async() => {
     active = "ticket"
     dispersionDetailView = false;
-    selectedDispersion = {};
+    // selectedDispersion = {};
     loading = true;
     dispersions = [...$loggedInUser.dispersions];
     if(dispersions.length <= 0){
@@ -369,6 +387,15 @@
     {value: "month", name: "Mes", click: fetchByMonthButton},
   ]
 
+  const depositTypeName = (id) => {
+    const types = {
+      1: {value: "Mismo Día"},
+      2: {value: "Día Siguiente"}
+    }
+    // console.log(id)
+    return types[id].value
+  }
+
   const showModal = (option) => {
     option.show();
   }
@@ -380,6 +407,10 @@
   onMount(async () => {
     await fetchDBRates()
     await fetchByDayButton()
+    if($redirectUrgentDispersions === true){
+      $redirectUrgentDispersions = false;
+      showModal(modalImmediateDeposit)
+    }
     /* .then(async() => {
     }).catch(err => {
       console.log(err);
@@ -395,58 +426,70 @@
   </div>
   <div slot="content">
     <div class="immediate-deposit">
-      <div class="row-element">
-        <!-- <p>{immediateDeposit.availableBalance.toLocaleString(localeParam.language, localeParam.currency)}</p> -->
-        <IconInput icon="dollar" label="Saldo Disponible" id="availableAmountTxtField" value={immediateDeposit.availableBalance} disabled={true} className="disabled-txt-field" type="number"/>
-        <IconInput icon="dollar" label="Monto Solicitado" placeholder="Monto Solicitado" id="requestedAmountTxtField" bind:value={immediateDeposit.immediateDepositQty} className="txt-field normal" type="number"/>
-      </div>
-      <div class="column-element">
-        <div class="blue-title">
-          <p>Comisión por disposición inmediata</p>
+      {#if immediateDeposit.availableBalance < 500}
+        <div>
+          <p>Para Solicitar un depósito Urgente es necesario que tu saldo a depositar sea al menos del mínimo por solicitud ($500) además de haber agregado la documentación necesaria en la sección de <b>Perfil</b></p>
         </div>
-        <div class="content">
-          <p>{immediateDeposit.immediateDepositCommission} %</p>
+        {:else}
+        <div class="row-element">
+          <!-- <p>{immediateDeposit.availableBalance.toLocaleString(localeParam.language, localeParam.currency)}</p> -->
+          <IconInput icon="dollar" label="Saldo Disponible" id="availableAmountTxtField" value={immediateDeposit.availableBalance} disabled={true} className="disabled-txt-field" type="number"/>
+          <IconInput icon="dollar" label="Monto Solicitado" placeholder="Monto Solicitado" id="requestedAmountTxtField" bind:value={immediateDeposit.immediateDepositQty} className="txt-field normal" type="number"/>
         </div>
-      </div>
-      <div class="column-element">
-        <div class="gray-title">
-          <p>Monto a Depositar</p>
+        <div class="column-element">
+          <div class="blue-title">
+            <p>Comisión por disposición inmediata</p>
+          </div>
+          <div class="content">
+            <p>{immediateDeposit.immediateDepositCommission} %</p>
+          </div>
         </div>
-        <div class="content">
-          <p>{getPercentage(immediateDeposit.immediateDepositQty,immediateDeposit.immediateDepositCommission).toLocaleString(localeParam.language, localeParam.currency)}</p>
+        <div class="column-element">
+          <div class="gray-title">
+            <p>Monto a Depositar</p>
+          </div>
+          <div class="content">
+            <p>{getPercentage(immediateDeposit.immediateDepositQty,immediateDeposit.immediateDepositCommission).toLocaleString(localeParam.language, localeParam.currency)}</p>
+          </div>
         </div>
-      </div>
-      <div class="terms">
-        <div class="terms-checkbox">
-          <Checkbox bind:checked={terms}/>
+        <div class="terms">
+          <div class="terms-checkbox">
+            <Checkbox bind:checked={terms}/>
+          </div>
+          <p>
+            He Leído, entendido y acepto los <br>
+            <a href="/register#terms">Términos y Condiciones Generales</a> de Lkl Pay, <br>
+            así como su <a href="/register#privacy">Política de Privacidad</a> y, por lo tanto <br>
+            estoy de acuerdo en el uso y procesamiento de <br>
+            datos personales.
+          </p>
         </div>
-        <p>
-          He Leído, entendido y acepto los <br>
-          <a href="/register#terms">Términos y Condiciones Generales</a> de Lkl Pay, <br>
-          así como su <a href="/register#privacy">Política de Privacidad</a> y, por lo tanto <br>
-          estoy de acuerdo en el uso y procesamiento de <br>
-          datos personales.
-        </p>
-      </div>
+      {/if}
     </div>
   </div>
   <div class="modal-buttons" slot="footer">
     <Input on:click={closeModal(modalImmediateDeposit)} label="Cerrar" id="buttonCloseModalImmediateDeposit" type="button" className="btn-plain" icon=""/>
-    <Input 
-      on:click={closeModal(modalImmediateDeposit)} 
-      on:click={() => handleImmediateDeposit()}
-      label="Solicitar Depósito" 
-      id="buttonSaveModalImmediateDeposit" 
-      type="button" 
-      className={`btn-plain
-        ${
-          immediateDeposit.immediateDepositQty > 0 &&
-          terms === true
-          ? "" : "disabled"
-        }`
-      } 
-      icon=""
-    />
+    {#if immediateDeposit.availableBalance > 500 && 
+      $loggedInUser.bankAccountInfo.ineFront != "" && 
+      $loggedInUser.bankAccountInfo.ineBack != "" &&
+      $loggedInUser.bankAccountInfo.clabe != ""
+    }  
+      <Input 
+        on:click={closeModal(modalImmediateDeposit)} 
+        on:click={() => handleImmediateDeposit()}
+        label="Solicitar Depósito" 
+        id="buttonSaveModalImmediateDeposit" 
+        type="button" 
+        className={`btn-plain
+          ${
+            immediateDeposit.immediateDepositQty > 0 && immediateDeposit.immediateDepositQty > 500 &&
+            terms === true
+            ? "" : "disabled"
+          }`
+        } 
+        icon=""
+      />
+    {/if}
   </div>
 </Modal>
 
@@ -474,6 +517,37 @@
       className={`btn-plain
         ${
           clarification.description != "" 
+          ? "" : "disabled"
+        }`
+      } 
+      icon=""
+    />
+  </div>
+</Modal>
+<!-- MODAL DISPERSION DETAIL CLARIFICATION -->
+<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalDetailClarification}>
+  <div slot="header">
+    <p>Solicitar Aclaración</p>
+  </div>
+  <div slot="content">
+    <div class="clarifications-select">
+      <Select bind:optionsList={clarificationsList} defaultText={"Elige una opción"} label="Tipo de Aclaración" id="clarificationDetailType" bind:value={detailClarification.type}/>
+    </div>
+    <div class="clarification-description">
+      <TextArea bind:value={detailClarification.description} label="Descripción" placeholder="¿Qué problema hay con esta transacción?" id="clarificationDetailDescription" name="clarificationDescription"/>
+    </div>
+  </div>
+  <div class="modal-buttons" slot="footer">
+    <Input on:click={closeModal(modalDetailClarification)} label="Cerrar" id="buttonCloseModalDetailClarification" type="button" className="btn-plain" icon=""/>
+    <Input 
+      on:click={closeModal(modalDetailClarification)} 
+      on:click={() => handleClarification()} 
+      label="Enviar Aclaración" 
+      id="buttonSaveModalDetailClarification" 
+      type="button" 
+      className={`btn-plain
+        ${
+          detailClarification.description != "" 
           ? "" : "disabled"
         }`
       } 
@@ -592,7 +666,10 @@
                 </thead>
                 <tbody>
                   {#each dispersions as dispersion}
-                    <tr>
+                    <tr class="clickable-table-row"
+                      on:click={() => (dispersionDetailView = true)}
+                      on:keypress={(e) => e.key === 'Enter' ? dispersionDetailView = true : ""} 
+                    >
                       <td>{dispersion.date.toDate().getDate()} {getMonthName(dispersion.date.toDate().getMonth())} {dispersion.date.toDate().getFullYear()} - {dispersion.date.toDate().toLocaleTimeString()}</td>
                       <!-- <td>
                         <Input
@@ -628,66 +705,58 @@
               <div class="details-left">
                 <div class="title">Datos</div>
                 <div class="item">
+                  <b>Tipo de Depósito</b>
+                  <p>{depositTypeName(selectedDispersion.type)}</p>
+                </div>
+                <div class="item">
                   <b>Referencia</b>
-                  <p>{selectedDispersion.uuid}</p>
+                  <p>{selectedDispersion.reference}</p>
                 </div>
                 <div class="item">
-                  <b>TVR</b>
-                  <p>0000000000</p>
-                </div>
-                <div class="item">
-                  <b>AID</b>
-                  <p></p>
-                </div>
-                <div class="item">
-                  <b>TSI</b>
-                  <p></p>
-                </div>
-                <div class="item">
-                  <b>Tipo de Tarjeta</b>
-                  <p>MASTERCARD</p>
+                  <b>Rastreo</b>
+                  <p>{selectedDispersion.tracking}</p>
                 </div>
               </div>
               <div class="details-center">
                 <div class="details-card">
                   <div class="details-card__top">
-                    <b>Detalle de Venta</b>
+                    <b>Detalle de Depósito</b>
                   </div>
                   <div class="details-card__middle">
                     <div class="item">
-                      <b>Tarjeta Utilizada</b>
-                      <p></p>
+                      <b>Cuenta CLABE</b>
+                      <p>{selectedDispersion.clabe}</p>
                     </div>
-                    <div class="item">
+                    <!-- <div class="item">
                       <b>Tipo de Tarjeta</b>
                       <p></p>
-                    </div>
+                    </div> -->
                     <div class="item">
-                      <b>Total de la Venta</b>
-                      <p>{selectedDispersion.total.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                      <b>Total Depositado</b>
+                      <p>{selectedDispersion.dispersion.toLocaleString(localeParam.language, localeParam.currency)}</p>
                     </div>
                   </div>
                   <div class="details-card__bottom">
                     <div class="item">
-                      <b>Comisión Lkl Pay</b>
+                      <b>Ventas</b>
+                      <p>{selectedDispersion.transactions}</p>
+                      <!-- <span>{`(${(selectedDispersion.commission/selectedDispersion.total)*100}%)`}</span> -->
+                    </div>
+                    <div class="item">
+                      <b>Total Ventas</b>
+                      <p>{selectedDispersion.total.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                      <span></span>
+                    </div>
+                    <div class="item">
+                      <b>Comisión</b>
                       <p>{selectedDispersion.commission.toLocaleString(localeParam.language, localeParam.currency)}</p>
-                      <span>{`(${(selectedDispersion.commission/selectedDispersion.total)*100}%)`}</span>
-                    </div>
-                    <div class="item">
-                      <b>Comisión por Operación</b>
-                      <p><!-- {`(${selectedDispersion.total})`} -->()</p>
-                      <span></span>
-                    </div>
-                    <div class="item">
-                      <b>Total a Dispersión</b>
-                      <p>{selectedDispersion.dispersion.toLocaleString(localeParam.language, localeParam.currency)}</p>
-                      <span></span>
+                      <span>(4.06%)</span>
                     </div>
                   </div>
                 </div>
                 <div class="card-buttons">
-                  <div class="reverse-button">
-                    <Input on:click={showModal(modalClarification)} label="Aclaración" id="reverseDispersion" type="button" className="btn-plain" icon=""/>
+                  <div class="clarification-button">
+                    <Input on:click={showModal(modalDetailClarification)} label="Aclaración" id="clarificationDispersionDetail" type="button" className="btn-plain" icon=""/>
                   </div>
                   <div class="email-button">
                     <Input label="Enviar por e-mail" id="emailDispersion" type="button" className="btn-plain" icon=""/>
@@ -994,6 +1063,10 @@
     border-collapse: collapse;
     padding: 1rem 1rem;
   }
+
+  .table-content .clickable-table-row {
+    cursor: pointer;
+  }
   
   .table-content thead {
     font-family: 'Raleway';
@@ -1116,6 +1189,8 @@
     gap: 2rem;
   }
   .details__middle .details-center .details-card .details-card__middle .item b{
+    display: flex;
+    justify-content: center;
     font-style: normal;
     font-weight: 500;
     font-size: .8125rem;/* 13px */
@@ -1134,6 +1209,8 @@
     display: flex;
     flex-direction: row;
     gap: .5rem;
+    width: -webkit-fill-available;
+    justify-content: space-evenly;
   }
   .details__middle .details-center .details-card .details-card__bottom .item b{
     font-style: normal;
@@ -1164,12 +1241,13 @@
 
   .details__middle .details-center .card-buttons {
     width: 100%;
+    height: 2.5rem;/* 40px */
     display: flex;
     margin-top: 2rem;
     gap: 1rem;/* 16px */
     justify-content: center;
   }
-  .details__middle .details-center .card-buttons .reverse-button {
+  .details__middle .details-center .card-buttons .clarification-button {
     display: flex;
     width: 6rem; /* 80px */
   }

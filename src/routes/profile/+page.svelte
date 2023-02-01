@@ -1,5 +1,5 @@
 <script>
-  import { isLoggedIn, loggedInUser } from '$lib/stores';
+  import { isLoggedIn, loggedInUser, redirectBankProfile } from '$lib/stores';
   import { changeEmail, changePassword } from '$lib/hooks/auth.js'
   import { updateUserIne, updateUserBankAccountInfo } from '$lib/hooks/updates.js'
   import { updateUserInfo, updateUserAvatar } from '$lib/hooks/updates.js'
@@ -217,7 +217,11 @@
     // console.log(bankAccountInfo)
   }
 
-  afterUpdate(() => {
+  onMount(() => {
+    if($redirectBankProfile === true){
+      active = "bankAccountInfo";
+      $redirectBankProfile = false;
+    }
     states.map(function(key, index) {
       statesArray.push({name: key, value: key})
       // console.log(townsData[key]);

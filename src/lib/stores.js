@@ -33,11 +33,13 @@ export const linkSelected = writable(browser && sessionStorage.getItem("selected
 linkSelected.subscribe(
 	(val) => browser && (sessionStorage.selectedTab = val)
 )
-export const sidebar = writable(browser && (JSON.parse(sessionStorage.getItem("sidebarState"))));
+export const sidebar = writable(browser && (JSON.parse(sessionStorage.getItem("sidebarState")) || true));
 sidebar.subscribe(
 	(val) => browser && (sessionStorage.sidebarState = val)
 )
 export const onboardingSuccess = writable(false);
+export const redirectBankProfile = writable(false);
+export const redirectUrgentDispersions = writable(false);
 /* type NavigationState = "loading" | "loaded" | null;
 
 export default writable<NavigationState>(null); */
