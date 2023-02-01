@@ -66,7 +66,7 @@
     },
     {
       value: "3",
-      name: "LklPay Master"
+      name: "LklPay Business"
     },
     {
       value: "4",

@@ -119,10 +119,10 @@
         <InfoCard className={""} title="Ventas Realizadas Hoy" numData={transactions.length}/>
       </div>
       <div class="card">
-        <InfoCard className={""} title="Total de Ventas de Hoy" numData={transactions.reduce((prev, curr) => prev + parseInt(curr.total), 0).toLocaleString(localeParam.language, localeParam.currency)}/>
+        <InfoCard className={""} title="Total de Ventas de Hoy" numData={transactions.reduce((prev, curr) => prev + parseInt(curr.total), 0)?.toLocaleString(localeParam.language, localeParam.currency)}/>
       </div>
       <div class="card">
-        <InfoCard className={""} title="Por Depositar" numData={$loggedInUser.toDeposit.toLocaleString(localeParam.language, localeParam.currency)}/>
+        <InfoCard className={""} title="Por Depositar" numData={$loggedInUser.toDeposit?.toLocaleString(localeParam.language, localeParam.currency)}/>
       </div>
     </div>
     <div class="transactions">
@@ -159,9 +159,9 @@
                     on:click={() => (transactionDetailView = true)}
                     label={transaction.id} type="button" className="text-button" icon=""/>
                 </td> -->
-                <td>{parseFloat(transaction.total).toLocaleString(localeParam.language, localeParam.currency)}</td>
-                <td>{parseFloat(transaction.commission).toLocaleString(localeParam.language, localeParam.currency)}</td>
-                <td>{parseFloat(transaction.dispersion).toLocaleString(localeParam.language, localeParam.currency)}</td>
+                <td>{parseFloat(transaction.total)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                <td>{parseFloat(transaction.commission)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                <td>{parseFloat(transaction.dispersion)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
               </tr>
             {/each}
               <tr>
@@ -169,7 +169,7 @@
                 <td></td>
                 <td>
                   {
-                    transactions.reduce((prev, curr) => prev + parseInt(curr.total), 0)
+                    transactions?.reduce((prev, curr) => prev + parseInt(curr.total), 0)
                     .toLocaleString(localeParam.language, localeParam.currency)
                   }
                 </td>

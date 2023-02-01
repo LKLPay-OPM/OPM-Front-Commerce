@@ -32,7 +32,7 @@
 
 <style>
   :root {
---accent-color: CornflowerBlue;
+--accent-color: linear-gradient( #50CAFF 0%, #0478FF 100%);;
 --gray: #ccc;
 }
 
@@ -46,8 +46,13 @@
 font-weight: bold;
 }
 label {
-user-select: none;
-line-height: 1.2em;
+  user-select: none;
+  line-height: 1.2em;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  /* Text */
+  color: #8C9FB1;
 }
 
 .sr-only {
@@ -64,10 +69,21 @@ input[type="radio"] {
 position: absolute;
 }
 
+input[type="radio"]:checked+label {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  /* identical to box height, or 125% */
+  /* display: flex; */
+  /* align-items: center; */
+  /* Text */
+  color: #113A62;
+}
+
 input[type="radio"] + label {
-display: block;
-position: relative;
-text-align: left;
+  display: block;
+  position: relative;
+  text-align: left;
 }
 
 input[type="radio"] + label::before {
@@ -86,16 +102,18 @@ input[type="radio"] + label::before {
 input[type="radio"]:checked + label::before {
 border: 1px solid var(--gray, #ccc);
 border-radius: 50%;
+/* Text */
+color: #113A62;
 }
 
 input[type="radio"] + label::after {
 content: "";
 position: absolute;
 display: inline-block;
-width: 0.5em;
-height: 0.5em;
-top: 0.45em;
-left: 0.25em;
+width: 1rem;
+height: 1rem;
+top: 0.25rem;
+left: 0.05rem;
 background: var(--accent-color, #282828);
 border: 1px solid var(--accent-color, #282828);
 border-radius: 50%;

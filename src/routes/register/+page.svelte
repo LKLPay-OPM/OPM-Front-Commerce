@@ -44,6 +44,7 @@
     totalCommissions: 0,
     toDeposit: 0,
     dispersions: [],
+    terminals: [],
     ratesDiscount: {
       amex: 0,
       credit: 0,

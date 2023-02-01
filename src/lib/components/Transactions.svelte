@@ -414,15 +414,21 @@
                 </thead>
                 <tbody>
                   {#each transactions as transaction}
-                    <tr>
+                    <tr class="clickable-table-row"
+                      on:click={() => (selectedTransaction = transaction)}
+                      on:click={() => (transactionDetailView = true)}
+                      on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
+                      on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
+                    >
                       <td>{transaction.date.toDate().getDate()} {getMonthName(transaction.date.toDate().getMonth())} {transaction.date.toDate().getFullYear()} - {transaction.date.toDate().toLocaleTimeString()}</td>
                       <td>
-                        <Input
+                        {transaction.id}
+                        <!-- <Input
                           id='detailsTicket{transaction.id}'
                           title="Ver Detalles"
                           on:click={() => (selectedTransaction = transaction)}
                           on:click={() => (transactionDetailView = true)}
-                          label={transaction.id} type="button" className="text-button" icon=""/>
+                          label={transaction.id} type="button" className="text-button" icon=""/> -->
                       </td>
                       <td>{parseFloat(transaction.total).toLocaleString(localeParam.language, localeParam.currency)}</td>
                       <td>{parseFloat(transaction.commission).toLocaleString(localeParam.language, localeParam.currency)}</td>
@@ -858,6 +864,10 @@
     /* text-placeholder */
     color: #8C9FB1;
     height: 2.375rem;
+  }
+
+  .table-content .clickable-table-row {
+    cursor: pointer;
   }
 
   .table-content td {
