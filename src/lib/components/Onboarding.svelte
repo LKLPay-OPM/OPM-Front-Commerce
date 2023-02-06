@@ -355,7 +355,7 @@
                 <Input placeholder="Circunvalación Jorge Álvarez del Castillo" label="Calle" id="businessAddress" bind:value={userData.businessAddress} className="txt-field normal" type="text"/>
                 <div class="row">
                   <Input placeholder="1106" label="N° Exterior" id="outsideNumber" bind:value={userData.outsideNumber} className="txt-field normal" type="text"/>
-                  <Input placeholder="NA" label="N° Interior" id="insideNumber" bind:value={userData.insideNumber} className="txt-field normal" type="text"/>
+                   <!--<Input placeholder="NA" label="N° Interior" id="insideNumber" bind:value={userData.insideNumber} className="txt-field normal" type="text"/> --> 
                   <Input placeholder="44620" label="Código Postal" id="zipCode" bind:value={userData.zipCode} className="txt-field normal" type="text"/>
                 </div>
                 <div class="row">
