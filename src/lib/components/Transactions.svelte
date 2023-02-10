@@ -20,6 +20,7 @@
   import { onMount } from 'svelte';
   import { generatePDF, generateCSV, generateXLSX } from '$lib/hooks/exportDataToFile.js';
   import { updateTransactionStatus } from '$lib/hooks/updates.js'
+  import Icons from './Icons.svelte';
 
   export let user;
   const dbCollection = "users-client";
@@ -81,16 +82,16 @@
     const q = query(
       collection(db, dbCollection, uid, "transactions"), 
       //where('uid', '==', uid),
-      orderBy('date', 'desc'),
+      /* orderBy('date', 'desc'),
       startAt(Timestamp.fromDate(new Date(tomorrow))), endAt(Timestamp.fromDate(new Date(today))),
-      limit(10)
+      limit(10) */
     );
     const querySnapshot = await getDocs(q);
     transactions = querySnapshot.docs.map((doc) => {
       return {...doc.data()}
     });
     transactionFound();
-    //console.log(transactions)
+    console.log(transactions)
   }
 
   const fetchByWeekButton = async() => {
@@ -189,7 +190,7 @@
   const sortObject = (data) => {
     const transactionsNew = data.map(element => {
       return {
-        date: element.date.toDate().toLocaleDateString(),
+        date: element.date?.toDate().toLocaleDateString(),
         id: element.id,
         status: element.status,
         total: parseInt(element.total)
@@ -354,7 +355,7 @@
       <div class="top__middle">
         <div class="date">
           <p>
-            {date.getDate()} de {getMonthName(date.getMonth())} del {date.getFullYear()}
+            <!-- {date.getDate()} de {getMonthName(date.getMonth())} del {date.getFullYear()} -->
           </p>
         </div>
         <ButtonGroup bind:active={active} options={buttonGroupOptions}/>
@@ -366,15 +367,15 @@
         <div class="card-group">
           <div class="card">
             <div><p>Ventas Totales</p></div>
-            <div><span>{user.total.toLocaleString(localeParam.language, localeParam.currency)}</span></div>
+            <div><span>{user.total?.toLocaleString(localeParam.language, localeParam.currency)}</span></div>
           </div>
           <div class="card">
             <div><p>Comisiones Cobradas</p></div>
-            <div><span>{(user?.toDeposit - user?.totalCommissions).toLocaleString(localeParam.language, localeParam.currency)}</span></div>
+            <div><span>{(user?.toDeposit - user?.totalCommissions)?.toLocaleString(localeParam.language, localeParam.currency)}</span></div>
           </div>
           <div class="card">
             <div><p>Saldo a Depositar</p></div>
-            <div><span>{user.toDeposit.toLocaleString(localeParam.language, localeParam.currency)}</span></div>
+            <div><span>{user.toDeposit?.toLocaleString(localeParam.language, localeParam.currency)}</span></div>
           </div>
         </div>
       </div>
@@ -420,9 +421,9 @@
                       on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
                       on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
                     >
-                      <td>{transaction.date.toDate().getDate()} {getMonthName(transaction.date.toDate().getMonth())} {transaction.date.toDate().getFullYear()} - {transaction.date.toDate().toLocaleTimeString()}</td>
+                      <td>{transaction.TransactionDate}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td>
                       <td>
-                        {transaction.id}
+                        {transaction.TransactionTime}
                         <!-- <Input
                           id='detailsTicket{transaction.id}'
                           title="Ver Detalles"
@@ -430,19 +431,19 @@
                           on:click={() => (transactionDetailView = true)}
                           label={transaction.id} type="button" className="text-button" icon=""/> -->
                       </td>
-                      <td>{parseFloat(transaction.total).toLocaleString(localeParam.language, localeParam.currency)}</td>
-                      <td>{parseFloat(transaction.commission).toLocaleString(localeParam.language, localeParam.currency)}</td>
-                      <td>{parseFloat(transaction.dispersion).toLocaleString(localeParam.language, localeParam.currency)}</td>
+                      <td>{parseFloat(transaction.Amount)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                      <td>{parseFloat(transaction.Amount * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                      <td>{parseFloat(transaction.Amount * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
                     </tr>
                   {/each}
                     <tr>
                       <td><b>Totales</b></td>
                       <td></td>
                       <td>
-                        {
+                        <!-- {
                           transactions.reduce((prev, curr) => prev + parseInt(curr.total), 0)
                           .toLocaleString(localeParam.language, localeParam.currency)
-                        }
+                        } -->
                       </td>
                       <td></td>
                       <td></td>
@@ -457,9 +458,9 @@
           </div>
           <div class="transaction-details">
             <div class="details__top">
-              <b>Recibo #{selectedTransaction.id}</b>
+              <b>Recibo #{selectedTransaction.TransactionTime}</b>
               <p>
-                {selectedTransaction.date.toDate().getDate()} de {getMonthName(selectedTransaction.date.toDate().getMonth())} del {selectedTransaction.date.toDate().getFullYear()} a las {selectedTransaction.date.toDate().toLocaleTimeString()}
+                <!-- {selectedTransaction.date?.toDate().getDate()} de {getMonthName(selectedTransaction.date?.toDate().getMonth())} del {selectedTransaction.date?.toDate().getFullYear()} a las {selectedTransaction.date?.toDate().toLocaleTimeString()} -->
               </p>
             </div>
             <div class="details__middle">
@@ -467,19 +468,19 @@
                 <div class="title">Datos</div>
                 <div class="item">
                   <b>Referencia</b>
-                  <p>{selectedTransaction.uuid}</p>
+                  <p>{selectedTransaction.IFDSerialNumber}</p>
                 </div>
                 <div class="item">
                   <b>TVR</b>
-                  <p>0000000000</p>
+                  <p>{selectedTransaction.TVR}</p>
                 </div>
                 <div class="item">
                   <b>AID</b>
-                  <p></p>
+                  <p>{selectedTransaction.TerminalCapabilities}</p>
                 </div>
                 <div class="item">
                   <b>TSI</b>
-                  <p></p>
+                  <p>{selectedTransaction.AdditionalTerminalCapabilities}</p>
                 </div>
                 <div class="item">
                   <b>Tipo de Tarjeta</b>
@@ -494,31 +495,31 @@
                   <div class="details-card__middle">
                     <div class="item">
                       <b>Tarjeta Utilizada</b>
-                      <p></p>
+                      <p><span>**** **** ****</span><span> {selectedTransaction.ApplicationPAN.substr(-4) }</span></p>
                     </div>
                     <div class="item">
                       <b>Tipo de Tarjeta</b>
-                      <p></p>
+                      <p><Icons name="mastercard" width="24" height="24"/></p>
                     </div>
                     <div class="item">
                       <b>Total de la Venta</b>
-                      <p>{selectedTransaction.total.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                      <p>{(selectedTransaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
                     </div>
                   </div>
                   <div class="details-card__bottom">
                     <div class="item">
-                      <b>Comisión Lkl Pay</b>
-                      <p>{selectedTransaction.commission.toLocaleString(localeParam.language, localeParam.currency)}</p>
-                      <span>{`(${(selectedTransaction.commission/selectedTransaction.total)*100}%)`}</span>
+                      <b>Estatus</b>
+                      <p>APROBADA</p>
+                      
                     </div>
                     <div class="item">
-                      <b>Comisión por Operación</b>
-                      <p><!-- {`(${selectedTransaction.total})`} -->()</p>
-                      <span></span>
+                      <b>Comisión Lkl Pay</b>
+                      <p>{((selectedTransaction.Amount/100) * 0.0406)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                      <span>{`(4.06%)`}</span>
                     </div>
                     <div class="item">
                       <b>Total a Dispersión</b>
-                      <p>{selectedTransaction.dispersion.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                      <p>{((selectedTransaction.Amount/100) * 0.9594)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
                       <span></span>
                     </div>
                   </div>
