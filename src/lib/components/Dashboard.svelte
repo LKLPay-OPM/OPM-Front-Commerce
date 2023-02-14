@@ -32,6 +32,24 @@
 
   const getMonthName = (month) => {
     const monthsArray = {
+      "01": {value: "Enero"},
+      "02": {value: "Febrero"},
+      "03": {value: "Marzo"},
+      "04": {value: "Abril"},
+      "05": {value: "Mayo"},
+      "06": {value: "Junio"},
+      "07": {value: "Julio"},
+      "08": {value: "Agosto"},
+      "09": {value: "Septiembre"},
+      "10": {value: "Octubre"},
+      "11": {value: "Noviembre"},
+      "12": {value: "Diciembre"},
+    }
+    return monthsArray[month].value
+  }
+
+  const getMonth = (month) => {
+    const monthsArray = {
       0: {value: "Enero"},
       1: {value: "Febrero"},
       2: {value: "Marzo"},
@@ -53,6 +71,7 @@
       notFound = true;
     }else{
       notFound = false;
+      console.log(transactions)
     }
     loading = false;
   }
@@ -82,15 +101,23 @@
         {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
       )
     } */
+    // active = "day";
+    // transactionDetailView = false;
+    // selectedTransaction = {};
+    var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
+    //transactions = [];
     const curr = new Date;
     const today = new Date(curr.setDate(curr.getDate())).setHours(0,0,0,0); // Sets Date to today day at 00:00
     const tomorrow = new Date(curr.setDate(curr.getDate() + 1)).setHours(0,0,0,0); // Sets Date to tomorrow at 00:00
+    // Dates in dd/MM/YY
+    const strToday = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(today);
+    const strTomorrow = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(tomorrow);
 
     const q = query(
       collection(db, dbCollection, uid, "transactions"), 
       //where('uid', '==', uid),
-      orderBy('date', 'desc'),
-      startAt(Timestamp.fromDate(new Date(tomorrow))), endAt(Timestamp.fromDate(new Date(today))),
+      orderBy('Transaction Date', 'desc'),
+      startAt(strTomorrow.replace(pattern,'$3$2$1')/* Timestamp.fromDate(new Date(tomorrow)) */), endAt(strToday.replace(pattern,'$3$2$1')/* Timestamp.fromDate(new Date(today)) */),
       limit(10)
     );
     const querySnapshot = await getDocs(q);
@@ -98,6 +125,22 @@
       return {...doc.data()}
     });
     transactionFound();
+  }
+
+  const getTransactionDate = (string) => {
+    var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
+    const extractMonth = string.replace(pattern, '$2')
+    const month = getMonthName(extractMonth)
+    let str = string.replace(pattern, `$3 ${month} 20$1`)
+    // console.log(str)
+    return str
+  }
+
+  const getTransactionTime = (string) => {
+    var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
+    let str = string.replace(pattern, `$1:$2:$3`)
+    // console.log(str)
+    return str
   }
 
   onMount(async () => {
@@ -119,7 +162,7 @@
         <InfoCard className={""} title="Ventas Realizadas Hoy" numData={transactions.length}/>
       </div>
       <div class="card">
-        <InfoCard className={""} title="Total de Ventas de Hoy" numData={transactions.reduce((prev, curr) => prev + parseInt(curr.total), 0)?.toLocaleString(localeParam.language, localeParam.currency)}/>
+        <InfoCard className={""} title="Total de Ventas de Hoy" numData={transactions.reduce((prev, curr) => prev + (curr['Amount']/100), 0)?.toLocaleString(localeParam.language, localeParam.currency)}/>
       </div>
       <div class="card">
         <InfoCard className={""} title="Por Depositar" numData={$loggedInUser.toDeposit?.toLocaleString(localeParam.language, localeParam.currency)}/>
@@ -149,8 +192,8 @@
           <tbody>
             {#each transactions as transaction}
               <tr>
-                <td>{transaction.date.toDate().getDate()} {getMonthName(transaction.date.toDate().getMonth())} {transaction.date.toDate().getFullYear()} - {transaction.date.toDate().toLocaleTimeString()}</td>
-                <td>{transaction.id}</td>
+                <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td>
+                      <td>{transaction['Transaction Time']}</td>
                 <!-- <td>
                   <Input
                     id='detailsTicket{transaction.id}'
@@ -159,22 +202,25 @@
                     on:click={() => (transactionDetailView = true)}
                     label={transaction.id} type="button" className="text-button" icon=""/>
                 </td> -->
-                <td>{parseFloat(transaction.total)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                <!-- <td>{parseFloat(transaction.total)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
                 <td>{parseFloat(transaction.commission)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                <td>{parseFloat(transaction.dispersion)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                <td>{parseFloat(transaction.dispersion)?.toLocaleString(localeParam.language, localeParam.currency)}</td> -->
               </tr>
             {/each}
               <tr>
                 <td><b>Totales</b></td>
                 <td></td>
+                <td></td>
+                <td></td>
                 <td>
                   {
-                    transactions?.reduce((prev, curr) => prev + parseInt(curr.total), 0)
+                    transactions?.reduce((prev, curr) => prev + (curr['Amount']/100) * 0.965, 0)
                     .toLocaleString(localeParam.language, localeParam.currency)
                   }
                 </td>
-                <td></td>
-                <td></td>
               </tr>
           </tbody>
         </table>
@@ -219,7 +265,7 @@
   }
 
   .subtitle {
-    margin: 1rem 0rem;
+    margin: .5rem 0rem;
   }
 
   .subtitle p {
@@ -241,7 +287,7 @@
 
   .content .card-group .card {
     min-width: calc((80% / 4) - 2rem);
-    max-width: calc((80% / 4) - 2rem);
+    /* max-width: calc((80% / 4) - 2rem); */
     min-height: 10rem;/* 160px */
   }
 

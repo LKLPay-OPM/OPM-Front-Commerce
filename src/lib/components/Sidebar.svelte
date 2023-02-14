@@ -20,8 +20,8 @@
         {name: 'Depósitos', path: '/dispersions', icon: 'sales-fill'},
         {name: 'Depósito Urgente', path: '/urgent-dispersion', icon: 'sales-fill'},
         {name: 'Cuenta Bancaria', path: '/bank-account', icon: 'bank-line'},
-        {name: 'Créditos', path: '/credits', icon: 'bank-line'},
-        {name: 'Nueva Venta', path: '/new-sale', icon: 'bank-card-line'},
+        // {name: 'Créditos', path: '/credits', icon: 'bank-line'},
+        // {name: 'Nueva Venta', path: '/new-sale', icon: 'bank-card-line'},
       ]
 
       const optionListBusiness = [
@@ -31,8 +31,8 @@
         {name: 'Depósito Urgente', path: '/urgent-dispersion', icon: 'sales-fill'},
         {name: 'Cuenta Bancaria', path: '/bank-account', icon: 'bank-line'},
         {name: 'Sucursales', path: '/branch-office', icon: 'bank-line'},
-        {name: 'Créditos', path: '/credits', icon: 'bank-line'},
-        {name: 'Nueva Venta', path: '/new-sale', icon: 'bank-card-line'},
+        // {name: 'Créditos', path: '/credits', icon: 'bank-line'},
+        // {name: 'Nueva Venta', path: '/new-sale', icon: 'bank-card-line'},
       ]
       if($loggedInUser.accountType === "3"){
         return options = optionListBusiness;

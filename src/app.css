@@ -9,6 +9,14 @@ body {
   overflow: hidden;
 }
 
+.text {
+  font-family: 'Raleway';
+}
+
+.number {
+  font-family: 'Roboto';
+}
+
 .layout {
   display: flex;
   flex-direction: row;
