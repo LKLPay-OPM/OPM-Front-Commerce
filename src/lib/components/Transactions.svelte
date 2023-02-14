@@ -63,6 +63,8 @@
       notFound = true;
     }else{
       notFound = false;
+      // transactions = JSON.parse(JSON.stringify(transactions).replace(/"\s+|\s+"/g,'"'))
+      console.log(transactions)
     }
     loading = false;
   }
@@ -72,26 +74,28 @@
     transactionDetailView = false;
     selectedTransaction = {};
     loading = true;
+    var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
     //transactions = [];
     const curr = new Date;
     const today = new Date(curr.setDate(curr.getDate())).setHours(0,0,0,0); // Sets Date to today day at 00:00
     const tomorrow = new Date(curr.setDate(curr.getDate() + 1)).setHours(0,0,0,0); // Sets Date to tomorrow at 00:00
+    // Dates in dd/MM/YY
+    const strToday = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(today);
+    const strTomorrow = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(tomorrow);
 
-    /* console.log(new Date(today))
-    console.log(new Date(tomorrow)) */
     const q = query(
       collection(db, dbCollection, uid, "transactions"), 
       //where('uid', '==', uid),
-      /* orderBy('date', 'desc'),
-      startAt(Timestamp.fromDate(new Date(tomorrow))), endAt(Timestamp.fromDate(new Date(today))),
-      limit(10) */
+      orderBy('Transaction Date', 'desc'),
+      startAt(strTomorrow.replace(pattern,'$3$2$1')/* Timestamp.fromDate(new Date(tomorrow)) */), endAt(strToday.replace(pattern,'$3$2$1')/* Timestamp.fromDate(new Date(today)) */),
+      limit(10)
     );
     const querySnapshot = await getDocs(q);
     transactions = querySnapshot.docs.map((doc) => {
       return {...doc.data()}
     });
     transactionFound();
-    console.log(transactions)
+    // console.log(transactions)
   }
 
   const fetchByWeekButton = async() => {
@@ -99,17 +103,20 @@
     transactionDetailView = false;
     selectedTransaction = {};
     loading = true;
+    var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
     const curr = new Date;
     const firstDay = new Date(curr.setDate(curr.getDate() - curr.getDay()+1)).setHours(0,0,0,0);
     const lastDay = new Date(curr.setDate(curr.getDate() - curr.getDay()+7)).setHours(0,0,0,0);
-    const first = Timestamp.fromDate(new Date(firstDay));
-    const last = Timestamp.fromDate(new Date(lastDay));
+    // const first = Timestamp.fromDate(new Date(firstDay));
+    // const last = Timestamp.fromDate(new Date(lastDay));
+    const first = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(firstDay);
+    const last = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(lastDay);
 
     const q = query(
       collection(db, dbCollection, uid, "transactions"), 
       //where('uid', '==', uid),
-      orderBy('date', 'desc'),
-      startAt(last), endAt(first),
+      orderBy('Transaction Date', 'desc'),
+      startAt(last.replace(pattern,'$3$2$1')), endAt(first.replace(pattern,'$3$2$1')),
       limit(10)
     );
     const querySnapshot = await getDocs(q);
@@ -125,15 +132,19 @@
     transactionDetailView = false;
     selectedTransaction = {};
     loading = true;
+    var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
     //transactions = [];
     const curr = new Date;
     const currentMonth = new Date(curr.setMonth(curr.getMonth(), 1)).setHours(0,0,0,0); // Sets Date to actual month day 1 at 00:00
     const nextMonth = new Date(curr.setMonth(curr.getMonth() + 1, 1)).setHours(0,0,0,0); // Sets Date to next month day 1 at 00:00
 
+    const first = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(currentMonth);
+    const last = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(nextMonth);
+
     const q = query(
       collection(db, dbCollection, uid, "transactions"),
-      orderBy('date', 'desc'),
-      startAt(Timestamp.fromDate(new Date(nextMonth))), endAt(Timestamp.fromDate(new Date(currentMonth))),
+      orderBy('Transaction Date', 'desc'),
+      startAt(last.replace(pattern,'$3$2$1')/* Timestamp.fromDate(new Date(nextMonth)) */), endAt(first.replace(pattern,'$3$2$1')/* Timestamp.fromDate(new Date(currentMonth)) */),
       limit(10)
     );
     const querySnapshot = await getDocs(q);
@@ -150,13 +161,20 @@
     selectedTransaction = {};
     loading = true;
     var pattern = /(\d{4})\-(\d{2})\-(\d{2})/; // String pattern replace for date
+    var patternFetch = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace fetch date
     const startRange = new Date(dateRangeStart.replace(pattern,'$2-$3-$1')).setHours(0,0,0,0);//Sets the date pattern and time to 00:00
     const endRange = new Date(dateRangeEnd.replace(pattern,'$2-$3-$1')).setHours(23,59,59,59);//Sets the date pattern and time to 23:59
+
+    const first = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(startRange);
+    const last = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(endRange);
+
+    // console.log(first)
+    // console.log(last)
     
     const q = query(
       collection(db, dbCollection, uid, "transactions"),
-      orderBy('date', 'desc'),
-      startAt(Timestamp.fromDate(new Date(endRange))), endAt(Timestamp.fromDate(new Date(startRange))),
+      orderBy('Transaction Date', 'desc'),
+      startAt(last.replace(patternFetch,'$3$2$1')/* Timestamp.fromDate(new Date(endRange)) */), endAt(first.replace(patternFetch,'$3$2$1')/* Timestamp.fromDate(new Date(startRange)) */),
       // limit(10)
     );
     const querySnapshot = await getDocs(q);
@@ -175,8 +193,8 @@
     const ticket = ticketId.toString();
     const q = query(
       collection(db, dbCollection, uid, "transactions"), 
-      where('id', '==', ticket),
-      orderBy('date', 'desc'),
+      where('Transaction Time', '==', ticket),
+      orderBy('Transaction Date', 'desc'),
       limit(1)
     );
     const querySnapshot = await getDocs(q);
@@ -184,7 +202,7 @@
       return {...doc.data()}
     });
     transactionFound();
-    console.log(transactions)
+    // console.log(transactions)
   }
 
   const sortObject = (data) => {
@@ -230,6 +248,23 @@
 
   const getMonthName = (month) => {
     const monthsArray = {
+      "01": {value: "Enero"},
+      "02": {value: "Febrero"},
+      "03": {value: "Marzo"},
+      "04": {value: "Abril"},
+      "05": {value: "Mayo"},
+      "06": {value: "Junio"},
+      "07": {value: "Julio"},
+      "08": {value: "Agosto"},
+      "09": {value: "Septiembre"},
+      "10": {value: "Octubre"},
+      "11": {value: "Noviembre"},
+      "12": {value: "Diciembre"},
+    }
+    return monthsArray[month].value
+  }
+  const getMonth = (month) => {
+    const monthsArray = {
       0: {value: "Enero"},
       1: {value: "Febrero"},
       2: {value: "Marzo"},
@@ -256,6 +291,37 @@
     {value: "week", name: "Semana", click: fetchByWeekButton},
     {value: "month", name: "Mes", click: fetchByMonthButton},
   ]
+
+  const getTransactionDate = (string) => {
+    var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
+    const extractMonth = string.replace(pattern, '$2')
+    const month = getMonthName(extractMonth)
+    let str = string.replace(pattern, `$3 ${month} 20$1`)
+    // console.log(str)
+    return str
+  }
+
+  const getTransactionTime = (string) => {
+    var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
+    let str = string.replace(pattern, `$1:$2:$3`)
+    // console.log(str)
+    return str
+  }
+
+  const dateToLocalString = (string) => {
+    var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
+    const extractMonth = string.replace(pattern, '$2')
+    const month = getMonthName(extractMonth)
+    let str = string.replace(pattern, `$3 de ${month} del 20$1`)
+    return str
+    // de {getMonthName(selectedTransaction.date?.toDate().getMonth())} del {selectedTransaction.date?.toDate().getFullYear()}
+  }
+  const timeToLocalString = (string) => {
+    var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
+    let str = string.replace(pattern, `a las $1:$2`)
+    return str
+    // a las {selectedTransaction.date?.toDate().toLocaleTimeString()}
+  }
 
   const showModal = (option) => {
     option.show();
@@ -354,8 +420,8 @@
       </div>
       <div class="top__middle">
         <div class="date">
-          <p>
-            <!-- {date.getDate()} de {getMonthName(date.getMonth())} del {date.getFullYear()} -->
+          <p class="number">
+            {date.getDate()} de {getMonth(date.getMonth())} del {date.getFullYear()}
           </p>
         </div>
         <ButtonGroup bind:active={active} options={buttonGroupOptions}/>
@@ -415,15 +481,15 @@
                 </thead>
                 <tbody>
                   {#each transactions as transaction}
-                    <tr class="clickable-table-row"
+                    <tr class="clickable-table-row number"
                       on:click={() => (selectedTransaction = transaction)}
                       on:click={() => (transactionDetailView = true)}
                       on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
                       on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
                     >
-                      <td>{transaction.TransactionDate}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td>
+                      <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td>
                       <td>
-                        {transaction.TransactionTime}
+                        {transaction['Transaction Time']}
                         <!-- <Input
                           id='detailsTicket{transaction.id}'
                           title="Ver Detalles"
@@ -431,22 +497,23 @@
                           on:click={() => (transactionDetailView = true)}
                           label={transaction.id} type="button" className="text-button" icon=""/> -->
                       </td>
-                      <td>{parseFloat(transaction.Amount)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                      <td>{parseFloat(transaction.Amount * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                      <td>{parseFloat(transaction.Amount * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                      <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                      <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                      <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
                     </tr>
                   {/each}
                     <tr>
-                      <td><b>Totales</b></td>
+                      <td><b>Total</b></td>
+                      <td></td>
+                      <td></td>
                       <td></td>
                       <td>
-                        <!-- {
-                          transactions.reduce((prev, curr) => prev + parseInt(curr.total), 0)
+                        {
+                          transactions
+                          .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
                           .toLocaleString(localeParam.language, localeParam.currency)
-                        } -->
+                        }
                       </td>
-                      <td></td>
-                      <td></td>
                     </tr>
                 </tbody>
               </table>
@@ -458,9 +525,9 @@
           </div>
           <div class="transaction-details">
             <div class="details__top">
-              <b>Recibo #{selectedTransaction.TransactionTime}</b>
+              <b>Recibo #{selectedTransaction['Transaction Time']}</b>
               <p>
-                <!-- {selectedTransaction.date?.toDate().getDate()} de {getMonthName(selectedTransaction.date?.toDate().getMonth())} del {selectedTransaction.date?.toDate().getFullYear()} a las {selectedTransaction.date?.toDate().toLocaleTimeString()} -->
+                {dateToLocalString(selectedTransaction['Transaction Date'])} {timeToLocalString(selectedTransaction['Transaction Time'])}
               </p>
             </div>
             <div class="details__middle">
@@ -468,7 +535,7 @@
                 <div class="title">Datos</div>
                 <div class="item">
                   <b>Referencia</b>
-                  <p>{selectedTransaction.IFDSerialNumber}</p>
+                  <p>{selectedTransaction['IFD Serial Number']}</p>
                 </div>
                 <div class="item">
                   <b>TVR</b>
@@ -476,11 +543,11 @@
                 </div>
                 <div class="item">
                   <b>AID</b>
-                  <p>{selectedTransaction.TerminalCapabilities}</p>
+                  <p>{selectedTransaction['Terminal Capabilities']}</p>
                 </div>
                 <div class="item">
                   <b>TSI</b>
-                  <p>{selectedTransaction.AdditionalTerminalCapabilities}</p>
+                  <p>{selectedTransaction['Additional Terminal Capabilities']}</p>
                 </div>
                 <div class="item">
                   <b>Tipo de Tarjeta</b>
@@ -494,32 +561,55 @@
                   </div>
                   <div class="details-card__middle">
                     <div class="item">
-                      <b>Tarjeta Utilizada</b>
-                      <p><span>**** **** ****</span><span> {selectedTransaction.ApplicationPAN.substr(-4) }</span></p>
+                      <div class=item__title>
+                        <b>Tarjeta Utilizada</b>
+                      </div>
+                      <div class=item__content>
+                        <p><span>{"**** **** **** "+selectedTransaction['Application PAN'].substr(-4)}</span></p>
+                      </div>
                     </div>
                     <div class="item">
-                      <b>Tipo de Tarjeta</b>
-                      <p><Icons name="mastercard" width="24" height="24"/></p>
+                      <div class=item__title>
+                        <b>Tipo de Tarjeta</b>
+                      </div>
+                      <div class=item__content>
+                        <p><Icons name="mastercard" width="24" height="24"/></p>
+                      </div>
                     </div>
                     <div class="item">
-                      <b>Total de la Venta</b>
-                      <p>{(selectedTransaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                      <div class=item__title>
+                        <b>Total de la Venta</b>
+                      </div>
+                      <div class=item__content>
+                        <p>{(selectedTransaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                      </div>
                     </div>
                   </div>
                   <div class="details-card__bottom">
                     <div class="item">
-                      <b>Estatus</b>
-                      <p>APROBADA</p>
-                      
+                      <div class=item__title>
+                        <b>Estatus</b>
+                      </div>
+                      <div class=item__content>
+                        <p>APROBADA</p>
+                      </div>
                     </div>
                     <div class="item">
-                      <b>Comisión Lkl Pay</b>
-                      <p>{((selectedTransaction.Amount/100) * 0.0406)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
-                      <span>{`(4.06%)`}</span>
+                      <div class=item__title>
+                        <b>Comisión</b>
+                      </div>
+                      <div class=item__content>
+                        <p>{((selectedTransaction.Amount/100) * 0.0406)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                        <span>{`(4.06%)`}</span>
+                      </div>
                     </div>
                     <div class="item">
-                      <b>Total a Dispersión</b>
-                      <p>{((selectedTransaction.Amount/100) * 0.9594)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                      <div class=item__title>
+                        <b>Total a Depositar</b>
+                      </div>
+                      <div class=item__content>
+                        <p>{((selectedTransaction.Amount/100) * 0.9594)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                      </div>
                       <span></span>
                     </div>
                   </div>
@@ -713,7 +803,7 @@
     padding: 0px;
     gap: 24px;
 
-    width: 610px;
+    /* width: 610px; */
     height: 88px;
 
 
@@ -731,7 +821,8 @@
     align-items: center;
     padding: 16px;
     gap: 16px;
-    width: 166px;
+    width: auto;
+    min-width: 180px;
     height: 88px;
     /* Nue Fill */
     background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
@@ -755,6 +846,7 @@
   }
 
   .card-group .card span {
+    font-family: 'Roboto';
     font-style: normal;
     font-weight: 700;
     font-size: 24px;
@@ -872,7 +964,7 @@
   }
 
   .table-content td {
-    font-family: 'Raleway';
+    font-family: 'Roboto';
     font-style: normal;
     font-weight: 500;
     font-size: 13px;
@@ -945,6 +1037,7 @@
     color: #8C9FB1;
   }
   .details__middle .details-left .item p {
+    font-family: 'Roboto';
     font-style: normal;
     font-weight: 700;
     font-size: .875rem;/* 14px */
@@ -958,8 +1051,8 @@
     align-items: center;
     padding: 1rem;/* 16px */
     gap: 2rem;/* 32px */
-    width: 26.75rem;/* 428px */
-    height: 13.125rem;/* 210px */
+    min-width: 26.75rem;/* 428px */
+    min-height: 13.125rem;/* 210px */
     /* Fill Container */
     background: #F3F3F3;
     /* container effect */
@@ -975,31 +1068,66 @@
     color: #113A62;
   }
   .details__middle .details-center .details-card .details-card__middle{
-    display: flex;
+    /* display: flex;
     flex-direction: row;
-    gap: 2rem;
+    gap: 1rem; */
+    width: -webkit-fill-available;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template: auto / 10rem 6rem auto;
+
   }
-  .details__middle .details-center .details-card .details-card__middle .item b{
+  .details__middle .details-center .details-card .details-card__middle .item .item__title{
+    display: flex;
+    justify-content: center;
+  }
+  .details__middle .details-center .details-card .details-card__middle .item .item__content{
+    display: flex;
+    justify-content: center;
+  }
+  .details__middle .details-center .details-card .details-card__middle .item .item__title b{
     font-style: normal;
     font-weight: 500;
     font-size: .8125rem;/* 13px */
     line-height: 1.125rem;/* 18px */
     color: #113A62;
   }
-
+  
   .details__middle .details-center .details-card .details-card__middle .item p{
+    font-family: 'Roboto';
     font-style: normal;
     font-weight: 700;
     font-size: 1.25rem;/* 20px */
     line-height: 1.125rem;/* 18px */
     color: #113A62;
   }
-  .details__middle .details-center .details-card .details-card__bottom{
-    display: flex;
-    flex-direction: row;
-    gap: .5rem;
+  .details__middle .details-center .details-card .details-card__middle .item p span{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1rem;/* 20px */
+    line-height: 1.125rem;/* 18px */
+    color: #113A62;
   }
-  .details__middle .details-center .details-card .details-card__bottom .item b{
+  .details__middle .details-center .details-card .details-card__bottom{
+    /* display: flex;
+    flex-direction: row;
+    gap: .5rem; */
+    width: -webkit-fill-available;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template: auto / 10rem 6rem auto;
+  }
+  .details__middle .details-center .details-card .details-card__bottom .item .item__title{
+    display: flex;
+    justify-content: center;
+  }
+  .details__middle .details-center .details-card .details-card__bottom .item .item__content{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .details__middle .details-center .details-card .details-card__bottom .item .item__title b{
     font-style: normal;
     font-weight: 500;
     font-size: .8125rem;/* 13px */
@@ -1008,6 +1136,7 @@
   }
 
   .details__middle .details-center .details-card .details-card__bottom .item p{
+    font-family: 'Roboto';
     font-style: normal;
     font-weight: 700;
     font-size: .875rem;/* 14px */
@@ -1017,6 +1146,7 @@
   }
 
   .details__middle .details-center .details-card .details-card__bottom .item span{
+    font-family: 'Roboto';
     display: flex; 
     justify-content: center;
     font-style: normal;

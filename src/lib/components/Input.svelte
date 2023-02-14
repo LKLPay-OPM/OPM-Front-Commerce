@@ -48,6 +48,7 @@
     color: #8B9EB0;
   }
   .txt-field input {
+    font-family: 'Roboto';
     width: -webkit-fill-available;
     height: 3.125rem;
     background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);

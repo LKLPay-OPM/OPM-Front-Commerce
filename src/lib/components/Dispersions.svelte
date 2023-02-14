@@ -857,6 +857,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
     padding: 0px;
     gap: 24px;
     width: 610px;
@@ -874,7 +875,7 @@
     align-items: center;
     padding: 16px;
     gap: 16px;
-    width: 166px;
+    min-width: 166px;
     height: 88px;
     /* Nue Fill */
     background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
@@ -917,6 +918,7 @@
   }
 
   .card-group .card span {
+    font-family: 'Roboto';
     font-style: normal;
     font-weight: 700;
     font-size: 24px;
@@ -1081,7 +1083,7 @@
   }
 
   .table-content td {
-    font-family: 'Raleway';
+    font-family: 'Roboto';
     font-style: normal;
     font-weight: 500;
     font-size: 13px;

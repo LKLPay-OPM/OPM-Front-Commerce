@@ -34,7 +34,12 @@
     suburb: $loggedInUser?.suburb || "",
     outsideNumber: $loggedInUser?.outsideNumber || "",
     insideNumber: $loggedInUser?.insideNumber || "",
-    bankAccountInfo: $loggedInUser?.bankAccountInfo
+    bankAccountInfo: {
+      clabe: $loggedInUser.bankAccountInfo?.clabe || "",
+      ineFront: $loggedInUser.bankAccountInfo?.ineFront || "",
+      ineBack: $loggedInUser.bankAccountInfo?.ineBack || "",
+      bankStatement: $loggedInUser.bankAccountInfo?.bankStatement || ""
+    }
   }
 
   $: {
@@ -255,7 +260,7 @@
       </div>
     </div>
     <div class="display-user-info">
-      <ButtonGroup bind:active={active} options={$loggedInUser.accountType === "1" ? buttonGroupAggregatorAccount : buttonGroupOptions}/>
+      <ButtonGroup bind:active={active} options={$loggedInUser.accountType !== "1" ? buttonGroupAggregatorAccount : buttonGroupOptions}/>
       {#if active === "personalInfo"}
       <div class="display">
         <div class="container">
@@ -371,7 +376,7 @@
               </div>
               <div class="section">
                 <span>Identificación Oficial (INE)</span>
-                {#if $loggedInUser.bankAccountInfo.ineFront != "" && $loggedInUser.bankAccountInfo.ineBack != ""}
+                {#if userData.bankAccountInfo?.ineFront != "" && $loggedInUser.bankAccountInfo?.ineBack != ""}
                   <div class="img-row">
                     <a href={$loggedInUser.bankAccountInfo?.ineFront} target="_blank" rel="noopener noreferrer">
                       <img src={$loggedInUser.bankAccountInfo?.ineFront} alt="ineFront">
@@ -660,13 +665,15 @@
               <p>{userData.bankAccountInfo.clabe}</p>
             </div>
             <div class="section">
-              {#if $loggedInUser.bankAccountInfo.bankStatement != "" && $loggedInUser.accountType !="1"}
+              {#if userData.bankAccountInfo?.bankStatement != "" && $loggedInUser.accountType !="1"}
                 <span>Estado de Cuenta</span>
-                <div class="img-row">
-                  <a href={$loggedInUser.bankAccountInfo?.bankStatement} target="_blank" rel="noopener noreferrer">
-                    <img src={$loggedInUser.bankAccountInfo?.bankStatement} alt="bankStatement">
-                  </a>
-                </div>
+                {#if userData.bankAccountInfo?.bankStatement != ""}
+                  <div class="img-row">
+                    <a href={$loggedInUser.bankAccountInfo?.bankStatement} target="_blank" rel="noopener noreferrer">
+                      <img src={$loggedInUser.bankAccountInfo?.bankStatement} alt="bankStatement">
+                    </a>
+                  </div>
+                {/if}
               {/if}
             </div>
           {/if}
