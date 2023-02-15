@@ -23,6 +23,13 @@ body {
   /* position: relative; */
 }
 
+.main-container {
+  background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+  /* out */
+  box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
+  border-radius: 10px;
+}
+
 /* Sidebar */
 .sidebar {
   position: fixed;
