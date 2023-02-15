@@ -26,6 +26,8 @@
   const dbCollection = "users-client";
   const uid = user.uid;
   let transactions = [];
+  let transactionsWeek = [];
+  let transactionsMonth = [];
   let selectedTransaction = {};
   let transactionToArray = [];
   let transactionDetailView = false;
@@ -34,6 +36,8 @@
   let loading = false;
   let date = new Date;
   let active = "day";
+  let toggleWeek = "";
+  let toggleWeekDetails = "";
 
   let dateRangeStart, dateRangeEnd, ticketId, modalDateFilter, modalClarification;
   let pdfData, print = true;
@@ -64,7 +68,7 @@
     }else{
       notFound = false;
       // transactions = JSON.parse(JSON.stringify(transactions).replace(/"\s+|\s+"/g,'"'))
-      console.log(transactions)
+      // console.log(transactions)
     }
     loading = false;
   }
@@ -73,6 +77,7 @@
     active = "day";
     transactionDetailView = false;
     selectedTransaction = {};
+    transactions = [];
     loading = true;
     var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
     //transactions = [];
@@ -102,6 +107,8 @@
     active = "week";
     transactionDetailView = false;
     selectedTransaction = {};
+    transactionsWeek = [];
+    transactions = [];
     loading = true;
     var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
     const curr = new Date;
@@ -123,6 +130,22 @@
     transactions = querySnapshot.docs.map((doc) => {
       return {...doc.data()}
     });
+    if(transactions.length < 0){
+      transactionsWeek = [];
+    }else{
+      var index = 0;
+      let arr = []
+      do {
+        const initialDate = new Date();
+        let d = new Date(initialDate.setDate(initialDate.getDate() - initialDate.getDay()+(index+1))).setHours(0,0,0,0);
+        const formatDay = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(d);
+        const key = formatDay.replace(pattern,'$3$2$1')
+        arr.push({date: key, data: transactions.filter(date => date['Transaction Date'] === formatDay.replace(pattern,'$3$2$1')).map((doc) => {return doc})})
+        index++;
+      } while (index < 7);
+      transactionsWeek = [...arr]
+      // console.log(transactionsWeek)
+    }
     transactionFound();
     //console.log(transactions)
   }
@@ -131,15 +154,20 @@
     active = "month";
     transactionDetailView = false;
     selectedTransaction = {};
+    transactionsMonth = [];
+    transactions = [];
     loading = true;
     var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
     //transactions = [];
     const curr = new Date;
     const currentMonth = new Date(curr.setMonth(curr.getMonth(), 1)).setHours(0,0,0,0); // Sets Date to actual month day 1 at 00:00
     const nextMonth = new Date(curr.setMonth(curr.getMonth() + 1, 1)).setHours(0,0,0,0); // Sets Date to next month day 1 at 00:00
+    const lastDayOfMonth = new Date(curr.setMonth(curr.getMonth(), 0)).setHours(0,0,0,0); // Sets Date to last day of month at 00:00
+    const numDays = new Date(lastDayOfMonth).getDate();
 
     const first = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(currentMonth);
     const last = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(nextMonth);
+    const lastDayMonth = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(lastDayOfMonth);
 
     const q = query(
       collection(db, dbCollection, uid, "transactions"),
@@ -151,6 +179,40 @@
     transactions = querySnapshot.docs.map((doc) => {
       return {...doc.data()}
     });
+    let index = 0;
+    let arr = []
+    let array = []
+    let flag = 0;
+    let keyFirstDay, keyLastDay;
+    if(transactions.length < 0){
+      transactionsMonth = [];
+    }else{
+      do {
+        const d = new Date();
+        let initialDate = new Date(currentMonth).setHours(0,0,0,0);
+        let m = first.replace(pattern,'$3$2$1')
+        flag = parseInt(m) + index;
+        const key = flag.toString().replace(pattern,'$3$2$1')
+        if(arr.length < 7){
+          arr.push({date: key, data: transactions.filter(date => date['Transaction Date'] === flag.toString()).map((doc) => {return doc})})
+        }else{
+          array.push({firstDay: keyFirstDay, lastDay: keyLastDay ,objects: arr})
+          arr = [];
+          arr.push({date: key, data: transactions.filter(date => date['Transaction Date'] === flag.toString()).map((doc) => {return doc})})
+        }
+        if(arr.length === 1){keyFirstDay = flag.toString()}
+        else if(arr.length === 7){keyLastDay = flag.toString()}
+        index++;
+        if((index) === numDays){
+          array.push({firstDay: keyFirstDay, lastDay: keyLastDay ,objects: arr})
+          arr = [];
+          arr.push({date: key, data: transactions.filter(date => date['Transaction Date'] === flag.toString()).map((doc) => {return doc})})
+        }
+      } while (flag < parseInt(lastDayMonth.replace(pattern,'$3$2$1')));
+      // console.log(array)
+      transactionsMonth = [...array]
+      // console.log(transactionsMonth)
+    }
     transactionFound();
     //console.log(transactions)
   }
@@ -237,14 +299,14 @@
     generateCSV(data)
   }
 
-  const reverseTransaction = async(transaction) => {
+  /* const reverseTransaction = async(transaction) => {
     transaction.total = parseFloat(transaction.total);
     transaction.status = "refund";
     // console.log(transaction)
     await updateTransactionStatus(transaction);
     transactionDetailView = false;
     fetchByDayButton();
-  }
+  } */
 
   const getMonthName = (month) => {
     const monthsArray = {
@@ -296,7 +358,7 @@
     var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
     const extractMonth = string.replace(pattern, '$2')
     const month = getMonthName(extractMonth)
-    let str = string.replace(pattern, `$3 ${month} 20$1`)
+    let str = string.replace(pattern, `$3 de ${month} del 20$1`)
     // console.log(str)
     return str
   }
@@ -321,6 +383,37 @@
     let str = string.replace(pattern, `a las $1:$2`)
     return str
     // a las {selectedTransaction.date?.toDate().toLocaleTimeString()}
+  }
+
+  const handleTableState = (id) => {
+    // console.log(id)
+    document.getElementById(id).classList.toggle('hidden')
+  }
+  const handleToggleWeek = (id) => {
+    if(toggleWeek === id){toggleWeek = ""; toggleWeekDetails = ""}
+    else{toggleWeek = id}
+  }
+  const handleToggleWeekDetails = (id) => {
+    console.log(id)
+    if(toggleWeekDetails === id){toggleWeekDetails = ""}
+    else{toggleWeekDetails = id}
+  }
+
+  const getWeekDay = (string) => {
+    var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
+    const d = new Date(string.replace(pattern,'$2-$3-20$1'));
+    let index = d.getDay()
+    // console.log(index)
+    const days = {
+      0: {name: "Domingo"},
+      1: {name: "Lunes"},
+      2: {name: "Martes"},
+      3: {name: "Miércoles"},
+      4: {name: "Jueves"},
+      5: {name: "Viernes"},
+      6: {name: "Sábado"},
+    }
+    return days[index].name
   }
 
   const showModal = (option) => {
@@ -425,11 +518,6 @@
           </p>
         </div>
         <ButtonGroup bind:active={active} options={buttonGroupOptions}/>
-        <!-- <div class="button-group">
-          <button on:click={fetchByDayButton} class={`button ${active === "day" ? "button-active" : ""}`} type="button">Día</button>
-          <button on:click={fetchByWeekButton} class={`button ${active === "week" ? "button-active" : ""}`} type="button">Semana</button>
-          <button on:click={fetchByMonthButton} class={`button ${active === "month" ? "button-active" : ""}`} type="button">Mes</button>
-        </div> -->
         <div class="card-group">
           <div class="card">
             <div><p>Ventas Totales</p></div>
@@ -467,58 +555,229 @@
       </div>
       {:else}
         {#if !transactionDetailView}
-          <div class="transaction-tables">
-            <div bind:this={pdfData} id="pdfTable" class="table-container">
-              <table class="table-content">
-                <thead>
-                  <tr>
-                    <th>Fecha</th>
-                    <th>ID Transacción</th>
-                    <th>Cobro</th>
-                    <th>Comisión</th>
-                    <th>Dispersión</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {#each transactions as transaction}
-                    <tr class="clickable-table-row number"
-                      on:click={() => (selectedTransaction = transaction)}
-                      on:click={() => (transactionDetailView = true)}
-                      on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
-                      on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
-                    >
-                      <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td>
-                      <td>
-                        {transaction['Transaction Time']}
-                        <!-- <Input
-                          id='detailsTicket{transaction.id}'
-                          title="Ver Detalles"
-                          on:click={() => (selectedTransaction = transaction)}
-                          on:click={() => (transactionDetailView = true)}
-                          label={transaction.id} type="button" className="text-button" icon=""/> -->
-                      </td>
-                      <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                      <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                      <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                    </tr>
-                  {/each}
+          {#if active !== "week" && active !=="month" && transactions.length > 0}
+            <div class="transaction-tables">
+              <div bind:this={pdfData} id="pdfTable" class="table-container">
+                <table class="table-content">
+                  <thead>
                     <tr>
-                      <td><b>Total</b></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td>
-                        {
-                          transactions
-                          .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
-                          .toLocaleString(localeParam.language, localeParam.currency)
-                        }
-                      </td>
+                      <th>Fecha</th>
+                      <th>ID Transacción</th>
+                      <th>Cobro</th>
+                      <th>Comisión</th>
+                      <th>Dispersión</th>
                     </tr>
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {#each transactions as transaction}
+                      <tr class="clickable-table-row number"
+                        on:click={() => (selectedTransaction = transaction)}
+                        on:click={() => (transactionDetailView = true)}
+                        on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
+                        on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
+                      >
+                        <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td>
+                        <td>{transaction['Transaction Time']}</td>
+                        <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                      </tr>
+                    {/each}
+                      <tr>
+                        <td><b>Total</b></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          {
+                            transactions
+                            .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
+                            .toLocaleString(localeParam.language, localeParam.currency)
+                          }
+                        </td>
+                      </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+            {:else if active === "week"}<!-- TABLES BY WEEK -->
+              <div class="transaction-tables">
+                {#each transactionsWeek as day, index}
+                <div 
+                  class="week-table__title main-container"
+                  on:click={handleTableState(`pdfTable-${day.date}`)}
+                  on:keypress={(e) => e.key === 'Enter' ? handleTableState(`pdfTable-${day.date}`) : ""} 
+                >
+                    <div class="col">
+                      <div class="element">{getWeekDay(day.date)}</div>
+                      <div class="element">{getTransactionDate(day.date)}</div>
+                    </div>
+                    <div class="col">
+                      <div class="element">Ventas Totales</div>
+                      <div class="element">{day.data.length}</div>
+                    </div>
+                    <div class="col">
+                      <div class="element">Total</div>
+                      <div class="element">{day.data
+                        .reduce((prev, curr) => prev + (curr.Amount/100), 0)
+                        .toLocaleString(localeParam.language, localeParam.currency)}
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="element">Comisión</div>
+                      <div class="element">
+                        {day.data
+                        .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
+                        .toLocaleString(localeParam.language, localeParam.currency)}
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="element">Depósito</div>
+                      <div class="element">
+                        {day.data
+                        .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
+                        .toLocaleString(localeParam.language, localeParam.currency)}
+                      </div>
+                    </div>
+                </div>
+                  <div bind:this={pdfData} id={`pdfTable-${day.date}`} class="table-container hidden">
+                    {#if day.data.length <= 0}
+                      <div class="not-found">
+                        <b>
+                          {notFoundMessage}
+                        </b>
+                      </div>
+                    {:else}
+                    <table class="table-content">
+                      <thead>
+                        <tr>
+                          <th>Fecha</th>
+                          <th>ID Transacción</th>
+                          <th>Cobro</th>
+                          <th>Comisión</th>
+                          <th>Dispersión</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {#each day.data as transaction}
+                          <tr class="clickable-table-row number"
+                            on:click={() => (selectedTransaction = transaction)}
+                            on:click={() => (transactionDetailView = true)}
+                            on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
+                            on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
+                          >
+                            <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td>
+                            <td>{transaction['Transaction Time']}</td>
+                            <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                            <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                            <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                          </tr>
+                          {/each}
+                      </tbody>
+                    </table>
+                    {/if}
+                  </div>
+                {/each}
+              </div>
+            {:else if active === "month"}<!-- TABLES BY MONTH -->
+            <div class="transaction-tables">
+              {#each transactionsMonth as month}
+                <div 
+                  class="week-table__title "
+                  on:click={handleToggleWeek(`${month.firstDay}-${month.lastDay}`)}
+                  on:keypress={(e) => e.key === 'Enter' ? handleToggleWeek(`${month.firstDay}-${month.lastDay}`) : ""}
+                >
+                  <div class="col">
+                    <!-- <div class="element">Fechas</div> -->
+                    <div class="element">
+                      Del {getTransactionDate(month.firstDay)} al {getTransactionDate(month.lastDay)}
+                    </div>
+                  </div>
+                </div>
+                {#each month.objects as objects, i}
+                  <div 
+                    class={`${toggleWeek === `${month.firstDay}-${month.lastDay}` ? "" : "hidden"}`}
+                    on:click={handleToggleWeekDetails(`${objects.date}`)}
+                    on:keypress={(e) => e.key === 'Enter' ? handleToggleWeek(`${objects.date}`) : ""}
+                  >
+                    <div class="main-container week-table__subtitle">
+                      <div class="col">
+                        <div class="element">{getWeekDay(objects.date)}</div>
+                        <div class="element">
+                          {getTransactionDate(objects.date)}
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="element">Ventas Totales</div>
+                        <div class="element">{objects.data.length}</div>
+                      </div>
+                      <div class="col">
+                        <div class="element">Total</div>
+                        <div class="element">
+                          {objects.data
+                          .reduce((prev, curr) => prev + (curr.Amount/100), 0)
+                          .toLocaleString(localeParam.language, localeParam.currency)}
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="element">Comisión</div>
+                        <div class="element">
+                          {objects.data
+                          .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
+                          .toLocaleString(localeParam.language, localeParam.currency)}
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="element">Depósito</div>
+                        <div class="element">
+                          {objects.data
+                          .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
+                          .toLocaleString(localeParam.language, localeParam.currency)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div bind:this={pdfData} id={`pdfTable-${month.date}`} class={`table-container ${toggleWeekDetails === objects.date ? "":"hidden"}`}>
+                    {#if objects.data.length <= 0}
+                      <div class={`not-found`}>
+                        <b>
+                          {notFoundMessage}
+                        </b>
+                      </div>
+                    {:else}
+                    <table class="table-content">
+                      <thead>
+                        <tr>
+                          <th>Fecha</th>
+                          <th>ID Transacción</th>
+                          <th>Cobro</th>
+                          <th>Comisión</th>
+                          <th>Dispersión</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {#each objects.data as transaction}
+                          <tr class="clickable-table-row number"
+                            on:click={() => (selectedTransaction = transaction)}
+                            on:click={() => (transactionDetailView = true)}
+                            on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
+                            on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
+                          >
+                            <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
+                            <td>{transaction['Transaction Time']}</td>
+                            <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                            <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                            <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                          </tr>
+                          {/each}
+                      </tbody>
+                    </table>
+                    {/if}
+                  </div>
+                {/each}
+              {/each}
+            </div>
+          {/if}
           {:else}
           <div class="return">
             <Input on:click={() => (transactionDetailView = false)} label="Regresar" id="detailsReturnButton" type="button" className="btn-plain" icon=""/>
@@ -1214,4 +1473,76 @@
     justify-content: center;
     width: 100%;
   } */
+
+  .hidden {
+    /* height: 0;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s linear; */
+    display: none;
+  }
+
+  .week-table__title {
+    /* width: -webkit-fill-available; */
+    display: grid;
+    grid-auto-flow: column;
+    /* justify-content: center; */
+    align-items: center;
+    padding: 1rem 1rem;
+    gap: 16px;
+    margin: 1rem 0rem;
+    min-width: 60rem;
+    /* Nue Fill */
+    
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    cursor: pointer;
+  }
+
+  .week-table__title > .col {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+  }
+  .week-table__title * .element {
+    /* TEXT */
+    font-family: 'Roboto';
+    font-weight: 500;
+    font-size: 1.25rem;
+    color: #113A62;
+  }
+  .week-table__subtitle {
+    /* width: -webkit-fill-available; */
+    display: grid;
+    grid-auto-flow: column;
+    /* justify-content: center; */
+    align-items: center;
+    padding: 1rem 1rem;
+    gap: 16px;
+    margin: 1rem 0rem;
+    min-width: 60rem;
+    /* Nue Fill */
+    
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    cursor: pointer;
+  }
+
+  .week-table__subtitle > .col {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+  }
+  .week-table__subtitle * .element {
+    /* TEXT */
+    font-family: 'Roboto';
+    font-weight: 500;
+    font-size: 1.25rem;
+    color: #113A62;
+  }
 </style>
