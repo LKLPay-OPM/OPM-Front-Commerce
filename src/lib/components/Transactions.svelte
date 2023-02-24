@@ -167,7 +167,16 @@
     transactionsMonth = querySnapshot.docs.map((doc) => {
       return {...doc.data()}
     });
-    console.log(transactionsMonth)
+
+    let newArr = [];
+    transactionsMonth.map((arr) => {
+      arr.data.map((data)=>{
+        newArr.push(data)
+      })
+    })
+    transactions = [...newArr]
+    // console.log(transactions)
+    // console.log(transactionsMonth)
 
     // console.log(transactions)
     /* let index = 0;
@@ -252,6 +261,14 @@
       } while (flag < parseInt(lastDayMonth.replace(pattern,'$3$2$1')));
       // console.log(array)
       transactionsMonth = [...array]
+
+      transactionsMonth.map((months) => (
+        console.log(months.data)
+        /* months.map((data)=>(
+
+          console.log({data})
+        )) */
+      ))
       // console.log(transactionsMonth)
     }
     transactionFound();
@@ -585,11 +602,19 @@
       <div class="card-group">
         <div class="card">
           <div><p>Total Vendido</p></div>
-          <div><span>{user.total?.toLocaleString(localeParam.language, localeParam.currency)}</span></div>
+          <!-- <div><span>{user.total?.toLocaleString(localeParam.language, localeParam.currency)}</span></div> -->
+          <div><span>{transactions
+            .reduce((prev, curr) => prev + (curr.Amount/100), 0)
+            .toLocaleString(localeParam.language, localeParam.currency)}
+            </span></div>
         </div>
         <div class="card">
           <div><p>Comisión</p></div>
-          <div><span>{(user?.toDeposit - user?.totalCommissions)?.toLocaleString(localeParam.language, localeParam.currency)}</span></div>
+          <div><span>{transactions
+            .reduce((prev, curr) => prev + (curr.Amount/100)*.035, 0)
+            .toLocaleString(localeParam.language, localeParam.currency)}
+            </span></div>
+          <!-- <div><span>{(user?.toDeposit - user?.totalCommissions)?.toLocaleString(localeParam.language, localeParam.currency)}</span></div> -->
         </div>
         <div class="card">
           <div><p>Propinas</p></div>
@@ -597,7 +622,11 @@
         </div>
         <div class="card">
           <div><p>Saldo a Depositar</p></div>
-          <div><span>{user.toDeposit?.toLocaleString(localeParam.language, localeParam.currency)}</span></div>
+          <div><span>{transactions
+            .reduce((prev, curr) => prev + (curr.Amount/100)*.965, 0)
+            .toLocaleString(localeParam.language, localeParam.currency)}
+            </span></div>
+          <!-- <div><span>{user.toDeposit?.toLocaleString(localeParam.language, localeParam.currency)}</span></div> -->
         </div>
       </div>
     </div>
@@ -844,13 +873,13 @@
                 <div class="card-container">
                   <div class="row">
                     <div class="title">
-                      <i class="arrow-blue"
-                        on:click={() => (dayView = !dayView)}
-                        on:keypress={(e) => e.key === 'Enter' ? dayView = !dayView : ""}
+                      <i class="arrow-blue clickable"
+                        on:click={() => (monthView = !monthView)}
+                        on:keypress={(e) => e.key === 'Enter' ? monthView = !monthView : ""}
                       >
                         <Icons name="arrow-bwd" width="24" height="24"/>
                       </i>
-                      {getMonthPeriod(selectedDay.date)}}
+                      {getMonthPeriod(selectedDay.date)}
                     </div>
                   </div>
                   <table class="table-content">
@@ -887,10 +916,7 @@
                     <tbody class="inside">
                       {#each selectedDay.data as transaction}
                         <tr class="clickable number"
-                          on:click={() => (selectedTransaction = transaction)}
-                          on:click={() => (transactionDetailView = true)}
-                          on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
-                          on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
+                          
                         >
                           <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
                           <td>{transaction['Transaction Time']}</td>
@@ -1484,7 +1510,7 @@
     height: 2.375rem;
   }
 
-  .table-content .clickable {
+  .clickable {
     cursor: pointer;
   }
 
