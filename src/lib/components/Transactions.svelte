@@ -327,11 +327,14 @@
 
   const sortObject = (data) => {
     const transactionsNew = data.map(element => {
+      //value = Math.round((e.target.value) * 100) / 100
       return {
-        date: element.date?.toDate().toLocaleDateString(),
-        id: element.id,
-        status: element.status,
-        total: parseInt(element.total)
+        date: getTransactionDate(element['Transaction Date']),
+        id: element['Transaction Time'],
+        total: parseInt(element.Amount)/100,
+        commission: ((element.Amount*.035)/100),
+        deposit: (element.Amount*.965)/100,
+        card: 'MasterCard'
       }
     })
     return transactionsNew;
@@ -588,8 +591,8 @@
           <Input on:click={fetchByTicketId} label="" id="byTicketId-button" type="button" className="btn-plain btn-round {ticketId != "" ? '' : 'disabled'}" icon="search"/>
         </div>
         <div class="export-buttons">
-          <Input label="" id="csv-export" type="button" className="btn-plain btn-square fill-blue {transactions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/>
-          <Input label="" id="excel-export" type="button" className="btn-plain btn-square fill-green {transactions.length > 0 ? '' : 'disabled'}" icon="xls-fill"/>
+          <Input on:click={exportDataToCSV(transactions)} label="" id="csv-export" type="button" className="btn-plain btn-square fill-blue {transactions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/>
+          <Input on:click={exportDataToExcel(transactions)} label="" id="excel-export" type="button" className="btn-plain btn-square fill-green {transactions.length > 0 ? '' : 'disabled'}" icon="xls-fill"/>
           <Input label="" id="print" type="button" className="btn-plain btn-square fill-blue {transactions.length > 0 ? '' : 'disabled'}" icon="print"/>
           <Input label="" id="pdf-export" type="button" className="btn-plain btn-square fill-red {transactions.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/>
           <!-- <Input on:click={exportDataToCSV(transactions)} label="" id="csv-export" type="button" className="btn-plain btn-square {transactions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/> -->

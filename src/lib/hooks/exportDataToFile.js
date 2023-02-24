@@ -7,8 +7,10 @@ let today = new Date().toISOString().slice(0, 10);
 const headers = {
   date: 'Fecha',
   id: 'Ticket',
-  status: 'Estado',
   total: 'Total',
+  commission: 'Comisión',
+  deposit: 'Depósito',
+  card: 'Tarjeta'
 };
 const localeParam = {
   language: 'es-MX',
@@ -298,7 +300,7 @@ export const generateCSV = (arrayData, clientData) => {
   const exportCSVFile = (headers, items, fileName) => {
     items.unshift(headers)
     const data = items.map(item => {
-      return [item.date, item.id, item.status, item.total];
+      return [item.date, item.id, item.total, item.commission, item.deposit, item.card];
     });
     const workBook = XLSX.utils.book_new(); //create new workbook
     const workSheetData = [
@@ -318,7 +320,7 @@ export const generateXLSX = (arrayData) => {
   const exportXLSXFile = (headers, items, fileName) => {
     items.unshift(headers)
     const data = items.map(item => {
-      return [item.date, item.id, item.status, item.total];
+      return [item.date, item.id, item.total, item.commission, item.deposit, item.card];
     });
     const workBook = XLSX.utils.book_new(); //create new workbook
     const workSheetData = [
