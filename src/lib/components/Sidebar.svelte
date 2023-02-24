@@ -97,7 +97,7 @@
         </ul>
       </li>
       <li>
-        <a href="/" on:click={logout}>
+        <a href="/login" on:click={logout}>
           <i>
             <Icons name="logout-box-line" width="24" height="24"/>
           </i>
