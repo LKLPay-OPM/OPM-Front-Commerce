@@ -3,6 +3,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Raleway';
+  font-feature-settings: 'pnum' on, 'lnum' on;
 }
 
 body {
@@ -27,6 +28,28 @@ body {
   background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
   /* out */
   box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
+  border-radius: 10px;
+}
+
+.card-container {
+  /* Fill Container */
+  background: #F3F3F3;
+  /* container effect */
+  box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+  border-radius: 10px;
+}
+
+.card-inside {
+  background: #E9EDF0;
+  /* inner-flat */
+  box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0;
+  border-radius: 0px 0px 10px 10px;
+}
+
+.card-secondary {
+  background: #E9EDF0;
+  /* outer.effect */
+  box-shadow: -5px -5px 8px #F2F4F8, 5px 5px 7px rgba(174, 174, 192, 0.5);
   border-radius: 10px;
 }
 

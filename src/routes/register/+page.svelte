@@ -82,21 +82,21 @@
     const id = makeId(7)
     let sum = stringSum(id)
     const uid = id+sum;
-    console.log("ID: ",id)
-    console.log("Validador: ", sum)
-    console.log("User ID: ", uid)
+    // console.log("ID: ",id)
+    // console.log("Validador: ", sum)
+    // console.log("User ID: ", uid)
     // registerData.uid = id+sum;
     // console.log(registerData.uid)
     // console.log(registerData.uid.split('', 7)) //Gets the first 7 chars of string
     // console.log(registerData.uid.slice(-1)) //Gets the last char of string
 
     const response = await registerUser(registerData.email, registerData.password, registerData)
-    .then(() => {
+    /* .then(() => {
       menu = "success"
     })
     .catch(() => {
       menu = "error"
-    })
+    }) */
   }
 </script>
 
