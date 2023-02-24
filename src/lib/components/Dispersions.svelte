@@ -646,7 +646,7 @@
             <div><span>{user.toDeposit.toLocaleString(localeParam.language, localeParam.currency)}</span></div>
           </div>
           <div class="button">
-            <Input on:click={showModal(modalImmediateDeposit)} label="Solicitar Depósito" id="immediateDepositButton" type="button" className="btn-plain" icon=""/>
+            <Input on:click={showModal(modalImmediateDeposit)} label="Depósito Urgente" id="immediateDepositButton" type="button" className="btn" icon=""/>
           </div>
         </div>
       </div>
@@ -688,6 +688,7 @@
                       <th>Saldo</th>
                       <th>Tipo</th>
                       <th>Comisión</th>
+                      <th>Interés</th>
                       <th>Depósito</th>
                       <th>Saldo Final</th>
                     </tr>
@@ -711,6 +712,7 @@
                         <td>{parseFloat(dispersion.total).toLocaleString(localeParam.language, localeParam.currency)}</td>
                         <td>{dispersion.type}</td>
                         <td>{parseFloat(dispersion.commission).toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td></td>
                         <td>{parseFloat(dispersion.dispersion).toLocaleString(localeParam.language, localeParam.currency)}</td>
                         <td>{parseFloat(dispersion.afterDispersion).toLocaleString(localeParam.language, localeParam.currency)}</td>
                       </tr>
