@@ -30,6 +30,10 @@
     }
   }
 
+  $: {
+		fetchByDay()
+  }
+
   const getMonthName = (month) => {
     const monthsArray = {
       "01": {value: "Enero"},
@@ -78,32 +82,6 @@
 
   const fetchByDay = async() => {
     loading = true;
-    /* transactions = [...$loggedInUser.dispersions];
-    if(transactions.length <= 0){
-      transactions.push(
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-        {date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970},
-      )
-    } */
-    // active = "day";
-    // transactionDetailView = false;
-    // selectedTransaction = {};
     var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
     //transactions = [];
     const curr = new Date;
@@ -144,7 +122,7 @@
   }
 
   onMount(async () => {
-		await fetchByDay()
+		fetchByDay()
 	});
 </script>
 <div class="container">
@@ -165,7 +143,7 @@
         <InfoCard className={""} title="Total de Ventas de Hoy" numData={transactions.reduce((prev, curr) => prev + (curr['Amount']/100), 0)?.toLocaleString(localeParam.language, localeParam.currency)}/>
       </div>
       <div class="card">
-        <InfoCard className={""} title="Por Depositar" numData={$loggedInUser.toDeposit?.toLocaleString(localeParam.language, localeParam.currency)}/>
+        <InfoCard className={""} title="Por Depositar" numData={transactions.reduce((prev, curr) => prev + (curr['Amount']/100)* 0.965, 0)?.toLocaleString(localeParam.language, localeParam.currency)}/>
       </div>
     </div>
     <div class="transactions">

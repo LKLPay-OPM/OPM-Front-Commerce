@@ -1,8 +1,8 @@
 <script>
   let terminals = [
-    {name: "Matriz 1", serial:'F20-003925', branch:'Matriz', type:'Master', transactions:'00000000200000'},
-    {name: "Matriz 2", serial:'i9100-012680', branch:'Matriz', type:'Master', transactions:'00000000100000'},
-    {name: "Sucursal 1", serial:'i2000-019007', branch:'Sucursal', type:'Master', transactions:'00000000200000'},
+    {name: "Matriz 1", serial:'F20-003925', branch:'Matriz', type:'Master', transactions:'000000200000'},
+    {name: "Matriz 2", serial:'i9100-012680', branch:'Matriz', type:'Master', transactions:'000000100000'},
+    {name: "Sucursal 1", serial:'i2000-019007', branch:'Sucursal', type:'Master', transactions:'000000265880'},
   ]
 
   const localeParam = {

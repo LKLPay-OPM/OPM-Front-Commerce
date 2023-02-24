@@ -36,13 +36,13 @@
 
 
 {#if $isLoggedIn === true}
-	{#if 
+	<!-- {#if 
 		$loggedInUser.firstTimeUser == true || $onboardingSuccess == true
 	}
 		<Onboarding/>
 		{:else}
+	{/if} -->
 		<Dashboard/>
-	{/if}
 {/if}
 
 <style>

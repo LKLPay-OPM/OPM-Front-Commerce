@@ -477,7 +477,7 @@
             <p>Monto a Depositar</p>
           </div>
           <div class="content">
-            <p>{getPercentage(immediateDeposit.immediateDepositQty,immediateDeposit.immediateDepositCommission).toLocaleString(localeParam.language, localeParam.currency)}</p>
+            <p>{$loggedInUser.toDeposit?.toLocaleString(localeParam.language, localeParam.currency)}</p>
           </div>
         </div>
         <div class="terms">
