@@ -133,14 +133,13 @@
     loading = true;
     dispersions = [...$loggedInUser.dispersions];
     if(dispersions.length <= 0){
-      dispersions.push({
-        date: Timestamp.now(),
-        id: "123",
-        total: 1000,
-        commission: 30,
-        dispersion: 970,
-        afterDispersion: 0
-      })
+      dispersions.push(
+        {date: '230222',time: '183033',type: 'Inmediata',id: "123",total: 1000,commission: 35,dispersion: 965,afterDispersion: 0},
+        {date: '230223',time: '093021',type: 'Tradicional',id: "124",total: 1000,commission: 35,dispersion: 965,afterDispersion: 0},
+        {date: '230223',time: '130638',type: 'Urgente',id: "125",total: 1000,commission: 35,dispersion: 965,afterDispersion: 0},
+        {date: '230223',time: '183033',type: 'Inmediata',id: "126",total: 1000,commission: 35,dispersion: 965,afterDispersion: 0},
+        {date: '230224',time: '093021',type: 'Tradicional',id: "127",total: 1000,commission: 35,dispersion: 965,afterDispersion: 0},
+      )
       // console.log($loggedInUser.dispersions)
       // console.log(dispersions)
     }
@@ -362,6 +361,18 @@
       9: {value: "Octubre"},
       10: {value: "Noviembre"},
       11: {value: "Diciembre"},
+      "01": {value: "Enero"},
+      "02": {value: "Febrero"},
+      "03": {value: "Marzo"},
+      "04": {value: "Abril"},
+      "05": {value: "Mayo"},
+      "06": {value: "Junio"},
+      "07": {value: "Julio"},
+      "08": {value: "Agosto"},
+      "09": {value: "Septiembre"},
+      "10": {value: "Octubre"},
+      "11": {value: "Noviembre"},
+      "12": {value: "Diciembre"},
     }
 
     return monthsArray[month].value
@@ -396,6 +407,23 @@
     return types[id].value
   }
 
+  const getTransactionDate = (string) => {
+    var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
+    const extractMonth = string.replace(pattern, '$2')
+    const month = getMonthName(extractMonth)
+    let str = string.replace(pattern, `$3 de ${month}`)
+    // let str = string.replace(pattern, `$3 de ${month} del 20$1`)
+    // console.log(str)
+    return str
+  }
+
+  const getTransactionTime = (string) => {
+    var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
+    let str = string.replace(pattern, `$1:$2:$3`)
+    // console.log(str)
+    return str
+  }
+
   const showModal = (option) => {
     option.show();
   }
@@ -422,15 +450,15 @@
 <!-- MODAL IMMEDIATE DEPOSIT -->
 <Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalImmediateDeposit}>
   <div slot="header">
-    <p>Solicitar Depósito Inmediato</p>
+    <p>Solicitar Depósito Urgente</p>
   </div>
   <div slot="content">
     <div class="immediate-deposit">
-      {#if immediateDeposit.availableBalance < 500}
+      <!-- {#if immediateDeposit.availableBalance < 500}
         <div>
           <p>Para Solicitar un depósito Urgente es necesario que tu saldo a depositar sea al menos del mínimo por solicitud ($500) además de haber agregado la documentación necesaria en la sección de <b>Perfil</b></p>
         </div>
-        {:else}
+        {:else} -->
         <div class="row-element">
           <!-- <p>{immediateDeposit.availableBalance.toLocaleString(localeParam.language, localeParam.currency)}</p> -->
           <IconInput icon="dollar" label="Saldo Disponible" id="availableAmountTxtField" value={immediateDeposit.availableBalance} disabled={true} className="disabled-txt-field" type="number"/>
@@ -464,16 +492,12 @@
             datos personales.
           </p>
         </div>
-      {/if}
+      <!-- {/if} -->
     </div>
   </div>
   <div class="modal-buttons" slot="footer">
     <Input on:click={closeModal(modalImmediateDeposit)} label="Cerrar" id="buttonCloseModalImmediateDeposit" type="button" className="btn-plain" icon=""/>
-    {#if immediateDeposit.availableBalance > 500 && 
-      $loggedInUser.bankAccountInfo.ineFront != "" && 
-      $loggedInUser.bankAccountInfo.ineBack != "" &&
-      $loggedInUser.bankAccountInfo.clabe != ""
-    }  
+    {#if immediateDeposit.availableBalance > 500 && terms}  
       <Input 
         on:click={closeModal(modalImmediateDeposit)} 
         on:click={() => handleImmediateDeposit()}
@@ -612,7 +636,7 @@
             {date.getDate()} de {getMonthName(date.getMonth())} del {date.getFullYear()}
           </p>
         </div>
-        <ButtonGroup bind:active={active} options={buttonGroupOptions}/>
+        <!-- <ButtonGroup bind:active={active} options={buttonGroupOptions}/> -->
         <div class="card-group">
           <div class="button">
             <Input on:click={showModal(modalClarification)} label="Solicitar Aclaración" id="aclarationButton" type="button" className="btn-plain" icon=""/>
@@ -632,9 +656,13 @@
           <Input on:click={fetchByTicketId} label="" id="byTicketId-button" type="button" className="btn-plain btn-round {ticketId != "" ? '' : 'disabled'}" icon="search"/>
         </div>
         <div class="export-buttons">
-          <Input on:click={exportDataToCSV(dispersions)} label="" id="csv-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/>
-          <Input on:click={exportDataToExcel(dispersions)} label="" id="excel-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="xls-fill"/>
-          <Input on:click={exportDataToPDF(dispersions)} label="" id="pdf-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/>
+          <Input label="" id="csv-export" type="button" className="btn-plain btn-square fill-blue {dispersions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/>
+          <Input label="" id="excel-export" type="button" className="btn-plain btn-square fill-green {dispersions.length > 0 ? '' : 'disabled'}" icon="xls-fill"/>
+          <Input label="" id="print" type="button" className="btn-plain btn-square fill-blue {dispersions.length > 0 ? '' : 'disabled'}" icon="print"/>
+          <Input label="" id="pdf-export" type="button" className="btn-plain btn-square fill-red {dispersions.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/>
+          <!-- <Input on:click={exportDataToCSV(dispersions)} label="" id="csv-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/> -->
+          <!-- <Input on:click={exportDataToExcel(dispersions)} label="" id="excel-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="xls-fill"/> -->
+          <!-- <Input on:click={exportDataToPDF(dispersions)} label="" id="pdf-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/> -->
         </div>
       </div>
     </div>
@@ -650,44 +678,46 @@
         {#if !dispersionDetailView}
           <div class="dispersion-tables">
             <div bind:this={pdfData} id="pdfTable" class="table-container">
-              <table class="table-content">
-                <thead>
-                  <tr>
-                    <th>Fecha</th>
-                    <th>ID Transacción</th>
-                    <th>Total Cobrado</th>
-                    <th>Comisión</th>
-                    <th>Saldo a Depositar</th>
-                    <th>
-                      Saldo después
-                      del Depósito
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {#each dispersions as dispersion}
-                    <tr class="clickable-table-row"
-                      on:click={() => (dispersionDetailView = true)}
-                      on:keypress={(e) => e.key === 'Enter' ? dispersionDetailView = true : ""} 
-                    >
-                      <td>{dispersion.date.toDate().getDate()} {getMonthName(dispersion.date.toDate().getMonth())} {dispersion.date.toDate().getFullYear()} - {dispersion.date.toDate().toLocaleTimeString()}</td>
-                      <!-- <td>
-                        <Input
-                          id='detailsTicket{dispersion.id}'
-                          title="Ver Detalles"
-                          on:click={() => (selectedDispersion = dispersion)}
-                          on:click={() => (dispersionDetailView = true)}
-                          label={dispersion.id} type="button" className="text-button" icon=""/>
-                      </td> -->
-                      <td>{dispersion.id}</td>
-                      <td>{parseFloat(dispersion.total).toLocaleString(localeParam.language, localeParam.currency)}</td>
-                      <td>{parseFloat(dispersion.commission).toLocaleString(localeParam.language, localeParam.currency)}</td>
-                      <td>{parseFloat(dispersion.dispersion).toLocaleString(localeParam.language, localeParam.currency)}</td>
-                      <td>{parseFloat(dispersion.afterDispersion).toLocaleString(localeParam.language, localeParam.currency)}</td>
+              <div class="card-container">
+
+                <table class="table-content">
+                  <thead>
+                    <tr>
+                      <th>Fecha</th>
+                      <th>ID</th>
+                      <th>Saldo</th>
+                      <th>Tipo</th>
+                      <th>Comisión</th>
+                      <th>Depósito</th>
+                      <th>Saldo Final</th>
                     </tr>
-                  {/each}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {#each dispersions as dispersion}
+                      <tr class="clickable-table-row"
+                        on:click={() => (dispersionDetailView = true)}
+                        on:keypress={(e) => e.key === 'Enter' ? dispersionDetailView = true : ""} 
+                      >
+                        <td>{getTransactionDate(dispersion.date)+" - "+getTransactionTime(dispersion.time)}</td>
+                        <!-- <td>
+                          <Input
+                            id='detailsTicket{dispersion.id}'
+                            title="Ver Detalles"
+                            on:click={() => (selectedDispersion = dispersion)}
+                            on:click={() => (dispersionDetailView = true)}
+                            label={dispersion.id} type="button" className="text-button" icon=""/>
+                        </td> -->
+                        <td>{dispersion.id}</td>
+                        <td>{parseFloat(dispersion.total).toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td>{dispersion.type}</td>
+                        <td>{parseFloat(dispersion.commission).toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td>{parseFloat(dispersion.dispersion).toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td>{parseFloat(dispersion.afterDispersion).toLocaleString(localeParam.language, localeParam.currency)}</td>
+                      </tr>
+                    {/each}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
           {:else}
@@ -769,7 +799,11 @@
               <div class="details-right">
                 <div class="title">Reportes</div>
                 <div class="export-buttons">
-                  <Input on:click={
+                  <Input label="" id="csv-export" type="button" className="btn-plain btn-square fill-blue {dispersions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/>
+                  <Input label="" id="excel-export" type="button" className="btn-plain btn-square fill-green {dispersions.length > 0 ? '' : 'disabled'}" icon="xls-fill"/>
+                  <Input label="" id="print" type="button" className="btn-plain btn-square fill-blue {dispersions.length > 0 ? '' : 'disabled'}" icon="print"/>
+                  <Input label="" id="pdf-export" type="button" className="btn-plain btn-square fill-red {dispersions.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/>
+                  <!-- <Input on:click={
                     () => {
                       dispersionToArray.push(selectedDispersion)
                       exportDataToCSV(dispersionToArray)
@@ -790,7 +824,8 @@
                       dispersionToArray = [];
                     }
                   } label="" id="pdf-export" type="button" className="btn-plain btn-square " icon="pdf-fill"/>
-                </div>
+                 -->
+              </div>
               </div>
             </div>
           </div>
@@ -1060,10 +1095,12 @@
 
   .table-content {
     /* width: 46.875rem; */
-    width: 70%;
+    /* width: 70%; */
     /* border-bottom: 1px solid; */
     border-collapse: collapse;
-    padding: 1rem 1rem;
+    margin: 2rem;
+    border-spacing: 1rem;
+    min-width: 40rem;
   }
 
   .table-content .clickable-table-row {
@@ -1076,9 +1113,9 @@
     font-weight: 500;
     font-size: 13px;
     line-height: 18px;
-    text-align: left;
+    text-align: center;
     /* text-placeholder */
-    color: #8C9FB1;
+    color: #113A62;
     height: 2.375rem;
   }
 
@@ -1091,7 +1128,15 @@
     color: #000000;
     text-align: center;
     border-bottom: 1px solid #8C9FB1;
-    padding: .5rem .5rem;
+    padding: 0.625rem 0rem 0.625rem 0rem;
+    min-width: 7rem;
+
+  }
+
+  th:first-child {
+    text-align: left;
+  }
+  td:first-child {
     text-align: left;
   }
 

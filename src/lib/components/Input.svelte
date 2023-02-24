@@ -451,5 +451,14 @@
   display: none;
 }
 
+.fill-red label {
+  color: #C40000;
+}
+.fill-green label {
+  color: #00C48C;
+}
+.fill-blue label {
+  color: #113A62;
+}
 
 </style>

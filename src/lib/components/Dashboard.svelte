@@ -210,7 +210,7 @@
                 <td>{parseFloat(transaction.dispersion)?.toLocaleString(localeParam.language, localeParam.currency)}</td> -->
               </tr>
             {/each}
-              <tr>
+              <!-- <tr>
                 <td><b>Totales</b></td>
                 <td></td>
                 <td></td>
@@ -221,7 +221,7 @@
                     .toLocaleString(localeParam.language, localeParam.currency)
                   }
                 </td>
-              </tr>
+              </tr> -->
           </tbody>
         </table>
       </div>
@@ -287,8 +287,6 @@
 
   .content .card-group .card {
     min-width: calc((80% / 4) - 2rem);
-    /* max-width: calc((80% / 4) - 2rem); */
-    min-height: 10rem;/* 160px */
   }
 
   .transactions {

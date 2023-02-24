@@ -70,7 +70,7 @@ export const logout = async() => {
     //goto('/')
     linkSelected.set('Inicio')
     if(browser){
-      goto("/");
+      goto("/login");
       // window.location.href = '/';
     }
   }).catch((error) => {
