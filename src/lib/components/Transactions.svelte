@@ -569,11 +569,11 @@
               <Input on:click={showModal(modalDateFilter)} label="Filtrar" id="openModalDateFilter" type="button" className="btn-plain fill-blue" icon=""/>
             {/if}
           </div>
-          <div class="element">
-            {#if transactionDetailView}
+          {#if transactionDetailView}
+            <div class="element">
               <Input on:click={() => (transactionDetailView = false)} label="Regresar" id="detailsReturnButton" type="button" className="btn-plain" icon=""/>
-            {/if}
-          </div>
+            </div>
+          {/if}
         </div>
       </div>
       <div class="top__middle">
@@ -651,10 +651,10 @@
                     <thead>
                       <tr>
                         <th>Fecha</th>
-                        <th>ID</th>
+                        <th class="responsive">ID</th>
                         <th>Venta</th>
-                        <th>Comisión</th>
-                        <th>Depósito</th>
+                        <th class="responsive">Comisión</th>
+                        <th class="responsive">Depósito</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -666,10 +666,10 @@
                           on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
                         >
                           <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td>
-                          <td>{transaction['Transaction Time']}</td>
+                          <td class="responsive">{transaction['Transaction Time']}</td>
                           <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                          <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                          <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                          <td class="responsive">{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                          <td class="responsive">{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
                         </tr>
                       {/each}
                     </tbody>
@@ -688,8 +688,8 @@
                           <th class="title">Día</th>
                           <th class="title">N° Ventas</th>
                           <th class="title">Vendido</th>
-                          <th class="title">Comisión</th>
-                          <th class="title">Depósito</th>
+                          <th class="title responsive">Comisión</th>
+                          <th class="title responsive">Depósito</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -707,12 +707,12 @@
                                 .reduce((prev, curr) => prev + (curr.Amount/100), 0)
                                 .toLocaleString(localeParam.language, localeParam.currency)}
                             </td>
-                            <td class="element">
+                            <td class="element responsive">
                               {day.data
                                 .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
                                 .toLocaleString(localeParam.language, localeParam.currency)}
                             </td>
-                            <td class="element">
+                            <td class="element responsive">
                               {day.data
                                 .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
                                 .toLocaleString(localeParam.language, localeParam.currency)}
@@ -744,8 +744,8 @@
                   <table class="table-content">
                     <thead style="height:1.5rem">
                       <tr>
-                        <th>Fecha</th>
-                        <th>ID</th>
+                        <th class="responsive">Fecha</th>
+                        <th class="responsive">ID</th>
                         <th>Ventas</th>
                         <th>Comisión</th>
                         <th>Depósito</th>
@@ -753,8 +753,8 @@
                     </thead>
                     <thead style="height:1.5rem">
                       <tr>
-                        <th></th>
-                        <th></th>
+                        <th class="responsive"></th>
+                        <th class="responsive"></th>
                         <th>
                           {selectedDay.data
                             .reduce((prev, curr) => prev + (curr.Amount/100), 0)
@@ -780,8 +780,8 @@
                           on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
                           on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
                         >
-                          <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
-                          <td>{transaction['Transaction Time']}</td>
+                          <td class="responsive">{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
+                          <td class="responsive">{transaction['Transaction Time']}</td>
                           <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
                           <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
                           <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
@@ -803,8 +803,8 @@
                           <th class="title">Día</th>
                           <th class="title">N° Ventas</th>
                           <th class="title">Vendido</th>
-                          <th class="title">Comisión</th>
-                          <th class="title">Depósito</th>
+                          <th class="title responsive">Comisión</th>
+                          <th class="title responsive">Depósito</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -822,12 +822,12 @@
                               .reduce((prev, curr) => prev + (curr.Amount/100), 0)
                               .toLocaleString(localeParam.language, localeParam.currency)}
                           </td>
-                          <td class="element">
+                          <td class="element responsive">
                             {month.data
                               .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
                               .toLocaleString(localeParam.language, localeParam.currency)}
                           </td>
-                          <td class="element">
+                          <td class="element responsive">
                             {month.data
                               .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
                               .toLocaleString(localeParam.language, localeParam.currency)}
@@ -888,8 +888,8 @@
                   <table class="table-content">
                     <thead style="height:1.5rem">
                       <tr>
-                        <th>Fecha</th>
-                        <th>ID</th>
+                        <th class="responsive">Fecha</th>
+                        <th class="responsive">ID</th>
                         <th>Ventas</th>
                         <th>Comisión</th>
                         <th>Depósito</th>
@@ -897,8 +897,8 @@
                     </thead>
                     <thead style="height:1.5rem">
                       <tr>
-                        <th></th>
-                        <th></th>
+                        <th class="responsive"></th>
+                        <th class="responsive"></th>
                         <th>
                           {selectedDay.data
                             .reduce((prev, curr) => prev + (curr.Amount/100), 0)
@@ -921,8 +921,8 @@
                         <tr class="clickable number"
                           
                         >
-                          <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
-                          <td>{transaction['Transaction Time']}</td>
+                          <td class="responsive">{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
+                          <td class="responsive">{transaction['Transaction Time']}</td>
                           <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
                           <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
                           <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
@@ -1042,7 +1042,7 @@
               </p>
             </div>
             <div class="details__middle">
-              <div class="details-left">
+              <div class="details-left responsive">
                 <div class="title">Datos</div>
                 <div class="item">
                   <b>Referencia</b>
@@ -1137,7 +1137,7 @@
                   </div>
                 </div>
               </div>
-              <div class="details-right">
+              <div class="details-right responsive">
                 <div class="title">Reportes</div>
                 <div class="export-buttons">
                   <Input on:click={
@@ -1871,5 +1871,87 @@
 
   .arrow-blue {
     color: #007AFF;
+  }
+
+  @media (max-width: 540px) {
+    .top{
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .top__left .buttons {
+      justify-content: center;
+      align-items: center;
+      width: -webkit-fill-available;
+    }
+    .top__left * .element {
+      width: 15rem;
+    }
+
+    .middle > .card-group{
+      flex-direction: column;
+      height: auto;
+      width: 100%;
+    }
+    
+    .middle * .card {
+      width: -webkit-fill-available;
+    }
+
+    .table-container {
+      display: block;
+      width: 100%;
+    }
+
+    .transactions-view {
+      margin: 0rem 0rem 4rem 0rem;
+    }
+
+    .table-content {
+      min-width: auto;
+      width: -webkit-fill-available;
+    }
+
+    .date-range-input {
+      display: block;
+    }
+
+    .transactions .return {
+      margin: 0rem 0rem 1rem 0rem;
+    }
+
+    .details__middle .details-card {
+      min-width: auto;
+    }
+    .responsive {
+      display: none;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+
+    .top__left{
+      min-width: 15rem;
+    }
+    .middle > .card-group{
+      /* flex-direction: column; */
+      height: auto;
+      width: 100%;
+      gap: .5rem;
+    }
+    .middle * .card {
+      width: auto;
+    }
+    .details__middle {
+      gap: 1rem;
+    }
+
+    .details-right .export-buttons {
+      flex-direction: column;
+    }
+    /* .responsive {
+      display: none;
+    } */
   }
 </style>

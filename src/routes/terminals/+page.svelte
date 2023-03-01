@@ -46,9 +46,9 @@
             <thead>
               <tr>
                 <th>Terminal</th>
-                <th>Serie</th>
+                <th class="r425 r540">Serie</th>
                 <th>Sucursal</th>
-                <th>Tipo</th>
+                <th class="r425 r540">Tipo</th>
                 <th>Ventas</th>
               </tr>
             </thead>
@@ -56,9 +56,9 @@
               {#each terminals as terminal}
                 <tr class="">
                   <td>{terminal.name}</td>
-                  <td>{terminal.serial}</td>
+                  <td class="r425 r540">{terminal.serial}</td>
                   <td>{terminal.branch}</td>
-                  <td>{terminal.type}</td>
+                  <td class="r425 r540">{terminal.type}</td>
                   <td>{parseFloat(terminal.transactions/100).toLocaleString(localeParam.language, localeParam.currency)}</td>
                 </tr>
               {/each}
@@ -146,5 +146,29 @@
   }
   td:first-child {
     text-align: left;
+  }
+
+  @media (max-width: 425px){
+    .table-content {
+      min-width: auto;
+      width: -webkit-fill-available;
+    }
+    .r425 {
+      display: none;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .table-content {
+      min-width: auto;
+      width: -webkit-fill-available;
+    }
+    .r540 {
+      display: none;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+
   }
 </style>

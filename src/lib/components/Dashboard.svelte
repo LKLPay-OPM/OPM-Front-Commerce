@@ -121,9 +121,9 @@
     return str
   }
 
-  onMount(async () => {
+  /* onMount(async () => {
 		fetchByDay()
-	});
+	}); */
 </script>
 <div class="container">
   <div class="title">
@@ -156,62 +156,62 @@
         </div>
       </div>
       {#if transactions?.length > 0}
-      <div id="pdfTable" class="table-container">
-        <table class="table-content">
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>ID Transacción</th>
-              <th>Cobro</th>
-              <th>Comisión</th>
-              <th>Dispersión</th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each transactions as transaction}
+        <div id="pdfTable" class="table-container">
+          <table class="table-content">
+            <thead>
               <tr>
-                <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td>
-                      <td>{transaction['Transaction Time']}</td>
-                <!-- <td>
-                  <Input
-                    id='detailsTicket{transaction.id}'
-                    title="Ver Detalles"
-                    on:click={() => (selectedTransaction = transaction)}
-                    on:click={() => (transactionDetailView = true)}
-                    label={transaction.id} type="button" className="text-button" icon=""/>
-                </td> -->
-                <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                <!-- <td>{parseFloat(transaction.total)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                <td>{parseFloat(transaction.commission)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                <td>{parseFloat(transaction.dispersion)?.toLocaleString(localeParam.language, localeParam.currency)}</td> -->
+                <th>Fecha</th>
+                <th class="responsive">ID Transacción</th>
+                <th>Cobro</th>
+                <th class="responsive">Comisión</th>
+                <th class="responsive">Dispersión</th>
               </tr>
-            {/each}
-              <!-- <tr>
-                <td><b>Totales</b></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                  {
-                    transactions?.reduce((prev, curr) => prev + (curr['Amount']/100) * 0.965, 0)
-                    .toLocaleString(localeParam.language, localeParam.currency)
-                  }
-                </td>
-              </tr> -->
-          </tbody>
-        </table>
-      </div>
-      {:else}
-        <div class="message">
-          <div class="msg">
-            <p>No has realizado ventas el día de hoy</p>
-          </div>
-          <div class="description">
-            <p>Aquí podrás ver el resumen de tus últimas ventas realizadas</p>
-          </div>
+            </thead>
+            <tbody>
+              {#each transactions as transaction}
+                <tr>
+                  <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td>
+                  <td class="responsive">{transaction['Transaction Time']}</td>
+                  <!-- <td>
+                    <Input
+                      id='detailsTicket{transaction.id}'
+                      title="Ver Detalles"
+                      on:click={() => (selectedTransaction = transaction)}
+                      on:click={() => (transactionDetailView = true)}
+                      label={transaction.id} type="button" className="text-button" icon=""/>
+                  </td> -->
+                  <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                  <td class="responsive">{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                  <td class="responsive">{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                  <!-- <td>{parseFloat(transaction.total)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                  <td>{parseFloat(transaction.commission)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                  <td>{parseFloat(transaction.dispersion)?.toLocaleString(localeParam.language, localeParam.currency)}</td> -->
+                </tr>
+              {/each}
+                <!-- <tr>
+                  <td><b>Totales</b></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    {
+                      transactions?.reduce((prev, curr) => prev + (curr['Amount']/100) * 0.965, 0)
+                      .toLocaleString(localeParam.language, localeParam.currency)
+                    }
+                  </td>
+                </tr> -->
+            </tbody>
+          </table>
         </div>
+        {:else}
+          <div class="message">
+            <div class="msg">
+              <p>No has realizado ventas el día de hoy</p>
+            </div>
+            <div class="description">
+              <p>Aquí podrás ver el resumen de tus últimas ventas realizadas</p>
+            </div>
+          </div>
       {/if}
     </div>
   </div>
@@ -274,7 +274,7 @@
     align-items: center;
     padding: 2rem 0rem;/* 32px 0px */
     gap: 16px;
-    margin: 0rem 4rem;/* 0px 64px */
+    margin: 0rem 4rem 2rem 4rem;/* 0px 64px */
     /* min-width: calc(80% - 20rem); */
     min-height: 25rem;/* 400px */
     /* Nue Fill */
@@ -289,11 +289,10 @@
   }
   .transactions .top {
     display: flex;
-
     width: -webkit-fill-available;
   }
 
-  .transactions .top .top__left {
+  .transactions * .top__left {
     display: flex;
     width: 50%;
     justify-content: left;
@@ -308,7 +307,7 @@
     color: #113A62;
   }
   
-  .transactions .top .top__right {
+  .transactions * .top__right {
     display: flex;
     width: 50%;
     justify-content: right;
@@ -386,5 +385,39 @@
     text-align: center;
     /* Text */
     color: #8C9FB1;
+  }
+
+  /* MEDIA QUERIES */
+  @media (max-width: 540px) {
+    .container {
+      margin: 0;
+    }
+
+    .container .title p{
+      margin: 0;
+      text-align: center;
+    }
+
+    .content > .card-group,
+    .transactions > .top {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .content > .transactions {
+      margin: 0;
+      min-height: auto;
+    }
+
+    .transactions * .top__right,
+    .transactions * .top__left {
+      width: 100%;
+      padding: 0;
+      justify-content: center;
+    }
+
+    .responsive {
+      display: none;
+    }
   }
 </style>

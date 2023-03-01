@@ -485,4 +485,22 @@
     color: #007AFF;
     cursor: pointer;
   }
+
+  @media (max-width: 425px){
+    .content {
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .content {
+      flex-direction: column;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .content {
+      flex-direction: column;
+    }
+  }
 </style>
