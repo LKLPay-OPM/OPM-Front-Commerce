@@ -3,17 +3,20 @@
   import { auth } from "$lib/firebase";
   import Sidebar from '$lib/components/Sidebar.svelte';
   import Loader from '$lib/components/Loader.svelte';
-  import { isLoggedIn, loggedInUser, linkSelected } from '$lib/stores';
+  import { isLoggedIn, loggedInUser, linkSelected, sidebar } from '$lib/stores';
   import { onMount } from "svelte";
   import { onAuthStateChanged } from "firebase/auth";
   import { goto } from "$app/navigation";
   import { page, navigating } from '$app/stores';
   import { router } from "$lib/hooks/router.js"
 
+  let innerWidth = 0
+	let innerHeight = 0
 
-  let sidebar = true;
+  // let sidebar = true;
 
   $: {
+    // console.log(innerWidth)
     if ($isLoggedIn) {
       router($loggedInUser.accountType, $page.routeId)
       .then((response) => {
@@ -24,6 +27,10 @@
           // console.log("DENEGADO")
         }
       })
+
+      if (innerWidth <= 768) {
+        $sidebar = false
+      }
     }
   }
 
@@ -44,10 +51,14 @@
   });
 </script>
 
+<svelte:window bind:innerWidth bind:innerHeight />
 <div class="layout">
   {#if $navigating}
     <Loader/>
     {:else}
+      <!-- {#if $isLoggedIn && innerWidth > 640}
+        <Sidebar/>
+      {/if} -->
       {#if $isLoggedIn}
         <Sidebar/>
       {/if}

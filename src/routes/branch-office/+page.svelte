@@ -237,11 +237,11 @@
 
 <style>
   .container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
 
 .date {
   font-style: normal;
@@ -366,4 +366,29 @@
     cursor: pointer;
   }
   
+  @media (max-width: 425px){
+    .content{
+      flex-direction: column;
+    }
+
+    .container {
+      margin: 0 0 4rem 0;
+    }
+  }
+
+  @media (max-width: 540px) {
+
+    .content{
+      flex-direction: column;
+    }
+
+    .container {
+      margin: 0 0 4rem 0;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+
+    
+  }
 </style>

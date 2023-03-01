@@ -485,11 +485,10 @@
             <Checkbox bind:checked={terms}/>
           </div>
           <p>
-            He Leído, entendido y acepto los <br>
-            <a href="/register#terms">Términos y Condiciones Generales</a> de Lkl Pay, <br>
-            así como su <a href="/register#privacy">Política de Privacidad</a> y, por lo tanto <br>
-            estoy de acuerdo en el uso y procesamiento de <br>
-            datos personales.
+            He Leído, entendido y acepto los 
+            <a href="/register#terms">Términos y Condiciones Generales</a> de LklPay, 
+            así como su <a href="/register#privacy">Política de Privacidad</a> y, por lo tanto 
+            estoy de acuerdo en el uso y procesamiento de datos personales.
           </p>
         </div>
       <!-- {/if} -->
@@ -623,11 +622,11 @@
               <Input on:click={showModal(modalDateFilter)} label="Filtrar " id="openModalDateFilter" type="button" className="btn-plain" icon=""/>
             {/if}
           </div>
-          <div class="element">
-            {#if dispersionDetailView}
+          {#if dispersionDetailView}
+            <div class="element">
               <Input on:click={() => (dispersionDetailView = false)} label="Regresar" id="detailsReturnButton" type="button" className="btn-plain" icon=""/>
-            {/if}
-          </div>
+            </div>
+          {/if}
         </div>
       </div>
       <div class="top__middle">
@@ -637,18 +636,6 @@
           </p>
         </div>
         <!-- <ButtonGroup bind:active={active} options={buttonGroupOptions}/> -->
-        <div class="card-group">
-          <div class="button">
-            <Input on:click={showModal(modalClarification)} label="Solicitar Aclaración" id="aclarationButton" type="button" className="btn-plain" icon=""/>
-          </div>
-          <div class="card">
-            <div><p>Saldo a Depositar</p></div>
-            <div><span>{user.toDeposit.toLocaleString(localeParam.language, localeParam.currency)}</span></div>
-          </div>
-          <div class="button">
-            <Input on:click={showModal(modalImmediateDeposit)} label="Depósito Urgente" id="immediateDepositButton" type="button" className="btn" icon=""/>
-          </div>
-        </div>
       </div>
       <div class="top__right">
         <div class="dispersion-search-bar">
@@ -666,6 +653,20 @@
         </div>
       </div>
     </div>
+    <div class="middle">
+      <div class="card-group">
+        <div class="button">
+          <Input on:click={showModal(modalClarification)} label="Solicitar Aclaración" id="aclarationButton" type="button" className="btn-plain" icon=""/>
+        </div>
+        <div class="card">
+          <div><p>Saldo a Depositar</p></div>
+          <div><span>{user.toDeposit.toLocaleString(localeParam.language, localeParam.currency)}</span></div>
+        </div>
+        <div class="button">
+          <Input on:click={showModal(modalImmediateDeposit)} label="Depósito Urgente" id="immediateDepositButton" type="button" className="btn" icon=""/>
+        </div>
+      </div>
+    </div>
   {/if}
   <div class="dispersions-view">
     {#if notFound}
@@ -679,18 +680,17 @@
           <div class="dispersion-tables">
             <div bind:this={pdfData} id="pdfTable" class="table-container">
               <div class="card-container">
-
                 <table class="table-content">
                   <thead>
                     <tr>
                       <th>Fecha</th>
-                      <th>ID</th>
+                      <th class="responsive hide">ID</th>
                       <th>Saldo</th>
                       <th>Tipo</th>
-                      <th>Comisión</th>
-                      <th>Interés</th>
-                      <th>Depósito</th>
-                      <th>Saldo Final</th>
+                      <th class="responsive hide">Comisión</th>
+                      <th class="responsive hide">Interés</th>
+                      <th class="responsive hide">Depósito</th>
+                      <th class="responsive hide">Saldo Final</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -708,13 +708,13 @@
                             on:click={() => (dispersionDetailView = true)}
                             label={dispersion.id} type="button" className="text-button" icon=""/>
                         </td> -->
-                        <td>{dispersion.id}</td>
+                        <td class="responsive hide">{dispersion.id}</td>
                         <td>{parseFloat(dispersion.total).toLocaleString(localeParam.language, localeParam.currency)}</td>
                         <td>{dispersion.type}</td>
-                        <td>{parseFloat(dispersion.commission).toLocaleString(localeParam.language, localeParam.currency)}</td>
-                        <td></td>
-                        <td>{parseFloat(dispersion.dispersion).toLocaleString(localeParam.language, localeParam.currency)}</td>
-                        <td>{parseFloat(dispersion.afterDispersion).toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td class="responsive hide">{parseFloat(dispersion.commission).toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td class="responsive hide"></td>
+                        <td class="responsive hide">{parseFloat(dispersion.dispersion).toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td class="responsive hide">{parseFloat(dispersion.afterDispersion).toLocaleString(localeParam.language, localeParam.currency)}</td>
                       </tr>
                     {/each}
                   </tbody>
@@ -734,7 +734,7 @@
               </p>
             </div>
             <div class="details__middle">
-              <div class="details-left">
+              <div class="details-left hide">
                 <div class="title">Datos</div>
                 <div class="item">
                   <b>Tipo de Depósito</b>
@@ -798,7 +798,7 @@
                   </div>
                 </div>
               </div>
-              <div class="details-right">
+              <div class="details-right hide">
                 <div class="title">Reportes</div>
                 <div class="export-buttons">
                   <Input label="" id="csv-export" type="button" className="btn-plain btn-square fill-blue {dispersions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/>
@@ -858,7 +858,7 @@
   .top {
     width: 100%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     margin-bottom: 2.5rem;
   }
 
@@ -875,7 +875,7 @@
   .top__middle {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
     gap: 1rem;
   }
@@ -888,6 +888,12 @@
     text-align: center;
     /* Text */
     color: #113A62;
+  }
+
+  .middle {
+    display: flex;
+    justify-content: center;
+    margin: 0rem 0rem 2rem 0rem;
   }
 
   .card-group {
@@ -932,7 +938,7 @@
     padding: .5rem 1rem;
     gap: 1rem;
     width: 8.75rem;/* 140px */
-    height: 5.5rem;/* 88px */
+    height: 4.375rem;/* 70px */
     /* Nue Fill */
     /* background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%); */
     /* out */
@@ -1346,4 +1352,100 @@
     justify-content: center;
     width: 100%;
   } */
+
+  @media (max-width: 540px) {
+    .top{
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .top__left .buttons {
+      justify-content: center;
+      align-items: center;
+      width: -webkit-fill-available;
+    }
+    .top__left * .element {
+      width: 15rem;
+    }
+
+    .middle > .card-group{
+      /* flex-direction: column;
+      height: auto;
+      width: 100%; */
+      gap: .5rem;
+    }
+
+    .middle * .button {
+      padding: 0;
+      width: 7rem;
+      height: 3.375rem;
+    }
+    
+    /* .middle * .card {
+      width: -webkit-fill-available;
+    } */
+
+    .table-container {
+      display: block;
+      width: 100%;
+    }
+
+    .dispersions-view {
+      margin: 0rem 0rem 4rem 0rem;
+    }
+
+    .table-content {
+      min-width: auto;
+      width: -webkit-fill-available;
+    }
+
+    .date-range-input {
+      display: block;
+    }
+
+    .dispersions .return {
+      margin: 0rem 0rem 1rem 0rem;
+    }
+
+    .details__middle .details-card {
+      width: auto;
+    }
+
+    .immediate-deposit .terms{
+      max-width: 310px;
+    }
+    .responsive,
+    .hide {
+      display: none;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+
+    .top__left{
+      min-width: 15rem;
+    }
+    .middle > .card-group{
+      /* flex-direction: column; */
+      height: auto;
+      width: 100%;
+      gap: .5rem;
+    }
+    .middle * .card {
+      width: auto;
+    }
+    .details__middle {
+      gap: 1rem;
+    }
+    .details-right .export-buttons {
+      flex-direction: column;
+    }
+    .hide {
+      display: none;
+    }
+    /* .responsive {
+      display: none;
+    } */
+  }
 </style>

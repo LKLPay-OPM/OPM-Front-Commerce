@@ -1,6 +1,6 @@
 <script>
 	import { isLoggedIn, loggedInUser, onboardingSuccess } from '$lib/stores';
-	import { page } from '$app/stores';
+	import { page, navigating } from '$app/stores';
 	import { onMount } from 'svelte';
 	import Loader from '$lib/components/Loader.svelte'
 	import Onboarding from '$lib/components/Onboarding.svelte';
@@ -10,6 +10,7 @@
 	import Icons from '$lib/components/Icons.svelte';
 	import noUser from '$lib/assets/no_user.png';
 	import Logo from '$lib/assets/Logo.png';
+
 	/* import { 
     PUBLIC_API_SERVER
   } from "$env/static/public"; */
@@ -18,6 +19,7 @@
 	let selected;
 
   $: {
+		// console.log($loggedInUser)
     // console.log(selected)
   }
 	
@@ -35,14 +37,18 @@
 
 
 
-{#if $isLoggedIn === true}
+{#if $isLoggedIn}
 	<!-- {#if 
 		$loggedInUser.firstTimeUser == true || $onboardingSuccess == true
 	}
 		<Onboarding/>
 		{:else}
 	{/if} -->
+	{#if !$loggedInUser.uid}
+		<Loader/>
+	{:else}
 		<Dashboard/>
+	{/if}
 {/if}
 
 <style>

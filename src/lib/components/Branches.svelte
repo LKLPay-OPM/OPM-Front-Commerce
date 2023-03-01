@@ -202,7 +202,7 @@
           {/if}
         </div>
       </div>
-      <div class="element">
+      <div class="element r425">
         <div class="title-blue">Comisión</div>
         <div class="description text-center">
           {#if active === "day"}
@@ -221,7 +221,7 @@
           {/if}
         </div>
       </div>
-      <div class="element">
+      <div class="element r425">
         <div class="title-blue">A Depositar</div>
         <div class="description text-center">
           {#if active === "day"}
@@ -250,7 +250,7 @@
               </div>
             </div>
           </div>
-          <div class="element-center" style="min-width: 12.5rem;">
+          <div class="element-center min-width">
             <div class="title-blue text-left">
               {branch.name}
             </div>
@@ -258,7 +258,7 @@
               {branch.manager.name} {branch.manager.firstLastName}
             </div>
           </div>
-          <div class="element-center">
+          <div class="element-center r425 r540">
             <div class="title-blue text-center">Ventas</div>
             <div class="description text-center">
               {#if active === "day"}
@@ -271,7 +271,7 @@
               {/if}
             </div>
           </div>
-          <div class="element-center">
+          <div class="element-center r425">
             <div class="title-blue text-center">Vendido</div>
             <div class="description text-center">
               {#if active === "day"}
@@ -289,7 +289,7 @@
               {/if}
             </div>
           </div>
-          <div class="element-center">
+          <div class="element-center r425 r540">
             <div class="title-blue text-center">Comisión</div>
             <div class="description text-center">
               {#if active === "day"}
@@ -354,7 +354,7 @@
           {/if}
         </div>
       </div>
-      <div class="element">
+      <div class="element r425 r540 r768">
         <div class="title-blue">Comisión</div>
         <div class="description text-center">
           {#if active === "day"}
@@ -373,7 +373,7 @@
           {/if}
         </div>
       </div>
-      <div class="element">
+      <div class="element r425 r540 r768">
         <div class="title-blue">A Depositar</div>
         <div class="description text-center">
           {#if active === "day"}
@@ -400,10 +400,10 @@
             <thead>
               <tr>
                 <th>Fecha</th>
-                <th>ID</th>
+                <th class="r425 r540 r768">ID</th>
                 <th>Venta</th>
-                <th>Comisión</th>
-                <th>Depósito</th>
+                <th class="r425 r540 r768">Comisión</th>
+                <th class="r425 r540 r768">Depósito</th>
               </tr>
             </thead>
             <tbody>
@@ -411,30 +411,30 @@
                 {#each fetchByDayButton(selected.transactions) as transaction}
                   <tr class="clickable">
                     <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
-                    <td>{transaction['Transaction Time']}</td>
+                    <td class="r425 r540 r768">{transaction['Transaction Time']}</td>
                     <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                    <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                    <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                    <td class="r425 r540 r768">{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                    <td class="r425 r540 r768">{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
                   </tr>
                 {/each}
               {:else if active === "week"}
                 {#each fetchByWeekButton(selected.transactions) as transaction}
                   <tr class="clickable">
                     <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
-                    <td>{transaction['Transaction Time']}</td>
+                    <td class="r425 r540 r768">{transaction['Transaction Time']}</td>
                     <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                    <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                    <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                    <td class="r425 r540 r768">{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                    <td class="r425 r540 r768">{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
                   </tr>
                 {/each}             
               {:else if active === "month"}
                 {#each fetchByMonthButton(selected.transactions) as transaction}
                   <tr class="clickable">
                     <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
-                    <td>{transaction['Transaction Time']}</td>
+                    <td class="r425">{transaction['Transaction Time']}</td>
                     <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                    <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                    <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                    <td class="r425">{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                    <td class="r425">{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
                   </tr>
                 {/each}             
               {/if}
@@ -448,6 +448,9 @@
 
 <style>
   /* ========================================== */
+  .min-width {
+    min-width: 12.5rem;
+  }
   .container {
     width: 100%;
     display: flex;
@@ -651,4 +654,66 @@
     gap: 1rem;
   }
 
-  </style>
+  @media (max-width: 425px){
+    .r425 {
+      display: none
+    }
+    .min-width {
+      min-width: 10rem;
+    }
+
+    .transaction-tables{
+      margin: 0 0 2rem 0;
+    }
+
+    .container {
+      margin: 0 0 2rem 0;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .min-width {
+      min-width: 10rem;
+    }
+    .container {
+      margin: 0 0 2rem 0;
+    }
+
+    .transaction-tables{
+      margin: 0 0 2rem 0;
+    }
+
+
+    .table-container {
+      display: block;
+      width: 100%;
+    }
+
+    .table-content {
+      min-width: auto;
+      width: -webkit-fill-available;
+    }
+    .r540 {
+      display: none;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+
+    .transaction-tables{
+      margin: 0 0 2rem 0;
+    }
+    .table-container {
+      display: block;
+      width: 100%;
+    }
+
+    .table-content {
+      min-width: auto;
+      width: -webkit-fill-available;
+    }
+    .r768 {
+      display: none;
+    }
+  }
+</style>
