@@ -1391,6 +1391,10 @@
       width: 100%;
     }
 
+    .card-container {
+      padding: 2rem 2rem;
+    }
+
     .dispersions-view {
       margin: 0rem 0rem 4rem 0rem;
     }
@@ -1398,6 +1402,7 @@
     .table-content {
       min-width: auto;
       width: -webkit-fill-available;
+      margin: 0;
     }
 
     .date-range-input {
