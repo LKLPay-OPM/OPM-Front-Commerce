@@ -40,7 +40,7 @@
   let toggleWeekDetails = "";
   let selectedDay;
 
-  let dateRangeStart, dateRangeEnd, ticketId, modalDateFilter, modalClarification;
+  let dateRangeStart="", dateRangeEnd="", ticketId="", modalDateFilter, modalClarification, cardBrand="", cardIcon="";
   let pdfData, print = true, dayView = false, monthView = false;
 
   let clarificationsList = [
@@ -51,7 +51,7 @@
   ]
 
   let clarification = {
-    type: "",
+    ticket: "",
     description: "",
   }
 
@@ -481,6 +481,54 @@
     return days[index].name
   }
 
+  const getCardBrand = (cc) => {
+    let amex = new RegExp('^3[47][0-9]{13}$');
+    let visa = new RegExp('^4[0-9]{12}(?:[0-9]{3})?$');
+    let cup1 = new RegExp('^62[0-9]{14}[0-9]*$');
+    let cup2 = new RegExp('^81[0-9]{14}[0-9]*$');
+
+    let mastercard = new RegExp('^5[1-5][0-9]{14}$');
+    let mastercard2 = new RegExp('^2[2-7][0-9]{14}$');
+
+    let disco1 = new RegExp('^6011[0-9]{12}[0-9]*$');
+    let disco2 = new RegExp('^62[24568][0-9]{13}[0-9]*$');
+    let disco3 = new RegExp('^6[45][0-9]{14}[0-9]*$');
+    
+    let diners = new RegExp('^3[0689][0-9]{12}[0-9]*$');
+    let jcb =  new RegExp('^35[0-9]{14}[0-9]*$');
+
+
+    if (visa.test(cc)) {
+      cardIcon="visa";
+      return 'VISA';
+    }
+    if (amex.test(cc)) {
+      cardIcon="amex";
+      return 'AMEX';
+    }
+    if (mastercard.test(cc) || mastercard2.test(cc)) {
+      cardIcon="master-card";
+      return 'MASTERCARD';
+    }
+    if (disco1.test(cc) || disco2.test(cc) || disco3.test(cc)) {
+      cardIcon="bank-card-line";
+      return 'DISCOVER';
+    }
+    if (diners.test(cc)) {
+      cardIcon="bank-card-line";
+      return 'DINERS';
+    }
+    if (jcb.test(cc)) {
+      cardIcon="bank-card-line";
+      return 'JCB';
+    }
+    if (cup1.test(cc) || cup2.test(cc)) {
+      cardIcon="bank-card-line";
+      return 'CHINA_UNION_PAY';
+    }
+    return undefined;
+  }
+
   const showModal = (option) => {
     option.show();
   }
@@ -500,8 +548,14 @@
     <p>Solicitar Aclaración</p>
   </div>
   <div slot="content">
-    <div class="clarifications-select">
-      <Select bind:optionsList={clarificationsList} defaultText={"Elige una opción"} label="Tipo de Aclaración" id="clarificationType" bind:value={clarification.type}/>
+    <div class="clarifications">
+      <div class="title">
+        Recibo N°
+      </div>
+      <div class="description">
+        <p>{clarification.ticket}</p>
+      </div>
+      <!-- <Select bind:optionsList={clarificationsList} defaultText={"Elige una opción"} label="Tipo de Aclaración" id="clarificationType" bind:value={clarification.type}/> -->
     </div>
     <div class="clarification-description">
       <TextArea bind:value={clarification.description} label="Descripción" placeholder="¿Qué problema hay con esta transacción?" id="clarificationDescription" name="clarificationDescription"/>
@@ -515,10 +569,10 @@
       label="Enviar Aclaración" 
       id="buttonSaveModalClarification" 
       type="button" 
-      className={`btn-plain
+      className={`
         ${
           clarification.description != "" 
-          ? "" : "disabled"
+          ? "btn" : "btn-plain disabled"
         }`
       } 
       icon=""
@@ -529,12 +583,42 @@
 <!-- MODAL FETCH BY DATE RANGE -->
 <Modal className={`modal-medium`} bind:this={modalDateFilter}>
   <div slot="header">
-    <p>Por Fechas</p>
+    <!-- <p>Por Fechas</p> -->
   </div>
   <div slot="content">
-    <div class="date-range-input">
-      <DatePicker label="Del" id="date-range-start" bind:value={dateRangeStart}/>
-      <DatePicker label="Al" id="date-range-end" bind:value={dateRangeEnd}/>
+    <div class="modal-range">
+      <p>Fechas</p>
+      <div class="date-range-input">
+        <DatePicker label="Del" id="date-range-start" bind:value={dateRangeStart}/>
+        <DatePicker label="Al" id="date-range-end" bind:value={dateRangeEnd}/>
+      </div>
+      <p>Marca</p>
+      <div class="input-cards">
+        <i 
+          on:click={() => (cardBrand = "MasterCard")}
+          on:keypress={(e) => e.key === 'Enter' ? cardBrand = "MasterCard" : ""}
+        >
+          <Icons name="master-card" width="50" height="30"/>
+        </i>
+        <i 
+          on:click={() => (cardBrand = "Visa")}
+          on:keypress={(e) => e.key === 'Enter' ? cardBrand = "Visa" : ""}
+        >
+          <Icons name="visa" width="50" height="30"/>
+        </i>
+        <i 
+          on:click={() => (cardBrand = "AMEX")}
+          on:keypress={(e) => e.key === 'Enter' ? cardBrand = "AMEX" : ""}
+        >
+          <Icons name="amex" width="25" height="25"/>
+        </i>
+        <i 
+          on:click={() => (cardBrand = "Other")}
+          on:keypress={(e) => e.key === 'Enter' ? cardBrand = "Other" : ""}
+        >
+          <Icons name="bank-card-line" width="25" height="25"/>
+        </i>
+      </div>
     </div>
   </div>
   <div class="modal-buttons" slot="footer">
@@ -547,7 +631,7 @@
       type="button" 
       className={`btn-plain
         ${
-          dateRangeStart != "" && dateRangeEnd != "" 
+          dateRangeStart != "" && dateRangeEnd != "" && cardBrand != ""
           ? "" : "disabled"
         }`
       } 
@@ -636,199 +720,87 @@
   {/if}
   <div class="transactions-view">
     {#if notFound}
-      <div class="not-found">
-        <b>
-          {notFoundMessage}
-        </b>
+      <div class="message card-container">
+        <div class="msg">
+          <p>No has realizado ventas el día de hoy</p>
+        </div>
+        <div class="description">
+          <p>Aquí podrás ver el resumen de tus últimas ventas realizadas</p>
+        </div>
       </div>
-      {:else}
-        {#if !transactionDetailView}
-          {#if active !== "week" && active !=="month" && transactions.length > 0}
+    {:else}
+      {#if !transactionDetailView}
+        {#if active !== "week" && active !=="month" && transactions.length > 0}
+          <div class="transaction-tables">
+            <div bind:this={pdfData} id="pdfTable" class="table-container">
+              <div class="card-container">
+                <table class="table-content">
+                  <thead>
+                    <tr>
+                      <th>Fecha</th>
+                      <th class="responsive">ID</th>
+                      <th>Venta</th>
+                      <th class="responsive">Comisión</th>
+                      <th class="responsive">Depósito</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {#each transactions as transaction}
+                      <tr class="clickable number"
+                        on:click={() => (selectedTransaction = transaction)}
+                        on:click={() => (transactionDetailView = true)}
+                        on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
+                        on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
+                      >
+                        <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td>
+                        <td class="responsive">{transaction['Transaction Time']}</td>
+                        <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td class="responsive">{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td class="responsive">{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                      </tr>
+                    {/each}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        {:else if active === "week"}<!-- TABLES BY WEEK -->
+          {#if !dayView}
             <div class="transaction-tables">
               <div bind:this={pdfData} id="pdfTable" class="table-container">
                 <div class="card-container">
                   <table class="table-content">
                     <thead>
                       <tr>
-                        <th>Fecha</th>
-                        <th class="responsive">ID</th>
-                        <th>Venta</th>
-                        <th class="responsive">Comisión</th>
-                        <th class="responsive">Depósito</th>
+                        <th class="title">Día</th>
+                        <th class="title">N° Ventas</th>
+                        <th class="title">Vendido</th>
+                        <th class="title responsive">Comisión</th>
+                        <th class="title responsive">Depósito</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {#each transactions as transaction}
-                        <tr class="clickable number"
-                          on:click={() => (selectedTransaction = transaction)}
-                          on:click={() => (transactionDetailView = true)}
-                          on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
-                          on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
-                        >
-                          <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td>
-                          <td class="responsive">{transaction['Transaction Time']}</td>
-                          <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                          <td class="responsive">{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                          <td class="responsive">{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                        </tr>
-                      {/each}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          {:else if active === "week"}<!-- TABLES BY WEEK -->
-            {#if !dayView}
-              <div class="transaction-tables">
-                <div bind:this={pdfData} id="pdfTable" class="table-container">
-                  <div class="card-container">
-                    <table class="table-content">
-                      <thead>
-                        <tr>
-                          <th class="title">Día</th>
-                          <th class="title">N° Ventas</th>
-                          <th class="title">Vendido</th>
-                          <th class="title responsive">Comisión</th>
-                          <th class="title responsive">Depósito</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {#each transactionsWeek as day}
-                          <tr class="clickable"
-                            on:click={() => (selectedDay = day)}
-                            on:click={() => (dayView = !dayView)}
-                            on:keypress={(e) => e.key === 'Enter' ? selectedDay = day : ""} 
-                            on:keypress={(e) => e.key === 'Enter' ? dayView = !dayView : ""} 
-                          >
-                            <td class="element">{getWeekDay(day.date)} - {getTransactionDate(day.date)}</td>
-                            <td class="element">{day.data.length}</td>
-                            <td class="element">
-                              {day.data
-                                .reduce((prev, curr) => prev + (curr.Amount/100), 0)
-                                .toLocaleString(localeParam.language, localeParam.currency)}
-                            </td>
-                            <td class="element responsive">
-                              {day.data
-                                .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
-                                .toLocaleString(localeParam.language, localeParam.currency)}
-                            </td>
-                            <td class="element responsive">
-                              {day.data
-                                .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
-                                .toLocaleString(localeParam.language, localeParam.currency)}
-                            </td>
-                            <i class="arrow arrow-blue">
-                              <Icons name="arrow-fwd" width="24" height="24"/>
-                            </i>
-                          </tr>
-                        {/each}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            {:else}
-              <div bind:this={pdfData} id={`pdfTable-${selectedDay.date}`} class="table-container">
-                <div class="card-container">
-                  <div class="row">
-                    <div class="title">
-                      <i class="arrow-blue"
-                        on:click={() => (dayView = !dayView)}
-                        on:keypress={(e) => e.key === 'Enter' ? dayView = !dayView : ""}
-                      >
-                        <Icons name="arrow-bwd" width="24" height="24"/>
-                      </i>
-                      {getWeekDay(selectedDay.date)} - {getTransactionDate(selectedDay.date)}
-                    </div>
-                  </div>
-                  <table class="table-content">
-                    <thead style="height:1.5rem">
-                      <tr>
-                        <th class="responsive">Fecha</th>
-                        <th class="responsive">ID</th>
-                        <th>Ventas</th>
-                        <th>Comisión</th>
-                        <th>Depósito</th>
-                      </tr>
-                    </thead>
-                    <thead style="height:1.5rem">
-                      <tr>
-                        <th class="responsive"></th>
-                        <th class="responsive"></th>
-                        <th>
-                          {selectedDay.data
-                            .reduce((prev, curr) => prev + (curr.Amount/100), 0)
-                            .toLocaleString(localeParam.language, localeParam.currency)}
-                        </th>
-                        <th>
-                          {selectedDay.data
-                            .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
-                            .toLocaleString(localeParam.language, localeParam.currency)}
-                        </th>
-                        <th>
-                          {selectedDay.data
-                            .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
-                            .toLocaleString(localeParam.language, localeParam.currency)}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody class="inside">
-                      {#each selectedDay.data as transaction}
-                        <tr class="clickable number"
-                          on:click={() => (selectedTransaction = transaction)}
-                          on:click={() => (transactionDetailView = true)}
-                          on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
-                          on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
-                        >
-                          <td class="responsive">{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
-                          <td class="responsive">{transaction['Transaction Time']}</td>
-                          <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                          <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                          <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                        </tr>
-                        {/each}
-                    </tbody>
-                  </table>
-                  </div>
-              </div>
-            {/if}
-          {:else if active === "month"}<!-- TABLES BY MONTH -->
-            {#if !monthView}
-              <div class="transaction-tables">
-                <div bind:this={pdfData} id="pdfTable" class="table-container">
-                  <div class="card-container">
-                    <table class="table-content">
-                      <thead>
-                        <tr>
-                          <th class="title">Día</th>
-                          <th class="title">N° Ventas</th>
-                          <th class="title">Vendido</th>
-                          <th class="title responsive">Comisión</th>
-                          <th class="title responsive">Depósito</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {#each transactionsMonth as month}
+                      {#each transactionsWeek as day}
                         <tr class="clickable"
-                          on:click={() => (selectedDay = month)}
-                          on:click={() => (monthView = !monthView)}
-                          on:keypress={(e) => e.key === 'Enter' ? selectedDay = month : ""} 
-                          on:keypress={(e) => e.key === 'Enter' ? monthView = !monthView : ""} 
+                          on:click={() => (selectedDay = day)}
+                          on:click={() => (dayView = !dayView)}
+                          on:keypress={(e) => e.key === 'Enter' ? selectedDay = day : ""} 
+                          on:keypress={(e) => e.key === 'Enter' ? dayView = !dayView : ""} 
                         >
-                          <td class="element">{getMonthPeriod(month.date)}</td>
-                          <td class="element">{month.data.length}</td>
+                          <td class="element">{getWeekDay(day.date)} - {getTransactionDate(day.date)}</td>
+                          <td class="element">{day.data.length}</td>
                           <td class="element">
-                            {month.data
+                            {day.data
                               .reduce((prev, curr) => prev + (curr.Amount/100), 0)
                               .toLocaleString(localeParam.language, localeParam.currency)}
                           </td>
                           <td class="element responsive">
-                            {month.data
+                            {day.data
                               .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
                               .toLocaleString(localeParam.language, localeParam.currency)}
                           </td>
                           <td class="element responsive">
-                            {month.data
+                            {day.data
                               .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
                               .toLocaleString(localeParam.language, localeParam.currency)}
                           </td>
@@ -836,93 +808,302 @@
                             <Icons name="arrow-fwd" width="24" height="24"/>
                           </i>
                         </tr>
-                          <!-- {#each month.data as data}
-                            <tr class="clickable"
-                              on:click={() => (selectedDay = data)}
-                              on:click={() => (monthView = !monthView)}
-                              on:keypress={(e) => e.key === 'Enter' ? selectedDay = data : ""} 
-                              on:keypress={(e) => e.key === 'Enter' ? monthView = !monthView : ""} 
-                            >
-                              <td class="element">{getWeekDay(month.date)} - {getTransactionDate(data.date)}</td>
-                              <td class="element">{data.data.length}</td>
-                              <td class="element">
-                                {data.data
-                                  .reduce((prev, curr) => prev + (curr.Amount/100), 0)
-                                  .toLocaleString(localeParam.language, localeParam.currency)}
-                              </td>
-                              <td class="element">
-                                {data.data
-                                  .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
-                                  .toLocaleString(localeParam.language, localeParam.currency)}
-                              </td>
-                              <td class="element">
-                                {data.data
-                                  .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
-                                  .toLocaleString(localeParam.language, localeParam.currency)}
-                              </td>
-                              <i class="arrow arrow-blue">
-                                <Icons name="arrow-fwd" width="24" height="24"/>
-                              </i>
-                            </tr>
-                          {/each} -->
-                        {/each}
-                      </tbody>
-                    </table>
+                      {/each}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          {:else}
+            <div bind:this={pdfData} id={`pdfTable-${selectedDay.date}`} class="table-container">
+              <div class="card-container">
+                <div class="row">
+                  <div class="title">
+                    <i class="arrow-blue"
+                      on:click={() => (dayView = !dayView)}
+                      on:keypress={(e) => e.key === 'Enter' ? dayView = !dayView : ""}
+                    >
+                      <Icons name="arrow-bwd" width="24" height="24"/>
+                    </i>
+                    {getWeekDay(selectedDay.date)} - {getTransactionDate(selectedDay.date)}
+                  </div>
+                </div>
+                <table class="table-content">
+                  <thead style="height:1.5rem">
+                    <tr>
+                      <th class="responsive">Fecha</th>
+                      <th class="responsive">ID</th>
+                      <th>Ventas</th>
+                      <th>Comisión</th>
+                      <th>Depósito</th>
+                    </tr>
+                  </thead>
+                  <thead style="height:1.5rem">
+                    <tr>
+                      <th class="responsive"></th>
+                      <th class="responsive"></th>
+                      <th>
+                        {selectedDay.data
+                          .reduce((prev, curr) => prev + (curr.Amount/100), 0)
+                          .toLocaleString(localeParam.language, localeParam.currency)}
+                      </th>
+                      <th>
+                        {selectedDay.data
+                          .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
+                          .toLocaleString(localeParam.language, localeParam.currency)}
+                      </th>
+                      <th>
+                        {selectedDay.data
+                          .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
+                          .toLocaleString(localeParam.language, localeParam.currency)}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="inside">
+                    {#each selectedDay.data as transaction}
+                      <tr class="clickable number"
+                        on:click={() => (selectedTransaction = transaction)}
+                        on:click={() => (transactionDetailView = true)}
+                        on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
+                        on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
+                      >
+                        <td class="responsive">{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
+                        <td class="responsive">{transaction['Transaction Time']}</td>
+                        <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                      </tr>
+                      {/each}
+                  </tbody>
+                </table>
+                </div>
+            </div>
+          {/if}
+        {:else if active === "month"}<!-- TABLES BY MONTH -->
+          {#if !monthView}
+            <div class="transaction-tables">
+              <div bind:this={pdfData} id="pdfTable" class="table-container">
+                <div class="card-container">
+                  <table class="table-content">
+                    <thead>
+                      <tr>
+                        <th class="title">Día</th>
+                        <th class="title">N° Ventas</th>
+                        <th class="title">Vendido</th>
+                        <th class="title responsive">Comisión</th>
+                        <th class="title responsive">Depósito</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {#each transactionsMonth as month}
+                      <tr class="clickable"
+                        on:click={() => (selectedDay = month)}
+                        on:click={() => (monthView = !monthView)}
+                        on:keypress={(e) => e.key === 'Enter' ? selectedDay = month : ""} 
+                        on:keypress={(e) => e.key === 'Enter' ? monthView = !monthView : ""} 
+                      >
+                        <td class="element">{getMonthPeriod(month.date)}</td>
+                        <td class="element">{month.data.length}</td>
+                        <td class="element">
+                          {month.data
+                            .reduce((prev, curr) => prev + (curr.Amount/100), 0)
+                            .toLocaleString(localeParam.language, localeParam.currency)}
+                        </td>
+                        <td class="element responsive">
+                          {month.data
+                            .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
+                            .toLocaleString(localeParam.language, localeParam.currency)}
+                        </td>
+                        <td class="element responsive">
+                          {month.data
+                            .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
+                            .toLocaleString(localeParam.language, localeParam.currency)}
+                        </td>
+                        <i class="arrow arrow-blue">
+                          <Icons name="arrow-fwd" width="24" height="24"/>
+                        </i>
+                      </tr>
+                        <!-- {#each month.data as data}
+                          <tr class="clickable"
+                            on:click={() => (selectedDay = data)}
+                            on:click={() => (monthView = !monthView)}
+                            on:keypress={(e) => e.key === 'Enter' ? selectedDay = data : ""} 
+                            on:keypress={(e) => e.key === 'Enter' ? monthView = !monthView : ""} 
+                          >
+                            <td class="element">{getWeekDay(month.date)} - {getTransactionDate(data.date)}</td>
+                            <td class="element">{data.data.length}</td>
+                            <td class="element">
+                              {data.data
+                                .reduce((prev, curr) => prev + (curr.Amount/100), 0)
+                                .toLocaleString(localeParam.language, localeParam.currency)}
+                            </td>
+                            <td class="element">
+                              {data.data
+                                .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
+                                .toLocaleString(localeParam.language, localeParam.currency)}
+                            </td>
+                            <td class="element">
+                              {data.data
+                                .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
+                                .toLocaleString(localeParam.language, localeParam.currency)}
+                            </td>
+                            <i class="arrow arrow-blue">
+                              <Icons name="arrow-fwd" width="24" height="24"/>
+                            </i>
+                          </tr>
+                        {/each} -->
+                      {/each}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          {:else}
+            <div bind:this={pdfData} id={`pdfTable-${selectedDay.date}`} class="table-container">
+              <div class="card-container">
+                <div class="row">
+                  <div class="title">
+                    <i class="arrow-blue clickable"
+                      on:click={() => (monthView = !monthView)}
+                      on:keypress={(e) => e.key === 'Enter' ? monthView = !monthView : ""}
+                    >
+                      <Icons name="arrow-bwd" width="24" height="24"/>
+                    </i>
+                    {getMonthPeriod(selectedDay.date)}
+                  </div>
+                </div>
+                <table class="table-content">
+                  <thead style="height:1.5rem">
+                    <tr>
+                      <th class="responsive">Fecha</th>
+                      <th class="responsive">ID</th>
+                      <th>Ventas</th>
+                      <th>Comisión</th>
+                      <th>Depósito</th>
+                    </tr>
+                  </thead>
+                  <thead style="height:1.5rem">
+                    <tr>
+                      <th class="responsive"></th>
+                      <th class="responsive"></th>
+                      <th>
+                        {selectedDay.data
+                          .reduce((prev, curr) => prev + (curr.Amount/100), 0)
+                          .toLocaleString(localeParam.language, localeParam.currency)}
+                      </th>
+                      <th>
+                        {selectedDay.data
+                          .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
+                          .toLocaleString(localeParam.language, localeParam.currency)}
+                      </th>
+                      <th>
+                        {selectedDay.data
+                          .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
+                          .toLocaleString(localeParam.language, localeParam.currency)}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="inside">
+                    {#each selectedDay.data as transaction}
+                      <tr class="clickable number"
+                        
+                      >
+                        <td class="responsive">{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
+                        <td class="responsive">{transaction['Transaction Time']}</td>
+                        <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                      </tr>
+                      {/each}
+                  </tbody>
+                </table>
+                </div>
+            </div>
+          {/if}
+          <!-- <div class="transaction-tables">
+            {#each transactionsMonth as month}
+              <div 
+                class="week-table__title "
+                on:click={handleToggleWeek(`${month.firstDay}-${month.lastDay}`)}
+                on:keypress={(e) => e.key === 'Enter' ? handleToggleWeek(`${month.firstDay}-${month.lastDay}`) : ""}
+              >
+                <div class="col">
+                  <div class="element">
+                    Del {getTransactionDate(month.firstDay)} al {getTransactionDate(month.lastDay)}
                   </div>
                 </div>
               </div>
-            {:else}
-              <div bind:this={pdfData} id={`pdfTable-${selectedDay.date}`} class="table-container">
-                <div class="card-container">
-                  <div class="row">
-                    <div class="title">
-                      <i class="arrow-blue clickable"
-                        on:click={() => (monthView = !monthView)}
-                        on:keypress={(e) => e.key === 'Enter' ? monthView = !monthView : ""}
-                      >
-                        <Icons name="arrow-bwd" width="24" height="24"/>
-                      </i>
-                      {getMonthPeriod(selectedDay.date)}
+              {#each month.objects as objects, i}
+                <div 
+                  class={`${toggleWeek === `${month.firstDay}-${month.lastDay}` ? "" : "hidden"}`}
+                  on:click={handleToggleWeekDetails(`${objects.date}`)}
+                  on:keypress={(e) => e.key === 'Enter' ? handleToggleWeek(`${objects.date}`) : ""}
+                >
+                  <div class="main-container week-table__subtitle">
+                    <div class="col">
+                      <div class="element">{getWeekDay(objects.date)}</div>
+                      <div class="element">
+                        {getTransactionDate(objects.date)}
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="element">Ventas Totales</div>
+                      <div class="element">{objects.data.length}</div>
+                    </div>
+                    <div class="col">
+                      <div class="element">Total</div>
+                      <div class="element">
+                        {objects.data
+                        .reduce((prev, curr) => prev + (curr.Amount/100), 0)
+                        .toLocaleString(localeParam.language, localeParam.currency)}
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="element">Comisión</div>
+                      <div class="element">
+                        {objects.data
+                        .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
+                        .toLocaleString(localeParam.language, localeParam.currency)}
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="element">Depósito</div>
+                      <div class="element">
+                        {objects.data
+                        .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
+                        .toLocaleString(localeParam.language, localeParam.currency)}
+                      </div>
                     </div>
                   </div>
+                </div>
+                <div bind:this={pdfData} id={`pdfTable-${month.date}`} class={`table-container ${toggleWeekDetails === objects.date ? "":"hidden"}`}>
+                  {#if objects.data.length <= 0}
+                    <div class={`not-found`}>
+                      <b>
+                        {notFoundMessage}
+                      </b>
+                    </div>
+                  {:else}
                   <table class="table-content">
-                    <thead style="height:1.5rem">
+                    <thead>
                       <tr>
-                        <th class="responsive">Fecha</th>
-                        <th class="responsive">ID</th>
-                        <th>Ventas</th>
+                        <th>Fecha</th>
+                        <th>ID</th>
+                        <th>Venta</th>
                         <th>Comisión</th>
                         <th>Depósito</th>
                       </tr>
                     </thead>
-                    <thead style="height:1.5rem">
-                      <tr>
-                        <th class="responsive"></th>
-                        <th class="responsive"></th>
-                        <th>
-                          {selectedDay.data
-                            .reduce((prev, curr) => prev + (curr.Amount/100), 0)
-                            .toLocaleString(localeParam.language, localeParam.currency)}
-                        </th>
-                        <th>
-                          {selectedDay.data
-                            .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
-                            .toLocaleString(localeParam.language, localeParam.currency)}
-                        </th>
-                        <th>
-                          {selectedDay.data
-                            .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
-                            .toLocaleString(localeParam.language, localeParam.currency)}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody class="inside">
-                      {#each selectedDay.data as transaction}
+                    <tbody>
+                      {#each objects.data as transaction}
                         <tr class="clickable number"
-                          
+                          on:click={() => (selectedTransaction = transaction)}
+                          on:click={() => (transactionDetailView = true)}
+                          on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
+                          on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
                         >
-                          <td class="responsive">{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
-                          <td class="responsive">{transaction['Transaction Time']}</td>
+                          <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
+                          <td>{transaction['Transaction Time']}</td>
                           <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
                           <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
                           <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
@@ -930,242 +1111,156 @@
                         {/each}
                     </tbody>
                   </table>
-                  </div>
-              </div>
-            {/if}
-            <!-- <div class="transaction-tables">
-              {#each transactionsMonth as month}
-                <div 
-                  class="week-table__title "
-                  on:click={handleToggleWeek(`${month.firstDay}-${month.lastDay}`)}
-                  on:keypress={(e) => e.key === 'Enter' ? handleToggleWeek(`${month.firstDay}-${month.lastDay}`) : ""}
-                >
-                  <div class="col">
-                    <div class="element">
-                      Del {getTransactionDate(month.firstDay)} al {getTransactionDate(month.lastDay)}
-                    </div>
-                  </div>
+                  {/if}
                 </div>
-                {#each month.objects as objects, i}
-                  <div 
-                    class={`${toggleWeek === `${month.firstDay}-${month.lastDay}` ? "" : "hidden"}`}
-                    on:click={handleToggleWeekDetails(`${objects.date}`)}
-                    on:keypress={(e) => e.key === 'Enter' ? handleToggleWeek(`${objects.date}`) : ""}
-                  >
-                    <div class="main-container week-table__subtitle">
-                      <div class="col">
-                        <div class="element">{getWeekDay(objects.date)}</div>
-                        <div class="element">
-                          {getTransactionDate(objects.date)}
-                        </div>
-                      </div>
-                      <div class="col">
-                        <div class="element">Ventas Totales</div>
-                        <div class="element">{objects.data.length}</div>
-                      </div>
-                      <div class="col">
-                        <div class="element">Total</div>
-                        <div class="element">
-                          {objects.data
-                          .reduce((prev, curr) => prev + (curr.Amount/100), 0)
-                          .toLocaleString(localeParam.language, localeParam.currency)}
-                        </div>
-                      </div>
-                      <div class="col">
-                        <div class="element">Comisión</div>
-                        <div class="element">
-                          {objects.data
-                          .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
-                          .toLocaleString(localeParam.language, localeParam.currency)}
-                        </div>
-                      </div>
-                      <div class="col">
-                        <div class="element">Depósito</div>
-                        <div class="element">
-                          {objects.data
-                          .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
-                          .toLocaleString(localeParam.language, localeParam.currency)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div bind:this={pdfData} id={`pdfTable-${month.date}`} class={`table-container ${toggleWeekDetails === objects.date ? "":"hidden"}`}>
-                    {#if objects.data.length <= 0}
-                      <div class={`not-found`}>
-                        <b>
-                          {notFoundMessage}
-                        </b>
-                      </div>
-                    {:else}
-                    <table class="table-content">
-                      <thead>
-                        <tr>
-                          <th>Fecha</th>
-                          <th>ID</th>
-                          <th>Venta</th>
-                          <th>Comisión</th>
-                          <th>Depósito</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {#each objects.data as transaction}
-                          <tr class="clickable number"
-                            on:click={() => (selectedTransaction = transaction)}
-                            on:click={() => (transactionDetailView = true)}
-                            on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
-                            on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
-                          >
-                            <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
-                            <td>{transaction['Transaction Time']}</td>
-                            <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                            <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                            <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                          </tr>
-                          {/each}
-                      </tbody>
-                    </table>
-                    {/if}
-                  </div>
-                {/each}
               {/each}
-            </div> -->
-          {/if}
-          {:else}
-          <div class="return">
-            <Input on:click={() => (transactionDetailView = false)} label="Regresar" id="detailsReturnButton" type="button" className="btn-plain" icon=""/>
-          </div>
-          <div class="transaction-details">
-            <div class="details__top">
-              <b>Recibo #{selectedTransaction['Transaction Time']}</b>
-              <p>
-                {dateToLocalString(selectedTransaction['Transaction Date'])} {timeToLocalString(selectedTransaction['Transaction Time'])}
-              </p>
-            </div>
-            <div class="details__middle">
-              <div class="details-left responsive">
-                <div class="title">Datos</div>
-                <div class="item">
-                  <b>Referencia</b>
-                  <p>{selectedTransaction['IFD Serial Number']}</p>
-                </div>
-                <div class="item">
-                  <b>TVR</b>
-                  <p>{selectedTransaction.TVR}</p>
-                </div>
-                <div class="item">
-                  <b>AID</b>
-                  <p>{selectedTransaction['Terminal Capabilities']}</p>
-                </div>
-                <div class="item">
-                  <b>TSI</b>
-                  <p>{selectedTransaction['Additional Terminal Capabilities']}</p>
-                </div>
-                <div class="item">
-                  <b>Tipo de Tarjeta</b>
-                  <p>MASTERCARD</p>
-                </div>
-              </div>
-              <div class="details-center">
-                <div class="details-card">
-                  <div class="details-card__top">
-                    <b>Detalle de Venta</b>
-                  </div>
-                  <div class="details-card__middle">
-                    <div class="item">
-                      <div class=item__title>
-                        <b>Tarjeta Utilizada</b>
-                      </div>
-                      <div class=item__content>
-                        <p><span>{"**** **** **** "+selectedTransaction['Application PAN'].substr(-4)}</span></p>
-                      </div>
-                    </div>
-                    <div class="item">
-                      <div class=item__title>
-                        <b>Tipo de Tarjeta</b>
-                      </div>
-                      <div class=item__content>
-                        <p><Icons name="mastercard" width="24" height="24"/></p>
-                      </div>
-                    </div>
-                    <div class="item">
-                      <div class=item__title>
-                        <b>Total de la Venta</b>
-                      </div>
-                      <div class=item__content>
-                        <p>{(selectedTransaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="details-card__bottom">
-                    <div class="item">
-                      <div class=item__title>
-                        <b>Estatus</b>
-                      </div>
-                      <div class=item__content>
-                        <p>APROBADA</p>
-                      </div>
-                    </div>
-                    <div class="item">
-                      <div class=item__title>
-                        <b>Comisión</b>
-                      </div>
-                      <div class=item__content>
-                        <p>{((selectedTransaction.Amount/100) * 0.0406)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
-                        <span>{`(4.06%)`}</span>
-                      </div>
-                    </div>
-                    <div class="item">
-                      <div class=item__title>
-                        <b>Total a Depositar</b>
-                      </div>
-                      <div class=item__content>
-                        <p>{((selectedTransaction.Amount/100) * 0.9594)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
-                      </div>
-                      <span></span>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-buttons">
-                  <div class="reverse-button">
-                    <Input on:click={showModal(modalClarification)} label="Aclaración" id="reverseTransaction" type="button" className="btn-plain" icon=""/>
-                  </div>
-                  <div class="email-button">
-                    <Input label="Enviar por e-mail" id="emailTransaction" type="button" className="btn-plain" icon=""/>
-                  </div>
-                  <div class="print-button">
-                    <Input label="Imprimir Recibo" id="printTransaction" type="button" className="btn-plain" icon=""/>
-                  </div>
-                </div>
-              </div>
-              <div class="details-right responsive">
-                <div class="title">Reportes</div>
-                <div class="export-buttons">
-                  <Input on:click={
-                    () => {
-                      transactionToArray.push(selectedTransaction)
-                      exportDataToCSV(transactionToArray)
-                      transactionToArray = [];
-                    }
-                  } label="" id="csv-export" type="button" className="btn-plain fill-blue btn-square " icon="csv-fill"/>
-                  <Input on:click={
-                    () => {
-                      transactionToArray.push(selectedTransaction)
-                      exportDataToCSV(transactionToArray)
-                      transactionToArray = [];
-                    }
-                  } label="" id="excel-export" type="button" className="btn-plain fill-green btn-square " icon="xls-fill"/>
-                  <Input on:click={
-                    () => {
-                      transactionToArray.push(selectedTransaction)
-                      exportDataToCSV(transactionToArray)
-                      transactionToArray = [];
-                    }
-                  } label="" id="pdf-export" type="button" className="btn-plain fill-red btn-square " icon="pdf-fill"/>
-                </div>
-              </div>
-            </div>
-          </div>
+            {/each}
+          </div> -->
         {/if}
+        {:else}
+        <div class="return">
+          <Input on:click={() => (transactionDetailView = false)} label="Regresar" id="detailsReturnButton" type="button" className="btn-plain" icon=""/>
+        </div>
+        <div class="transaction-details">
+          <div class="details__top">
+            <b>Recibo #{selectedTransaction['Transaction Time']}</b>
+            <p>
+              {dateToLocalString(selectedTransaction['Transaction Date'])} {timeToLocalString(selectedTransaction['Transaction Time'])}
+            </p>
+          </div>
+          <div class="details__middle">
+            <div class="details-left responsive">
+              <div class="title">Datos</div>
+              <div class="item">
+                <b>Referencia</b>
+                <p>{selectedTransaction['IFD Serial Number']}</p>
+              </div>
+              <div class="item">
+                <b>TVR</b>
+                <p>{selectedTransaction.TVR}</p>
+              </div>
+              <div class="item">
+                <b>AID</b>
+                <p>{selectedTransaction['Terminal Capabilities']}</p>
+              </div>
+              <div class="item">
+                <b>TSI</b>
+                <p>{selectedTransaction['Additional Terminal Capabilities']}</p>
+              </div>
+              <div class="item">
+                <b>Tipo de Tarjeta</b>
+                <p>{getCardBrand(selectedTransaction['Application PAN'])}</p>
+              </div>
+            </div>
+            <div class="details-center">
+              <div class="details-card">
+                <div class="details-card__top">
+                  <b>Detalle de Venta</b>
+                </div>
+                <div class="details-card__middle">
+                  <div class="item">
+                    <div class=item__title>
+                      <b>Tarjeta Utilizada</b>
+                    </div>
+                    <div class=item__content>
+                      <p><span>{"**** **** **** "+selectedTransaction['Application PAN'].substr(-4)}</span></p>
+                    </div>
+                  </div>
+                  <div class="item">
+                    <div class=item__title>
+                      <b>Tipo de Tarjeta</b>
+                    </div>
+                    <div class=item__content>
+                      {#if cardIcon === "master-card"}
+                        <p><Icons name="mastercard" width="24" height="24"/></p>
+                      {:else if cardIcon === "visa"}
+                        <Icons name="visa" width="50" height="30"/>
+                      {:else if cardIcon === "amex"}
+                        <Icons name="amex" width="25" height="25"/>
+                      {:else if cardIcon === "bank-card-line"}
+                        <Icons name="bank-card-line" width="25" height="25"/>
+                      {/if}
+                    </div>
+                  </div>
+                  <div class="item">
+                    <div class=item__title>
+                      <b>Total de la Venta</b>
+                    </div>
+                    <div class=item__content>
+                      <p>{(selectedTransaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="details-card__bottom">
+                  <div class="item">
+                    <div class=item__title>
+                      <b>Estatus</b>
+                    </div>
+                    <div class=item__content>
+                      <p>APROBADA</p>
+                    </div>
+                  </div>
+                  <div class="item">
+                    <div class=item__title>
+                      <b>Comisión</b>
+                    </div>
+                    <div class=item__content>
+                      <p>{((selectedTransaction.Amount/100) * 0.0406)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                      <!-- <span>{`(4.06%)`}</span> -->
+                    </div>
+                  </div>
+                  <div class="item">
+                    <div class=item__title>
+                      <b>Total a Depositar</b>
+                    </div>
+                    <div class=item__content>
+                      <p>{((selectedTransaction.Amount/100) * 0.9594)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                    </div>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+              <div class="card-buttons">
+                <div class="reverse-button">
+                  <Input on:click={() => clarification.ticket = selectedTransaction['Transaction Time']} on:click={showModal(modalClarification)} label="Aclaración" id="reverseTransaction" type="button" className="btn-plain" icon=""/>
+                </div>
+                <div class="email-button">
+                  <Input label="Enviar por e-mail" id="emailTransaction" type="button" className="btn-plain" icon=""/>
+                </div>
+                <div class="print-button">
+                  <Input label="Imprimir Recibo" id="printTransaction" type="button" className="btn-plain" icon=""/>
+                </div>
+              </div>
+            </div>
+            <div class="details-right responsive">
+              <div class="title">Reportes</div>
+              <div class="export-buttons">
+                <Input on:click={
+                  () => {
+                    transactionToArray.push(selectedTransaction)
+                    exportDataToCSV(transactionToArray)
+                    transactionToArray = [];
+                  }
+                } label="" id="csv-export" type="button" className="btn-plain fill-blue btn-square " icon="csv-fill"/>
+                <Input on:click={
+                  () => {
+                    transactionToArray.push(selectedTransaction)
+                    exportDataToCSV(transactionToArray)
+                    transactionToArray = [];
+                  }
+                } label="" id="excel-export" type="button" className="btn-plain fill-green btn-square " icon="xls-fill"/>
+                <Input on:click={
+                  () => {
+                    transactionToArray.push(selectedTransaction)
+                    exportDataToCSV(transactionToArray)
+                    transactionToArray = [];
+                  }
+                } label="" id="pdf-export" type="button" className="btn-plain fill-red btn-square " icon="pdf-fill"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      {/if}
     {/if}
   </div>
 </div>
@@ -1441,15 +1536,36 @@
     flex-direction: row;
   }
 
-  .clarifications-select {
+  .clarifications {
     display: flex;
-    width: 50%;
+    flex-direction: column;
+    width: 100%;
+    /* TEXT */
+    text-align: center;
+    font-weight: 700;
+    line-height: 1.25rem;/* 20px */
+    color: #113A62;
   }
+  .clarifications .title {
+    font-size: 1rem;/* 16px */
+  }
+  .clarifications .description {
+    font-size: 1.5rem;/* 16px */
+  }
+
   .clarification-description {
     display: flex;
     flex-direction: column;
     justify-content: center;
     /* width: 50%; */
+  }
+
+  .modal-range p {
+    font-weight: 700;
+    font-size: 1.25rem;/* 20px */
+    line-height: 1.25rem;/* 20px */
+    /* Text */
+    color: #113A62;
   }
 
   .date-range-input {
@@ -1458,6 +1574,13 @@
     justify-content: center;
   }
 
+  .input-cards{
+    display: flex;
+    justify-content: space-between;
+  }
+  .input-cards > i{
+    cursor: pointer;
+  }
   .export-buttons {
     display: flex;
     flex-direction: row;
@@ -1873,6 +1996,34 @@
     color: #007AFF;
   }
 
+  .message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: inherit;
+    padding: 2rem 0;
+    gap: .5rem;
+    margin: 0 4rem 2rem 4rem;
+    min-height: 25rem;
+  }
+
+  .message .msg{
+    font-weight: 700;
+    font-size: 1.25rem;/* 16px */
+    line-height: 1.25rem;/* 20px */
+    text-align: center;
+    /* Text */
+    color: #113A62;
+  }
+  .message .description{
+    font-weight: 500;
+    font-size: 1rem;/* 16px */
+    line-height: 1.25rem;/* 20px */
+    text-align: center;
+    /* Text */
+    color: #8C9FB1;
+  }
+
   @media (max-width: 540px) {
     .top{
       display: flex;
@@ -1932,6 +2083,15 @@
     .responsive {
       display: none;
     }
+
+    .card-group > .card{
+      margin: 0 1rem;
+    }
+
+    .message {
+      min-height: 10rem;
+      margin: 0 1rem;
+    }
   }
 
   @media (min-width: 768px) and (max-width: 1023px) {
@@ -1954,6 +2114,10 @@
 
     .details-right .export-buttons {
       flex-direction: column;
+    }
+
+    .message {
+      margin: 0;
     }
     /* .responsive {
       display: none;

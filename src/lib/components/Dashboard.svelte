@@ -137,23 +137,24 @@
   <div class="content">
     <div class="card-group">
       <div class="card">
-        <InfoCard className={""} title="Ventas Realizadas Hoy" numData={transactions.length}/>
+        <InfoCard className={""} title="Total Vendido" numData={transactions.reduce((prev, curr) => prev + (curr['Amount']/100), 0)?.toLocaleString(localeParam.language, localeParam.currency)}/>
       </div>
       <div class="card">
-        <InfoCard className={""} title="Total de Ventas de Hoy" numData={transactions.reduce((prev, curr) => prev + (curr['Amount']/100), 0)?.toLocaleString(localeParam.language, localeParam.currency)}/>
+        <InfoCard className={""} title="N° de Ventas" numData={transactions.length}/>
       </div>
       <div class="card">
-        <InfoCard className={""} title="Por Depositar" numData={transactions.reduce((prev, curr) => prev + (curr['Amount']/100)* 0.965, 0)?.toLocaleString(localeParam.language, localeParam.currency)}/>
+        <InfoCard className={""} title="Saldo a Depositar" numData={transactions.reduce((prev, curr) => prev + (curr['Amount']/100)* 0.965, 0)?.toLocaleString(localeParam.language, localeParam.currency)}/>
       </div>
     </div>
     <div class="transactions">
       <div class="top">
         <div class="top__left">
-          <p>Transacciones recientes</p>
+          <p><a href="/transactions">Últimas Transacciones</a></p>
+          <!-- <p>Transacciones recientes</p> -->
         </div>
-        <div class="top__right">
+        <!-- <div class="top__right">
           <a on:click={() => ($linkSelected = "Mis Ventas")} href="/transactions">Ver Transacciones ></a>
-        </div>
+        </div> -->
       </div>
       {#if transactions?.length > 0}
         <div id="pdfTable" class="table-container">
@@ -294,11 +295,21 @@
 
   .transactions * .top__left {
     display: flex;
-    width: 50%;
-    justify-content: left;
+    width: 100%;
+    justify-content: center;
     padding-left: 2rem;
   }
   .transactions .top .top__left p{
+    font-weight: 700;
+    font-size: 1.5rem;/* 24px */
+    line-height: 20px;/* 20px */
+    text-align: center;
+    /* Text */
+    color: #113A62;
+  }
+
+  .top__left * a {
+    text-decoration: none;
     font-weight: 700;
     font-size: 1.5rem;/* 24px */
     line-height: 20px;/* 20px */

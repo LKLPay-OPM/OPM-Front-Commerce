@@ -199,3 +199,8 @@ body {
 .divider:not(:empty)::after {
   margin-left: .25em;
 }
+
+.arrow-blue {
+  color: #007AFF;
+  cursor: pointer;
+}
