@@ -159,12 +159,12 @@
   }
 
   div.btn {
-    width: 100%;
     align-content: center;
     justify-content: center;
     border: none;
     display: flex;
-    height: 3.375rem;
+    height: 100%;
+    width: 100%;
     background: linear-gradient(270deg, #0478FF 0%, #50CAFF 100%);
     box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: .625rem;
@@ -313,6 +313,14 @@
     display: none;
   }
 
+  div.btn-orange {
+    background: #FD9053;
+  }
+
+  .btn-orange label {
+    color: #FFFFFF;
+  }
+
   div.btn-disabled {
     width: 100%;
     align-content: center;
@@ -438,6 +446,54 @@
   cursor: pointer;
 }
 
+.txt-field-horizontal label {
+    font-size: .8125rem;
+    font-weight: 700;
+    line-height: 1.25rem;
+    color: #8B9EB0;
+    min-width: 4.25rem;/* 10px */
+  }
+  .txt-field-horizontal.blue label {
+    font-weight: 500;
+    font-size: .8125rem;/* 13px */
+    line-height: 1.25rem;/* 20px */
+    color: #113A62;
+  }
+  div.txt-field-horizontal {
+    width: -webkit-fill-available;
+    min-width: -webkit-fill-available;
+    display: flex;
+    margin: .75rem 0rem 0rem 0rem;
+    /* max-width: 100%; */
+  }
+
+  .txt-field-horizontal input {
+    width: -webkit-fill-available;
+    max-width: 5rem;/* 80px */
+    min-height: 2.125rem;/* 34px */
+    height: 2.125rem;/* 34px */
+    background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+    box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0;
+    /* border: none; */
+    border-radius: 4px;
+    padding-left: 1.25rem;
+    /* TEXT */
+    font-weight: 500;
+    font-size: .8125rem;/* 13px */
+    line-height: 1.125rem;/* 18px */
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    color: #113A62;
+  }
+
+  .txt-field-horizontal input::placeholder{
+    font-weight: 500;
+    font-size: .8125rem;/* 13px */
+    line-height: 1.125rem;/* 18px */
+    color: #D9D9D9;
+  }
+
 .modal-toggle {
   display: none;
 }
@@ -459,6 +515,10 @@
 }
 .fill-blue label {
   color: #113A62;
+}
+
+.fill-orange label {
+ color: #FD9053;
 }
 
 </style>

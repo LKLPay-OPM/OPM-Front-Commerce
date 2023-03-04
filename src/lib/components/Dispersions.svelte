@@ -37,10 +37,11 @@
   let notFoundMessage = "No se encontraron registros";
   let loading = false;
   let date = new Date;
-  let active = "day";
+  let active = "1";
   let terms = false;
+  let termsDepositPreference = false;
 
-  let dateRangeStart, dateRangeEnd, ticketId, modalDateFilter, modalClarification, modalDetailClarification, modalImmediateDeposit;
+  let dateRangeStart, dateRangeEnd, ticketId, modalDateFilter, modalClarification, modalDetailClarification, modalImmediateDeposit, modalImmediateDepositPreference;
   let pdfData, print = true;
   let rates;
   /* let rateLklPay, rateNatural, ratesBusinessType, rateUrgentDispersion = 0;
@@ -56,7 +57,7 @@
     type: 1,
     reference: 6326701,
     tracking: "IACH2GJ05YW9MV",
-    clabe: "646-180-1737-4237822-7",
+    clabe: "646180173742378227",
     transactions: 37
   }
 
@@ -68,11 +69,11 @@
   ]
 
   let clarification = {
-    type: "",
+    customer: $loggedInUser.uid,
     description: "",
   }
   let detailClarification = {
-    type: "",
+    ticket: "",
     description: "",
   }
 
@@ -127,7 +128,7 @@
   }
 
   const fetchByDayButton = async() => {
-    active = "day";
+    // active = "day";
     dispersionDetailView = false;
     // selectedDispersion = {};
     loading = true;
@@ -386,16 +387,27 @@
     console.log(immediateDeposit)
     immediateDeposit = {
       availableBalance: $loggedInUser.toDeposit,
-      immediateDepositCommission: 0,
       immediateDepositQty: 0,
       toDeposit: 0
     }
   }
 
+  const handleImmediateDepositPreference = () => {
+
+  }
+
+  const traditionalDepositPreference = () => {
+    active = "1"
+  }
+  const immediateDepositPreference = () => {
+    active = "2"
+    showModal(modalImmediateDepositPreference)
+    
+  }
+
   let buttonGroupOptions = [
-    {value: "day", name: "Día", click: fetchByDayButton},
-    {value: "week", name: "Semana", click: fetchByWeekButton},
-    {value: "month", name: "Mes", click: fetchByMonthButton},
+    {value: "1", name: "Tradicional", click: traditionalDepositPreference},
+    {value: "2", name: "Inmediato", click: immediateDepositPreference},
   ]
 
   const depositTypeName = (id) => {
@@ -424,6 +436,12 @@
     return str
   }
 
+  const getClabe = (string) => {
+    var pattern = /(\d{3})(\d{11})(\d{4})/;
+    let result = string.replace(pattern, `$1***********$3`)
+    return result
+  }
+
   const showModal = (option) => {
     option.show();
   }
@@ -447,6 +465,57 @@
 	});
 </script>
 
+<!-- MODAL DEPOSIT PREFERENCE-->
+<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalImmediateDepositPreference}>
+  <div slot="header">
+    <p>Contratar Depósito Inmediato</p>
+  </div>
+  <div slot="content">
+    <div class="immediate-deposit">
+      <div class="error">
+        <p>Todas tus ventas acumuladas del día hasta las  6:00pm serán depositadas a las 6:30pm.</p>
+      </div>
+      <div class="column-element">
+        <div class="blue-title">
+          <p>Costo Extra por Depósito</p>
+        </div>
+        <div class="content">
+          <p>{immediateDeposit.immediateDepositCommission}%</p>
+        </div>
+      </div>
+      <div class="terms">
+        <div class="terms-checkbox">
+          <Checkbox bind:checked={termsDepositPreference}/>
+        </div>
+        <p>
+          He Leído, entendido y acepto los 
+          <a href="/#terms">Términos y Condiciones Generales</a> de LklPay, 
+          así como su <a href="/#privacy">Política de Privacidad</a> y, por lo tanto 
+          estoy de acuerdo en el uso y procesamiento de datos personales.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-buttons" slot="footer">
+    <Input on:click={closeModal(modalImmediateDepositPreference)} label="Cerrar" id="buttonCloseModalImmediateDepositPreference" type="button" className="btn-plain" icon=""/>
+    {#if termsDepositPreference}  
+      <Input 
+        on:click={closeModal(modalImmediateDepositPreference)} 
+        on:click={() => handleImmediateDepositPreference()}
+        label="Contratar" 
+        id="buttonSaveModalImmediateDepositPreference" 
+        type="button" 
+        className={`
+          ${
+            termsDepositPreference
+            ? "btn" : "btn-plain disabled"
+          }`
+        } 
+        icon=""
+      />
+    {/if}
+  </div>
+</Modal>
 <!-- MODAL IMMEDIATE DEPOSIT -->
 <Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalImmediateDeposit}>
   <div slot="header">
@@ -454,11 +523,11 @@
   </div>
   <div slot="content">
     <div class="immediate-deposit">
-      <!-- {#if immediateDeposit.availableBalance < 500}
-        <div>
-          <p>Para Solicitar un depósito Urgente es necesario que tu saldo a depositar sea al menos del mínimo por solicitud ($500) además de haber agregado la documentación necesaria en la sección de <b>Perfil</b></p>
+      {#if immediateDeposit.availableBalance < 500}
+        <div class="error">
+          <p>El monto mínimo para solicitar es de $500.00 mxn más el costo extra del {immediateDeposit.immediateDepositCommission}%</p>
         </div>
-        {:else} -->
+        {:else}
         <div class="row-element">
           <!-- <p>{immediateDeposit.availableBalance.toLocaleString(localeParam.language, localeParam.currency)}</p> -->
           <IconInput icon="dollar" label="Saldo Disponible" id="availableAmountTxtField" value={immediateDeposit.availableBalance} disabled={true} className="disabled-txt-field" type="number"/>
@@ -486,32 +555,36 @@
           </div>
           <p>
             He Leído, entendido y acepto los 
-            <a href="/register#terms">Términos y Condiciones Generales</a> de LklPay, 
-            así como su <a href="/register#privacy">Política de Privacidad</a> y, por lo tanto 
+            <a href="/#terms">Términos y Condiciones Generales</a> de LklPay, 
+            así como su <a href="/#privacy">Política de Privacidad</a> y, por lo tanto 
             estoy de acuerdo en el uso y procesamiento de datos personales.
           </p>
         </div>
-      <!-- {/if} -->
+      {/if}
     </div>
   </div>
   <div class="modal-buttons" slot="footer">
-    <Input on:click={closeModal(modalImmediateDeposit)} label="Cerrar" id="buttonCloseModalImmediateDeposit" type="button" className="btn-plain" icon=""/>
-    {#if immediateDeposit.availableBalance > 500 && terms}  
-      <Input 
-        on:click={closeModal(modalImmediateDeposit)} 
-        on:click={() => handleImmediateDeposit()}
-        label="Solicitar Depósito" 
-        id="buttonSaveModalImmediateDeposit" 
-        type="button" 
-        className={`btn-plain
-          ${
-            immediateDeposit.immediateDepositQty > 0 && immediateDeposit.immediateDepositQty > 500 &&
-            terms === true
-            ? "" : "disabled"
-          }`
-        } 
-        icon=""
-      />
+    {#if immediateDeposit.availableBalance < 500}
+      <Input on:click={closeModal(modalImmediateDeposit)} label="Entendido" id="buttonCloseModalImmediateDeposit" type="button" className="btn-plain btn-orange" icon=""/>
+    {:else}
+      <Input on:click={closeModal(modalImmediateDeposit)} label="Cerrar" id="buttonCloseModalImmediateDeposit" type="button" className="btn-plain" icon=""/>
+      {#if immediateDeposit.availableBalance > 500 && terms}  
+        <Input 
+          on:click={closeModal(modalImmediateDeposit)} 
+          on:click={() => handleImmediateDeposit()}
+          label="Solicitar Depósito" 
+          id="buttonSaveModalImmediateDeposit" 
+          type="button" 
+          className={`btn-plain
+            ${
+              immediateDeposit.immediateDepositQty > 0 && immediateDeposit.immediateDepositQty > 500 &&
+              terms === true
+              ? "" : "disabled"
+            }`
+          } 
+          icon=""
+        />
+      {/if}
     {/if}
   </div>
 </Modal>
@@ -522,8 +595,13 @@
     <p>Solicitar Aclaración</p>
   </div>
   <div slot="content">
-    <div class="clarifications-select">
-      <Select bind:optionsList={clarificationsList} defaultText={"Elige una opción"} label="Tipo de Aclaración" id="clarificationType" bind:value={clarification.type}/>
+    <div class="clarifications">
+      <div class="title">
+        Cantidad
+      </div>
+      <div class="description">
+        <p>{immediateDeposit.availableBalance.toLocaleString(localeParam.language, localeParam.currency)}</p>
+      </div>
     </div>
     <div class="clarification-description">
       <TextArea bind:value={clarification.description} label="Descripción" placeholder="¿Qué problema hay con esta transacción?" id="clarificationDescription" name="clarificationDescription"/>
@@ -537,10 +615,10 @@
       label="Enviar Aclaración" 
       id="buttonSaveModalClarification" 
       type="button" 
-      className={`btn-plain
+      className={`
         ${
           clarification.description != "" 
-          ? "" : "disabled"
+          ? "btn" : "btn-plain disabled"
         }`
       } 
       icon=""
@@ -553,9 +631,17 @@
     <p>Solicitar Aclaración</p>
   </div>
   <div slot="content">
-    <div class="clarifications-select">
-      <Select bind:optionsList={clarificationsList} defaultText={"Elige una opción"} label="Tipo de Aclaración" id="clarificationDetailType" bind:value={detailClarification.type}/>
+    <div class="clarifications">
+      <div class="title">
+        Recibo N°
+      </div>
+      <div class="description">
+        <p>{detailClarification.ticket}</p>
+      </div>
     </div>
+    <!-- <div class="clarifications-select">
+      <Select bind:optionsList={clarificationsList} defaultText={"Elige una opción"} label="Tipo de Aclaración" id="clarificationDetailType" bind:value={detailClarification.type}/>
+    </div> -->
     <div class="clarification-description">
       <TextArea bind:value={detailClarification.description} label="Descripción" placeholder="¿Qué problema hay con esta transacción?" id="clarificationDetailDescription" name="clarificationDescription"/>
     </div>
@@ -635,7 +721,7 @@
             {date.getDate()} de {getMonthName(date.getMonth())} del {date.getFullYear()}
           </p>
         </div>
-        <!-- <ButtonGroup bind:active={active} options={buttonGroupOptions}/> -->
+        <ButtonGroup bind:active={active} options={buttonGroupOptions}/>
       </div>
       <div class="top__right">
         <div class="dispersion-search-bar">
@@ -757,7 +843,7 @@
                   <div class="details-card__middle">
                     <div class="item">
                       <b>Cuenta CLABE</b>
-                      <p>{selectedDispersion.clabe}</p>
+                      <p>{getClabe(selectedDispersion.clabe)}</p>
                     </div>
                     <!-- <div class="item">
                       <b>Tipo de Tarjeta</b>
@@ -782,13 +868,13 @@
                     <div class="item">
                       <b>Comisión</b>
                       <p>{selectedDispersion.commission.toLocaleString(localeParam.language, localeParam.currency)}</p>
-                      <span>(4.06%)</span>
+                      <!-- <span>(4.06%)</span> -->
                     </div>
                   </div>
                 </div>
                 <div class="card-buttons">
                   <div class="clarification-button">
-                    <Input on:click={showModal(modalDetailClarification)} label="Aclaración" id="clarificationDispersionDetail" type="button" className="btn-plain" icon=""/>
+                    <Input on:click={() => detailClarification.ticket = selectedDispersion.id} on:click={showModal(modalDetailClarification)} label="Aclaración" id="clarificationDispersionDetail" type="button" className="btn-plain" icon=""/>
                   </div>
                   <div class="email-button">
                     <Input label="Enviar por e-mail" id="emailDispersion" type="button" className="btn-plain" icon=""/>
@@ -985,9 +1071,21 @@
     gap: 1rem;
   }
 
-  .clarifications-select {
+  .clarifications {
     display: flex;
-    width: 50%;
+    flex-direction: column;
+    width: 100%;
+    /* TEXT */
+    text-align: center;
+    font-weight: 700;
+    line-height: 1.25rem;/* 20px */
+    color: #113A62;
+  }
+  .clarifications .title {
+    font-size: 1rem;/* 16px */
+  }
+  .clarifications .description {
+    font-size: 1.5rem;/* 16px */
   }
   .clarification-description {
     display: flex;
@@ -1002,6 +1100,21 @@
     flex-direction: column;
     justify-content: space-evenly;
     gap: 1rem;
+  }
+
+  .immediate-deposit > .error > p{
+    font-weight: 700;
+    font-size: 1rem;/* 16px */
+    line-height: 1.25rem;/* 20px */
+    /* or 100% */
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    /* Text */
+
+    color: #113A62;
   }
   .immediate-deposit .row-element {
     display: flex;

@@ -87,9 +87,25 @@
     <ul class="nav-links">
       <li
         on:click={() => {
+          $linkSelected = "Solicitudes"
+        }}
+        on:keypress={(e) => e.key === 'Enter' ? $linkSelected = "Solicitudes" : $linkSelected = $linkSelected}
+      >
+        <a href="/requests">
+          <i class="{$linkSelected === "Solicitudes" ? "active-link_name" : ""}">
+            <Icons name="adviser" width="24" height="24"/>
+          </i>
+          <span class="{$linkSelected === "Solicitudes" ? "active-link_name" : "link_name"}">Solicitudes</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="/requests">Solicitudes</a></li>
+        </ul>
+      </li>
+      <li
+        on:click={() => {
           $linkSelected = "Ayuda"
         }}
-        on:keypress={(e) => e.key === 'Enter' ? $linkSelected = "Perfil" : $linkSelected = $linkSelected}
+        on:keypress={(e) => e.key === 'Enter' ? $linkSelected = "Ayuda" : $linkSelected = $linkSelected}
       >
         <a href="/#help">
           <i class="{$linkSelected === "Ayuda" ? "active-link_name" : ""}">
@@ -377,7 +393,7 @@
   transition: all 0.5s ease;
 }
 .sidebar.close .profile-details img{
-  padding: 10px;
+  /* padding: 10px; */
 }
 .sidebar .profile-details .profile_name,
 .sidebar .profile-details .job{
@@ -396,17 +412,6 @@
   font-weight: 500;
   font-size: .625rem;/* 10px */
   line-height: 1rem;/* 16px */
-}
-/* Sidebar Content Related CSS */
-.sidebar-start {
-  top: 0;
-  height: 70%;
-  overflow: hidden;
-  /* align-content: flex-start; */
-}
-.sidebar-bottom {
-  max-height: 25%;
-  bottom: 0;
 }
 
 @media screen {
