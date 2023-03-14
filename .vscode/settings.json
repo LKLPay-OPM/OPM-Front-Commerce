@@ -1,5 +1,9 @@
 {
-  "githubPullRequests.ignoredPullRequestBranches": [
-    "main"
-  ]
+  "svelte.enable-ts-plugin": true,
+  "svelte.plugin.svelte.format.enable": true,
+  "editor.formatOnSave": true,
+  "[svelte]": {
+    "editor.defaultFormatter": "svelte.svelte-vscode"
+  },
+  "editor.tabSize": 2
 }

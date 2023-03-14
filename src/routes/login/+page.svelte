@@ -1,91 +1,79 @@
 <script>
-  import {loggedInUser, isLoggedIn} from '$lib/stores.js';
-  import { login } from '$lib/hooks/auth.js';
-  import Input from '$lib/components/Input.svelte';
-  import Icons from '$lib/components/Icons.svelte';
-  import Logo from '$lib/assets/Logo.png';
-  import {goto} from '$app/navigation';
+  /* components */
+  import Input from "$lib/components/Input.svelte";
+  /* controllers */
+  import { AuthController } from "$lib/controllers/auth/auth.controller";
+  /* utils */
+  import { validateEmail, validatePassword } from "$lib/utils/input-validation";
+  /* assets */
+  import Logo from "$lib/assets/Logo.png";
 
-  let loginData = {
-      email: "",
-      password: "",
-  }
+  /* consts */
+  const input = {
+    email: "",
+    password: "",
+  };
 
+  /* dynamic vars */
   let error = false;
-  let emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  let passPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/
 
-  const handleLogin = async () => {
-    try {
-      const response = await login(loginData.email, loginData.password)
-      .then(() =>{
-        // goto('/home')
-        isLoggedIn.update(() => true)
-      })
-    } catch (err) {
-      error = true;
-    }
+  /* handlers & functions */
+  async function handleLogin() {
+    const { error: loginError } = await AuthController.login(input);
+    if (loginError) error = loginError;
   }
 </script>
 
 <div class="container">
   <div class="content">
     <div class="logo">
-      <img src={Logo} alt="Company Logo">
+      <img src={Logo} alt="Company Logo" />
     </div>
     <div class="form">
       <div class="title">Inicio de Sesión</div>
-      <div class={`subtitle ${!error ? "hidden" : ""}`}>Verifica que tus datos sean correctos</div>
+      <div class={`subtitle ${!error ? "hidden" : ""}`}>
+        Verifica que tus datos sean correctos
+      </div>
       <div class="form-inputs">
         <form on:submit|preventDefault={handleLogin}>
-          <Input 
-            label="Correo Electrónico" 
-            id="login-email" 
-            bind:value={loginData.email} 
-            type="email" 
-            className={`txt-field ${
-              /* loginData.email === "" ||
-              loginData.email != "" && loginData.email.match(emailPattern) ||
-              loginData.email != "" && loginData.email.match(emailPattern) &&  */!error ?
-              "normal" : "invalid"}`}
+          <Input
+            label="Correo Electrónico"
+            id="login-email"
+            bind:value={input.email}
+            name="email"
+            type="email"
+            className={`txt-field ${!error ? "normal" : "invalid"}`}
             placeholder="ejemplo@correo.com"
           />
-          <Input 
-            label="Contraseña" 
-            id="login-password" 
-            bind:value={loginData.password} 
-            type="password" 
-            className={`txt-field ${
-              /* loginData.password === "" ||
-              loginData.password != "" && loginData.password.match(passPattern) ||
-              loginData.password != "" && loginData.password.match(passPattern) &&  */!error ?
-              "normal" : "invalid"}`}
-            placeholder="contraseña"  
+          <Input
+            label="Contraseña"
+            id="login-password"
+            bind:value={input.password}
+            name="password"
+            type="password"
+            className={`txt-field ${!error ? "normal" : "invalid"}`}
+            placeholder="contraseña"
           />
           <div class="forgot-pass-link">
             <a href="/forgot-pass">Olvidé mi Contraseña</a>
           </div>
           <div class="btn-layout">
-            <Input 
-              label="Iniciar Sesión" 
-              id="loginButton" 
-              type="submit" 
-              className="{
-                loginData.email.match(emailPattern) &&
-                loginData.password.match(passPattern) ?
-                "btn" : "btn-disabled"
-              }" 
-              icon=""/>
-          </div>  
+            <Input
+              label="Iniciar Sesión"
+              id="loginButton"
+              type="submit"
+              className={validateEmail(input.email) &&
+              validatePassword(input.password)
+                ? "btn"
+                : "btn-disabled"}
+              icon=""
+            />
+          </div>
         </form>
-        <!-- <div class="register-link">
-          <a href="/register">Quiero crear una cuenta</a>
-        </div> -->
       </div>
     </div>
   </div>
 </div>
-
 
 <style>
   .container {
@@ -100,8 +88,9 @@
     position: absolute;
     width: 27rem;
     height: 37rem;
-    background: #F3F3F3;
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    background: #f3f3f3;
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     transform: matrix(1, 0, 0, 1, 0, 0);
   }
@@ -129,7 +118,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #8B9EB0;
+    color: #8b9eb0;
   }
 
   .subtitle {
@@ -141,7 +130,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #FF0000;
+    color: #ff0000;
   }
 
   .forgot-pass-link {
@@ -149,29 +138,20 @@
     align-items: center;
     justify-content: right;
   }
-  .forgot-pass-link a{
-    font-family: 'Raleway';
+  .forgot-pass-link a {
+    font-family: "Raleway";
     font-style: normal;
     font-weight: 700;
     font-size: 0.8125rem;
     line-height: 1.25rem;
     text-decoration: none;
-    color: #5585FF;
+    color: #5585ff;
   }
 
   .register-link {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  .register-link a{
-    font-family: 'Raleway';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 0.8125rem;
-    line-height: 1.25rem;
-    text-decoration: none;
-    color: #5585FF;
   }
 
   .form-inputs {

@@ -1,9 +1,11 @@
+/* Write your global styles here, in SCSS syntax. Variables and mixins from the src/variables.scss file are available here without importing */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Raleway';
-  font-feature-settings: 'pnum' on, 'lnum' on;
+  font-family: "Raleway";
+  font-feature-settings: "pnum" on, "lnum" on;
 }
 
 body {
@@ -11,11 +13,11 @@ body {
 }
 
 .text {
-  font-family: 'Raleway';
+  font-family: "Raleway";
 }
 
 .number {
-  font-family: 'Roboto';
+  font-family: "Roboto";
 }
 
 .layout {
@@ -25,7 +27,7 @@ body {
 }
 
 .main-container {
-  background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+  background: linear-gradient(91.36deg, #efeef5 0%, #e6e8ef 100%);
   /* out */
   box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
   border-radius: 10px;
@@ -33,42 +35,41 @@ body {
 
 .card-container {
   /* Fill Container */
-  background: #F3F3F3;
+  background: #f3f3f3;
   /* container effect */
-  box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+  box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+    4px 4px 20px rgba(111, 140, 176, 0.41);
   border-radius: 10px;
 }
 
 .card-inside {
-  background: #E9EDF0;
+  background: #e9edf0;
   /* inner-flat */
-  box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0;
+  box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
   border-radius: 0px 0px 10px 10px;
 }
 
 .card-secondary {
-  background: #E9EDF0;
+  background: #e9edf0;
   /* outer.effect */
-  box-shadow: -5px -5px 8px #F2F4F8, 5px 5px 7px rgba(174, 174, 192, 0.5);
+  box-shadow: -5px -5px 8px #f2f4f8, 5px 5px 7px rgba(174, 174, 192, 0.5);
   border-radius: 10px;
 }
 
-
-
-.no-user{
+.no-user {
   position: relative;
-  background: #E9EDF0;
+  background: #e9edf0;
   height: 100vh;
   width: 100vw;
   transition: all 0.5s ease;
   overflow-y: auto;
 }
-  
-.main-section{
+
+.main-section {
   position: relative;
-  background: #E9EDF0;
+  background: #e9edf0;
   height: 100vh;
-  left: 15rem;/* 240px */
+  left: 15rem; /* 240px */
   width: calc(100% - 15rem);
   transition: all 0.5s ease;
   padding: 12px;
@@ -76,33 +77,32 @@ body {
   overflow-x: hidden;
 }
 
-.main-content{
+.main-content {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
 }
 .main-section .main-content .bx-menu,
-.main-section .main-content .text{
+.main-section .main-content .text {
   color: #11101d;
   font-size: 35px;
 }
-.main-section .main-content .bx-menu{
+.main-section .main-content .bx-menu {
   cursor: pointer;
   margin-right: 10px;
 }
-.main-section .main-content .text{
+.main-section .main-content .text {
   font-size: 26px;
   font-weight: 600;
 }
 
 @media screen {
-  
-  .main-section{
-    left: 15rem;/* 240px */
+  .main-section {
+    left: 15rem; /* 240px */
     width: calc(100% - 15rem);
   }
-  .sidebar.close ~ .main-section{
-    left: 4.875rem;/* 78px */
+  .sidebar.close ~ .main-section {
+    left: 4.875rem; /* 78px */
     width: calc(100% - 4.875rem);
   }
 }
@@ -114,26 +114,25 @@ body {
 }
 
 @media (max-width: 768px) {
-
-  .main-section{
-    left:0rem;
+  .main-section {
+    left: 0rem;
     top: 50px;
     width: 100%;
   }
 
-  .sidebar.close ~ .main-section{
+  .sidebar.close ~ .main-section {
     left: 0rem;
     width: 100%;
   }
 }
 @media (min-width: 769px) and (max-width: 1024px) {
-  .main-section{
-    left: 4.875rem;/* 78px */
+  .main-section {
+    left: 4.875rem; /* 78px */
     width: calc(100% - 4.875rem);
   }
 
-  .sidebar.close ~ .main-section{
-    left: 4.875rem;/* 78px */
+  .sidebar.close ~ .main-section {
+    left: 4.875rem; /* 78px */
     width: calc(100% - 4.875rem);
   }
 }
@@ -166,7 +165,7 @@ body {
   flex-direction: column;
   overflow: hidden;
   flex: 1 1 auto;
-  flex-direction: column
+  flex-direction: column;
 }
 
 .btn-auth-form {
@@ -187,20 +186,20 @@ body {
 
 .divider::before,
 .divider::after {
-  content: '';
+  content: "";
   flex: 1;
   border-bottom: 3px solid #000;
 }
 
 .divider:not(:empty)::before {
-  margin-right: .25em;
+  margin-right: 0.25em;
 }
 
 .divider:not(:empty)::after {
-  margin-left: .25em;
+  margin-left: 0.25em;
 }
 
 .arrow-blue {
-  color: #007AFF;
+  color: #007aff;
   cursor: pointer;
 }
