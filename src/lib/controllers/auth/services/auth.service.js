@@ -4,18 +4,17 @@ import { AppAccount, AppClient } from "$lib/repos/appwrite";
 
 class AuthService {
   async login({ email, password }) {
-    const data = await AppAccount.createEmailSession(email, password);
-    return data;
+    const session = await AppAccount.createEmailSession(email, password);
+    const user = await AppAccount.get();
+    return { session, user };
   }
 
   async logout(id) {
-    const data = await AppAccount.deleteSession(id);
-    return data;
+    return await AppAccount.deleteSession(id);
   }
 
   async register({ email, password }) {
-    const data = await AppAccount.create(ID.unique(), email, password);
-    return data;
+    return await AppAccount.create(ID.unique(), email, password);
   }
 }
 

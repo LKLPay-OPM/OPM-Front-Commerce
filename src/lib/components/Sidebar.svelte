@@ -3,6 +3,7 @@
     isLoggedIn,
     loggedInUser,
     linkSelected,
+    appwriteUser,
     sidebar,
   } from "$lib/stores.js";
   // import { logout } from "$lib/hooks/auth.js";
@@ -19,6 +20,8 @@
 
   // export let sidebar = true;
   let options = [];
+
+  console.log($loggedInUser);
 
   $: {
     if ($isLoggedIn) {
@@ -71,11 +74,10 @@
       </div>
       <div class="name-job">
         <div class="profile_name">
-          {$loggedInUser?.name || ""}
-          {$loggedInUser?.firstLastName || ""}
+          {$appwriteUser?.name ?? ""}
         </div>
         <div class="job">
-          {$loggedInUser?.businessName ? $loggedInUser?.businessName : ""}
+          {$appwriteUser?.businessName ?? $appwriteUser?.email ?? ""}
         </div>
       </div>
     </a>

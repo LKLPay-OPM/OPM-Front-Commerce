@@ -1,19 +1,22 @@
 /* svelte */
 import { error } from "@sveltejs/kit";
 import { goto } from "$app/navigation";
-import { isLoggedIn, loggedInUser } from "$lib/stores";
+import { isLoggedIn, loggedInUser, appwriteUser } from "$lib/stores";
 /* services */
 import { authService } from "./services/auth.service";
 
 export class AuthController {
   static async login(body) {
     try {
-      const data = await authService.login(body);
+      const { session, user } = await authService.login(body);
       isLoggedIn.update(() => true);
-      loggedInUser.set(data);
+      loggedInUser.set(session);
+      appwriteUser.set(user);
       await goto("/");
     } catch (e) {
       isLoggedIn.update(() => false);
+      loggedInUser.set({});
+      appwriteUser.set({});
       return { error: true };
     }
   }
@@ -23,6 +26,7 @@ export class AuthController {
       await authService.logout(id);
       isLoggedIn.update(() => false);
       loggedInUser.set({});
+      appwriteUser.set({});
     } catch (e) {
       return { error: true };
     }

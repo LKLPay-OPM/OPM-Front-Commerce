@@ -19,8 +19,8 @@
 
   /* handlers & functions */
   async function handleLogin() {
-    const { error: loginError } = await AuthController.login(input);
-    if (loginError) error = loginError;
+    const data = await AuthController.login(input);
+    if (data?.error) error = data.error;
   }
 </script>
 
