@@ -195,7 +195,7 @@
     /* height: 2.5rem; */
     height: 100%;
     width: 100%;
-    max-width: 20rem;
+    /* max-width: 20rem; */
     background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
     box-shadow: -5px -5px 8px #F2F4F8, 5px 5px 7px rgba(174, 174, 192, 0.5);
     border-radius: 5px;
@@ -256,19 +256,22 @@
   .btn-success input {
     display: none;
   }
-  div.btn-success {
+  div.btn-success-border {
+    
     width: 100%;
-    height: 100%;
     align-content: center;
     justify-content: center;
     border: none;
     display: flex;
-    background: linear-gradient(270deg, #00C48C 0%, #50FFD5 100%);
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    height: 100%;
+    background: #E6E9EF;
+    border: 1px solid #00C48C;
+    box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
+    /* background: linear-gradient(270deg, #00C48C 0%, #50FFD5 100%); */
+    /* box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41); */
     border-radius: .625rem;
   }
-
-  .btn-success label {
+  .btn-success-border label {
     width: 100%;
     cursor: pointer;
     /* TEXT */
@@ -278,10 +281,9 @@
     text-align: center;
     justify-content: center;
     letter-spacing: -0.4px;
-    color: #FFFFFF;
+    color: #00C48C;
   }
-
-  .btn-success input {
+  .btn-success-border input {
     display: none;
   }
   div.btn-error {

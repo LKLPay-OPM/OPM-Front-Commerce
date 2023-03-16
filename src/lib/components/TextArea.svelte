@@ -21,12 +21,14 @@
   </label>
   <input on:click {type} {placeholder} {id} {value} on:input={onInput} {step} {accept}>
 </div> -->
-<label title={title} class="label" for={id}>
-  <span class="label-text">
-    {label}
-  </span>
-</label>
-<textarea on:input={onInput} {value} {placeholder} {id} class="text-area" rows="5"></textarea>
+<div class={className}>
+  <label title={title} class="label" for={id}>
+    <span class="label-text">
+      {label}
+    </span>
+  </label>
+  <textarea on:input={onInput} {value} {placeholder} {id} class="text-area" rows="5"></textarea>
+</div>
 <style>
   .label {
     display: flex;
@@ -65,6 +67,12 @@
     color: #113A62;
     /* outline-color: #113A62; */
     /* border-color: #00C48C; */
+  }
+
+  .fill-blue .label-text {
+    color: #113A62;
+    font-size: .875rem;
+
   }
 
   /* textarea.text-area {

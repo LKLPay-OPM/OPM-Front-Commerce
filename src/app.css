@@ -118,6 +118,7 @@ body {
   .main-section{
     left:0rem;
     top: 50px;
+    padding: 0 0 10rem 0;
     width: 100%;
   }
 

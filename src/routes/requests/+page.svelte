@@ -1,16 +1,30 @@
 <script>
+  import { loggedInUser } from '$lib/stores';
   import Icons from "$lib/components/Icons.svelte";
   import Input from "$lib/components/Input.svelte";
+  import Modal from "$lib/components/Modal.svelte";
+  import TextArea from "$lib/components/TextArea.svelte";
+  import EditProfile from "$lib/components/EditProfile.svelte";
   import { terminate } from "firebase/firestore";
   let date = new Date;
   let optionSelected = 0;
   let submenu = 0;
   let rollsQty = 0;
+  let modalSupport;
+  let detailTicketView = false;
+  let selectedTicket = {};
   let terminals = {
     pocket:0,
     smart:0,
     master:0,
   }
+  let supportDetails = {
+    user: $loggedInUser.uid,
+    description: "",
+  }
+
+  let userDetails = $loggedInUser
+
   let innerWidth=0, innerHeight=0;
   const getMonthName = (month) => {
     const monthsArray = {
@@ -42,6 +56,11 @@
     return monthsArray[month].value
   }
 
+  let tickets = [
+    {id: 1, description: "Problema con terminal Problema con terminal en la sucursal Matriz, se traba al abrir la aplicación", status: "Pendiente"},
+    {id: 2, description: "Revisión de terminal en sucursal Vallarta", status: "Pendiente"},
+  ]
+
   const requestRolls = () => {
     optionSelected = 0, submenu = 0, rollsQty = 0;
   }
@@ -56,11 +75,61 @@
     console.log('Perfil')
   }
 
-  /* $: {
-    console.log(optionSelected)
-  } */
+  const handleSupportRequest = () => {
+
+  }
+
+  const showModal = (option) => {
+    option.show();
+  }
+
+  const closeModal = (option) => {  
+    option.closeModal();
+  }
+
+  $: {
+    // console.log($loggedInUser.state)
+  }
 </script>
 <svelte:window bind:innerWidth bind:innerHeight />
+
+<!-- MODAL SUPPORT -->
+<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalSupport}>
+  <div slot="header">
+    <p>Solicitar Asistencia y Soporte</p>
+  </div>
+  <div slot="content">
+    <div class="support">
+      <div class="title">
+        Describa su problema a continuación, o comuníquese al 800 12341 5672 para una atención personalizada
+      </div>
+      <div class="description">
+        <p></p>
+      </div>
+    </div>
+    <div class="support-description">
+      <TextArea bind:value={supportDetails.description} label="Descripción" placeholder="¿Qué problema hay con esta transacción?" id="supportDescription" name="supportDescription"/>
+    </div>
+  </div>
+  <div class="modal-buttons" slot="footer">
+    <Input on:click={closeModal(modalSupport)} label="Cerrar" id="buttonCloseModalSupport" type="button" className="btn-plain" icon=""/>
+    <Input 
+      on:click={closeModal(modalSupport)} 
+      on:click={() => handleSupportRequest()} 
+      label="Enviar Solicitud" 
+      id="buttonSaveModalSupport" 
+      type="button" 
+      className={`
+        ${
+          supportDetails.description != "" 
+          ? "btn" : "btn-plain disabled"
+        }`
+      } 
+      icon=""
+    />
+  </div>
+</Modal>
+
 <div class="content">
   <div class="container">
     <div class="date">
@@ -100,8 +169,8 @@
             <Icons name="arrow-bwd" width="24" height="24"/>
           </i>
           <div
-            on:click={requestSupport}
-            on:keypress={(e) => e.key === 'Enter' ? requestSupport : ""} 
+            on:click={showModal(modalSupport)}
+            on:keypress={(e) => e.key === 'Enter' ? showModal(modalSupport) : ""} 
             class={`option-col ${optionSelected === 2 ? "option-selected" :""}`}>
             <i>
               <Icons name="detailed-support" width="100" height="100"/>
@@ -113,15 +182,15 @@
         </div>
         <div class="{innerWidth <= 540 ? "divider-hor":"divider-vert"}" class:hidden={optionSelected > 0}></div>
         <div class="element" class:hidden={optionSelected !== 0 && optionSelected !== 3}>
-          <i class="arrow-blue" class:hidden={optionSelected == 0}
+          <!-- <i class="arrow-blue" class:hidden={optionSelected == 0}
             on:click={() => (optionSelected = 0)}
             on:keypress={(e) => e.key === 'Enter' ? optionSelected = 0 : ""}
           >
             <Icons name="arrow-bwd" width="24" height="24"/>
-          </i>
+          </i> -->
           <div
-            on:click={requestProfileUpdate}
-            on:keypress={(e) => e.key === 'Enter' ? requestProfileUpdate : ""}
+            on:click={() => optionSelected = 3}
+            on:keypress={(e) => e.key === 'Enter' ? () => optionSelected = 3 : ""}
             class={`option-col ${optionSelected === 3 ? "option-selected" :""}`}>
             <i>
               <Icons name="detailed-user" width="100" height="100"/>
@@ -133,8 +202,8 @@
         </div>
       </div>
     </div>
-    <div class="card-container container">
-      <div class="col" class:hidden={optionSelected == 0}>
+    <div class="card-container container" class:hidden={optionSelected !== 1}>
+      <div class="col">
         <div class="element" class:hidden={submenu !== 0 && submenu !== 1}>
           <i class="arrow-blue" class:hidden={submenu == 0}
             on:click={() => (submenu = 0)}
@@ -220,6 +289,63 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class:hidden={optionSelected != 3}>
+      <EditProfile bind:optionSelected bind:userDetails/>
+    </div>
+    <div class="tickets-list" class:hidden={optionSelected !== 0}>
+      {#if !detailTicketView}
+        {#each tickets as ticket}
+          <div class="ticket card-container clickable"
+            on:click={() => selectedTicket = ticket}
+            on:keypress={(e) => e.key === 'Enter' ? () => selectedTicket = ticket : ""} 
+            on:click={() => detailTicketView = true}
+            on:keypress={(e) => e.key === 'Enter' ? () => detailTicketView = true : ""} 
+          >
+            <div class="row">
+              <div class="element">
+                <div class="item">Ticket</div>
+                <div class="item">{ticket.id}</div>
+              </div>
+              <div class="element">
+                <div class="item">Estado</div>
+                <div class="item">{ticket.status}</div>
+              </div>
+              <div class="element">
+                <i class="arrow arrow-blue">
+                  <Icons name="arrow-fwd" width="24" height="24"/>
+                </i>
+              </div>
+            </div>
+          </div>
+        {/each}
+      {:else}
+        <div class="ticket col card-container">
+          <div class="row">
+            <div class="element"
+              on:click={() => detailTicketView = false}
+              on:keypress={(e) => e.key === 'Enter' ? () => detailTicketView = false : ""}
+            >
+              <i class="arrow arrow-blue">
+                <Icons name="arrow-bwd" width="24" height="24"/>
+              </i>
+            </div>
+            <div class="element">
+              <div class="item">Ticket</div>
+              <div class="item">{selectedTicket.id}</div>
+            </div>
+            <div class="element">
+              <div class="item">Estado</div>
+              <div class="item">{selectedTicket.status}</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="element card-inside">
+              <div class="description">{selectedTicket.description}</div>
+            </div>
+          </div>
+        </div>
+      {/if}
     </div>
   </div>
 </div>
@@ -360,7 +486,74 @@
     gap: 1rem;
   }
 
+  .support {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    /* TEXT */
+    text-align: center;
+    font-weight: 700;
+    line-height: 1.25rem;/* 20px */
+    color: #113A62;
+  }
+  .support .title {
+    font-size: 1rem;/* 16px */
+  }
+  .support .description {
+    font-size: 1.5rem;/* 16px */
+  }
+  .support-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* width: 50%; */
+  }
+
+  .modal-buttons{
+    width: 70%;
+    height: 2.5rem;/* 40px */
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .ticket {
+    min-width: 20rem;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 2rem;
+    text-align: center;
+    margin: 1rem;
+  }
+  .ticket > .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+  }
+  .ticket * .element {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-weight: 700;
+    line-height: 1.25rem;/* 20px */
+    color: #113A62;
+  }
+  .ticket * .description {
+    margin: .5rem;
+    min-height: 2rem;
+    text-align: left;
+  }
+  
+  .element.card-inside {
+    width: 100%;
+    
+  }
   .hidden {
     display: none;
+  }
+
+  .clickable {
+    cursor: pointer;
   }
 </style>
