@@ -57,8 +57,8 @@
   }
 
   let tickets = [
-    {id: 1, description: "Problema con terminal Problema con terminal en la sucursal Matriz, se traba al abrir la aplicación", status: "Pendiente"},
-    {id: 2, description: "Revisión de terminal en sucursal Vallarta", status: "Pendiente"},
+    {id: 1, type: "Asistencia y Soporte", description: "Problema con terminal Problema con terminal en la sucursal Matriz, se traba al abrir la aplicación", status: "Pendiente"},
+    {id: 2, type: "Asistencia y Soporte", description: "Revisión de terminal en sucursal Vallarta", status: "Pendiente"},
   ]
 
   const requestRolls = () => {
@@ -304,8 +304,12 @@
           >
             <div class="row">
               <div class="element">
-                <div class="item">Ticket</div>
+                <div class="item">Solicitud</div>
                 <div class="item">{ticket.id}</div>
+              </div>
+              <div class="element">
+                <div class="item">Motivo</div>
+                <div class="item">{ticket.type}</div>
               </div>
               <div class="element">
                 <div class="item">Estado</div>
@@ -321,25 +325,31 @@
         {/each}
       {:else}
         <div class="ticket col card-container">
-          <div class="row">
-            <div class="element"
-              on:click={() => detailTicketView = false}
-              on:keypress={(e) => e.key === 'Enter' ? () => detailTicketView = false : ""}
-            >
-              <i class="arrow arrow-blue">
-                <Icons name="arrow-bwd" width="24" height="24"/>
-              </i>
+          <div class="row title">
+            <div class="row-element">
+              <div class="element return-arrow"
+                on:click={() => detailTicketView = false}
+                on:keypress={(e) => e.key === 'Enter' ? () => detailTicketView = false : ""}
+              >
+                <i class="arrow arrow-blue">
+                  <Icons name="arrow-bwd" width="24" height="24"/>
+                </i>
+              </div>
+              <div class="element">
+                <div class="item">Solicitud</div>
+                <div class="item">{selectedTicket.id}</div>
+              </div>
             </div>
             <div class="element">
-              <div class="item">Ticket</div>
-              <div class="item">{selectedTicket.id}</div>
+              <div class="item">Motivo</div>
+              <div class="item">{selectedTicket.type}</div>
             </div>
             <div class="element">
               <div class="item">Estado</div>
               <div class="item">{selectedTicket.status}</div>
             </div>
           </div>
-          <div class="row">
+          <div class="row description">
             <div class="element card-inside">
               <div class="description">{selectedTicket.description}</div>
             </div>
@@ -519,7 +529,8 @@
   }
 
   .ticket {
-    min-width: 20rem;
+    max-width: 40rem;
+    min-width: 40rem;
     display: flex;
     flex-direction: column;
     padding: 1rem 2rem;
@@ -531,6 +542,22 @@
     justify-content: space-between;
     padding: 0;
   }
+
+  .ticket.col {
+    padding: 0;
+  }
+
+  .ticket > .row.title {
+    padding: 1rem 3rem 0 .5rem;
+  }
+  .ticket > .row.description {
+    padding: 0 2rem 1rem 2rem;
+  }
+
+  .ticket * .return-arrow {
+    /* margin: 0 -3rem 0px -6rem; */
+  }
+
   .ticket * .element {
     display: flex;
     flex-direction: column;
@@ -538,6 +565,15 @@
     font-weight: 700;
     line-height: 1.25rem;/* 20px */
     color: #113A62;
+  }
+  .ticket * .row-element {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-weight: 700;
+    line-height: 1.25rem;/* 20px */
+    color: #113A62;
+    gap: .5rem;
   }
   .ticket * .description {
     margin: .5rem;
@@ -555,5 +591,44 @@
 
   .clickable {
     cursor: pointer;
+  }
+
+  @media (max-width: 425px) {
+    .ticket {
+      min-width: auto;
+      max-width: auto;
+    }
+
+    .ticket.col {
+      padding: 0;
+    }
+
+    .ticket > .row.title {
+      padding: 1rem 1rem 0 .5rem;
+    }
+    .ticket > .row.description {
+      padding: 0 2rem 1rem 2rem;
+    }
+  }
+  @media (min-width: 426px) and (max-width: 540px) {
+    .ticket {
+      min-width: auto;
+      max-width: auto;
+    }
+
+    .ticket.col {
+      padding: 0;
+    }
+
+    .ticket > .row.title {
+      padding: 1rem 1rem 0 .5rem;
+    }
+    .ticket > .row.description {
+      padding: 0 2rem 1rem 2rem;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    
   }
 </style>

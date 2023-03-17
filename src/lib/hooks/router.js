@@ -40,7 +40,8 @@ const userRoutes = (role, route) => {
       "/branch-office": true,
       "/terminals": true,
       "/urgent": true,
-      "/requests": true
+      "/requests": true,
+      "/help": true
     },
   }
   return routesByRole[role][route]
