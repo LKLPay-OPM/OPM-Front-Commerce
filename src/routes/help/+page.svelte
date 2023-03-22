@@ -1,5 +1,340 @@
 <script>
-  import RedirectHome from '$lib/components/RedirectHome.svelte';
+  let detailTicketView = false;
 </script>
 
-<RedirectHome/>
+{#if !detailTicketView}
+  <!-- {#each tickets as ticket}
+    <div class="ticket card-container clickable"
+      on:click={() => selectedTicket = ticket}
+      on:keypress={(e) => e.key === 'Enter' ? () => selectedTicket = ticket : ""} 
+      on:click={() => detailTicketView = true}
+      on:keypress={(e) => e.key === 'Enter' ? () => detailTicketView = true : ""} 
+    >
+      <div class="row">
+        <div class="element">
+          <div class="item">Solicitud</div>
+          <div class="item">{ticket.id}</div>
+        </div>
+        <div class="element">
+          <div class="item">Motivo</div>
+          <div class="item">{ticket.type}</div>
+        </div>
+        <div class="element">
+          <div class="item">Estado</div>
+          <div class="item">{ticket.status}</div>
+        </div>
+        <div class="element">
+          <i class="arrow arrow-blue">
+            <Icons name="arrow-fwd" width="24" height="24"/>
+          </i>
+        </div>
+      </div>
+    </div>
+  {/each}
+{:else}
+  <div class="ticket col card-container">
+    <div class="row title">
+      <div class="row-element">
+        <div class="element return-arrow"
+          on:click={() => detailTicketView = false}
+          on:keypress={(e) => e.key === 'Enter' ? () => detailTicketView = false : ""}
+        >
+          <i class="arrow arrow-blue">
+            <Icons name="arrow-bwd" width="24" height="24"/>
+          </i>
+        </div>
+        <div class="element">
+          <div class="item">Solicitud</div>
+          <div class="item">{selectedTicket.id}</div>
+        </div>
+      </div>
+      <div class="element">
+        <div class="item">Motivo</div>
+        <div class="item">{selectedTicket.type}</div>
+      </div>
+      <div class="element">
+        <div class="item">Estado</div>
+        <div class="item">{selectedTicket.status}</div>
+      </div>
+    </div>
+    <div class="row description">
+      <div class="element card-inside">
+        <div class="description">{selectedTicket.description}</div>
+      </div>
+    </div>
+  </div> -->
+{/if}
+
+<style>
+  .content {
+    width: 100%;
+  }
+
+  .content > .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .content * .container {
+    /* width: 50%; */
+  }
+
+  .date p {
+    margin: 2rem 0 0 0;
+    font-weight: 700;
+    font-size: 1.25rem;/* 20px */
+    line-height: 1.25rem;/* 20px */
+    text-align: center;
+    /* Text */
+    color: #113A62;
+  }
+
+  .row {
+    display: flex;
+    gap: 1rem; /* 16px */
+    padding: 2rem 1rem;
+    margin: 0rem 0rem 0rem 0rem;
+  }
+
+  .row > .button {
+    display: grid;
+    grid-auto-flow: row;
+    color: #8C9FB1;
+    height: 2.5rem;/* 40px */
+    min-width: 10rem;/* 200px */
+    align-self: self-end;
+  }
+
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* 16px */
+    padding: 2rem 1rem;
+    margin: 0rem 0rem 0rem 0rem;
+  }
+
+  .col  > .button {
+    display: grid;
+    grid-auto-flow: row;
+    color: #8C9FB1;
+    height: 2.5rem;/* 40px */
+    min-width: 10rem;/* 200px */
+    align-self: center;
+  }
+
+  .divider-vert {
+    height: auto;
+    width: .5rem;
+    background: linear-gradient(138.32deg, rgba(0, 0, 0, 0.5) 8.26%, rgba(255, 255, 255, 0.5) 91.02%), #EAECF0;
+    background-blend-mode: soft-light, normal;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: inset -1px -1px 2px #FAFBFF, inset 1px 1px 2px #A6ABBD;
+    border-radius: 5px;
+  }
+  .divider-hor {
+    width: auto;
+    height: .5rem;
+    background: linear-gradient(138.32deg, rgba(0, 0, 0, 0.5) 8.26%, rgba(255, 255, 255, 0.5) 91.02%), #EAECF0;
+    background-blend-mode: soft-light, normal;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: inset -1px -1px 2px #FAFBFF, inset 1px 1px 2px #A6ABBD;
+    border-radius: 5px;
+  }
+
+  .element > .option-col {
+    display: grid;
+    grid-auto-flow: row;
+    color: #113A62;
+    transition: all .4s ease;
+    cursor: pointer;
+  }
+
+  .element > .option-row {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    color: #113A62;
+    transition: all .4s ease;
+    cursor: pointer;
+  }
+  
+  .element > .button {
+    display: grid;
+    grid-auto-flow: row;
+    color: #8C9FB1;
+    height: 2.5rem;/* 40px */
+    width: 12.5rem;/* 200px */
+  }
+  
+  .option-col > i {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: center;
+  }
+  .option-col > .option-name {
+    font-weight: 700;
+    font-size: 1.5rem;/* 24px */
+    line-height: 1.25rem;/* 20px */
+    text-align: center;
+  }
+  .option-row > i {
+    display: grid;
+    grid-auto-flow: row;
+    justify-content: center;
+  }
+  .option-row > .option-name {
+    font-weight: 700;
+    font-size: 1.5rem;/* 24px */
+    line-height: 1.25rem;/* 20px */
+  }
+
+  .grid-row {
+    display: grid;
+    grid-auto-flow: row;
+    gap: 1rem;
+  }
+  .grid-col {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 1rem;
+  }
+
+  .support {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    /* TEXT */
+    text-align: center;
+    font-weight: 700;
+    line-height: 1.25rem;/* 20px */
+    color: #113A62;
+  }
+  .support .title {
+    font-size: 1rem;/* 16px */
+  }
+  .support .description {
+    font-size: 1.5rem;/* 16px */
+  }
+  .support-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* width: 50%; */
+  }
+
+  .modal-buttons{
+    width: 70%;
+    height: 2.5rem;/* 40px */
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .ticket {
+    max-width: 40rem;
+    min-width: 40rem;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 2rem;
+    text-align: center;
+    margin: 1rem;
+  }
+  .ticket > .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+  }
+
+  .ticket.col {
+    padding: 0;
+  }
+
+  .ticket > .row.title {
+    padding: 1rem 3rem 0 .5rem;
+  }
+  .ticket > .row.description {
+    padding: 0 2rem 1rem 2rem;
+  }
+
+  .ticket * .return-arrow {
+    /* margin: 0 -3rem 0px -6rem; */
+  }
+
+  .ticket * .element {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-weight: 700;
+    line-height: 1.25rem;/* 20px */
+    color: #113A62;
+  }
+  .ticket * .row-element {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-weight: 700;
+    line-height: 1.25rem;/* 20px */
+    color: #113A62;
+    gap: .5rem;
+  }
+  .ticket * .description {
+    margin: .5rem;
+    min-height: 2rem;
+    text-align: left;
+  }
+  
+  .element.card-inside {
+    width: 100%;
+    
+  }
+  .hidden {
+    display: none;
+  }
+
+  .clickable {
+    cursor: pointer;
+  }
+
+  @media (max-width: 425px) {
+    .ticket {
+      min-width: auto;
+      max-width: auto;
+    }
+
+    .ticket.col {
+      padding: 0;
+    }
+
+    .ticket > .row.title {
+      padding: 1rem 1rem 0 .5rem;
+    }
+    .ticket > .row.description {
+      padding: 0 2rem 1rem 2rem;
+    }
+  }
+  @media (min-width: 426px) and (max-width: 540px) {
+    .ticket {
+      min-width: auto;
+      max-width: auto;
+    }
+
+    .ticket.col {
+      padding: 0;
+    }
+
+    .ticket > .row.title {
+      padding: 1rem 1rem 0 .5rem;
+    }
+    .ticket > .row.description {
+      padding: 0 2rem 1rem 2rem;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    
+  }
+</style>
+
