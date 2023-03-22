@@ -1,22 +1,30 @@
 <script>
-  import { isLoggedIn, loggedInUser } from "$lib/stores";
+  /* svelte */
+  import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
+  import { isLoggedIn } from "$lib/stores";
+  /* components */
   import Loader from "$lib/components/Loader.svelte";
   import Dashboard from "$lib/components/Dashboard.svelte";
-  import { onMount } from "svelte";
-  import { ProfileController } from "$lib/controllers/profile/profile.controller";
+  import RedirectLogin from "$lib/components/RedirectLogin.svelte";
+
+  export let data;
+
+  /* dynamic vars */
+  let loading = true;
 
   onMount(async () => {
-    const profile = await ProfileController.getProfile();
-    if (profile?.error) return { error: true, message: String(profile.error) };
-    const data = { saludo: "hola", profile };
-    console.log(data);
+    if (data?.redirect) await goto(data.path);
+    loading = false;
   });
 </script>
 
 {#if $isLoggedIn}
-  {#if !$loggedInUser.$id}
+  {#if loading}
     <Loader />
   {:else}
     <Dashboard />
   {/if}
+{:else}
+  <RedirectLogin />
 {/if}
