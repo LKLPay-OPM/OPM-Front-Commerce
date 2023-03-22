@@ -242,7 +242,12 @@
     </div>
     <div class="card-container padding-2">
       {#each branches as branch, index}
-        <div class="card-secondary row padding-1">
+        <div class="card-secondary row padding-1 clickable"
+          on:click={()=>(selected=branch)}
+          on:keypress={(e) => e.key === 'Enter' ? selected = branch : ""}
+          on:click={()=>(branchView=!branchView)}
+          on:keypress={(e) => e.key === 'Enter' ? branchView=!branchView : ""}
+        >
           <div class="element">
             <div class="avatar-container">
               <div class="avatar">
@@ -310,10 +315,6 @@
           </div>
           <div 
             class="element-center arrow-blue"
-            on:click={()=>(selected=branch)}
-            on:keypress={(e) => e.key === 'Enter' ? selected = branch : ""}
-            on:click={()=>(branchView=!branchView)}
-            on:keypress={(e) => e.key === 'Enter' ? branchView=!branchView : ""}
           >
             <Icons name={"arrow-fwd"} width="24" height="24"/>
           </div>
@@ -409,7 +410,7 @@
             <tbody>
               {#if active === "day"}
                 {#each fetchByDayButton(selected.transactions) as transaction}
-                  <tr class="clickable">
+                  <tr class="">
                     <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
                     <td class="r425 r540 r768">{transaction['Transaction Time']}</td>
                     <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
@@ -419,7 +420,7 @@
                 {/each}
               {:else if active === "week"}
                 {#each fetchByWeekButton(selected.transactions) as transaction}
-                  <tr class="clickable">
+                  <tr class="">
                     <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
                     <td class="r425 r540 r768">{transaction['Transaction Time']}</td>
                     <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
@@ -429,7 +430,7 @@
                 {/each}             
               {:else if active === "month"}
                 {#each fetchByMonthButton(selected.transactions) as transaction}
-                  <tr class="clickable">
+                  <tr class="">
                     <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
                     <td class="r425">{transaction['Transaction Time']}</td>
                     <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
@@ -625,7 +626,7 @@
     height: 2.375rem;
   }
 
-  .table-content .clickable {
+  .clickable {
     cursor: pointer;
   }
 

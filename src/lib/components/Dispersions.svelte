@@ -132,7 +132,8 @@
     dispersionDetailView = false;
     // selectedDispersion = {};
     loading = true;
-    dispersions = [...$loggedInUser.dispersions];
+    // dispersions = [...$loggedInUser.dispersions];
+    dispersions = [];
     if(dispersions.length <= 0){
       dispersions.push(
         {date: '230222',time: '183033',type: 'Inmediata',id: "123",total: 1000,commission: 35,dispersion: 965,afterDispersion: 0},

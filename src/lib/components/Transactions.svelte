@@ -175,6 +175,7 @@
       })
     })
     transactions = [...newArr]
+    transactionFound();
     // console.log(transactions)
     // console.log(transactionsMonth)
 

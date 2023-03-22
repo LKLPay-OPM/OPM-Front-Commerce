@@ -145,7 +145,7 @@
             ? ($linkSelected = "Ayuda")
             : ($linkSelected = $linkSelected)}
       >
-        <a href="/#help">
+        <a href="/help">
           <i class={$linkSelected === "Ayuda" ? "active-link_name" : ""}>
             <Icons name="help" width="24" height="24" />
           </i>
@@ -155,7 +155,7 @@
           >
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="/home#help">Ayuda</a></li>
+          <li><a class="link_name" href="/help">Ayuda</a></li>
         </ul>
       </li>
       <li>

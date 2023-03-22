@@ -41,6 +41,7 @@ const userRoutes = (role, route) => {
       "/terminals": true,
       "/urgent": true,
       "/requests": true,
+      "/help": true,
     },
   };
   return routesByRole[role][route];
