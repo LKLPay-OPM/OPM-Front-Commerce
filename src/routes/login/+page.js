@@ -7,7 +7,7 @@ export const ssr = true;
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
-  const profile = await ProfileController.getProfile();
+  const profile = await ProfileController.getSession();
   if (profile?.error) {
     if (
       profile.message?.includes?.("User (role: guests) missing scope (account)")
