@@ -1,4 +1,4 @@
-import { Client, Account, Databases, Functions } from "appwrite";
+import { Client, Account, Databases, Functions, Storage } from "appwrite";
 /* environment */
 import {
   PUBLIC_APPWRITE_ENDPOINT,
@@ -20,3 +20,4 @@ export const AppDatabases = new Databases(AppClient);
 export const AppFunctions = new Functions(AppClient);
 /* clientes profiles */
 export const AppProfilesFunctions = new Functions(AppProfilesClient);
+export const AppProfilesStorage = new Storage(AppProfilesClient);

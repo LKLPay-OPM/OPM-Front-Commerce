@@ -3,36 +3,36 @@ import { writable } from "svelte/store";
 import { browser } from "$app/environment";
 
 export const appwriteUser = writable(
-  browser && (JSON.parse(sessionStorage.getItem("appwriteUser")) || {})
+  browser && (JSON.parse(localStorage.getItem("appwriteUser")) || {})
 );
 appwriteUser.subscribe(
-  (val) => browser && (sessionStorage.appwriteUser = JSON.stringify(val))
+  (val) => browser && (localStorage.appwriteUser = JSON.stringify(val))
 );
 
 export const loggedInUser = writable(
-  browser && (JSON.parse(sessionStorage.getItem("userData")) || {})
+  browser && (JSON.parse(localStorage.getItem("userData")) || {})
 );
 loggedInUser.subscribe(
-  (val) => browser && (sessionStorage.userData = JSON.stringify(val))
+  (val) => browser && (localStorage.userData = JSON.stringify(val))
 );
 
 export const bankAccountData = writable(
-  browser && (JSON.parse(sessionStorage.getItem("bankAccountData")) || {})
+  browser && (JSON.parse(localStorage.getItem("bankAccountData")) || {})
 );
 bankAccountData.subscribe(
-  (val) => browser && (sessionStorage.bankAccountData = JSON.stringify(val))
+  (val) => browser && (localStorage.bankAccountData = JSON.stringify(val))
 );
 
 export const isLoggedIn = writable(
-  browser && (JSON.parse(sessionStorage.getItem("isLoggedIn")) || false)
+  browser && (JSON.parse(localStorage.getItem("isLoggedIn")) || false)
 );
-isLoggedIn.subscribe((val) => browser && (sessionStorage.isLoggedIn = val));
+isLoggedIn.subscribe((val) => browser && (localStorage.isLoggedIn = val));
 
 export const bankDataDelivered = writable(
-  browser && (JSON.parse(sessionStorage.getItem("bankDataDelivered")) || false)
+  browser && (JSON.parse(localStorage.getItem("bankDataDelivered")) || false)
 );
 bankDataDelivered.subscribe(
-  (val) => browser && (sessionStorage.bankDataDelivered = val)
+  (val) => browser && (localStorage.bankDataDelivered = val)
 );
 
 export const userId = "";
@@ -48,14 +48,14 @@ export function booleanStore(initial) {
   };
 }
 export const linkSelected = writable(
-  (browser && sessionStorage.getItem("selectedTab")) || "Inicio"
+  (browser && localStorage.getItem("selectedTab")) || "Inicio"
 );
-linkSelected.subscribe((val) => browser && (sessionStorage.selectedTab = val));
+linkSelected.subscribe((val) => browser && (localStorage.selectedTab = val));
 
 export const sidebar = writable(
-  browser && (JSON.parse(sessionStorage.getItem("sidebarState")) || true)
+  browser && (JSON.parse(localStorage.getItem("sidebarState")) || true)
 );
-sidebar.subscribe((val) => browser && (sessionStorage.sidebarState = val));
+sidebar.subscribe((val) => browser && (localStorage.sidebarState = val));
 
 export const onboardingSuccess = writable(false);
 export const redirectBankProfile = writable(false);

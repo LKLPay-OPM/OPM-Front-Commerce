@@ -3,8 +3,6 @@ import { error } from "@sveltejs/kit";
 /* controllers */
 import { ProfileController } from "$lib/controllers/profile/profile.controller";
 
-export const ssr = true;
-
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
   const profile = await ProfileController.getSession();
