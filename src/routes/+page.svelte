@@ -1,55 +1,30 @@
 <script>
-	import { isLoggedIn, loggedInUser, onboardingSuccess } from '$lib/stores';
-	import { page, navigating } from '$app/stores';
-	import { onMount } from 'svelte';
-	import Loader from '$lib/components/Loader.svelte'
-	import Onboarding from '$lib/components/Onboarding.svelte';
-	import Dashboard from '$lib/components/Dashboard.svelte';
-	import Select from '$lib/components/Select.svelte';
-	import Input from '$lib/components/Input.svelte';
-	import Icons from '$lib/components/Icons.svelte';
-	import noUser from '$lib/assets/no_user.png';
-	import Logo from '$lib/assets/Logo.png';
+  /* svelte */
+  import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
+  import { isLoggedIn } from "$lib/stores";
+  /* components */
+  import Loader from "$lib/components/Loader.svelte";
+  import Dashboard from "$lib/components/Dashboard.svelte";
+  import RedirectLogin from "$lib/components/RedirectLogin.svelte";
 
-	/* import { 
-    PUBLIC_API_SERVER
-  } from "$env/static/public"; */
+  export let data;
 
-	let modalOnboarding;
-	let selected;
+  /* dynamic vars */
+  let loading = true;
 
-  $: {
-		// console.log($loggedInUser)
-    // console.log(selected)
-  }
-	
-	onMount(() => {
-	/* const query = `${PUBLIC_API_SERVER}/api/user/profile`
-	fetch(query)
-	.then(response=>{
-		return response.json();
-	}).then(json=>{
-		console.log(json)
-	}) */
-		//console.log($page)
-	});
+  onMount(async () => {
+    if (data?.redirect) await goto(data.path);
+    loading = false;
+  });
 </script>
 
-
-
 {#if $isLoggedIn}
-	<!-- {#if 
-		$loggedInUser.firstTimeUser == true || $onboardingSuccess == true
-	}
-		<Onboarding/>
-		{:else}
-	{/if} -->
-	{#if !$loggedInUser.uid}
-		<Loader/>
-	{:else}
-		<Dashboard/>
-	{/if}
+  {#if loading}
+    <Loader />
+  {:else}
+    <Dashboard />
+  {/if}
+{:else}
+  <RedirectLogin />
 {/if}
-
-<style>
-</style>
