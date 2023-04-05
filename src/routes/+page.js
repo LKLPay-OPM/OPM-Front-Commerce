@@ -2,6 +2,8 @@
 import { error } from "@sveltejs/kit";
 /* controllers */
 import { ProfileController } from "$lib/controllers/profile/profile.controller";
+/*  */
+import { axiosTransactionsClient } from "$lib/repos/axios";
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
@@ -14,6 +16,12 @@ export async function load() {
     throw error(500, profile?.message);
   }
 
-  // const userProfile = await ProfileController.getProfile();
-  return { profile /*, userProfile */ };
+  try {
+    
+    const transactions = await axiosTransactionsClient.get('/transaction')
+    // const userProfile = await ProfileController.getProfile();
+    return { profile, transactions: transactions.data?.response /*, userProfile */ };
+  } catch (err) {
+    throw new error(500, "Something went wrong!");
+  }
 }

@@ -10,8 +10,14 @@
 
   export let data;
 
+  let transactions = data.transactions;
+
   /* dynamic vars */
   let loading = true;
+
+  $: {
+    console.log(data);
+  }
 
   onMount(async () => {
     if (data?.redirect) await goto(data.path);
@@ -23,7 +29,7 @@
   {#if loading}
     <Loader />
   {:else}
-    <Dashboard />
+    <Dashboard bind:transactions />
   {/if}
 {:else}
   <RedirectLogin />
