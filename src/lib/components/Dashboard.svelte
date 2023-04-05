@@ -17,7 +17,7 @@
 
   const dbCollection = "users-client";
   const uid = $loggedInUser.uid;
-  let transactions = [];
+  export let transactions;
   let loading = false;
   let notFound = false;
 
@@ -30,7 +30,8 @@
   };
 
   $: {
-    fetchByDay();
+    console.log(transactions);
+    // fetchByDay();
   }
 
   const getMonthName = (month) => {
