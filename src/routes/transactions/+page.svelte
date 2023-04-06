@@ -1,92 +1,28 @@
 <script>
-  import { isLoggedIn, loggedInUser } from '$lib/stores';
-  //import * as firebase from 'firebase/firestore';
-  import { 
-    collection,
-    Timestamp, 
-    query,
-    orderBy,
-    limit,
-    getDocs,
-    startAt,
-    endAt,
-  } from 'firebase/firestore';
-  import { db } from "$lib/firebase";
-  import RedirectLogin from '$lib/components/RedirectLogin.svelte';
-  import Loader from '$lib/components/Loader.svelte';
-  import Transactions from '$lib/components/Transactions.svelte';
-  import { onMount } from 'svelte';
+  import { isLoggedIn, loggedInUser } from "$lib/stores";
+  import RedirectLogin from "$lib/components/RedirectLogin.svelte";
+  import Loader from "$lib/components/Loader.svelte";
+  import Transactions from "$lib/components/Transactions.svelte";
+  import { onMount } from "svelte";
 
-  const dbCollection = "users-client";
-  const uid = $loggedInUser.uid;
-  let transactions = [];
-  let selectedTransaction = {};
-  let transactionDetailView = false;
-  let notFound = false;
+  export let data;
+
   let loading = false;
-  let active = "day";
-
-  const localeParam = {
-    language: 'es-MX',
-    currency: {
-      style: 'currency',
-      currency: 'MXN'
-    }
-  }
 
   onMount(async () => {
-		await fetchByDayButton()
-	});
-
-  const transactionFound = () => {
-    if(transactions.length <= 0){
-      notFound = true;
-    }else{
-      notFound = false;
-    }
-    loading = false;
-  }
-
-  const fetchByDayButton = async() => {
-    active = "day";
-    transactionDetailView = false;
-    selectedTransaction = {};
-    loading = true;
-    //transactions = [];
-    const curr = new Date;
-    const today = new Date(curr.setDate(curr.getDate())).setHours(0,0,0,0); // Sets Date to today day at 00:00
-    const tomorrow = new Date(curr.setDate(curr.getDate() + 1)).setHours(0,0,0,0); // Sets Date to tomorrow at 00:00
-
-    /* console.log(new Date(today))
-    console.log(new Date(tomorrow)) */
-    const q = query(
-      collection(db, dbCollection, uid, "transactions"), 
-      //where('uid', '==', uid),
-      orderBy('date', 'desc'),
-      startAt(Timestamp.fromDate(new Date(tomorrow))), endAt(Timestamp.fromDate(new Date(today))),
-      limit(10)
-    );
-    const querySnapshot = await getDocs(q);
-    transactions = querySnapshot.docs.map((doc) => {
-      return {...doc.data()}
-    });
-    transactionFound();
-    //console.log(transactions)
-  }
-  
+    // await fetchByDayButton();
+  });
 </script>
 
 {#if $isLoggedIn}
   {#if loading == true}
-    <Loader/>
-    {:else}
-    <Transactions bind:user={$loggedInUser}/>
-  {/if}
+    <Loader />
   {:else}
-  <RedirectLogin/>
+    <Transactions bind:user={$loggedInUser} {data} />
+  {/if}
+{:else}
+  <RedirectLogin />
 {/if}
 
-
 <style>
-
 </style>

@@ -21,7 +21,8 @@
   // export let sidebar = true;
   let options = [];
 
-  console.log($loggedInUser);
+  // console.log($loggedInUser);
+  // console.log($appwriteUser);
 
   $: {
     if ($isLoggedIn) {
@@ -67,10 +68,7 @@
       class="profile-details"
     >
       <div class="profile-content">
-        <img
-          src={$loggedInUser.avatar ? $loggedInUser.avatar : noUser}
-          alt="profileImg"
-        />
+        <img src={$loggedInUser?.avatar ?? noUser} alt="profileImg" />
       </div>
       <div class="name-job">
         <div class="profile_name">
