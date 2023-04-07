@@ -1028,7 +1028,7 @@
                 <thead>
                   <tr>
                     <th>Fecha</th>
-                    <th class="responsive">ID</th>
+                    <th class="responsive">Ticket</th>
                     <th>Venta</th>
                     <th class="responsive">Comisión</th>
                     <th class="responsive">Depósito</th>
@@ -1083,6 +1083,14 @@
                   {/each}
                 </tbody>
               </table>
+              {#if count > 10}
+                <Pagination
+                  bind:paginationStart
+                  bind:paginationEnd
+                  bind:count
+                  on:pagination={handleFilterClick}
+                />
+              {/if}
             </div>
           </div>
         </div>
@@ -1186,7 +1194,7 @@
                 <thead style="height:1.5rem">
                   <tr>
                     <th class="responsive">Fecha</th>
-                    <th class="responsive">ID</th>
+                    <th class="responsive">Ticket</th>
                     <th>Ventas</th>
                     <th>Comisión</th>
                     <th>Depósito</th>
@@ -1277,16 +1285,15 @@
                   {/each}
                 </tbody>
               </table>
-              <Pagination bind:paginationStart bind:paginationEnd bind:count />
-              {#if count < 10}
+              <!-- {#if count > 10}
                 <Pagination
                   bind:paginationStart
                   bind:paginationEnd
                   bind:count
+                  on:pagination={handleFilterClick}
                 />
-              {/if}
+              {/if} -->
             </div>
-            <Pagination bind:paginationStart bind:paginationEnd bind:count />
           </div>
         {/if}
       {:else if active === "month"}<!-- TABLES BY MONTH -->
@@ -1412,7 +1419,7 @@
                 <thead style="height:1.5rem">
                   <tr>
                     <th class="responsive">Fecha</th>
-                    <th class="responsive">ID</th>
+                    <th class="responsive">Ticket</th>
                     <th>Ventas</th>
                     <th>Comisión</th>
                     <th>Depósito</th>
@@ -1493,6 +1500,14 @@
                   {/each}
                 </tbody>
               </table>
+              <!-- {#if count > 10}
+                <Pagination
+                  bind:paginationStart
+                  bind:paginationEnd
+                  bind:count
+                  on:pagination={handleFilterClick}
+                />
+              {/if} -->
             </div>
           </div>
         {/if}
@@ -1564,7 +1579,7 @@
                     <thead>
                       <tr>
                         <th>Fecha</th>
-                        <th>ID</th>
+                        <th>Ticket</th>
                         <th>Venta</th>
                         <th>Comisión</th>
                         <th>Depósito</th>

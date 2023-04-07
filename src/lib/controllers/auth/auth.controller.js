@@ -9,13 +9,18 @@ import { profilesClient } from "$lib/repos/axios";
 export class AuthController {
   static async login(body) {
     try {
-      const { session, user } = await authService.login(body);
-      // const profile = await profilesClient.get('/user/profile')
-      // console.log(profile)
+      const { session, user, jwt } = await authService.login(body);
+      /* const profile = await profilesClient.get(
+        '/user/profile',
+        jwt,
+      )
+      console.log(profile) */
       isLoggedIn.update(() => true);
-      loggedInUser.set(user);
-      // loggedInUser.set(session);
+      // loggedInUser.set(user);
+      loggedInUser.set(session);
       appwriteUser.set(user);
+      // console.log(session);
+      // console.log(user);
       await goto("/");
     } catch (e) {
       isLoggedIn.update(() => false);

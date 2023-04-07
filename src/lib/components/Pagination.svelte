@@ -11,12 +11,18 @@
   const dispatch = createEventDispatcher();
 
   function paginationBack() {
+    paginationStart -= 10;
+    paginationEnd -= 10;
+    dispatch("pagination");
     if (paginationStart > 0) {
       paginationStart -= 10;
       paginationEnd -= 10;
     }
   }
   function paginationFwd() {
+    paginationStart += 10;
+    paginationEnd += 10;
+    dispatch("pagination");
     if (count > paginationEnd) {
       paginationStart += 10;
       paginationEnd += 10;
@@ -26,11 +32,7 @@
 
 <div class="btns-pagination">
   <div class="button">
-    <input
-      type="button"
-      id="PaginationBack"
-      on:click={dispatch("paginationBack")}
-    />
+    <input type="button" id="PaginationBack" on:click={paginationBack} />
     <label for="PaginationBack">
       <i class="arrow-blue">
         <Icons name="arrow-bwd" width="24" height="24" />
@@ -41,11 +43,7 @@
     {paginationStart + 1} - {paginationEnd}
   </div>
   <div class="button">
-    <input
-      type="button"
-      id="PaginationFwd"
-      on:click={dispatch("paginationFwd")}
-    />
+    <input type="button" id="PaginationFwd" on:click={paginationFwd} />
     <label for="PaginationFwd">
       <i class="arrow-blue">
         <Icons name="arrow-fwd" width="24" height="24" />
@@ -59,6 +57,7 @@
   .btns-pagination {
     display: flex;
     flex-direction: row;
+    justify-content: center;
   }
 
   .pagination-text {

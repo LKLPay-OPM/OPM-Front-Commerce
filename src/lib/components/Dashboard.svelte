@@ -201,7 +201,7 @@
             <thead>
               <tr>
                 <th>Fecha</th>
-                <th class="responsive">ID Transacción</th>
+                <th class="responsive">Tikcket</th>
                 <th>Cobro</th>
                 <th class="responsive">Comisión</th>
                 <th class="responsive">Dispersión</th>

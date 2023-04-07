@@ -6,7 +6,8 @@ class AuthService {
   async login({ email, password }) {
     const session = await AppAccount.createEmailSession(email, password);
     const user = await AppAccount.get();
-    return { session, user };
+    const jwt = await AppAccount.createJWT();
+    return { session, user, jwt };
   }
 
   async logout(id) {

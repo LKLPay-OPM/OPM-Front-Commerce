@@ -169,7 +169,15 @@
           <span class="link_name">Cerrar Sesión</span>
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="/">Cerrar Sesión</a></li>
+          <li>
+            <a
+              class="link_name"
+              href="/login"
+              on:click={async () => {
+                await AuthController.logout($loggedInUser.$id);
+              }}>Cerrar Sesión</a
+            >
+          </li>
         </ul>
       </li>
     </ul>
