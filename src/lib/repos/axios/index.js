@@ -14,4 +14,5 @@ export const axiosClient = new AppEndpoint().client
 export const axiosFormDataClient = new AppEndpoint('multipart/form-data').client
 export const profilesFormDataClient = new AppEndpoint('multipart/form-data', 'http://18.234.171.110:3000/api').client
 export const profilesClient = new AppEndpoint('application/json', 'http://18.234.171.110:3000/api').client
-export const axiosTransactionsClient = new AppEndpoint('application/json', 'http://3.238.151.102:3002/api').client
+// export const axiosTransactionsClient = new AppEndpoint('application/json', 'http://3.238.151.102:3002/api').client
+export const axiosTransactionsClient = new AppEndpoint('application/json', 'http://192.168.100.31:3002/api').client

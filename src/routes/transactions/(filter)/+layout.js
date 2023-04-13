@@ -7,7 +7,9 @@ import { validQueryFilters } from "$lib/constants/filter";
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ url }) {
-  const filter = url.searchParams.get("filter") ?? "day";
+  const regexp = new RegExp('(day|week|month)')
+  let filter = url.pathname.match(regexp)[0];
+  console.log(filter)
   const start = Number(url.searchParams.get("start") ?? 0);
   const end = Number(url.searchParams.get("end") ?? 10);
 

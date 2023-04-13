@@ -33,14 +33,16 @@
   import { filterByDateOptions } from "$lib/constants/filter";
   /* variables */
   export let data;
+  let active = data.filter;
   let paginationStart = data.start;
   let paginationEnd = data.end;
-  let count = data.response.count;
+  let count = data.response?.count ?? 0;
 
   const filter = data.filter;
 
   function handleFilterClick({ detail }) {
     const value = detail?.value;
+    // active = value;
     goto(
       `?filter=${value ?? "day"}&start=${paginationStart}&end=${paginationEnd}`
     );
@@ -49,7 +51,8 @@
   export let user;
   const dbCollection = "users-client";
   const uid = user.uid;
-  let transactions = data.response;
+  let transactions = data.response?.transactions ?? [];
+  let resume = data.response.resume;
   let transactionsWeek = [];
   let transactionsMonth = [];
   let selectedTransaction = {};
@@ -59,7 +62,6 @@
   let notFoundMessage = "No se encontraron registros";
   let loading = false;
   let date = new Date();
-  let active = "day";
   let toggleWeek = "";
   let toggleWeekDetails = "";
   let selectedDay;
@@ -77,7 +79,16 @@
     monthView = false;
 
   $: {
-    console.log(data);
+    console.log(data.response);
+    console.log(active);
+    if (active === "day") {
+      transactionFound();
+    } else {
+      notFound = false;
+    }
+    if(data.response.week){
+      transactionsWeek = data.response.week
+    }
   }
   let clarificationsList = [
     { name: "Opción 1", value: "option1" },
@@ -100,7 +111,7 @@
   };
 
   const transactionFound = () => {
-    if (transactions.length <= 0) {
+    if (transactions?.length <= 0) {
       notFound = true;
     } else {
       notFound = false;
@@ -110,188 +121,19 @@
     loading = false;
   };
 
-  const fetchByDayButton = async () => {
-    active = "day";
-    transactionDetailView = false;
-    selectedTransaction = {};
-    transactions = [];
-    loading = true;
-    var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
-    //transactions = [];
-    const curr = new Date();
-    const today = new Date(curr.setDate(curr.getDate())).setHours(0, 0, 0, 0); // Sets Date to today day at 00:00
-    const tomorrow = new Date(curr.setDate(curr.getDate() + 1)).setHours(
-      0,
-      0,
-      0,
-      0
-    ); // Sets Date to tomorrow at 00:00
-    // Dates in dd/MM/YY
-    const strToday = new Intl.DateTimeFormat("es-MX", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "2-digit",
-    }).format(today);
-    const strTomorrow = new Intl.DateTimeFormat("es-MX", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "2-digit",
-    }).format(tomorrow);
-
-    const q = query(
-      collection(db, dbCollection, uid, "transactions"),
-      //where('uid', '==', uid),
-      orderBy("Transaction Date", "desc"),
-      startAt(
-        strTomorrow.replace(
-          pattern,
-          "$3$2$1"
-        ) /* Timestamp.fromDate(new Date(tomorrow)) */
-      ),
-      endAt(
-        strToday.replace(
-          pattern,
-          "$3$2$1"
-        ) /* Timestamp.fromDate(new Date(today)) */
-      ),
-      limit(10)
-    );
-    const querySnapshot = await getDocs(q);
-    transactions = querySnapshot.docs.map((doc) => {
-      return { ...doc.data() };
-    });
-    transactionFound();
-    // console.log(transactions)
-  };
-
-  const fetchByWeekButton = async () => {
-    active = "week";
-    transactionDetailView = false;
-    selectedTransaction = {};
-    transactionsWeek = [];
-    transactions = [];
-    loading = true;
-    var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
-    const curr = new Date();
-    const firstDay = new Date(
-      curr.setDate(curr.getDate() - curr.getDay() + 1)
-    ).setHours(0, 0, 0, 0);
-    const lastDay = new Date(
-      curr.setDate(curr.getDate() - curr.getDay() + 7)
-    ).setHours(0, 0, 0, 0);
-    // const first = Timestamp.fromDate(new Date(firstDay));
-    // const last = Timestamp.fromDate(new Date(lastDay));
-    const first = new Intl.DateTimeFormat("es-MX", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "2-digit",
-    }).format(firstDay);
-    const last = new Intl.DateTimeFormat("es-MX", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "2-digit",
-    }).format(lastDay);
-
-    const q = query(
-      collection(db, dbCollection, uid, "transactions"),
-      //where('uid', '==', uid),
-      orderBy("Transaction Date", "desc"),
-      startAt(last.replace(pattern, "$3$2$1")),
-      endAt(first.replace(pattern, "$3$2$1")),
-      limit(10)
-    );
-    const querySnapshot = await getDocs(q);
-    transactions = querySnapshot.docs.map((doc) => {
-      return { ...doc.data() };
-    });
-    if (transactions.length < 0) {
-      transactionsWeek = [];
-    } else {
-      var index = 0;
-      let arr = [];
-      do {
-        const initialDate = new Date();
-        let d = new Date(
-          initialDate.setDate(
-            initialDate.getDate() - initialDate.getDay() + (index + 1)
-          )
-        ).setHours(0, 0, 0, 0);
-        const formatDay = new Intl.DateTimeFormat("es-MX", {
-          month: "2-digit",
-          day: "2-digit",
-          year: "2-digit",
-        }).format(d);
-        const key = formatDay.replace(pattern, "$3$2$1");
-        arr.push({
-          date: key,
-          data: transactions
-            .filter(
-              (date) =>
-                date["Transaction Date"] ===
-                formatDay.replace(pattern, "$3$2$1")
-            )
-            .map((doc) => {
-              return doc;
-            }),
-        });
-        index++;
-      } while (index < 7);
-      transactionsWeek = [...arr];
-      // console.log(transactionsWeek)
+  const fetchWeekDayTransactions = async(id) => {
+    try {
+      const response = await axiosTransactionsClient.get(
+        `/transaction/${id}`,
+        // { params: { filter, start, end } }
+      );
+      transactions = response.transactions
+      // return {response: response.data?.response };
+    } catch (err) {
+      console.log(err)
+      throw new error(500, "Something went wrong!");
     }
-    transactionFound();
-    //console.log(transactions)
-  };
-
-  const fetchByMonth = async () => {
-    active = "month";
-    transactionDetailView = false;
-    selectedTransaction = {};
-    transactionsMonth = [];
-    transactions = [];
-    loading = true;
-    var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
-    const q = query(
-      collection(db, dbCollection, uid, "monthly")
-      // orderBy('Transaction Date', 'desc'),
-    );
-    const querySnapshot = await getDocs(q);
-    transactionsMonth = querySnapshot.docs.map((doc) => {
-      return { ...doc.data() };
-    });
-
-    let newArr = [];
-    transactionsMonth.map((arr) => {
-      arr.data.map((data) => {
-        newArr.push(data);
-      });
-    });
-    transactions = [...newArr];
-    transactionFound();
-    // console.log(transactions)
-    // console.log(transactionsMonth)
-
-    // console.log(transactions)
-    /* let index = 0;
-    let arr = []
-    let array = []
-    let flag = 0;
-    let keyFirstDay, keyLastDay;
-    let total = transactions.length
-    let first = transactions[index]['Transaction Date'], last=transactions[total-1]['Transaction Date'];
-    console.log(last)
-    if (transactions.lentgh<0) {
-      transactionsMonth = [];
-    } else {
-      do {
-        // transactions[index]
-        // console.log(transactions[index])
-        arr.push({year: date.replace(pattern,'$3'), month: date.replace(pattern,'$2'), data: transactions.filter(date => date['Transaction Date'] === flag.toString()).map((doc) => {return doc})})
-
-        index++;
-      } while (index < transactions.length);
-    } */
-  };
+  }
 
   const fetchByMonthButton = async () => {
     active = "month";
@@ -365,7 +207,7 @@
     let array = [];
     let flag = 0;
     let keyFirstDay, keyLastDay;
-    if (transactions.length < 0) {
+    if (transactions?.length < 0) {
       transactionsMonth = [];
     } else {
       do {
@@ -589,12 +431,6 @@
     console.log(clarification);
   };
 
-  let buttonGroupOptions = [
-    { value: "day", name: "Día", click: fetchByDayButton },
-    { value: "week", name: "Semana", click: fetchByWeekButton },
-    { value: "month", name: "Mes", click: fetchByMonth },
-  ];
-
   const getTransactionDate = (string) => {
     var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
     const extractMonth = string.replace(pattern, "$2");
@@ -666,13 +502,14 @@
   };
 
   const getCardBrand = (cc) => {
+    console.log(cc.substring(0, 4));
     let amex = new RegExp("^3[47][0-9]{13}$");
     let visa = new RegExp("^4[0-9]{12}(?:[0-9]{3})?$");
     let cup1 = new RegExp("^62[0-9]{14}[0-9]*$");
     let cup2 = new RegExp("^81[0-9]{14}[0-9]*$");
 
-    let mastercard = new RegExp("^5[1-5][0-9]{14}$");
-    let mastercard2 = new RegExp("^2[2-7][0-9]{14}$");
+    let mastercard = new RegExp("^5[1-5][0-9]{2}$");
+    let mastercard2 = new RegExp("^2[2-7][0-9]{2}$");
 
     let disco1 = new RegExp("^6011[0-9]{12}[0-9]*$");
     let disco2 = new RegExp("^62[24568][0-9]{13}[0-9]*$");
@@ -689,7 +526,10 @@
       cardIcon = "amex";
       return "AMEX";
     }
-    if (mastercard.test(cc) || mastercard2.test(cc)) {
+    if (
+      mastercard.test(cc.substring(0, 4)) ||
+      mastercard2.test(cc.substring(0, 4))
+    ) {
       cardIcon = "master-card";
       return "MASTERCARD";
     }
@@ -721,7 +561,6 @@
   };
 
   onMount(async () => {
-    // await fetchByDayButton()
   });
 </script>
 
@@ -917,7 +756,7 @@
             label=""
             id="csv-export"
             type="button"
-            className="btn-plain btn-square fill-blue {transactions.length > 0
+            className="btn-plain btn-square fill-blue {transactions?.length > 0
               ? ''
               : 'disabled'}"
             icon="csv-fill"
@@ -927,7 +766,7 @@
             label=""
             id="excel-export"
             type="button"
-            className="btn-plain btn-square fill-green {transactions.length > 0
+            className="btn-plain btn-square fill-green {transactions?.length > 0
               ? ''
               : 'disabled'}"
             icon="xls-fill"
@@ -936,7 +775,7 @@
             label=""
             id="print"
             type="button"
-            className="btn-plain btn-square fill-blue {transactions.length > 0
+            className="btn-plain btn-square fill-blue {transactions?.length > 0
               ? ''
               : 'disabled'}"
             icon="print"
@@ -945,14 +784,14 @@
             label=""
             id="pdf-export"
             type="button"
-            className="btn-plain btn-square fill-red {transactions.length > 0
+            className="btn-plain btn-square fill-red {transactions?.length > 0
               ? ''
               : 'disabled'}"
             icon="pdf-fill"
           />
-          <!-- <Input on:click={exportDataToCSV(transactions)} label="" id="csv-export" type="button" className="btn-plain btn-square {transactions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/> -->
-          <!-- <Input on:click={exportDataToExcel(transactions)} label="" id="excel-export" type="button" className="btn-plain btn-square {transactions.length > 0 ? '' : 'disabled'}" icon="xls-fill"/> -->
-          <!-- <Input on:click={exportDataToPDF(transactions)} label="" id="pdf-export" type="button" className="btn-plain btn-square {transactions.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/> -->
+          <!-- <Input on:click={exportDataToCSV(transactions)} label="" id="csv-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="csv-fill"/> -->
+          <!-- <Input on:click={exportDataToExcel(transactions)} label="" id="excel-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="xls-fill"/> -->
+          <!-- <Input on:click={exportDataToPDF(transactions)} label="" id="pdf-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/> -->
         </div>
       </div>
     </div>
@@ -960,12 +799,12 @@
       <div class="card-group">
         <div class="card">
           <div><p>Total Vendido</p></div>
-          <!-- <div><span>{user.total?.toLocaleString(localeParam.language, localeParam.currency)}</span></div> -->
           <div>
             <span
-              >{transactions
-                .reduce((prev, curr) => prev + curr.Amount / 100, 0)
-                .toLocaleString(localeParam.language, localeParam.currency)}
+              >{resume.Amount?.toLocaleString(
+                localeParam.language,
+                localeParam.currency
+              ) ?? "$0.00"}
             </span>
           </div>
         </div>
@@ -973,38 +812,34 @@
           <div><p>Comisión</p></div>
           <div>
             <span
-              >{transactions
-                .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.035, 0)
-                .toLocaleString(localeParam.language, localeParam.currency)}
+              >{resume.Comission?.toLocaleString(
+                localeParam.language,
+                localeParam.currency
+              ) ?? "$0.00"}
             </span>
           </div>
-          <!-- <div><span>{(user?.toDeposit - user?.totalCommissions)?.toLocaleString(localeParam.language, localeParam.currency)}</span></div> -->
         </div>
         <div class="card">
           <div><p>Propinas</p></div>
           <div>
-            <span
-              >{user.tip?.toLocaleString(
+            <span>
+              {resume.Tips?.toLocaleString(
                 localeParam.language,
                 localeParam.currency
-              ) ||
-                (0).toLocaleString(
-                  localeParam.language,
-                  localeParam.currency
-                )}</span
-            >
+              ) ?? "$0.00"}
+            </span>
           </div>
         </div>
         <div class="card">
           <div><p>Saldo a Depositar</p></div>
           <div>
-            <span
-              >{transactions
-                .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.965, 0)
-                .toLocaleString(localeParam.language, localeParam.currency)}
+            <span>
+              {resume.Deposit?.toLocaleString(
+                localeParam.language,
+                localeParam.currency
+              ) ?? "$0.00"}
             </span>
           </div>
-          <!-- <div><span>{user.toDeposit?.toLocaleString(localeParam.language, localeParam.currency)}</span></div> -->
         </div>
       </div>
     </div>
@@ -1020,7 +855,7 @@
         </div>
       </div>
     {:else if !transactionDetailView}
-      {#if active !== "week" && active !== "month" && transactions.length > 0}
+      {#if active !== "week" && active !== "month" && transactions?.length > 0}
         <div class="transaction-tables">
           <div bind:this={pdfData} id="pdfTable" class="table-container">
             <div class="card-container">
@@ -1028,9 +863,10 @@
                 <thead>
                   <tr>
                     <th>Fecha</th>
-                    <th class="responsive">Ticket</th>
-                    <th>Venta</th>
+                    <th class="responsive">N° Ticket</th>
+                    <th>Monto</th>
                     <th class="responsive">Comisión</th>
+                    <th class="responsive">IVA</th>
                     <th class="responsive">Depósito</th>
                   </tr>
                 </thead>
@@ -1071,6 +907,7 @@
                           localeParam.currency
                         )}</td
                       >
+                      <td class="resonsive"></td>
                       <td class="responsive"
                         >{parseFloat(
                           (transaction.Amount / 100) * 0.965
@@ -1104,8 +941,9 @@
                     <tr>
                       <th class="title">Día</th>
                       <th class="title">N° Ventas</th>
-                      <th class="title">Vendido</th>
+                      <th class="title">Monto</th>
                       <th class="title responsive">Comisión</th>
+                      <th class="title responsive">IVA</th>
                       <th class="title responsive">Depósito</th>
                     </tr>
                   </thead>
@@ -1113,47 +951,32 @@
                     {#each transactionsWeek as day}
                       <tr
                         class="clickable"
-                        on:click={() => (selectedDay = day)}
+                        on:click={fetchWeekDayTransactions(day.date)}
                         on:click={() => (dayView = !dayView)}
                         on:keypress={(e) =>
-                          e.key === "Enter" ? (selectedDay = day) : ""}
+                          e.key === "Enter" ? fetchWeekDayTransactions(day.date) : ""}
                         on:keypress={(e) =>
                           e.key === "Enter" ? (dayView = !dayView) : ""}
                       >
                         <td class="element"
-                          >{getWeekDay(day.date)} - {getTransactionDate(
-                            day.date
-                          )}</td
+                          >{day.day} - {getTransactionDate(day.date)}</td
                         >
-                        <td class="element">{day.data.length}</td>
+                        <td class="element">{day.sold}</td>
                         <td class="element">
-                          {day.data
-                            .reduce((prev, curr) => prev + curr.Amount / 100, 0)
-                            .toLocaleString(
+                          {day.sales.toLocaleString(
                               localeParam.language,
                               localeParam.currency
                             )}
                         </td>
                         <td class="element responsive">
-                          {day.data
-                            .reduce(
-                              (prev, curr) =>
-                                prev + (curr.Amount / 100) * 0.035,
-                              0
-                            )
-                            .toLocaleString(
+                          {day.comission.toLocaleString(
                               localeParam.language,
                               localeParam.currency
                             )}
                         </td>
+                        <td class="element responsive"></td>
                         <td class="element responsive">
-                          {day.data
-                            .reduce(
-                              (prev, curr) =>
-                                prev + (curr.Amount / 100) * 0.965,
-                              0
-                            )
-                            .toLocaleString(
+                          {day.deposit.toLocaleString(
                               localeParam.language,
                               localeParam.currency
                             )}
@@ -1237,7 +1060,7 @@
                   </tr>
                 </thead>
                 <tbody class="inside">
-                  {#each selectedDay.data as transaction}
+                  {#each transactions as transaction}
                     <tr
                       class="clickable number"
                       on:click={() => (selectedTransaction = transaction)}
@@ -1360,35 +1183,6 @@
                           <Icons name="arrow-fwd" width="24" height="24" />
                         </i>
                       </tr>
-                      <!-- {#each month.data as data}
-                          <tr class="clickable"
-                            on:click={() => (selectedDay = data)}
-                            on:click={() => (monthView = !monthView)}
-                            on:keypress={(e) => e.key === 'Enter' ? selectedDay = data : ""} 
-                            on:keypress={(e) => e.key === 'Enter' ? monthView = !monthView : ""} 
-                          >
-                            <td class="element">{getWeekDay(month.date)} - {getTransactionDate(data.date)}</td>
-                            <td class="element">{data.data.length}</td>
-                            <td class="element">
-                              {data.data
-                                .reduce((prev, curr) => prev + (curr.Amount/100), 0)
-                                .toLocaleString(localeParam.language, localeParam.currency)}
-                            </td>
-                            <td class="element">
-                              {data.data
-                                .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
-                                .toLocaleString(localeParam.language, localeParam.currency)}
-                            </td>
-                            <td class="element">
-                              {data.data
-                                .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
-                                .toLocaleString(localeParam.language, localeParam.currency)}
-                            </td>
-                            <i class="arrow arrow-blue">
-                              <Icons name="arrow-fwd" width="24" height="24"/>
-                            </i>
-                          </tr>
-                        {/each} -->
                     {/each}
                   </tbody>
                 </table>

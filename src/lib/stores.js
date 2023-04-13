@@ -60,6 +60,7 @@ sidebar.subscribe((val) => browser && (localStorage.sidebarState = val));
 export const onboardingSuccess = writable(false);
 export const redirectBankProfile = writable(false);
 export const redirectUrgentDispersions = writable(false);
+export const previousPage = writable("");
 /* type NavigationState = "loading" | "loaded" | null;
 
 export default writable<NavigationState>(null); */

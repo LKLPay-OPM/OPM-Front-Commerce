@@ -11,22 +11,22 @@
   const dispatch = createEventDispatcher();
 
   function paginationBack() {
-    paginationStart -= 10;
-    paginationEnd -= 10;
-    dispatch("pagination");
     if (paginationStart > 0) {
       paginationStart -= 10;
       paginationEnd -= 10;
+      dispatch("pagination");
     }
   }
   function paginationFwd() {
-    paginationStart += 10;
-    paginationEnd += 10;
-    dispatch("pagination");
     if (count > paginationEnd) {
       paginationStart += 10;
       paginationEnd += 10;
+      dispatch("pagination");
     }
+  }
+
+  $: {
+    console.log(count);
   }
 </script>
 
@@ -72,5 +72,9 @@
 
   .button input {
     display: none;
+  }
+
+  .button label {
+    cursor: pointer;
   }
 </style>
