@@ -21,7 +21,8 @@
   // export let sidebar = true;
   let options = [];
 
-  console.log($loggedInUser);
+  // console.log($loggedInUser);
+  // console.log($appwriteUser);
 
   $: {
     if ($isLoggedIn) {
@@ -67,10 +68,7 @@
       class="profile-details"
     >
       <div class="profile-content">
-        <img
-          src={$loggedInUser.avatar ? $loggedInUser.avatar : noUser}
-          alt="profileImg"
-        />
+        <img src={$loggedInUser?.avatar ?? noUser} alt="profileImg" />
       </div>
       <div class="name-job">
         <div class="profile_name">
@@ -171,7 +169,15 @@
           <span class="link_name">Cerrar Sesión</span>
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="/">Cerrar Sesión</a></li>
+          <li>
+            <a
+              class="link_name"
+              href="/login"
+              on:click={async () => {
+                await AuthController.logout($loggedInUser.$id);
+              }}>Cerrar Sesión</a
+            >
+          </li>
         </ul>
       </li>
     </ul>

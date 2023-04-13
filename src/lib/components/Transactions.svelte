@@ -9,23 +9,50 @@
     getDocs,
     startAt,
     endAt,
-  } from 'firebase/firestore';
+  } from "firebase/firestore";
   import { db } from "$lib/firebase";
-  import Input from '$lib/components/Input.svelte';
-  import Modal from '$lib/components/Modal.svelte';
-  import DatePicker from '$lib/components/DatePicker.svelte';
-  import Select from '$lib/components/Select.svelte';
-  import TextArea from '$lib/components/TextArea.svelte';
-  import ButtonGroup from '$lib/components/ButtonGroup.svelte';
-  import { onMount } from 'svelte';
-  import { generatePDF, generateCSV, generateXLSX } from '$lib/hooks/exportDataToFile.js';
-  import { updateTransactionStatus } from '$lib/hooks/updates.js'
-  import Icons from './Icons.svelte';
+  /* components */
+  import Input from "$lib/components/Input.svelte";
+  import Modal from "$lib/components/Modal.svelte";
+  import DatePicker from "$lib/components/DatePicker.svelte";
+  import Select from "$lib/components/Select.svelte";
+  import TextArea from "$lib/components/TextArea.svelte";
+  import ButtonGroup from "$lib/components/ButtonGroup.svelte";
+  import Pagination from "$lib/components/Pagination.svelte";
+  /*  */
+  import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
+  import {
+    generatePDF,
+    generateCSV,
+    generateXLSX,
+  } from "$lib/hooks/exportDataToFile.js";
+  /* icons */
+  import Icons from "./Icons.svelte";
+  /* Constants */
+  import { filterByDateOptions } from "$lib/constants/filter";
+  /* variables */
+  export let data;
+  let active = data.filter;
+  let paginationStart = data.start;
+  let paginationEnd = data.end;
+  let count = data.response?.count ?? 0;
+
+  const filter = data.filter;
+
+  function handleFilterClick({ detail }) {
+    const value = detail?.value;
+    // active = value;
+    goto(
+      `?filter=${value ?? "day"}&start=${paginationStart}&end=${paginationEnd}`
+    );
+  }
 
   export let user;
   const dbCollection = "users-client";
   const uid = user.uid;
-  let transactions = [];
+  let transactions = data.response?.transactions ?? [];
+  let resume = data.response.resume;
   let transactionsWeek = [];
   let transactionsMonth = [];
   let selectedTransaction = {};
@@ -34,174 +61,81 @@
   let notFound = false;
   let notFoundMessage = "No se encontraron registros";
   let loading = false;
-  let date = new Date;
-  let active = "day";
+  let date = new Date();
   let toggleWeek = "";
   let toggleWeekDetails = "";
   let selectedDay;
 
-  let dateRangeStart="", dateRangeEnd="", ticketId="", modalDateFilter, modalClarification, cardBrand="", cardIcon="";
-  let pdfData, print = true, dayView = false, monthView = false;
+  let dateRangeStart = "",
+    dateRangeEnd = "",
+    ticketId = "",
+    modalDateFilter,
+    modalClarification,
+    cardBrand = "",
+    cardIcon = "";
+  let pdfData,
+    print = true,
+    dayView = false,
+    monthView = false;
 
+  $: {
+    console.log(data.response);
+    console.log(active);
+    if (active === "day") {
+      transactionFound();
+    } else {
+      notFound = false;
+    }
+    if(data.response.week){
+      transactionsWeek = data.response.week
+    }
+  }
   let clarificationsList = [
-    {name: "Opción 1", value: "option1"},
-    {name: "Opción 2", value: "option2"},
-    {name: "Opción 3", value: "option3"},
-    {name: "Opción 4", value: "option4"}
-  ]
+    { name: "Opción 1", value: "option1" },
+    { name: "Opción 2", value: "option2" },
+    { name: "Opción 3", value: "option3" },
+    { name: "Opción 4", value: "option4" },
+  ];
 
   let clarification = {
     ticket: "",
     description: "",
-  }
+  };
 
   const localeParam = {
-    language: 'es-MX',
+    language: "es-MX",
     currency: {
-      style: 'currency',
-      currency: 'MXN'
-    }
-  }
+      style: "currency",
+      currency: "MXN",
+    },
+  };
 
   const transactionFound = () => {
-    if(transactions.length <= 0){
+    if (transactions?.length <= 0) {
       notFound = true;
-    }else{
+    } else {
       notFound = false;
       // transactions = JSON.parse(JSON.stringify(transactions).replace(/"\s+|\s+"/g,'"'))
       // console.log(transactions)
     }
     loading = false;
-  }
+  };
 
-  const fetchByDayButton = async() => {
-    active = "day";
-    transactionDetailView = false;
-    selectedTransaction = {};
-    transactions = [];
-    loading = true;
-    var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
-    //transactions = [];
-    const curr = new Date;
-    const today = new Date(curr.setDate(curr.getDate())).setHours(0,0,0,0); // Sets Date to today day at 00:00
-    const tomorrow = new Date(curr.setDate(curr.getDate() + 1)).setHours(0,0,0,0); // Sets Date to tomorrow at 00:00
-    // Dates in dd/MM/YY
-    const strToday = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(today);
-    const strTomorrow = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(tomorrow);
-
-    const q = query(
-      collection(db, dbCollection, uid, "transactions"), 
-      //where('uid', '==', uid),
-      orderBy('Transaction Date', 'desc'),
-      startAt(strTomorrow.replace(pattern,'$3$2$1')/* Timestamp.fromDate(new Date(tomorrow)) */), endAt(strToday.replace(pattern,'$3$2$1')/* Timestamp.fromDate(new Date(today)) */),
-      limit(10)
-    );
-    const querySnapshot = await getDocs(q);
-    transactions = querySnapshot.docs.map((doc) => {
-      return {...doc.data()}
-    });
-    transactionFound();
-    // console.log(transactions)
-  }
-
-  const fetchByWeekButton = async() => {
-    active = "week";
-    transactionDetailView = false;
-    selectedTransaction = {};
-    transactionsWeek = [];
-    transactions = [];
-    loading = true;
-    var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
-    const curr = new Date;
-    const firstDay = new Date(curr.setDate(curr.getDate() - curr.getDay()+1)).setHours(0,0,0,0);
-    const lastDay = new Date(curr.setDate(curr.getDate() - curr.getDay()+7)).setHours(0,0,0,0);
-    // const first = Timestamp.fromDate(new Date(firstDay));
-    // const last = Timestamp.fromDate(new Date(lastDay));
-    const first = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(firstDay);
-    const last = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(lastDay);
-
-    const q = query(
-      collection(db, dbCollection, uid, "transactions"), 
-      //where('uid', '==', uid),
-      orderBy('Transaction Date', 'desc'),
-      startAt(last.replace(pattern,'$3$2$1')), endAt(first.replace(pattern,'$3$2$1')),
-      limit(10)
-    );
-    const querySnapshot = await getDocs(q);
-    transactions = querySnapshot.docs.map((doc) => {
-      return {...doc.data()}
-    });
-    if(transactions.length < 0){
-      transactionsWeek = [];
-    }else{
-      var index = 0;
-      let arr = []
-      do {
-        const initialDate = new Date();
-        let d = new Date(initialDate.setDate(initialDate.getDate() - initialDate.getDay()+(index+1))).setHours(0,0,0,0);
-        const formatDay = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(d);
-        const key = formatDay.replace(pattern,'$3$2$1')
-        arr.push({date: key, data: transactions.filter(date => date['Transaction Date'] === formatDay.replace(pattern,'$3$2$1')).map((doc) => {return doc})})
-        index++;
-      } while (index < 7);
-      transactionsWeek = [...arr]
-      // console.log(transactionsWeek)
+  const fetchWeekDayTransactions = async(id) => {
+    try {
+      const response = await axiosTransactionsClient.get(
+        `/transaction/${id}`,
+        // { params: { filter, start, end } }
+      );
+      transactions = response.transactions
+      // return {response: response.data?.response };
+    } catch (err) {
+      console.log(err)
+      throw new error(500, "Something went wrong!");
     }
-    transactionFound();
-    //console.log(transactions)
   }
 
-  const fetchByMonth = async() => {
-    active = "month"
-    transactionDetailView = false;
-    selectedTransaction = {};
-    transactionsMonth = [];
-    transactions = [];
-    loading = true;
-    var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
-    const q = query(
-      collection(db, dbCollection, uid, "monthly"),
-      // orderBy('Transaction Date', 'desc'),
-    );
-    const querySnapshot = await getDocs(q);
-    transactionsMonth = querySnapshot.docs.map((doc) => {
-      return {...doc.data()}
-    });
-
-    let newArr = [];
-    transactionsMonth.map((arr) => {
-      arr.data.map((data)=>{
-        newArr.push(data)
-      })
-    })
-    transactions = [...newArr]
-    transactionFound();
-    // console.log(transactions)
-    // console.log(transactionsMonth)
-
-    // console.log(transactions)
-    /* let index = 0;
-    let arr = []
-    let array = []
-    let flag = 0;
-    let keyFirstDay, keyLastDay;
-    let total = transactions.length
-    let first = transactions[index]['Transaction Date'], last=transactions[total-1]['Transaction Date'];
-    console.log(last)
-    if (transactions.lentgh<0) {
-      transactionsMonth = [];
-    } else {
-      do {
-        // transactions[index]
-        // console.log(transactions[index])
-        arr.push({year: date.replace(pattern,'$3'), month: date.replace(pattern,'$2'), data: transactions.filter(date => date['Transaction Date'] === flag.toString()).map((doc) => {return doc})})
-
-        index++;
-      } while (index < transactions.length);
-    } */
-  }
-
-  const fetchByMonthButton = async() => {
+  const fetchByMonthButton = async () => {
     active = "month";
     transactionDetailView = false;
     selectedTransaction = {};
@@ -210,372 +144,470 @@
     loading = true;
     var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
     //transactions = [];
-    const curr = new Date;
-    const currentMonth = new Date(curr.setMonth(curr.getMonth(), 1)).setHours(0,0,0,0); // Sets Date to actual month day 1 at 00:00
-    const nextMonth = new Date(curr.setMonth(curr.getMonth() + 1, 1)).setHours(0,0,0,0); // Sets Date to next month day 1 at 00:00
-    const lastDayOfMonth = new Date(curr.setMonth(curr.getMonth(), 0)).setHours(0,0,0,0); // Sets Date to last day of month at 00:00
+    const curr = new Date();
+    const currentMonth = new Date(curr.setMonth(curr.getMonth(), 1)).setHours(
+      0,
+      0,
+      0,
+      0
+    ); // Sets Date to actual month day 1 at 00:00
+    const nextMonth = new Date(curr.setMonth(curr.getMonth() + 1, 1)).setHours(
+      0,
+      0,
+      0,
+      0
+    ); // Sets Date to next month day 1 at 00:00
+    const lastDayOfMonth = new Date(curr.setMonth(curr.getMonth(), 0)).setHours(
+      0,
+      0,
+      0,
+      0
+    ); // Sets Date to last day of month at 00:00
     const numDays = new Date(lastDayOfMonth).getDate();
 
-    const first = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(currentMonth);
-    const last = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(nextMonth);
-    const lastDayMonth = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(lastDayOfMonth);
+    const first = new Intl.DateTimeFormat("es-MX", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "2-digit",
+    }).format(currentMonth);
+    const last = new Intl.DateTimeFormat("es-MX", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "2-digit",
+    }).format(nextMonth);
+    const lastDayMonth = new Intl.DateTimeFormat("es-MX", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "2-digit",
+    }).format(lastDayOfMonth);
 
     const q = query(
       collection(db, dbCollection, uid, "transactions"),
-      orderBy('Transaction Date', 'desc'),
-      startAt(last.replace(pattern,'$3$2$1')/* Timestamp.fromDate(new Date(nextMonth)) */), endAt(first.replace(pattern,'$3$2$1')/* Timestamp.fromDate(new Date(currentMonth)) */),
+      orderBy("Transaction Date", "desc"),
+      startAt(
+        last.replace(
+          pattern,
+          "$3$2$1"
+        ) /* Timestamp.fromDate(new Date(nextMonth)) */
+      ),
+      endAt(
+        first.replace(
+          pattern,
+          "$3$2$1"
+        ) /* Timestamp.fromDate(new Date(currentMonth)) */
+      ),
       limit(10)
     );
     const querySnapshot = await getDocs(q);
     transactions = querySnapshot.docs.map((doc) => {
-      return {...doc.data()}
+      return { ...doc.data() };
     });
     let index = 0;
-    let arr = []
-    let array = []
+    let arr = [];
+    let array = [];
     let flag = 0;
     let keyFirstDay, keyLastDay;
-    if(transactions.length < 0){
+    if (transactions?.length < 0) {
       transactionsMonth = [];
-    }else{
+    } else {
       do {
         const d = new Date();
-        let initialDate = new Date(currentMonth).setHours(0,0,0,0);
-        let m = first.replace(pattern,'$3$2$1')
+        let initialDate = new Date(currentMonth).setHours(0, 0, 0, 0);
+        let m = first.replace(pattern, "$3$2$1");
         flag = parseInt(m) + index;
-        const key = flag.toString().replace(pattern,'$3$2$1')
-        if(arr.length < 7){
-          arr.push({date: key, data: transactions.filter(date => date['Transaction Date'] === flag.toString()).map((doc) => {return doc})})
-        }else{
-          array.push({firstDay: keyFirstDay, lastDay: keyLastDay ,objects: arr})
+        const key = flag.toString().replace(pattern, "$3$2$1");
+        if (arr.length < 7) {
+          arr.push({
+            date: key,
+            data: transactions
+              .filter((date) => date["Transaction Date"] === flag.toString())
+              .map((doc) => {
+                return doc;
+              }),
+          });
+        } else {
+          array.push({
+            firstDay: keyFirstDay,
+            lastDay: keyLastDay,
+            objects: arr,
+          });
           arr = [];
-          arr.push({date: key, data: transactions.filter(date => date['Transaction Date'] === flag.toString()).map((doc) => {return doc})})
+          arr.push({
+            date: key,
+            data: transactions
+              .filter((date) => date["Transaction Date"] === flag.toString())
+              .map((doc) => {
+                return doc;
+              }),
+          });
         }
-        if(arr.length === 1){keyFirstDay = flag.toString()}
-        else if(arr.length === 7){keyLastDay = flag.toString()}
+        if (arr.length === 1) {
+          keyFirstDay = flag.toString();
+        } else if (arr.length === 7) {
+          keyLastDay = flag.toString();
+        }
         index++;
-        if((index) === numDays){
-          array.push({firstDay: keyFirstDay, lastDay: keyLastDay ,objects: arr})
+        if (index === numDays) {
+          array.push({
+            firstDay: keyFirstDay,
+            lastDay: keyLastDay,
+            objects: arr,
+          });
           arr = [];
-          arr.push({date: key, data: transactions.filter(date => date['Transaction Date'] === flag.toString()).map((doc) => {return doc})})
+          arr.push({
+            date: key,
+            data: transactions
+              .filter((date) => date["Transaction Date"] === flag.toString())
+              .map((doc) => {
+                return doc;
+              }),
+          });
         }
-      } while (flag < parseInt(lastDayMonth.replace(pattern,'$3$2$1')));
+      } while (flag < parseInt(lastDayMonth.replace(pattern, "$3$2$1")));
       // console.log(array)
-      transactionsMonth = [...array]
+      transactionsMonth = [...array];
 
-      transactionsMonth.map((months) => (
-        console.log(months.data)
+      transactionsMonth.map(
+        (months) => console.log(months.data)
         /* months.map((data)=>(
 
           console.log({data})
         )) */
-      ))
+      );
       // console.log(transactionsMonth)
     }
     transactionFound();
     //console.log(transactions)
-  }
+  };
 
-  const fetchByDateRange = async() => {
+  const fetchByDateRange = async () => {
     active = "range";
     transactionDetailView = false;
     selectedTransaction = {};
     loading = true;
     var pattern = /(\d{4})\-(\d{2})\-(\d{2})/; // String pattern replace for date
     var patternFetch = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace fetch date
-    const startRange = new Date(dateRangeStart.replace(pattern,'$2-$3-$1')).setHours(0,0,0,0);//Sets the date pattern and time to 00:00
-    const endRange = new Date(dateRangeEnd.replace(pattern,'$2-$3-$1')).setHours(23,59,59,59);//Sets the date pattern and time to 23:59
+    const startRange = new Date(
+      dateRangeStart.replace(pattern, "$2-$3-$1")
+    ).setHours(0, 0, 0, 0); //Sets the date pattern and time to 00:00
+    const endRange = new Date(
+      dateRangeEnd.replace(pattern, "$2-$3-$1")
+    ).setHours(23, 59, 59, 59); //Sets the date pattern and time to 23:59
 
-    const first = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(startRange);
-    const last = new Intl.DateTimeFormat('es-MX', { month: '2-digit', day: '2-digit', year: '2-digit' }).format(endRange);
+    const first = new Intl.DateTimeFormat("es-MX", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "2-digit",
+    }).format(startRange);
+    const last = new Intl.DateTimeFormat("es-MX", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "2-digit",
+    }).format(endRange);
 
     // console.log(first)
     // console.log(last)
-    
+
     const q = query(
       collection(db, dbCollection, uid, "transactions"),
-      orderBy('Transaction Date', 'desc'),
-      startAt(last.replace(patternFetch,'$3$2$1')/* Timestamp.fromDate(new Date(endRange)) */), endAt(first.replace(patternFetch,'$3$2$1')/* Timestamp.fromDate(new Date(startRange)) */),
+      orderBy("Transaction Date", "desc"),
+      startAt(
+        last.replace(
+          patternFetch,
+          "$3$2$1"
+        ) /* Timestamp.fromDate(new Date(endRange)) */
+      ),
+      endAt(
+        first.replace(
+          patternFetch,
+          "$3$2$1"
+        ) /* Timestamp.fromDate(new Date(startRange)) */
+      )
       // limit(10)
     );
     const querySnapshot = await getDocs(q);
     transactions = querySnapshot.docs.map((doc) => {
-      return {...doc.data()}
+      return { ...doc.data() };
     });
     transactionFound();
     // console.log(transactions)
-  }
+  };
 
-  const fetchByTicketId = async() => {
-    active = "ticket"
+  const fetchByTicketId = async () => {
+    active = "ticket";
     transactionDetailView = false;
     selectedTransaction = {};
     loading = true;
     const ticket = ticketId.toString();
     const q = query(
-      collection(db, dbCollection, uid, "transactions"), 
-      where('Transaction Time', '==', ticket),
-      orderBy('Transaction Date', 'desc'),
+      collection(db, dbCollection, uid, "transactions"),
+      where("Transaction Time", "==", ticket),
+      orderBy("Transaction Date", "desc"),
       limit(1)
     );
     const querySnapshot = await getDocs(q);
     transactions = querySnapshot.docs.map((doc) => {
-      return {...doc.data()}
+      return { ...doc.data() };
     });
     transactionFound();
     // console.log(transactions)
-  }
+  };
 
   const sortObject = (data) => {
-    const transactionsNew = data.map(element => {
+    const transactionsNew = data.map((element) => {
       //value = Math.round((e.target.value) * 100) / 100
       return {
-        date: getTransactionDate(element['Transaction Date']),
-        id: element['Transaction Time'],
-        total: parseInt(element.Amount)/100,
-        commission: ((element.Amount*.035)/100),
-        deposit: (element.Amount*.965)/100,
-        card: 'MasterCard'
-      }
-    })
+        date: getTransactionDate(element["Transaction Date"]),
+        id: element["Transaction Time"],
+        total: parseInt(element.Amount) / 100,
+        commission: (element.Amount * 0.035) / 100,
+        deposit: (element.Amount * 0.965) / 100,
+        card: "MasterCard",
+      };
+    });
     return transactionsNew;
-  }
+  };
 
-  const exportDataToPDF = async(transactions) => {
+  const exportDataToPDF = async (transactions) => {
     //alert("PDF")
     // console.log(transactions)
-    generatePDF(transactions, user)
-  }
+    generatePDF(transactions, user);
+  };
 
-  const exportDataToExcel = async(transactions) => {
+  const exportDataToExcel = async (transactions) => {
     // alert("Excel")
     const data = sortObject(transactions);
     // console.log(data)
     generateXLSX(data);
-  }
+  };
 
-  const exportDataToCSV = async(transactions) => {
+  const exportDataToCSV = async (transactions) => {
     // alert("CSV")
     const data = sortObject(transactions);
     // console.log(data)
-    generateCSV(data)
-  }
-
-  /* const reverseTransaction = async(transaction) => {
-    transaction.total = parseFloat(transaction.total);
-    transaction.status = "refund";
-    // console.log(transaction)
-    await updateTransactionStatus(transaction);
-    transactionDetailView = false;
-    fetchByDayButton();
-  } */
+    generateCSV(data);
+  };
 
   const getMonthName = (month) => {
     const monthsArray = {
-      "01": {value: "Enero"},
-      "02": {value: "Febrero"},
-      "03": {value: "Marzo"},
-      "04": {value: "Abril"},
-      "05": {value: "Mayo"},
-      "06": {value: "Junio"},
-      "07": {value: "Julio"},
-      "08": {value: "Agosto"},
-      "09": {value: "Septiembre"},
-      "10": {value: "Octubre"},
-      "11": {value: "Noviembre"},
-      "12": {value: "Diciembre"},
-      0: {value: "Enero"},
-      1: {value: "Febrero"},
-      2: {value: "Marzo"},
-      3: {value: "Abril"},
-      4: {value: "Mayo"},
-      5: {value: "Junio"},
-      6: {value: "Julio"},
-      7: {value: "Agosto"},
-      8: {value: "Septiembre"},
-      9: {value: "Octubre"},
-      10: {value: "Noviembre"},
-      11: {value: "Diciembre"},
-    }
-    return monthsArray[month].value
-  }
+      "01": { value: "Enero" },
+      "02": { value: "Febrero" },
+      "03": { value: "Marzo" },
+      "04": { value: "Abril" },
+      "05": { value: "Mayo" },
+      "06": { value: "Junio" },
+      "07": { value: "Julio" },
+      "08": { value: "Agosto" },
+      "09": { value: "Septiembre" },
+      "10": { value: "Octubre" },
+      "11": { value: "Noviembre" },
+      "12": { value: "Diciembre" },
+      0: { value: "Enero" },
+      1: { value: "Febrero" },
+      2: { value: "Marzo" },
+      3: { value: "Abril" },
+      4: { value: "Mayo" },
+      5: { value: "Junio" },
+      6: { value: "Julio" },
+      7: { value: "Agosto" },
+      8: { value: "Septiembre" },
+      9: { value: "Octubre" },
+      10: { value: "Noviembre" },
+      11: { value: "Diciembre" },
+    };
+    return monthsArray[month].value;
+  };
   const getMonthPeriod = (string) => {
     var pattern = /(\d{2})(\d{2})/; // String pattern replace for date
-    const extractMonth = string.replace(pattern, '$2')
-    const month = getMonthName(extractMonth)
-    let str = string.replace(pattern, `${month} 20$1`)
+    const extractMonth = string.replace(pattern, "$2");
+    const month = getMonthName(extractMonth);
+    let str = string.replace(pattern, `${month} 20$1`);
     // let str = string.replace(pattern, `$3 de ${month} del 20$1`)
     // console.log(str)
-    return str
-  }
+    return str;
+  };
 
   const handleClarification = () => {
-    console.log(clarification)
-  }
-
-  let buttonGroupOptions = [
-    {value: "day", name: "Día", click: fetchByDayButton},
-    {value: "week", name: "Semana", click: fetchByWeekButton},
-    {value: "month", name: "Mes", click: fetchByMonth},
-  ]
+    console.log(clarification);
+  };
 
   const getTransactionDate = (string) => {
     var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
-    const extractMonth = string.replace(pattern, '$2')
-    const month = getMonthName(extractMonth)
-    let str = string.replace(pattern, `$3 de ${month}`)
+    const extractMonth = string.replace(pattern, "$2");
+    const month = getMonthName(extractMonth);
+    let str = string.replace(pattern, `$3 de ${month}`);
     // let str = string.replace(pattern, `$3 de ${month} del 20$1`)
     // console.log(str)
-    return str
-  }
+    return str;
+  };
 
   const getTransactionTime = (string) => {
     var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
-    let str = string.replace(pattern, `$1:$2:$3`)
+    let str = string.replace(pattern, `$1:$2:$3`);
     // console.log(str)
-    return str
-  }
+    return str;
+  };
 
   const dateToLocalString = (string) => {
     var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
-    const extractMonth = string.replace(pattern, '$2')
-    const month = getMonthName(extractMonth)
-    let str = string.replace(pattern, `$3 de ${month} del 20$1`)
-    return str
+    const extractMonth = string.replace(pattern, "$2");
+    const month = getMonthName(extractMonth);
+    let str = string.replace(pattern, `$3 de ${month} del 20$1`);
+    return str;
     // de {getMonthName(selectedTransaction.date?.toDate().getMonth())} del {selectedTransaction.date?.toDate().getFullYear()}
-  }
+  };
   const timeToLocalString = (string) => {
     var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
-    let str = string.replace(pattern, `a las $1:$2`)
-    return str
+    let str = string.replace(pattern, `a las $1:$2`);
+    return str;
     // a las {selectedTransaction.date?.toDate().toLocaleTimeString()}
-  }
+  };
 
   const handleTableState = (id) => {
     // console.log(id)
-    document.getElementById(id).classList.toggle('hidden')
-  }
+    document.getElementById(id).classList.toggle("hidden");
+  };
   const handleToggleWeek = (id) => {
-    if(toggleWeek === id){toggleWeek = ""; toggleWeekDetails = ""}
-    else{toggleWeek = id}
-  }
+    if (toggleWeek === id) {
+      toggleWeek = "";
+      toggleWeekDetails = "";
+    } else {
+      toggleWeek = id;
+    }
+  };
   const handleToggleWeekDetails = (id) => {
-    console.log(id)
-    if(toggleWeekDetails === id){toggleWeekDetails = ""}
-    else{toggleWeekDetails = id}
-  }
+    console.log(id);
+    if (toggleWeekDetails === id) {
+      toggleWeekDetails = "";
+    } else {
+      toggleWeekDetails = id;
+    }
+  };
 
   const getWeekDay = (string) => {
     var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
-    const d = new Date(string.replace(pattern,'$2-$3-20$1'));
-    let index = d.getDay()
+    const d = new Date(string.replace(pattern, "$2-$3-20$1"));
+    let index = d.getDay();
     // console.log(index)
     const days = {
-      0: {name: "Domingo"},
-      1: {name: "Lunes"},
-      2: {name: "Martes"},
-      3: {name: "Miércoles"},
-      4: {name: "Jueves"},
-      5: {name: "Viernes"},
-      6: {name: "Sábado"},
-    }
-    return days[index].name
-  }
+      0: { name: "Domingo" },
+      1: { name: "Lunes" },
+      2: { name: "Martes" },
+      3: { name: "Miércoles" },
+      4: { name: "Jueves" },
+      5: { name: "Viernes" },
+      6: { name: "Sábado" },
+    };
+    return days[index].name;
+  };
 
   const getCardBrand = (cc) => {
-    let amex = new RegExp('^3[47][0-9]{13}$');
-    let visa = new RegExp('^4[0-9]{12}(?:[0-9]{3})?$');
-    let cup1 = new RegExp('^62[0-9]{14}[0-9]*$');
-    let cup2 = new RegExp('^81[0-9]{14}[0-9]*$');
+    console.log(cc.substring(0, 4));
+    let amex = new RegExp("^3[47][0-9]{13}$");
+    let visa = new RegExp("^4[0-9]{12}(?:[0-9]{3})?$");
+    let cup1 = new RegExp("^62[0-9]{14}[0-9]*$");
+    let cup2 = new RegExp("^81[0-9]{14}[0-9]*$");
 
-    let mastercard = new RegExp('^5[1-5][0-9]{14}$');
-    let mastercard2 = new RegExp('^2[2-7][0-9]{14}$');
+    let mastercard = new RegExp("^5[1-5][0-9]{2}$");
+    let mastercard2 = new RegExp("^2[2-7][0-9]{2}$");
 
-    let disco1 = new RegExp('^6011[0-9]{12}[0-9]*$');
-    let disco2 = new RegExp('^62[24568][0-9]{13}[0-9]*$');
-    let disco3 = new RegExp('^6[45][0-9]{14}[0-9]*$');
-    
-    let diners = new RegExp('^3[0689][0-9]{12}[0-9]*$');
-    let jcb =  new RegExp('^35[0-9]{14}[0-9]*$');
+    let disco1 = new RegExp("^6011[0-9]{12}[0-9]*$");
+    let disco2 = new RegExp("^62[24568][0-9]{13}[0-9]*$");
+    let disco3 = new RegExp("^6[45][0-9]{14}[0-9]*$");
 
+    let diners = new RegExp("^3[0689][0-9]{12}[0-9]*$");
+    let jcb = new RegExp("^35[0-9]{14}[0-9]*$");
 
     if (visa.test(cc)) {
-      cardIcon="visa";
-      return 'VISA';
+      cardIcon = "visa";
+      return "VISA";
     }
     if (amex.test(cc)) {
-      cardIcon="amex";
-      return 'AMEX';
+      cardIcon = "amex";
+      return "AMEX";
     }
-    if (mastercard.test(cc) || mastercard2.test(cc)) {
-      cardIcon="master-card";
-      return 'MASTERCARD';
+    if (
+      mastercard.test(cc.substring(0, 4)) ||
+      mastercard2.test(cc.substring(0, 4))
+    ) {
+      cardIcon = "master-card";
+      return "MASTERCARD";
     }
     if (disco1.test(cc) || disco2.test(cc) || disco3.test(cc)) {
-      cardIcon="bank-card-line";
-      return 'DISCOVER';
+      cardIcon = "bank-card-line";
+      return "DISCOVER";
     }
     if (diners.test(cc)) {
-      cardIcon="bank-card-line";
-      return 'DINERS';
+      cardIcon = "bank-card-line";
+      return "DINERS";
     }
     if (jcb.test(cc)) {
-      cardIcon="bank-card-line";
-      return 'JCB';
+      cardIcon = "bank-card-line";
+      return "JCB";
     }
     if (cup1.test(cc) || cup2.test(cc)) {
-      cardIcon="bank-card-line";
-      return 'CHINA_UNION_PAY';
+      cardIcon = "bank-card-line";
+      return "CHINA_UNION_PAY";
     }
     return undefined;
-  }
+  };
 
   const showModal = (option) => {
     option.show();
-  }
+  };
 
-  const closeModal = (option) => {  
+  const closeModal = (option) => {
     option.closeModal();
-  }
-  
+  };
+
   onMount(async () => {
-		await fetchByDayButton()
-	});
+  });
 </script>
 
 <!-- MODAL TRANSACTION CLARIFICATION -->
-<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalClarification}>
+<Modal
+  className={`modal-medium`}
+  wrapperClass={"text-area-wrapper"}
+  bind:this={modalClarification}
+>
   <div slot="header">
     <p>Solicitar Aclaración</p>
   </div>
   <div slot="content">
     <div class="clarifications">
-      <div class="title">
-        Recibo N°
-      </div>
+      <div class="title">Recibo N°</div>
       <div class="description">
         <p>{clarification.ticket}</p>
       </div>
       <!-- <Select bind:optionsList={clarificationsList} defaultText={"Elige una opción"} label="Tipo de Aclaración" id="clarificationType" bind:value={clarification.type}/> -->
     </div>
     <div class="clarification-description">
-      <TextArea bind:value={clarification.description} label="Descripción" placeholder="¿Qué problema hay con esta transacción?" id="clarificationDescription" name="clarificationDescription"/>
+      <TextArea
+        bind:value={clarification.description}
+        label="Descripción"
+        placeholder="¿Qué problema hay con esta transacción?"
+        id="clarificationDescription"
+        name="clarificationDescription"
+      />
     </div>
   </div>
   <div class="modal-buttons" slot="footer">
-    <Input on:click={closeModal(modalClarification)} label="Cerrar" id="buttonCloseModalClarification" type="button" className="btn-plain" icon=""/>
-    <Input 
-      on:click={closeModal(modalClarification)} 
-      on:click={() => handleClarification()} 
-      label="Enviar Aclaración" 
-      id="buttonSaveModalClarification" 
-      type="button" 
+    <Input
+      on:click={closeModal(modalClarification)}
+      label="Cerrar"
+      id="buttonCloseModalClarification"
+      type="button"
+      className="btn-plain"
+      icon=""
+    />
+    <Input
+      on:click={closeModal(modalClarification)}
+      on:click={() => handleClarification()}
+      label="Enviar Aclaración"
+      id="buttonSaveModalClarification"
+      type="button"
       className={`
-        ${
-          clarification.description != "" 
-          ? "btn" : "btn-plain disabled"
-        }`
-      } 
+        ${clarification.description != "" ? "btn" : "btn-plain disabled"}`}
       icon=""
     />
   </div>
@@ -590,52 +622,64 @@
     <div class="modal-range">
       <p>Fechas</p>
       <div class="date-range-input">
-        <DatePicker label="Del" id="date-range-start" bind:value={dateRangeStart}/>
-        <DatePicker label="Al" id="date-range-end" bind:value={dateRangeEnd}/>
+        <DatePicker
+          label="Del"
+          id="date-range-start"
+          bind:value={dateRangeStart}
+        />
+        <DatePicker label="Al" id="date-range-end" bind:value={dateRangeEnd} />
       </div>
       <p>Marca</p>
       <div class="input-cards">
-        <i 
+        <i
           on:click={() => (cardBrand = "MasterCard")}
-          on:keypress={(e) => e.key === 'Enter' ? cardBrand = "MasterCard" : ""}
+          on:keypress={(e) =>
+            e.key === "Enter" ? (cardBrand = "MasterCard") : ""}
         >
-          <Icons name="master-card" width="50" height="30"/>
+          <Icons name="master-card" width="50" height="30" />
         </i>
-        <i 
+        <i
           on:click={() => (cardBrand = "Visa")}
-          on:keypress={(e) => e.key === 'Enter' ? cardBrand = "Visa" : ""}
+          on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "Visa") : "")}
         >
-          <Icons name="visa" width="50" height="30"/>
+          <Icons name="visa" width="50" height="30" />
         </i>
-        <i 
+        <i
           on:click={() => (cardBrand = "AMEX")}
-          on:keypress={(e) => e.key === 'Enter' ? cardBrand = "AMEX" : ""}
+          on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "AMEX") : "")}
         >
-          <Icons name="amex" width="25" height="25"/>
+          <Icons name="amex" width="25" height="25" />
         </i>
-        <i 
+        <i
           on:click={() => (cardBrand = "Other")}
-          on:keypress={(e) => e.key === 'Enter' ? cardBrand = "Other" : ""}
+          on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "Other") : "")}
         >
-          <Icons name="bank-card-line" width="25" height="25"/>
+          <Icons name="bank-card-line" width="25" height="25" />
         </i>
       </div>
     </div>
   </div>
   <div class="modal-buttons" slot="footer">
-    <Input on:click={closeModal(modalDateFilter)} label="Cerrar" id="buttonCloseModalDateRange" type="button" className="btn-plain" icon=""/>
-    <Input 
-      on:click={closeModal(modalDateFilter)} 
-      on:click={() => fetchByDateRange()} 
-      label="Filtrar" 
-      id="buttonSaveModalDateRange" 
-      type="button" 
+    <Input
+      on:click={closeModal(modalDateFilter)}
+      label="Cerrar"
+      id="buttonCloseModalDateRange"
+      type="button"
+      className="btn-plain"
+      icon=""
+    />
+    <Input
+      on:click={closeModal(modalDateFilter)}
+      on:click={() => fetchByDateRange()}
+      label="Filtrar"
+      id="buttonSaveModalDateRange"
+      type="button"
       className={`btn-plain
         ${
           dateRangeStart != "" && dateRangeEnd != "" && cardBrand != ""
-          ? "" : "disabled"
-        }`
-      } 
+            ? ""
+            : "disabled"
+        }`}
       icon=""
     />
   </div>
@@ -651,12 +695,26 @@
         <div class="buttons">
           <div class="element">
             {#if !transactionDetailView}
-              <Input on:click={showModal(modalDateFilter)} label="Filtrar" id="openModalDateFilter" type="button" className="btn-plain fill-blue" icon=""/>
+              <Input
+                on:click={showModal(modalDateFilter)}
+                label="Filtrar"
+                id="openModalDateFilter"
+                type="button"
+                className="btn-plain fill-blue"
+                icon=""
+              />
             {/if}
           </div>
           {#if transactionDetailView}
             <div class="element">
-              <Input on:click={() => (transactionDetailView = false)} label="Regresar" id="detailsReturnButton" type="button" className="btn-plain" icon=""/>
+              <Input
+                on:click={() => (transactionDetailView = false)}
+                label="Regresar"
+                id="detailsReturnButton"
+                type="button"
+                className="btn-plain"
+                icon=""
+              />
             </div>
           {/if}
         </div>
@@ -667,22 +725,73 @@
             {date.getDate()} de {getMonthName(date.getMonth())} del {date.getFullYear()}
           </p>
         </div>
-        <ButtonGroup bind:active={active} options={buttonGroupOptions}/>
-        
+        <ButtonGroup
+          active={filter}
+          options={filterByDateOptions}
+          on:click={handleFilterClick}
+        />
       </div>
       <div class="top__right">
         <div class="transaction-search-bar">
-          <Input placeholder="Buscar por ticket" id="ticket-id-search" bind:value={ticketId} className="txt-field normal" type="text" icon=""/>
-          <Input on:click={fetchByTicketId} label="" id="byTicketId-button" type="button" className="btn-plain btn-round {ticketId != "" ? '' : 'disabled'}" icon="search"/>
+          <Input
+            placeholder="Buscar por ticket"
+            id="ticket-id-search"
+            bind:value={ticketId}
+            className="txt-field normal"
+            type="text"
+            icon=""
+          />
+          <Input
+            on:click={fetchByTicketId}
+            label=""
+            id="byTicketId-button"
+            type="button"
+            className="btn-plain btn-round {ticketId != '' ? '' : 'disabled'}"
+            icon="search"
+          />
         </div>
         <div class="export-buttons">
-          <Input on:click={exportDataToCSV(transactions)} label="" id="csv-export" type="button" className="btn-plain btn-square fill-blue {transactions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/>
-          <Input on:click={exportDataToExcel(transactions)} label="" id="excel-export" type="button" className="btn-plain btn-square fill-green {transactions.length > 0 ? '' : 'disabled'}" icon="xls-fill"/>
-          <Input label="" id="print" type="button" className="btn-plain btn-square fill-blue {transactions.length > 0 ? '' : 'disabled'}" icon="print"/>
-          <Input label="" id="pdf-export" type="button" className="btn-plain btn-square fill-red {transactions.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/>
-          <!-- <Input on:click={exportDataToCSV(transactions)} label="" id="csv-export" type="button" className="btn-plain btn-square {transactions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/> -->
-          <!-- <Input on:click={exportDataToExcel(transactions)} label="" id="excel-export" type="button" className="btn-plain btn-square {transactions.length > 0 ? '' : 'disabled'}" icon="xls-fill"/> -->
-          <!-- <Input on:click={exportDataToPDF(transactions)} label="" id="pdf-export" type="button" className="btn-plain btn-square {transactions.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/> -->
+          <Input
+            on:click={exportDataToCSV(transactions)}
+            label=""
+            id="csv-export"
+            type="button"
+            className="btn-plain btn-square fill-blue {transactions?.length > 0
+              ? ''
+              : 'disabled'}"
+            icon="csv-fill"
+          />
+          <Input
+            on:click={exportDataToExcel(transactions)}
+            label=""
+            id="excel-export"
+            type="button"
+            className="btn-plain btn-square fill-green {transactions?.length > 0
+              ? ''
+              : 'disabled'}"
+            icon="xls-fill"
+          />
+          <Input
+            label=""
+            id="print"
+            type="button"
+            className="btn-plain btn-square fill-blue {transactions?.length > 0
+              ? ''
+              : 'disabled'}"
+            icon="print"
+          />
+          <Input
+            label=""
+            id="pdf-export"
+            type="button"
+            className="btn-plain btn-square fill-red {transactions?.length > 0
+              ? ''
+              : 'disabled'}"
+            icon="pdf-fill"
+          />
+          <!-- <Input on:click={exportDataToCSV(transactions)} label="" id="csv-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="csv-fill"/> -->
+          <!-- <Input on:click={exportDataToExcel(transactions)} label="" id="excel-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="xls-fill"/> -->
+          <!-- <Input on:click={exportDataToPDF(transactions)} label="" id="pdf-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/> -->
         </div>
       </div>
     </div>
@@ -690,31 +799,47 @@
       <div class="card-group">
         <div class="card">
           <div><p>Total Vendido</p></div>
-          <!-- <div><span>{user.total?.toLocaleString(localeParam.language, localeParam.currency)}</span></div> -->
-          <div><span>{transactions
-            .reduce((prev, curr) => prev + (curr.Amount/100), 0)
-            .toLocaleString(localeParam.language, localeParam.currency)}
-            </span></div>
+          <div>
+            <span
+              >{resume.Amount?.toLocaleString(
+                localeParam.language,
+                localeParam.currency
+              ) ?? "$0.00"}
+            </span>
+          </div>
         </div>
         <div class="card">
           <div><p>Comisión</p></div>
-          <div><span>{transactions
-            .reduce((prev, curr) => prev + (curr.Amount/100)*.035, 0)
-            .toLocaleString(localeParam.language, localeParam.currency)}
-            </span></div>
-          <!-- <div><span>{(user?.toDeposit - user?.totalCommissions)?.toLocaleString(localeParam.language, localeParam.currency)}</span></div> -->
+          <div>
+            <span
+              >{resume.Comission?.toLocaleString(
+                localeParam.language,
+                localeParam.currency
+              ) ?? "$0.00"}
+            </span>
+          </div>
         </div>
         <div class="card">
           <div><p>Propinas</p></div>
-          <div><span>{user.tip?.toLocaleString(localeParam.language, localeParam.currency) || (0).toLocaleString(localeParam.language, localeParam.currency)}</span></div>
+          <div>
+            <span>
+              {resume.Tips?.toLocaleString(
+                localeParam.language,
+                localeParam.currency
+              ) ?? "$0.00"}
+            </span>
+          </div>
         </div>
         <div class="card">
           <div><p>Saldo a Depositar</p></div>
-          <div><span>{transactions
-            .reduce((prev, curr) => prev + (curr.Amount/100)*.965, 0)
-            .toLocaleString(localeParam.language, localeParam.currency)}
-            </span></div>
-          <!-- <div><span>{user.toDeposit?.toLocaleString(localeParam.language, localeParam.currency)}</span></div> -->
+          <div>
+            <span>
+              {resume.Deposit?.toLocaleString(
+                localeParam.language,
+                localeParam.currency
+              ) ?? "$0.00"}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -729,35 +854,136 @@
           <p>Aquí podrás ver el resumen de tus últimas ventas realizadas</p>
         </div>
       </div>
-    {:else}
-      {#if !transactionDetailView}
-        {#if active !== "week" && active !=="month" && transactions.length > 0}
+    {:else if !transactionDetailView}
+      {#if active !== "week" && active !== "month" && transactions?.length > 0}
+        <div class="transaction-tables">
+          <div bind:this={pdfData} id="pdfTable" class="table-container">
+            <div class="card-container">
+              <table class="table-content">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th class="responsive">N° Ticket</th>
+                    <th>Monto</th>
+                    <th class="responsive">Comisión</th>
+                    <th class="responsive">IVA</th>
+                    <th class="responsive">Depósito</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {#each transactions as transaction}
+                    <tr
+                      class="clickable number"
+                      on:click={() => (selectedTransaction = transaction)}
+                      on:click={() => (transactionDetailView = true)}
+                      on:keypress={(e) =>
+                        e.key === "Enter"
+                          ? (selectedTransaction = transaction)
+                          : ""}
+                      on:keypress={(e) =>
+                        e.key === "Enter" ? (transactionDetailView = true) : ""}
+                    >
+                      <td
+                        >{getTransactionDate(transaction["Transaction Date"]) +
+                          " - " +
+                          getTransactionTime(
+                            transaction["Transaction Time"]
+                          )}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td
+                      >
+                      <td class="responsive"
+                        >{transaction["Transaction Time"]}</td
+                      >
+                      <td
+                        >{parseFloat(transaction.Amount / 100)?.toLocaleString(
+                          localeParam.language,
+                          localeParam.currency
+                        )}</td
+                      >
+                      <td class="responsive"
+                        >{parseFloat(
+                          (transaction.Amount / 100) * 0.035
+                        )?.toLocaleString(
+                          localeParam.language,
+                          localeParam.currency
+                        )}</td
+                      >
+                      <td class="resonsive"></td>
+                      <td class="responsive"
+                        >{parseFloat(
+                          (transaction.Amount / 100) * 0.965
+                        )?.toLocaleString(
+                          localeParam.language,
+                          localeParam.currency
+                        )}</td
+                      >
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+              {#if count > 10}
+                <Pagination
+                  bind:paginationStart
+                  bind:paginationEnd
+                  bind:count
+                  on:pagination={handleFilterClick}
+                />
+              {/if}
+            </div>
+          </div>
+        </div>
+      {:else if active === "week"}<!-- TABLES BY WEEK -->
+        {#if !dayView}
           <div class="transaction-tables">
             <div bind:this={pdfData} id="pdfTable" class="table-container">
               <div class="card-container">
                 <table class="table-content">
                   <thead>
                     <tr>
-                      <th>Fecha</th>
-                      <th class="responsive">ID</th>
-                      <th>Venta</th>
-                      <th class="responsive">Comisión</th>
-                      <th class="responsive">Depósito</th>
+                      <th class="title">Día</th>
+                      <th class="title">N° Ventas</th>
+                      <th class="title">Monto</th>
+                      <th class="title responsive">Comisión</th>
+                      <th class="title responsive">IVA</th>
+                      <th class="title responsive">Depósito</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {#each transactions as transaction}
-                      <tr class="clickable number"
-                        on:click={() => (selectedTransaction = transaction)}
-                        on:click={() => (transactionDetailView = true)}
-                        on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
-                        on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
+                    {#each transactionsWeek as day}
+                      <tr
+                        class="clickable"
+                        on:click={fetchWeekDayTransactions(day.date)}
+                        on:click={() => (dayView = !dayView)}
+                        on:keypress={(e) =>
+                          e.key === "Enter" ? fetchWeekDayTransactions(day.date) : ""}
+                        on:keypress={(e) =>
+                          e.key === "Enter" ? (dayView = !dayView) : ""}
                       >
-                        <td>{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td>
-                        <td class="responsive">{transaction['Transaction Time']}</td>
-                        <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                        <td class="responsive">{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                        <td class="responsive">{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+                        <td class="element"
+                          >{day.day} - {getTransactionDate(day.date)}</td
+                        >
+                        <td class="element">{day.sold}</td>
+                        <td class="element">
+                          {day.sales.toLocaleString(
+                              localeParam.language,
+                              localeParam.currency
+                            )}
+                        </td>
+                        <td class="element responsive">
+                          {day.comission.toLocaleString(
+                              localeParam.language,
+                              localeParam.currency
+                            )}
+                        </td>
+                        <td class="element responsive"></td>
+                        <td class="element responsive">
+                          {day.deposit.toLocaleString(
+                              localeParam.language,
+                              localeParam.currency
+                            )}
+                        </td>
+                        <i class="arrow arrow-blue">
+                          <Icons name="arrow-fwd" width="24" height="24" />
+                        </i>
                       </tr>
                     {/each}
                   </tbody>
@@ -765,263 +991,321 @@
               </div>
             </div>
           </div>
-        {:else if active === "week"}<!-- TABLES BY WEEK -->
-          {#if !dayView}
-            <div class="transaction-tables">
-              <div bind:this={pdfData} id="pdfTable" class="table-container">
-                <div class="card-container">
-                  <table class="table-content">
-                    <thead>
-                      <tr>
-                        <th class="title">Día</th>
-                        <th class="title">N° Ventas</th>
-                        <th class="title">Vendido</th>
-                        <th class="title responsive">Comisión</th>
-                        <th class="title responsive">Depósito</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {#each transactionsWeek as day}
-                        <tr class="clickable"
-                          on:click={() => (selectedDay = day)}
-                          on:click={() => (dayView = !dayView)}
-                          on:keypress={(e) => e.key === 'Enter' ? selectedDay = day : ""} 
-                          on:keypress={(e) => e.key === 'Enter' ? dayView = !dayView : ""} 
-                        >
-                          <td class="element">{getWeekDay(day.date)} - {getTransactionDate(day.date)}</td>
-                          <td class="element">{day.data.length}</td>
-                          <td class="element">
-                            {day.data
-                              .reduce((prev, curr) => prev + (curr.Amount/100), 0)
-                              .toLocaleString(localeParam.language, localeParam.currency)}
-                          </td>
-                          <td class="element responsive">
-                            {day.data
-                              .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
-                              .toLocaleString(localeParam.language, localeParam.currency)}
-                          </td>
-                          <td class="element responsive">
-                            {day.data
-                              .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
-                              .toLocaleString(localeParam.language, localeParam.currency)}
-                          </td>
-                          <i class="arrow arrow-blue">
-                            <Icons name="arrow-fwd" width="24" height="24"/>
-                          </i>
-                        </tr>
-                      {/each}
-                    </tbody>
-                  </table>
+        {:else}
+          <div
+            bind:this={pdfData}
+            id={`pdfTable-${selectedDay.date}`}
+            class="table-container"
+          >
+            <div class="card-container">
+              <div class="row">
+                <div class="title">
+                  <i
+                    class="arrow-blue"
+                    on:click={() => (dayView = !dayView)}
+                    on:keypress={(e) =>
+                      e.key === "Enter" ? (dayView = !dayView) : ""}
+                  >
+                    <Icons name="arrow-bwd" width="24" height="24" />
+                  </i>
+                  {getWeekDay(selectedDay.date)} - {getTransactionDate(
+                    selectedDay.date
+                  )}
                 </div>
               </div>
-            </div>
-          {:else}
-            <div bind:this={pdfData} id={`pdfTable-${selectedDay.date}`} class="table-container">
-              <div class="card-container">
-                <div class="row">
-                  <div class="title">
-                    <i class="arrow-blue"
-                      on:click={() => (dayView = !dayView)}
-                      on:keypress={(e) => e.key === 'Enter' ? dayView = !dayView : ""}
+              <table class="table-content">
+                <thead style="height:1.5rem">
+                  <tr>
+                    <th class="responsive">Fecha</th>
+                    <th class="responsive">Ticket</th>
+                    <th>Ventas</th>
+                    <th>Comisión</th>
+                    <th>Depósito</th>
+                  </tr>
+                </thead>
+                <thead style="height:1.5rem">
+                  <tr>
+                    <th class="responsive" />
+                    <th class="responsive" />
+                    <th>
+                      {selectedDay.data
+                        .reduce((prev, curr) => prev + curr.Amount / 100, 0)
+                        .toLocaleString(
+                          localeParam.language,
+                          localeParam.currency
+                        )}
+                    </th>
+                    <th>
+                      {selectedDay.data
+                        .reduce(
+                          (prev, curr) => prev + (curr.Amount / 100) * 0.035,
+                          0
+                        )
+                        .toLocaleString(
+                          localeParam.language,
+                          localeParam.currency
+                        )}
+                    </th>
+                    <th>
+                      {selectedDay.data
+                        .reduce(
+                          (prev, curr) => prev + (curr.Amount / 100) * 0.965,
+                          0
+                        )
+                        .toLocaleString(
+                          localeParam.language,
+                          localeParam.currency
+                        )}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="inside">
+                  {#each transactions as transaction}
+                    <tr
+                      class="clickable number"
+                      on:click={() => (selectedTransaction = transaction)}
+                      on:click={() => (transactionDetailView = true)}
+                      on:keypress={(e) =>
+                        e.key === "Enter"
+                          ? (selectedTransaction = transaction)
+                          : ""}
+                      on:keypress={(e) =>
+                        e.key === "Enter" ? (transactionDetailView = true) : ""}
                     >
-                      <Icons name="arrow-bwd" width="24" height="24"/>
-                    </i>
-                    {getWeekDay(selectedDay.date)} - {getTransactionDate(selectedDay.date)}
-                  </div>
-                </div>
-                <table class="table-content">
-                  <thead style="height:1.5rem">
-                    <tr>
-                      <th class="responsive">Fecha</th>
-                      <th class="responsive">ID</th>
-                      <th>Ventas</th>
-                      <th>Comisión</th>
-                      <th>Depósito</th>
-                    </tr>
-                  </thead>
-                  <thead style="height:1.5rem">
-                    <tr>
-                      <th class="responsive"></th>
-                      <th class="responsive"></th>
-                      <th>
-                        {selectedDay.data
-                          .reduce((prev, curr) => prev + (curr.Amount/100), 0)
-                          .toLocaleString(localeParam.language, localeParam.currency)}
-                      </th>
-                      <th>
-                        {selectedDay.data
-                          .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
-                          .toLocaleString(localeParam.language, localeParam.currency)}
-                      </th>
-                      <th>
-                        {selectedDay.data
-                          .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
-                          .toLocaleString(localeParam.language, localeParam.currency)}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody class="inside">
-                    {#each selectedDay.data as transaction}
-                      <tr class="clickable number"
-                        on:click={() => (selectedTransaction = transaction)}
-                        on:click={() => (transactionDetailView = true)}
-                        on:keypress={(e) => e.key === 'Enter' ? selectedTransaction = transaction : ""} 
-                        on:keypress={(e) => e.key === 'Enter' ? transactionDetailView = true : ""} 
+                      <td class="responsive"
+                        >{getTransactionDate(transaction["Transaction Date"]) +
+                          " - " +
+                          getTransactionTime(
+                            transaction["Transaction Time"]
+                          )}</td
                       >
-                        <td class="responsive">{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
-                        <td class="responsive">{transaction['Transaction Time']}</td>
-                        <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                        <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                        <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                      </tr>
-                      {/each}
-                  </tbody>
-                </table>
-                </div>
+                      <td class="responsive"
+                        >{transaction["Transaction Time"]}</td
+                      >
+                      <td
+                        >{parseFloat(transaction.Amount / 100)?.toLocaleString(
+                          localeParam.language,
+                          localeParam.currency
+                        )}</td
+                      >
+                      <td
+                        >{parseFloat(
+                          (transaction.Amount / 100) * 0.035
+                        )?.toLocaleString(
+                          localeParam.language,
+                          localeParam.currency
+                        )}</td
+                      >
+                      <td
+                        >{parseFloat(
+                          (transaction.Amount / 100) * 0.965
+                        )?.toLocaleString(
+                          localeParam.language,
+                          localeParam.currency
+                        )}</td
+                      >
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+              <!-- {#if count > 10}
+                <Pagination
+                  bind:paginationStart
+                  bind:paginationEnd
+                  bind:count
+                  on:pagination={handleFilterClick}
+                />
+              {/if} -->
             </div>
-          {/if}
-        {:else if active === "month"}<!-- TABLES BY MONTH -->
-          {#if !monthView}
-            <div class="transaction-tables">
-              <div bind:this={pdfData} id="pdfTable" class="table-container">
-                <div class="card-container">
-                  <table class="table-content">
-                    <thead>
-                      <tr>
-                        <th class="title">Día</th>
-                        <th class="title">N° Ventas</th>
-                        <th class="title">Vendido</th>
-                        <th class="title responsive">Comisión</th>
-                        <th class="title responsive">Depósito</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {#each transactionsMonth as month}
-                      <tr class="clickable"
+          </div>
+        {/if}
+      {:else if active === "month"}<!-- TABLES BY MONTH -->
+        {#if !monthView}
+          <div class="transaction-tables">
+            <div bind:this={pdfData} id="pdfTable" class="table-container">
+              <div class="card-container">
+                <table class="table-content">
+                  <thead>
+                    <tr>
+                      <th class="title">Día</th>
+                      <th class="title">N° Ventas</th>
+                      <th class="title">Vendido</th>
+                      <th class="title responsive">Comisión</th>
+                      <th class="title responsive">Depósito</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {#each transactionsMonth as month}
+                      <tr
+                        class="clickable"
                         on:click={() => (selectedDay = month)}
                         on:click={() => (monthView = !monthView)}
-                        on:keypress={(e) => e.key === 'Enter' ? selectedDay = month : ""} 
-                        on:keypress={(e) => e.key === 'Enter' ? monthView = !monthView : ""} 
+                        on:keypress={(e) =>
+                          e.key === "Enter" ? (selectedDay = month) : ""}
+                        on:keypress={(e) =>
+                          e.key === "Enter" ? (monthView = !monthView) : ""}
                       >
                         <td class="element">{getMonthPeriod(month.date)}</td>
                         <td class="element">{month.data.length}</td>
                         <td class="element">
                           {month.data
-                            .reduce((prev, curr) => prev + (curr.Amount/100), 0)
-                            .toLocaleString(localeParam.language, localeParam.currency)}
+                            .reduce((prev, curr) => prev + curr.Amount / 100, 0)
+                            .toLocaleString(
+                              localeParam.language,
+                              localeParam.currency
+                            )}
                         </td>
                         <td class="element responsive">
                           {month.data
-                            .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
-                            .toLocaleString(localeParam.language, localeParam.currency)}
+                            .reduce(
+                              (prev, curr) =>
+                                prev + (curr.Amount / 100) * 0.035,
+                              0
+                            )
+                            .toLocaleString(
+                              localeParam.language,
+                              localeParam.currency
+                            )}
                         </td>
                         <td class="element responsive">
                           {month.data
-                            .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
-                            .toLocaleString(localeParam.language, localeParam.currency)}
+                            .reduce(
+                              (prev, curr) =>
+                                prev + (curr.Amount / 100) * 0.965,
+                              0
+                            )
+                            .toLocaleString(
+                              localeParam.language,
+                              localeParam.currency
+                            )}
                         </td>
                         <i class="arrow arrow-blue">
-                          <Icons name="arrow-fwd" width="24" height="24"/>
+                          <Icons name="arrow-fwd" width="24" height="24" />
                         </i>
                       </tr>
-                        <!-- {#each month.data as data}
-                          <tr class="clickable"
-                            on:click={() => (selectedDay = data)}
-                            on:click={() => (monthView = !monthView)}
-                            on:keypress={(e) => e.key === 'Enter' ? selectedDay = data : ""} 
-                            on:keypress={(e) => e.key === 'Enter' ? monthView = !monthView : ""} 
-                          >
-                            <td class="element">{getWeekDay(month.date)} - {getTransactionDate(data.date)}</td>
-                            <td class="element">{data.data.length}</td>
-                            <td class="element">
-                              {data.data
-                                .reduce((prev, curr) => prev + (curr.Amount/100), 0)
-                                .toLocaleString(localeParam.language, localeParam.currency)}
-                            </td>
-                            <td class="element">
-                              {data.data
-                                .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
-                                .toLocaleString(localeParam.language, localeParam.currency)}
-                            </td>
-                            <td class="element">
-                              {data.data
-                                .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
-                                .toLocaleString(localeParam.language, localeParam.currency)}
-                            </td>
-                            <i class="arrow arrow-blue">
-                              <Icons name="arrow-fwd" width="24" height="24"/>
-                            </i>
-                          </tr>
-                        {/each} -->
-                      {/each}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          {:else}
-            <div bind:this={pdfData} id={`pdfTable-${selectedDay.date}`} class="table-container">
-              <div class="card-container">
-                <div class="row">
-                  <div class="title">
-                    <i class="arrow-blue clickable"
-                      on:click={() => (monthView = !monthView)}
-                      on:keypress={(e) => e.key === 'Enter' ? monthView = !monthView : ""}
-                    >
-                      <Icons name="arrow-bwd" width="24" height="24"/>
-                    </i>
-                    {getMonthPeriod(selectedDay.date)}
-                  </div>
-                </div>
-                <table class="table-content">
-                  <thead style="height:1.5rem">
-                    <tr>
-                      <th class="responsive">Fecha</th>
-                      <th class="responsive">ID</th>
-                      <th>Ventas</th>
-                      <th>Comisión</th>
-                      <th>Depósito</th>
-                    </tr>
-                  </thead>
-                  <thead style="height:1.5rem">
-                    <tr>
-                      <th class="responsive"></th>
-                      <th class="responsive"></th>
-                      <th>
-                        {selectedDay.data
-                          .reduce((prev, curr) => prev + (curr.Amount/100), 0)
-                          .toLocaleString(localeParam.language, localeParam.currency)}
-                      </th>
-                      <th>
-                        {selectedDay.data
-                          .reduce((prev, curr) => prev + (curr.Amount/100) * 0.035, 0)
-                          .toLocaleString(localeParam.language, localeParam.currency)}
-                      </th>
-                      <th>
-                        {selectedDay.data
-                          .reduce((prev, curr) => prev + (curr.Amount/100) * 0.965, 0)
-                          .toLocaleString(localeParam.language, localeParam.currency)}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody class="inside">
-                    {#each selectedDay.data as transaction}
-                      <tr class="clickable number"
-                        
-                      >
-                        <td class="responsive">{getTransactionDate(transaction['Transaction Date'])+" - "+getTransactionTime(transaction['Transaction Time'])}</td>
-                        <td class="responsive">{transaction['Transaction Time']}</td>
-                        <td>{parseFloat(transaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                        <td>{parseFloat((transaction.Amount/100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                        <td>{parseFloat((transaction.Amount/100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                      </tr>
-                      {/each}
+                    {/each}
                   </tbody>
                 </table>
-                </div>
+              </div>
             </div>
-          {/if}
-          <!-- <div class="transaction-tables">
+          </div>
+        {:else}
+          <div
+            bind:this={pdfData}
+            id={`pdfTable-${selectedDay.date}`}
+            class="table-container"
+          >
+            <div class="card-container">
+              <div class="row">
+                <div class="title">
+                  <i
+                    class="arrow-blue clickable"
+                    on:click={() => (monthView = !monthView)}
+                    on:keypress={(e) =>
+                      e.key === "Enter" ? (monthView = !monthView) : ""}
+                  >
+                    <Icons name="arrow-bwd" width="24" height="24" />
+                  </i>
+                  {getMonthPeriod(selectedDay.date)}
+                </div>
+              </div>
+              <table class="table-content">
+                <thead style="height:1.5rem">
+                  <tr>
+                    <th class="responsive">Fecha</th>
+                    <th class="responsive">Ticket</th>
+                    <th>Ventas</th>
+                    <th>Comisión</th>
+                    <th>Depósito</th>
+                  </tr>
+                </thead>
+                <thead style="height:1.5rem">
+                  <tr>
+                    <th class="responsive" />
+                    <th class="responsive" />
+                    <th>
+                      {selectedDay.data
+                        .reduce((prev, curr) => prev + curr.Amount / 100, 0)
+                        .toLocaleString(
+                          localeParam.language,
+                          localeParam.currency
+                        )}
+                    </th>
+                    <th>
+                      {selectedDay.data
+                        .reduce(
+                          (prev, curr) => prev + (curr.Amount / 100) * 0.035,
+                          0
+                        )
+                        .toLocaleString(
+                          localeParam.language,
+                          localeParam.currency
+                        )}
+                    </th>
+                    <th>
+                      {selectedDay.data
+                        .reduce(
+                          (prev, curr) => prev + (curr.Amount / 100) * 0.965,
+                          0
+                        )
+                        .toLocaleString(
+                          localeParam.language,
+                          localeParam.currency
+                        )}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="inside">
+                  {#each selectedDay.data as transaction}
+                    <tr class="clickable number">
+                      <td class="responsive"
+                        >{getTransactionDate(transaction["Transaction Date"]) +
+                          " - " +
+                          getTransactionTime(
+                            transaction["Transaction Time"]
+                          )}</td
+                      >
+                      <td class="responsive"
+                        >{transaction["Transaction Time"]}</td
+                      >
+                      <td
+                        >{parseFloat(transaction.Amount / 100)?.toLocaleString(
+                          localeParam.language,
+                          localeParam.currency
+                        )}</td
+                      >
+                      <td
+                        >{parseFloat(
+                          (transaction.Amount / 100) * 0.035
+                        )?.toLocaleString(
+                          localeParam.language,
+                          localeParam.currency
+                        )}</td
+                      >
+                      <td
+                        >{parseFloat(
+                          (transaction.Amount / 100) * 0.965
+                        )?.toLocaleString(
+                          localeParam.language,
+                          localeParam.currency
+                        )}</td
+                      >
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+              <!-- {#if count > 10}
+                <Pagination
+                  bind:paginationStart
+                  bind:paginationEnd
+                  bind:count
+                  on:pagination={handleFilterClick}
+                />
+              {/if} -->
+            </div>
+          </div>
+        {/if}
+        <!-- <div class="transaction-tables">
             {#each transactionsMonth as month}
               <div 
                 class="week-table__title "
@@ -1089,7 +1373,7 @@
                     <thead>
                       <tr>
                         <th>Fecha</th>
-                        <th>ID</th>
+                        <th>Ticket</th>
                         <th>Venta</th>
                         <th>Comisión</th>
                         <th>Depósito</th>
@@ -1117,151 +1401,223 @@
               {/each}
             {/each}
           </div> -->
-        {/if}
-        {:else}
-        <div class="return">
-          <Input on:click={() => (transactionDetailView = false)} label="Regresar" id="detailsReturnButton" type="button" className="btn-plain" icon=""/>
-        </div>
-        <div class="transaction-details">
-          <div class="details__top">
-            <b>Recibo #{selectedTransaction['Transaction Time']}</b>
-            <p>
-              {dateToLocalString(selectedTransaction['Transaction Date'])} {timeToLocalString(selectedTransaction['Transaction Time'])}
-            </p>
-          </div>
-          <div class="details__middle">
-            <div class="details-left responsive">
-              <div class="title">Datos</div>
-              <div class="item">
-                <b>Referencia</b>
-                <p>{selectedTransaction['IFD Serial Number']}</p>
-              </div>
-              <div class="item">
-                <b>TVR</b>
-                <p>{selectedTransaction.TVR}</p>
-              </div>
-              <div class="item">
-                <b>AID</b>
-                <p>{selectedTransaction['Terminal Capabilities']}</p>
-              </div>
-              <div class="item">
-                <b>TSI</b>
-                <p>{selectedTransaction['Additional Terminal Capabilities']}</p>
-              </div>
-              <div class="item">
-                <b>Tipo de Tarjeta</b>
-                <p>{getCardBrand(selectedTransaction['Application PAN'])}</p>
-              </div>
-            </div>
-            <div class="details-center">
-              <div class="details-card">
-                <div class="details-card__top">
-                  <b>Detalle de Venta</b>
-                </div>
-                <div class="details-card__middle">
-                  <div class="item">
-                    <div class=item__title>
-                      <b>Tarjeta Utilizada</b>
-                    </div>
-                    <div class=item__content>
-                      <p><span>{"**** **** **** "+selectedTransaction['Application PAN'].substr(-4)}</span></p>
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class=item__title>
-                      <b>Tipo de Tarjeta</b>
-                    </div>
-                    <div class=item__content>
-                      {#if cardIcon === "master-card"}
-                        <p><Icons name="mastercard" width="24" height="24"/></p>
-                      {:else if cardIcon === "visa"}
-                        <Icons name="visa" width="50" height="30"/>
-                      {:else if cardIcon === "amex"}
-                        <Icons name="amex" width="25" height="25"/>
-                      {:else if cardIcon === "bank-card-line"}
-                        <Icons name="bank-card-line" width="25" height="25"/>
-                      {/if}
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class=item__title>
-                      <b>Total de la Venta</b>
-                    </div>
-                    <div class=item__content>
-                      <p>{(selectedTransaction.Amount/100)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="details-card__bottom">
-                  <div class="item">
-                    <div class=item__title>
-                      <b>Estatus</b>
-                    </div>
-                    <div class=item__content>
-                      <p>APROBADA</p>
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class=item__title>
-                      <b>Comisión</b>
-                    </div>
-                    <div class=item__content>
-                      <p>{((selectedTransaction.Amount/100) * 0.0406)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
-                      <!-- <span>{`(4.06%)`}</span> -->
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class=item__title>
-                      <b>Total a Depositar</b>
-                    </div>
-                    <div class=item__content>
-                      <p>{((selectedTransaction.Amount/100) * 0.9594)?.toLocaleString(localeParam.language, localeParam.currency)}</p>
-                    </div>
-                    <span></span>
-                  </div>
-                </div>
-              </div>
-              <div class="card-buttons">
-                <div class="reverse-button">
-                  <Input on:click={() => clarification.ticket = selectedTransaction['Transaction Time']} on:click={showModal(modalClarification)} label="Aclaración" id="reverseTransaction" type="button" className="btn-plain" icon=""/>
-                </div>
-                <div class="email-button">
-                  <Input label="Enviar por e-mail" id="emailTransaction" type="button" className="btn-plain" icon=""/>
-                </div>
-                <div class="print-button">
-                  <Input label="Imprimir Recibo" id="printTransaction" type="button" className="btn-plain" icon=""/>
-                </div>
-              </div>
-            </div>
-            <div class="details-right responsive">
-              <div class="title">Reportes</div>
-              <div class="export-buttons">
-                <Input on:click={
-                  () => {
-                    transactionToArray.push(selectedTransaction)
-                    exportDataToCSV(transactionToArray)
-                    transactionToArray = [];
-                  }
-                } label="" id="csv-export" type="button" className="btn-plain fill-blue btn-square " icon="csv-fill"/>
-                <Input on:click={
-                  () => {
-                    transactionToArray.push(selectedTransaction)
-                    exportDataToCSV(transactionToArray)
-                    transactionToArray = [];
-                  }
-                } label="" id="excel-export" type="button" className="btn-plain fill-green btn-square " icon="xls-fill"/>
-                <Input on:click={
-                  () => {
-                    transactionToArray.push(selectedTransaction)
-                    exportDataToCSV(transactionToArray)
-                    transactionToArray = [];
-                  }
-                } label="" id="pdf-export" type="button" className="btn-plain fill-red btn-square " icon="pdf-fill"/>
-              </div>
-            </div>
-          </div>
-        </div>
       {/if}
+    {:else}
+      <div class="return">
+        <Input
+          on:click={() => (transactionDetailView = false)}
+          label="Regresar"
+          id="detailsReturnButton"
+          type="button"
+          className="btn-plain"
+          icon=""
+        />
+      </div>
+      <div class="transaction-details">
+        <div class="details__top">
+          <b>Recibo #{selectedTransaction["Transaction Time"]}</b>
+          <p>
+            {dateToLocalString(selectedTransaction["Transaction Date"])}
+            {timeToLocalString(selectedTransaction["Transaction Time"])}
+          </p>
+        </div>
+        <div class="details__middle">
+          <div class="details-left responsive">
+            <div class="title">Datos</div>
+            <div class="item">
+              <b>Referencia</b>
+              <p>{selectedTransaction["IFD Serial Number"]}</p>
+            </div>
+            <div class="item">
+              <b>TVR</b>
+              <p>{selectedTransaction.TVR}</p>
+            </div>
+            <div class="item">
+              <b>AID</b>
+              <p>{selectedTransaction["Terminal Capabilities"]}</p>
+            </div>
+            <div class="item">
+              <b>TSI</b>
+              <p>{selectedTransaction["Additional Terminal Capabilities"]}</p>
+            </div>
+            <div class="item">
+              <b>Tipo de Tarjeta</b>
+              <p>{getCardBrand(selectedTransaction["Application PAN"])}</p>
+            </div>
+          </div>
+          <div class="details-center">
+            <div class="details-card">
+              <div class="details-card__top">
+                <b>Detalle de Venta</b>
+              </div>
+              <div class="details-card__middle">
+                <div class="item">
+                  <div class="item__title">
+                    <b>Tarjeta Utilizada</b>
+                  </div>
+                  <div class="item__content">
+                    <p>
+                      <span
+                        >{"**** **** **** " +
+                          selectedTransaction["Application PAN"].substr(
+                            -4
+                          )}</span
+                      >
+                    </p>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="item__title">
+                    <b>Tipo de Tarjeta</b>
+                  </div>
+                  <div class="item__content">
+                    {#if cardIcon === "master-card"}
+                      <p><Icons name="mastercard" width="24" height="24" /></p>
+                    {:else if cardIcon === "visa"}
+                      <Icons name="visa" width="50" height="30" />
+                    {:else if cardIcon === "amex"}
+                      <Icons name="amex" width="25" height="25" />
+                    {:else if cardIcon === "bank-card-line"}
+                      <Icons name="bank-card-line" width="25" height="25" />
+                    {/if}
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="item__title">
+                    <b>Total de la Venta</b>
+                  </div>
+                  <div class="item__content">
+                    <p>
+                      {(selectedTransaction.Amount / 100)?.toLocaleString(
+                        localeParam.language,
+                        localeParam.currency
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="details-card__bottom">
+                <div class="item">
+                  <div class="item__title">
+                    <b>Estatus</b>
+                  </div>
+                  <div class="item__content">
+                    <p>APROBADA</p>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="item__title">
+                    <b>Comisión</b>
+                  </div>
+                  <div class="item__content">
+                    <p>
+                      {(
+                        (selectedTransaction.Amount / 100) *
+                        0.0406
+                      )?.toLocaleString(
+                        localeParam.language,
+                        localeParam.currency
+                      )}
+                    </p>
+                    <!-- <span>{`(4.06%)`}</span> -->
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="item__title">
+                    <b>Total a Depositar</b>
+                  </div>
+                  <div class="item__content">
+                    <p>
+                      {(
+                        (selectedTransaction.Amount / 100) *
+                        0.9594
+                      )?.toLocaleString(
+                        localeParam.language,
+                        localeParam.currency
+                      )}
+                    </p>
+                  </div>
+                  <span />
+                </div>
+              </div>
+            </div>
+            <div class="card-buttons">
+              <div class="reverse-button">
+                <Input
+                  on:click={() =>
+                    (clarification.ticket =
+                      selectedTransaction["Transaction Time"])}
+                  on:click={showModal(modalClarification)}
+                  label="Aclaración"
+                  id="reverseTransaction"
+                  type="button"
+                  className="btn-plain"
+                  icon=""
+                />
+              </div>
+              <div class="email-button">
+                <Input
+                  label="Enviar por e-mail"
+                  id="emailTransaction"
+                  type="button"
+                  className="btn-plain"
+                  icon=""
+                />
+              </div>
+              <div class="print-button">
+                <Input
+                  label="Imprimir Recibo"
+                  id="printTransaction"
+                  type="button"
+                  className="btn-plain"
+                  icon=""
+                />
+              </div>
+            </div>
+          </div>
+          <div class="details-right responsive">
+            <div class="title">Reportes</div>
+            <div class="export-buttons">
+              <Input
+                on:click={() => {
+                  transactionToArray.push(selectedTransaction);
+                  exportDataToCSV(transactionToArray);
+                  transactionToArray = [];
+                }}
+                label=""
+                id="csv-export"
+                type="button"
+                className="btn-plain fill-blue btn-square "
+                icon="csv-fill"
+              />
+              <Input
+                on:click={() => {
+                  transactionToArray.push(selectedTransaction);
+                  exportDataToCSV(transactionToArray);
+                  transactionToArray = [];
+                }}
+                label=""
+                id="excel-export"
+                type="button"
+                className="btn-plain fill-green btn-square "
+                icon="xls-fill"
+              />
+              <Input
+                on:click={() => {
+                  transactionToArray.push(selectedTransaction);
+                  exportDataToCSV(transactionToArray);
+                  transactionToArray = [];
+                }}
+                label=""
+                id="pdf-export"
+                type="button"
+                className="btn-plain fill-red btn-square "
+                icon="pdf-fill"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     {/if}
   </div>
 </div>
@@ -1294,15 +1650,15 @@
     font-weight: 700;
     font-size: 20px;
     line-height: 18px;
-    color: #FD9053;
+    color: #fd9053;
   }
   .row > .element {
     font-weight: 700;
     font-size: 16px;
     line-height: 18px;
-    color: #113A62;
+    color: #113a62;
   }
-  
+
   .transactions {
     /* display: flex;
     flex-direction: column;
@@ -1316,11 +1672,11 @@
 
   .transactions .return {
     display: flex;
-    width: 10rem;/* 160px */
-    height: 2.5rem;/* 40px */
+    width: 10rem; /* 160px */
+    height: 2.5rem; /* 40px */
     justify-content: left;
   }
-  
+
   .top {
     width: 100%;
     display: flex;
@@ -1333,7 +1689,7 @@
     gap: 1rem;
   }
   .top__left .buttons .element {
-    height: 2.5rem;/* 40px */
+    height: 2.5rem; /* 40px */
   }
 
   .top__middle {
@@ -1347,11 +1703,11 @@
   .top__middle .date p {
     font-style: normal;
     font-weight: 700;
-    font-size: 1.25rem;/* 20px */
-    line-height: 1.25rem;/* 20px */
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.25rem; /* 20px */
     text-align: center;
     /* Text */
-    color: #113A62;
+    color: #113a62;
   }
 
   .button-group {
@@ -1366,15 +1722,16 @@
     width: 134px;
     height: 38px;
     /* Nue Fill */
-    background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+    background: linear-gradient(91.36deg, #efeef5 0%, #e6e8ef 100%);
     /* container effect */
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     /* Inside auto layout */
     flex: none;
     order: 1;
     flex-grow: 0;
-    border: 1px solid #FFFFFF
+    border: 1px solid #ffffff;
   }
 
   .button {
@@ -1388,17 +1745,17 @@
     flex: none;
     order: 0;
     flex-grow: 0;
-    outline:none;
+    outline: none;
     border: none;
     cursor: pointer;
-    font-family: 'Raleway';
+    font-family: "Raleway";
     font-style: normal;
     font-weight: 700;
     font-size: 12px;
     line-height: 14px;
     /* identical to box height */
     /* text-placeholder */
-    color: #8C9FB1;
+    color: #8c9fb1;
     /* Inside auto layout */
     flex: none;
     order: 0;
@@ -1416,12 +1773,18 @@
 
   .button-active {
     height: 22px;
-    background: linear-gradient(317.7deg, rgba(0, 0, 0, 0.2) 0%, rgba(255, 255, 255, 0.2) 105.18%), #007AFF;
+    background: linear-gradient(
+        317.7deg,
+        rgba(0, 0, 0, 0.2) 0%,
+        rgba(255, 255, 255, 0.2) 105.18%
+      ),
+      #007aff;
     background-blend-mode: soft-light, normal;
     /* inner blue */
-    box-shadow: inset -5px -5px 8px rgba(56, 151, 255, 0.75), inset 5px 5px 7px rgba(29, 79, 133, 0.5);
+    box-shadow: inset -5px -5px 8px rgba(56, 151, 255, 0.75),
+      inset 5px 5px 7px rgba(29, 79, 133, 0.5);
 
-    font-family: 'Raleway';
+    font-family: "Raleway";
     font-style: normal;
     font-weight: 700;
     font-size: 12px;
@@ -1429,13 +1792,12 @@
     /* identical to box height */
     display: flex;
     align-items: center;
-    color: #FFFFFF;
+    color: #ffffff;
     mix-blend-mode: normal;
     /* Inside auto layout */
     flex: none;
     order: 0;
     flex-grow: 0;
-  
   }
 
   .middle {
@@ -1454,7 +1816,6 @@
     /* width: 610px; */
     height: 88px;
 
-
     /* Inside auto layout */
 
     flex: none;
@@ -1462,7 +1823,7 @@
     flex-grow: 0;
   }
 
-  .card-group .card{
+  .card-group .card {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1473,7 +1834,7 @@
     min-width: 180px;
     height: 88px;
     /* Nue Fill */
-    background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+    background: linear-gradient(91.36deg, #efeef5 0%, #e6e8ef 100%);
     /* out */
     box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
@@ -1490,18 +1851,18 @@
     line-height: 20px;
     text-align: center;
     /* text-placeholder */
-    color: #8C9FB1;
+    color: #8c9fb1;
   }
 
   .card-group .card span {
-    font-family: 'Roboto';
+    font-family: "Roboto";
     font-style: normal;
     font-weight: 700;
     font-size: 24px;
     line-height: 20px;
     text-align: center;
     /* Text */
-    color: #113A62;
+    color: #113a62;
   }
 
   .transaction-form {
@@ -1544,14 +1905,14 @@
     /* TEXT */
     text-align: center;
     font-weight: 700;
-    line-height: 1.25rem;/* 20px */
-    color: #113A62;
+    line-height: 1.25rem; /* 20px */
+    color: #113a62;
   }
   .clarifications .title {
-    font-size: 1rem;/* 16px */
+    font-size: 1rem; /* 16px */
   }
   .clarifications .description {
-    font-size: 1.5rem;/* 16px */
+    font-size: 1.5rem; /* 16px */
   }
 
   .clarification-description {
@@ -1563,10 +1924,10 @@
 
   .modal-range p {
     font-weight: 700;
-    font-size: 1.25rem;/* 20px */
-    line-height: 1.25rem;/* 20px */
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.25rem; /* 20px */
     /* Text */
-    color: #113A62;
+    color: #113a62;
   }
 
   .date-range-input {
@@ -1575,11 +1936,11 @@
     justify-content: center;
   }
 
-  .input-cards{
+  .input-cards {
     display: flex;
     justify-content: space-between;
   }
-  .input-cards > i{
+  .input-cards > i {
     cursor: pointer;
   }
   .export-buttons {
@@ -1596,11 +1957,11 @@
   .not-found b {
     font-style: normal;
     font-weight: 700;
-    font-size: 1.25rem;/* 20px */
-    line-height: 1.25rem;/* 20px */
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.25rem; /* 20px */
     text-align: center;
     /* Text */
-    color: #113A62;
+    color: #113a62;
   }
   .transaction-tables {
     display: flex;
@@ -1624,16 +1985,16 @@
     border-spacing: 1rem;
     min-width: 40rem;
   }
-  
+
   .table-content thead {
-    font-family: 'Raleway';
+    font-family: "Raleway";
     font-style: normal;
     font-weight: 500;
     font-size: 1rem;
     line-height: 18px;
     text-align: center;
     /* text-placeholder */
-    color: #113A62;
+    color: #113a62;
     height: 2.375rem;
   }
 
@@ -1642,14 +2003,14 @@
   }
 
   .table-content td {
-    font-family: 'Roboto';
+    font-family: "Roboto";
     font-style: normal;
     font-weight: 500;
     font-size: 13px;
     line-height: 18px;
     color: #000000;
     text-align: center;
-    border-bottom: 1px solid #8C9FB1;
+    border-bottom: 1px solid #8c9fb1;
     padding: 0.625rem 0rem 0.625rem 0rem;
     min-width: 7rem;
   }
@@ -1661,9 +2022,9 @@
     text-align: left;
   }
 
-  .modal-buttons{
+  .modal-buttons {
     width: 70%;
-    height: 2.5rem;/* 40px */
+    height: 2.5rem; /* 40px */
     display: flex;
     justify-content: center;
     flex-direction: row;
@@ -1684,19 +2045,19 @@
     margin-bottom: 2.5rem;
   }
 
-  .details__top b{
+  .details__top b {
     font-style: normal;
     font-weight: 700;
     font-size: 1.25rem;
     line-height: 1.25rem;
-    color: #113A62;
+    color: #113a62;
   }
-  .details__top p{
+  .details__top p {
     font-style: normal;
     font-weight: 500;
     font-size: 1rem;
     line-height: 1.25rem;
-    color: #8C9FB1;
+    color: #8c9fb1;
   }
 
   .details__middle {
@@ -1711,48 +2072,49 @@
     font-weight: 700;
     font-size: 1rem;
     line-height: 1.125rem;
-    color: #113A62;
+    color: #113a62;
   }
 
   .details__middle .details-left .item b {
     font-style: normal;
     font-weight: 500;
-    font-size: .8125rem;/* 13px */
-    line-height: .875rem;/* 14px */
-    color: #8C9FB1;
+    font-size: 0.8125rem; /* 13px */
+    line-height: 0.875rem; /* 14px */
+    color: #8c9fb1;
   }
   .details__middle .details-left .item p {
-    font-family: 'Roboto';
+    font-family: "Roboto";
     font-style: normal;
     font-weight: 700;
-    font-size: .875rem;/* 14px */
-    line-height: .875rem;/* 14px */
-    color: #8C9FB1;
+    font-size: 0.875rem; /* 14px */
+    line-height: 0.875rem; /* 14px */
+    color: #8c9fb1;
   }
 
   .details__middle .details-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1rem;/* 16px */
-    gap: 2rem;/* 32px */
-    min-width: 26.75rem;/* 428px */
-    min-height: 13.125rem;/* 210px */
+    padding: 1rem; /* 16px */
+    gap: 2rem; /* 32px */
+    min-width: 26.75rem; /* 428px */
+    min-height: 13.125rem; /* 210px */
     /* Fill Container */
-    background: #F3F3F3;
+    background: #f3f3f3;
     /* container effect */
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
   }
 
-  .details__middle .details-center .details-card .details-card__top b{
+  .details__middle .details-center .details-card .details-card__top b {
     font-style: normal;
     font-weight: 700;
-    font-size: 1.25rem;/* 20px */
-    line-height: 1.125rem;/* 18px */
-    color: #113A62;
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.125rem; /* 18px */
+    color: #113a62;
   }
-  .details__middle .details-center .details-card .details-card__middle{
+  .details__middle .details-center .details-card .details-card__middle {
     /* display: flex;
     flex-direction: row;
     gap: 1rem; */
@@ -1760,41 +2122,62 @@
     display: grid;
     grid-auto-flow: column;
     grid-template: auto / 10rem 6rem auto;
-
   }
-  .details__middle .details-center .details-card .details-card__middle .item .item__title{
+  .details__middle
+    .details-center
+    .details-card
+    .details-card__middle
+    .item
+    .item__title {
     display: flex;
     justify-content: center;
   }
-  .details__middle .details-center .details-card .details-card__middle .item .item__content{
+  .details__middle
+    .details-center
+    .details-card
+    .details-card__middle
+    .item
+    .item__content {
     display: flex;
     justify-content: center;
   }
-  .details__middle .details-center .details-card .details-card__middle .item .item__title b{
+  .details__middle
+    .details-center
+    .details-card
+    .details-card__middle
+    .item
+    .item__title
+    b {
     font-style: normal;
     font-weight: 500;
-    font-size: .8125rem;/* 13px */
-    line-height: 1.125rem;/* 18px */
-    color: #113A62;
+    font-size: 0.8125rem; /* 13px */
+    line-height: 1.125rem; /* 18px */
+    color: #113a62;
   }
-  
-  .details__middle .details-center .details-card .details-card__middle .item p{
-    font-family: 'Roboto';
+
+  .details__middle .details-center .details-card .details-card__middle .item p {
+    font-family: "Roboto";
     font-style: normal;
     font-weight: 700;
-    font-size: 1.25rem;/* 20px */
-    line-height: 1.125rem;/* 18px */
-    color: #113A62;
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.125rem; /* 18px */
+    color: #113a62;
   }
-  .details__middle .details-center .details-card .details-card__middle .item p span{
-    font-family: 'Roboto';
+  .details__middle
+    .details-center
+    .details-card
+    .details-card__middle
+    .item
+    p
+    span {
+    font-family: "Roboto";
     font-style: normal;
     font-weight: 700;
-    font-size: 1rem;/* 20px */
-    line-height: 1.125rem;/* 18px */
-    color: #113A62;
+    font-size: 1rem; /* 20px */
+    line-height: 1.125rem; /* 18px */
+    color: #113a62;
   }
-  .details__middle .details-center .details-card .details-card__bottom{
+  .details__middle .details-center .details-card .details-card__bottom {
     /* display: flex;
     flex-direction: row;
     gap: .5rem; */
@@ -1803,50 +2186,71 @@
     grid-auto-flow: column;
     grid-template: auto / 10rem 6rem auto;
   }
-  .details__middle .details-center .details-card .details-card__bottom .item .item__title{
+  .details__middle
+    .details-center
+    .details-card
+    .details-card__bottom
+    .item
+    .item__title {
     display: flex;
     justify-content: center;
   }
-  .details__middle .details-center .details-card .details-card__bottom .item .item__content{
+  .details__middle
+    .details-center
+    .details-card
+    .details-card__bottom
+    .item
+    .item__content {
     display: flex;
     justify-content: center;
     flex-direction: column;
   }
-  .details__middle .details-center .details-card .details-card__bottom .item .item__title b{
+  .details__middle
+    .details-center
+    .details-card
+    .details-card__bottom
+    .item
+    .item__title
+    b {
     font-style: normal;
     font-weight: 500;
-    font-size: .8125rem;/* 13px */
-    line-height: 1.125rem;/* 18px */
-    color: #8C9FB1;
+    font-size: 0.8125rem; /* 13px */
+    line-height: 1.125rem; /* 18px */
+    color: #8c9fb1;
   }
 
-  .details__middle .details-center .details-card .details-card__bottom .item p{
-    font-family: 'Roboto';
+  .details__middle .details-center .details-card .details-card__bottom .item p {
+    font-family: "Roboto";
     font-style: normal;
     font-weight: 700;
-    font-size: .875rem;/* 14px */
-    line-height: 1.125rem;/* 18px */
-    color: #113A62;
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.125rem; /* 18px */
+    color: #113a62;
     text-align: center;
   }
 
-  .details__middle .details-center .details-card .details-card__bottom .item span{
-    font-family: 'Roboto';
-    display: flex; 
+  .details__middle
+    .details-center
+    .details-card
+    .details-card__bottom
+    .item
+    span {
+    font-family: "Roboto";
+    display: flex;
     justify-content: center;
     font-style: normal;
     font-weight: 500;
-    font-size: .625rem;/* 10px */
-    line-height: .875rem;/* 14px */
-    color: #8C9FB1;
+    font-size: 0.625rem; /* 10px */
+    line-height: 0.875rem; /* 14px */
+    color: #8c9fb1;
   }
 
   .details__middle .details-center .card-buttons {
     width: 100%;
-    height: 2.5rem;/* 40px */
+    height: 2.5rem; /* 40px */
     display: flex;
-    margin-top: 2rem;/* 32px */
-    gap: 1rem;/* 16px */
+    margin-top: 2rem; /* 32px */
+    gap: 1rem; /* 16px */
     justify-content: center;
   }
   .details__middle .details-center .card-buttons .reverse-button {
@@ -1869,23 +2273,23 @@
     font-weight: 700;
     font-size: 1rem;
     line-height: 1.125rem;
-    color: #113A62;
+    color: #113a62;
   }
 
   .details__middle .details-right .item b {
     font-style: normal;
     font-weight: 500;
-    font-size: .8125rem;/* 13px */
-    line-height: .875rem;/* 14px */
-    color: #8C9FB1;
+    font-size: 0.8125rem; /* 13px */
+    line-height: 0.875rem; /* 14px */
+    color: #8c9fb1;
   }
   .details__middle .details-right .item p {
     font-style: normal;
     font-weight: 700;
-    font-size: .875rem;/* 14px */
-    line-height: .875rem;/* 14px */
-    color: #8C9FB1;
-  }/* 
+    font-size: 0.875rem; /* 14px */
+    line-height: 0.875rem; /* 14px */
+    color: #8c9fb1;
+  } /* 
   .details-footer {
     margin: 1rem 0rem;
     width: 100%;
@@ -1918,7 +2322,7 @@
     margin: 1rem 0rem;
     min-width: 60rem;
     /* Nue Fill */
-    
+
     /* Inside auto layout */
     flex: none;
     order: 0;
@@ -1934,10 +2338,10 @@
   }
   .week-table__title * .element {
     /* TEXT */
-    font-family: 'Roboto';
+    font-family: "Roboto";
     font-weight: 500;
     font-size: 1.25rem;
-    color: #113A62;
+    color: #113a62;
   }
   .week-table__subtitle {
     /* width: -webkit-fill-available; */
@@ -1950,7 +2354,7 @@
     margin: 1rem 0rem;
     min-width: 60rem;
     /* Nue Fill */
-    
+
     /* Inside auto layout */
     flex: none;
     order: 0;
@@ -1966,35 +2370,35 @@
   }
   .week-table__subtitle * .element {
     /* TEXT */
-    font-family: 'Roboto';
+    font-family: "Roboto";
     font-weight: 500;
     font-size: 1.25rem;
-    color: #113A62;
+    color: #113a62;
   }
 
   th.title {
     font-weight: 700;
     font-size: 20px;
     line-height: 18px;
-    color: #FD9053;
+    color: #fd9053;
   }
   td.element {
     font-weight: 700;
     font-size: 16px;
     line-height: 18px;
-    color: #113A62;
+    color: #113a62;
     padding: 0rem;
   }
 
   tbody.inside {
-    background: #E9EDF0;
+    background: #e9edf0;
     /* inner-flat */
-    box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0;
+    box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     border-radius: 0px 0px 10px 10px;
   }
 
   .arrow-blue {
-    color: #007AFF;
+    color: #007aff;
   }
 
   .message {
@@ -2003,30 +2407,30 @@
     justify-content: center;
     min-height: inherit;
     padding: 2rem 0;
-    gap: .5rem;
+    gap: 0.5rem;
     margin: 0 4rem 2rem 4rem;
     min-height: 25rem;
   }
 
-  .message .msg{
+  .message .msg {
     font-weight: 700;
-    font-size: 1.25rem;/* 16px */
-    line-height: 1.25rem;/* 20px */
+    font-size: 1.25rem; /* 16px */
+    line-height: 1.25rem; /* 20px */
     text-align: center;
     /* Text */
-    color: #113A62;
+    color: #113a62;
   }
-  .message .description{
+  .message .description {
     font-weight: 500;
-    font-size: 1rem;/* 16px */
-    line-height: 1.25rem;/* 20px */
+    font-size: 1rem; /* 16px */
+    line-height: 1.25rem; /* 20px */
     text-align: center;
     /* Text */
-    color: #8C9FB1;
+    color: #8c9fb1;
   }
 
   @media (max-width: 540px) {
-    .top{
+    .top {
       display: flex;
       flex-direction: column;
       gap: 1rem;
@@ -2041,12 +2445,12 @@
       width: 15rem;
     }
 
-    .middle > .card-group{
+    .middle > .card-group {
       flex-direction: column;
       height: auto;
       width: 100%;
     }
-    
+
     .middle * .card {
       width: -webkit-fill-available;
     }
@@ -2085,7 +2489,7 @@
       display: none;
     }
 
-    .card-group > .card{
+    .card-group > .card {
       margin: 0 1rem;
     }
 
@@ -2096,15 +2500,14 @@
   }
 
   @media (min-width: 768px) and (max-width: 1023px) {
-
-    .top__left{
+    .top__left {
       min-width: 15rem;
     }
-    .middle > .card-group{
+    .middle > .card-group {
       /* flex-direction: column; */
       height: auto;
       width: 100%;
-      gap: .5rem;
+      gap: 0.5rem;
     }
     .middle * .card {
       width: auto;
