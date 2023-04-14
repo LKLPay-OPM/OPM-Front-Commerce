@@ -1,1 +1,25 @@
 /* Variables and mixins declared here will be available in all other SCSS files */
+/* Primary */
+$primary-dark: #001650;
+$primary-light: #0558EE;
+$primary-accent-dark: #38B6FF;
+$primary-accent-light: #B8D6F6;
+/* Secondary */
+$secondary-dark: #00990F;
+$secondary-light: #00BD58;
+$secondary-accent: #00FF85;
+/* colors */
+$grey: #8b9eb0;
+// orange:
+// red:
+// green:
+/* theme light*/
+$background-light: #e9edf0;
+$background-light-secondary: #f3f3f3;
+$background-light-accent-primary: #efeef5;
+$background-light-accent-secondary: #e6e9ef;
+/* theme dark*/
+// $background-dark: #e9edf0;
+// $background-dark-secondary: #f3f3f3;
+// $background-dark-accent-primary: #efeef5;
+// $background-dark-accent-secondary: #e6e9ef;

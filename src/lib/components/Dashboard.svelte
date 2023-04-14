@@ -17,7 +17,9 @@
 
   const dbCollection = "users-client";
   const uid = $loggedInUser.uid;
-  export let transactions;
+  export let data;
+  // let resume = data.resume;
+  let transactions = data.transactions.transactions;
   let loading = false;
   let notFound = false;
 
@@ -30,7 +32,8 @@
   };
 
   $: {
-    console.log(transactions);
+    console.log({data});
+    // console.log(transactions);
     // fetchByDay();
   }
 
@@ -282,7 +285,7 @@
   </div>
 </div>
 
-<style>
+<style lang="scss">
   .container {
     display: flex;
     flex-direction: column;
@@ -298,7 +301,7 @@
     text-align: left;
     margin-left: 2rem;
     /* text-placeholder */
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .content {
@@ -318,7 +321,7 @@
     line-height: 20px;
     text-align: center;
     /* text-placeholder */
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .content .card-group {
@@ -343,7 +346,7 @@
     /* min-width: calc(80% - 20rem); */
     min-height: 25rem; /* 400px */
     /* Nue Fill */
-    background: linear-gradient(91.36deg, #efeef5 0%, #e6e8ef 100%);
+    background: linear-gradient(91.36deg, background-light-accent-primary 0%, #e6e8ef 100%);
     /* out */
     box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
@@ -369,7 +372,7 @@
     line-height: 20px; /* 20px */
     text-align: center;
     /* Text */
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .top__left * a {
@@ -379,7 +382,7 @@
     line-height: 20px; /* 20px */
     text-align: center;
     /* Text */
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .transactions .top .top__right a {
@@ -389,7 +392,7 @@
     text-decoration: none;
     text-align: center;
     /* Text */
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .table-container {
@@ -445,7 +448,7 @@
     line-height: 1.25rem; /* 20px */
     text-align: center;
     /* Text */
-    color: #113a62;
+    color: $primary-dark;
   }
   .message .description {
     font-weight: 500;

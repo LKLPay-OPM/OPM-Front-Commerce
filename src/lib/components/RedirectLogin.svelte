@@ -19,7 +19,7 @@
   </section>
 </div>
 
-<style>
+<style lang="scss">
   :root {
     --white: #fff;
     --light: #e4e9f7;

@@ -1,14 +1,18 @@
 <script>
-  import { isLoggedIn, loggedInUser, onboardingSuccess } from '$lib/stores';
-  import { updateUserInfo, updateUserAvatar, updateUserIne } from '$lib/hooks/updates.js'
-  import { onMount } from 'svelte';
-  import Select from '$lib/components/Select.svelte';
-	import Input from '$lib/components/Input.svelte';
-	import Icons from '$lib/components/Icons.svelte';
-	import SuccessLogo from '$lib/components/Success.svelte';
-	import noUser from '$lib/assets/no_user.png';
-	import Logo from '$lib/assets/Logo.png';
-  import townsData from '$lib/assets/municipios.json';
+  import { isLoggedIn, loggedInUser, onboardingSuccess } from "$lib/stores";
+  import {
+    updateUserInfo,
+    updateUserAvatar,
+    updateUserIne,
+  } from "$lib/hooks/updates.js";
+  import { onMount } from "svelte";
+  import Select from "$lib/components/Select.svelte";
+  import Input from "$lib/components/Input.svelte";
+  import Icons from "$lib/components/Icons.svelte";
+  import SuccessLogo from "$lib/components/Success.svelte";
+  import noUser from "$lib/assets/no_user.png";
+  import Logo from "$lib/assets/Logo.png";
+  import townsData from "$lib/assets/municipios.json";
 
   let all = townsData;
   let states = Object.keys(townsData);
@@ -18,39 +22,40 @@
   let towns;
   let success = false;
   let menu = 1;
-  let ineFront = "", ineBack = "";
+  let ineFront = "",
+    ineBack = "";
 
   let userData = {
-		uid: $loggedInUser.uid,
-		name: "",
-		firstLastName: "",
-		secondLastName: "",
-		curp: "",
+    uid: $loggedInUser.uid,
+    name: "",
+    firstLastName: "",
+    secondLastName: "",
+    curp: "",
     rfc: "",
-		accountType: "",
-		businessName: "",
-		businessLine: "",
-		businessAddress: "",
-		outsideNumber: "",
-		insideNumber: "",
-		zipCode: "",
-		state: "Aguascalientes",
-		town: "",
-		suburb: "",
-		avatar: "",
-		phone: "",
-		firstTimeUser: false,
+    accountType: "",
+    businessName: "",
+    businessLine: "",
+    businessAddress: "",
+    outsideNumber: "",
+    insideNumber: "",
+    zipCode: "",
+    state: "Aguascalientes",
+    town: "",
+    suburb: "",
+    avatar: "",
+    phone: "",
+    firstTimeUser: false,
     bankAccountInfo: {
       clabe: "",
       ineFront: "",
-      ineBack: ""
-    }
-	}
+      ineBack: "",
+    },
+  };
 
   $: {
     townsArray = [];
-    townsData[userData.state].map(function(key, index) {
-      townsArray.push({name: key, value: key})
+    townsData[userData.state].map(function (key, index) {
+      townsArray.push({ name: key, value: key });
       // console.log(townsData[key]);
     });
   }
@@ -58,49 +63,52 @@
   let accountTypeOptions = [
     {
       value: "1",
-      name: "LklPay"
+      name: "LklPay",
     },
     {
       value: "2",
-      name: "LklPay Pro"
+      name: "LklPay Pro",
     },
     {
       value: "3",
-      name: "LklPay Business"
+      name: "LklPay Business",
     },
     {
       value: "4",
-      name: "LklPay E-Commerce"
-    }
-  ]
+      name: "LklPay E-Commerce",
+    },
+  ];
 
-	let businessLineOptions = [
-    {value: "travelAgency", name: "Agencias de Viajes"},
+  let businessLineOptions = [
+    { value: "travelAgency", name: "Agencias de Viajes" },
     // {value: "aggregators", name: "Agregadoras"},
-    {value: "insurers", name:"Aseguradoras"},
-    {value: "charity", name:"Beneficencia"},
-    {value: "collegeAndUniversities", name:"Colegios y Universidades"},
-    {value: "fastFood", name:"Comida Rápida"},
-    {value: "basicEducation", name: "Educación Básica"},
-    {value: "entertainment", name: "Entretenimiento"},
-    {value: "parkings", name: "Estacionamientos"},
-    {value: "pharmacy", name: "Farmacias"},
-    {value: "gasStations", name: "Gasolineras"},
-    {value: "hospitals", name: "Hospitales"},
-    {value: "hotels", name: "Hoteles"},
-    {value: "doctorsAndDentists", name: "Doctores y Dentistas"},
-    {value: "miscellaneous", name: "Miscelánea"},
-    {value: "others", name: "Otros"},
-    {value: "toll", name: "Peaje"},
-    {value: "sparePartsAndHardwareStores", name: "Refacciones y Ferreterías"},
-    {value: "carRental", name: "Renta de Autos"},
-    {value: "restaurants", name: "Restaurantes"},
-    {value: "beautySalons", name: "Salones de Belleza"},
-    {value: "supermarkets", name: "Supermercados"},
-    {value: "telecommunications", name: "Telecomunicaciones"},
-    {value: "airTransport", name: "Transporte Aéreo"},
-    {value: "landPassengerTransport", name: "Transaporte Terrestre de Pasajeros"}
-  ]
+    { value: "insurers", name: "Aseguradoras" },
+    { value: "charity", name: "Beneficencia" },
+    { value: "collegeAndUniversities", name: "Colegios y Universidades" },
+    { value: "fastFood", name: "Comida Rápida" },
+    { value: "basicEducation", name: "Educación Básica" },
+    { value: "entertainment", name: "Entretenimiento" },
+    { value: "parkings", name: "Estacionamientos" },
+    { value: "pharmacy", name: "Farmacias" },
+    { value: "gasStations", name: "Gasolineras" },
+    { value: "hospitals", name: "Hospitales" },
+    { value: "hotels", name: "Hoteles" },
+    { value: "doctorsAndDentists", name: "Doctores y Dentistas" },
+    { value: "miscellaneous", name: "Miscelánea" },
+    { value: "others", name: "Otros" },
+    { value: "toll", name: "Peaje" },
+    { value: "sparePartsAndHardwareStores", name: "Refacciones y Ferreterías" },
+    { value: "carRental", name: "Renta de Autos" },
+    { value: "restaurants", name: "Restaurantes" },
+    { value: "beautySalons", name: "Salones de Belleza" },
+    { value: "supermarkets", name: "Supermercados" },
+    { value: "telecommunications", name: "Telecomunicaciones" },
+    { value: "airTransport", name: "Transporte Aéreo" },
+    {
+      value: "landPassengerTransport",
+      name: "Transaporte Terrestre de Pasajeros",
+    },
+  ];
 
   /* const getTypesNames = (type) => {
     // console.log(type)
@@ -134,10 +142,8 @@
     return names[type].data;
   } */
 
-	
-
-  const handleUpdateProfile = async() => {
-		/* console.log(userData)
+  const handleUpdateProfile = async () => {
+    /* console.log(userData)
     userData = {
       uid: $loggedInUser.uid,
       name: "",
@@ -158,60 +164,62 @@
       phone: "",
       firstTimeUser: false,
     } */
-    if(ineFront != "" && ineBack != ""){
-      const frontINE = document.getElementById('buttonIneFront').files[0]
-      const backINE = document.getElementById('buttonIneBack').files[0]
-      const ineFrontType = document.getElementById('buttonIneFront').files[0].type;
-      const ineBackType = document.getElementById('buttonIneBack').files[0].type;
-  
+    if (ineFront != "" && ineBack != "") {
+      const frontINE = document.getElementById("buttonIneFront").files[0];
+      const backINE = document.getElementById("buttonIneBack").files[0];
+      const ineFrontType =
+        document.getElementById("buttonIneFront").files[0].type;
+      const ineBackType =
+        document.getElementById("buttonIneBack").files[0].type;
+
       userData.bankAccountInfo.ineFront = frontINE;
       userData.bankAccountInfo.ineFrontType = ineFrontType;
       userData.bankAccountInfo.ineBack = backINE;
       userData.bankAccountInfo.ineBackType = ineBackType;
     }
-    if(userData.accountType === "1"){
-      userData.businessLine = "aggregators"
+    if (userData.accountType === "1") {
+      userData.businessLine = "aggregators";
     }
     // console.log(userData)
     await updateUserIne(userData)
-    .then(() => {
-      // $onboardingSuccess = true;
-      userData = {
-        uid: $loggedInUser.uid,
-        name: "",
-        firstLastName: "",
-        secondLastName: "",
-        curp: "",
-        rfc: "",
-        accountType: "",
-        businessName: "",
-        businessLine: "aggregators",
-        businessAddress: "",
-        outsideNumber: "",
-        insideNumber: "",
-        zipCode: "",
-        state: "Aguascalientes",
-        town: "",
-        suburb: "",
-        avatar: "",
-        phone: "",
-        firstTimeUser: false,
-        bankAccountInfo: {
-          clabe: "",
-          ineFront,
-          ineBack
-        }
-      }
-    })
-    .catch((error) => {
-      throw new Error(error)
-    })
-	}
+      .then(() => {
+        // $onboardingSuccess = true;
+        userData = {
+          uid: $loggedInUser.uid,
+          name: "",
+          firstLastName: "",
+          secondLastName: "",
+          curp: "",
+          rfc: "",
+          accountType: "",
+          businessName: "",
+          businessLine: "aggregators",
+          businessAddress: "",
+          outsideNumber: "",
+          insideNumber: "",
+          zipCode: "",
+          state: "Aguascalientes",
+          town: "",
+          suburb: "",
+          avatar: "",
+          phone: "",
+          firstTimeUser: false,
+          bankAccountInfo: {
+            clabe: "",
+            ineFront,
+            ineBack,
+          },
+        };
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
+  };
 
-	const handleUpdateProfilePic = async() => {
+  const handleUpdateProfilePic = async () => {
     const uid = userData.uid;
-    const picture = document.getElementById('file').files[0]
-    const fileType = document.getElementById('file').files[0].type;
+    const picture = document.getElementById("file").files[0];
+    const fileType = document.getElementById("file").files[0].type;
 
     let profileData = {};
     profileData.uid = uid;
@@ -220,16 +228,14 @@
     // await updateUserAvatar(profileData)
     // console.log(profileData)
     profileData = {};
-  }
+  };
 
-  
   onMount(() => {
-
-    states.map(function(key, index) {
-      statesArray.push({name: key, value: key})
+    states.map(function (key, index) {
+      statesArray.push({ name: key, value: key });
       // console.log(townsData[key]);
     });
-	});
+  });
 </script>
 
 <div class="onboarding-container">
@@ -239,22 +245,22 @@
         <div class="success-card">
           <div class="header">
             <div class="logo">
-              <img src={Logo} alt="Logo LklPay">
+              <img src={Logo} alt="Logo LklPay" />
             </div>
             <div class="title">
               <p>Estamos Listos</p>
             </div>
           </div>
           <div class="svg">
-            <SuccessLogo/>
+            <SuccessLogo />
           </div>
           <div class="btn-layout">
             <div class="btn">
-              <Input 
-                label="Ir a mi Cuenta" 
-                id="goToDashboardBtn" 
-                type="button" 
-                className="btn-success" 
+              <Input
+                label="Ir a mi Cuenta"
+                id="goToDashboardBtn"
+                type="button"
+                className="btn-success"
                 icon=""
                 on:click={() => ($onboardingSuccess = false)}
                 on:click={() => (menu = 1)}
@@ -263,36 +269,35 @@
           </div>
         </div>
       </div>
-      {:else}
+    {:else}
       <div class="card-container">
-        <div 
-          class={
-            // userData.accountType === "1" && menu === 1 ||
-            menu === 3
-            ? "card" : "card-large"
-          }
+        <div
+          class={// userData.accountType === "1" && menu === 1 ||
+          menu === 3 ? "card" : "card-large"}
         >
           <div class="header">
             <div class="logo">
-              <img src={Logo} alt="Logo LklPay">
+              <img src={Logo} alt="Logo LklPay" />
             </div>
             <div class="title">
               <p>Bienvenido</p>
             </div>
             <div class="subtitle">
               <p>
-                Para verificar que realmente eres tú quien utilizará tu cuenta y brindarte la mejor seguridad,
-                necesitamos los siguientes datos personales, siempre protegidos bajo nuestra <a href="/home#privacy">Política de Privacidad</a>
+                Para verificar que realmente eres tú quien utilizará tu cuenta y
+                brindarte la mejor seguridad, necesitamos los siguientes datos
+                personales, siempre protegidos bajo nuestra <a
+                  href="/home#privacy">Política de Privacidad</a
+                >
               </p>
             </div>
           </div>
           {#if menu == 1}
-            <div 
-              class={
-                userData.accountType === "1" ||
-                userData.accountType === "2"
-                ? "form" : "form"
-              }
+            <div
+              class={userData.accountType === "1" ||
+              userData.accountType === "2"
+                ? "form"
+                : "form"}
             >
               <div class="title">
                 <p>Iniciemos con lo básico</p>
@@ -300,116 +305,220 @@
               <div class="inputs">
                 <div class="select">
                   <div class="element">
-                    <Select bind:value={userData.accountType} label="Tipo de cuenta" defaultText={"Elige una opción"} bind:optionsList={accountTypeOptions}/>
+                    <Select
+                      bind:value={userData.accountType}
+                      label="Tipo de cuenta"
+                      defaultText={"Elige una opción"}
+                      bind:optionsList={accountTypeOptions}
+                    />
                   </div>
                 </div>
-                <Input placeholder="Ejemplo de Nombre" label="Nombre (s)" id="businessName" bind:value={userData.name} className="txt-field-slim normal" type="text"/>
+                <Input
+                  placeholder="Ejemplo de Nombre"
+                  label="Nombre (s)"
+                  id="businessName"
+                  bind:value={userData.name}
+                  className="txt-field-slim normal"
+                  type="text"
+                />
                 <div class="row">
                   <div class="element">
-                    <Input placeholder="Apellido" label="Primer Apellido" id="firstLastName" bind:value={userData.firstLastName} className="txt-field-slim normal" type="text"/>
+                    <Input
+                      placeholder="Apellido"
+                      label="Primer Apellido"
+                      id="firstLastName"
+                      bind:value={userData.firstLastName}
+                      className="txt-field-slim normal"
+                      type="text"
+                    />
                   </div>
                   <div class="element">
-                    <Input placeholder="Apellido" label="Segundo Apellido" id="secondLastName" bind:value={userData.secondLastName} className="txt-field-slim normal" type="text"/>
+                    <Input
+                      placeholder="Apellido"
+                      label="Segundo Apellido"
+                      id="secondLastName"
+                      bind:value={userData.secondLastName}
+                      className="txt-field-slim normal"
+                      type="text"
+                    />
                   </div>
                 </div>
-                <div class="text">
-                </div>
+                <div class="text" />
                 {#if userData.accountType !== "1"}
                   <div class="select">
                     <div class="element">
-                      <Select bind:value={userData.businessLine} label="Giro" defaultText={"Elige una opción"} bind:optionsList={businessLineOptions}/>                
+                      <Select
+                        bind:value={userData.businessLine}
+                        label="Giro"
+                        defaultText={"Elige una opción"}
+                        bind:optionsList={businessLineOptions}
+                      />
                     </div>
                   </div>
                 {/if}
-                <Input placeholder="Nombre de tu Empresa" label="Nombre de tu Empresa" id="businessName" bind:value={userData.businessName} className="txt-field-slim normal" type="text"/>
+                <Input
+                  placeholder="Nombre de tu Empresa"
+                  label="Nombre de tu Empresa"
+                  id="businessName"
+                  bind:value={userData.businessName}
+                  className="txt-field-slim normal"
+                  type="text"
+                />
                 <div class="footer tooltip">
                   ¿Por qué te pedimos estos datos?
-                  <span class="tooltiptext">¿Por qué te pedimos estos datos?</span>
+                  <span class="tooltiptext"
+                    >¿Por qué te pedimos estos datos?</span
+                  >
                 </div>
               </div>
               <div class="footer-buttons">
                 <Input
                   on:click={() => (menu = 2)}
-                  label="Siguiente" 
-                  id="buttonMenuBasicInfo" 
-                  type="button" 
+                  label="Siguiente"
+                  id="buttonMenuBasicInfo"
+                  type="button"
                   className={` 
                     ${
                       userData.businessName != "" &&
                       userData.name != "" &&
                       userData.firstLastName != ""
-                      ? "btn" : "btn-disabled"}
-                  `} 
+                        ? "btn"
+                        : "btn-disabled"
+                    }
+                  `}
                   icon=""
                 />
               </div>
             </div>
           {:else if menu == 2}
-            <div 
-              class={"form-address"}
-            >
+            <div class={"form-address"}>
               <div class="title">
                 <p>Cuéntanos dónde te ubicas</p>
               </div>
               <div class="inputs">
-                <Input placeholder="Circunvalación Jorge Álvarez del Castillo" label="Calle" id="businessAddress" bind:value={userData.businessAddress} className="txt-field normal" type="text"/>
+                <Input
+                  placeholder="Circunvalación Jorge Álvarez del Castillo"
+                  label="Calle"
+                  id="businessAddress"
+                  bind:value={userData.businessAddress}
+                  className="txt-field normal"
+                  type="text"
+                />
                 <div class="row">
-                  <Input placeholder="1106" label="N° Exterior" id="outsideNumber" bind:value={userData.outsideNumber} className="txt-field normal" type="text"/>
-                   <!--<Input placeholder="NA" label="N° Interior" id="insideNumber" bind:value={userData.insideNumber} className="txt-field normal" type="text"/> --> 
-                  <Input placeholder="44620" label="Código Postal" id="zipCode" bind:value={userData.zipCode} className="txt-field normal" type="text"/>
+                  <Input
+                    placeholder="1106"
+                    label="N° Exterior"
+                    id="outsideNumber"
+                    bind:value={userData.outsideNumber}
+                    className="txt-field normal"
+                    type="text"
+                  />
+                  <!--<Input placeholder="NA" label="N° Interior" id="insideNumber" bind:value={userData.insideNumber} className="txt-field normal" type="text"/> -->
+                  <Input
+                    placeholder="44620"
+                    label="Código Postal"
+                    id="zipCode"
+                    bind:value={userData.zipCode}
+                    className="txt-field normal"
+                    type="text"
+                  />
                 </div>
                 <div class="row">
-                  <Select bind:value={userData.state} label="Estado" defaultText={"Elige una opción"} bind:optionsList={statesArray}/>
-                  <Select bind:value={userData.town} label="Municipio" defaultText={"Elige una opción"} bind:optionsList={townsArray}/>
+                  <Select
+                    bind:value={userData.state}
+                    label="Estado"
+                    defaultText={"Elige una opción"}
+                    bind:optionsList={statesArray}
+                  />
+                  <Select
+                    bind:value={userData.town}
+                    label="Municipio"
+                    defaultText={"Elige una opción"}
+                    bind:optionsList={townsArray}
+                  />
                 </div>
-                <Input placeholder="Chapultepec Country" label="Colonia" id="businessSuburb" bind:value={userData.suburb} className="txt-field normal" type="text"/>
+                <Input
+                  placeholder="Chapultepec Country"
+                  label="Colonia"
+                  id="businessSuburb"
+                  bind:value={userData.suburb}
+                  className="txt-field normal"
+                  type="text"
+                />
                 <div class="footer tooltip">
                   ¿Por qué te pedimos estos datos?
-                  <span class="tooltiptext">¿Por qué te pedimos estos datos?</span>
+                  <span class="tooltiptext"
+                    >¿Por qué te pedimos estos datos?</span
+                  >
                 </div>
               </div>
               <div class="footer-buttons">
                 <Input
-                on:click={() => (menu = 3)}
-                  label="Siguiente" 
-                  id="buttonMenuAddress" 
-                  type="button" 
+                  on:click={() => (menu = 3)}
+                  label="Siguiente"
+                  id="buttonMenuAddress"
+                  type="button"
                   className={` 
                     ${
                       userData.businessAddress != "" &&
                       userData.outsideNumber != "" &&
                       userData.zipCode != "" &&
                       userData.suburb != ""
-                      ? "btn" : "btn-disabled"}
-                  `} 
+                        ? "btn"
+                        : "btn-disabled"
+                    }
+                  `}
                   icon=""
                 />
               </div>
             </div>
           {:else if menu == 3}
-            <div 
-              class={"form-rfc"}
-            >
+            <div class={"form-rfc"}>
               <div class="title">
                 <p>
-                  Tenemos casi todos tus datos completos,<br>
+                  Tenemos casi todos tus datos completos,<br />
                   solo necesitamos unos pocos datos más
                 </p>
               </div>
               <div class="inputs">
                 <div class="row">
                   {#if userData.accountType != "1"}
-                    <Input placeholder="ASDF1234567T1" label="RFC" id="rfc" bind:value={userData.rfc} className="txt-field normal" type="text"/>
+                    <Input
+                      placeholder="ASDF1234567T1"
+                      label="RFC"
+                      id="rfc"
+                      bind:value={userData.rfc}
+                      className="txt-field normal"
+                      type="text"
+                    />
                   {/if}
-                  <Input placeholder="014320605732769900" label="CLABE" id="businessCLABE" bind:value={userData.bankAccountInfo.clabe} className="txt-field normal" type="text"/>
+                  <Input
+                    placeholder="014320605732769900"
+                    label="CLABE"
+                    id="businessCLABE"
+                    bind:value={userData.bankAccountInfo.clabe}
+                    className="txt-field normal"
+                    type="text"
+                  />
                 </div>
-                <div class="row-title">
-                  Credencial del INE
-                </div>
+                <div class="row-title">Credencial del INE</div>
                 <div class="row buttons-ine">
-                  <Input label="Frente" id="buttonIneFront" bind:value={ineFront} className="{ineFront != "" ? "btn-success" : "btn-plain"}" type="file" accept="image/*,.pdf"/>
-                  <Input label="Vuelta" id="buttonIneBack" bind:value={ineBack} className="{ineBack != "" ? "btn-success" : "btn-plain"}" type="file" accept="image/*,.pdf"/>
-                  
+                  <Input
+                    label="Frente"
+                    id="buttonIneFront"
+                    bind:value={ineFront}
+                    className={ineFront != "" ? "btn-success" : "btn-plain"}
+                    type="file"
+                    accept="image/*,.pdf"
+                  />
+                  <Input
+                    label="Vuelta"
+                    id="buttonIneBack"
+                    bind:value={ineBack}
+                    className={ineBack != "" ? "btn-success" : "btn-plain"}
+                    type="file"
+                    accept="image/*,.pdf"
+                  />
                 </div>
                 <div class="form-divider">
                   <!-- <Select bind:value={userData.state} label="Estado" defaultText={"Elige una opción"} bind:optionsList={statesArray}/> -->
@@ -417,31 +526,35 @@
                 </div>
                 <div class="footer tooltip">
                   ¿Por qué te pedimos estos datos?
-                  <span class="tooltiptext">¿Por qué te pedimos estos datos?</span>
+                  <span class="tooltiptext"
+                    >¿Por qué te pedimos estos datos?</span
+                  >
                 </div>
               </div>
               <div class="footer-buttons">
                 <Input
                   on:click={handleUpdateProfile}
-                  label="Saltar" 
-                  id="buttonSkipMenuRfc" 
-                  type="button" 
-                  className={`btn-plain`} 
+                  label="Saltar"
+                  id="buttonSkipMenuRfc"
+                  type="button"
+                  className={`btn-plain`}
                   icon=""
                 />
                 <Input
                   on:click={handleUpdateProfile}
-                  label="Siguiente" 
-                  id="buttonMenuRfc" 
-                  type="button" 
+                  label="Siguiente"
+                  id="buttonMenuRfc"
+                  type="button"
                   className={` 
                     ${
                       userData.rfc != "" &&
                       userData.bankAccountInfo.clabe != "" &&
                       ineFront != "" &&
                       ineBack != ""
-                      ? "btn-plain" : "btn-plain disabled"}
-                  `} 
+                        ? "btn-plain"
+                        : "btn-plain disabled"
+                    }
+                  `}
                   icon=""
                 />
               </div>
@@ -489,13 +602,12 @@
   </div>
 </div>
 
-<style>
-
+<style lang="scss">
   .onboarding-container {
     width: 100%;
     height: 100vh;
   }
-  
+
   .onboarding-content {
     width: 100%;
     height: 100%;
@@ -520,10 +632,11 @@
     width: 30rem;
     height: 30rem;
     /* Fill Container */
-    background: #F3F3F3;
+    background: $background-light-secondary;
     /* container effect */
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
-    border-radius: .625rem;
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
+    border-radius: 0.625rem;
   }
 
   .success-card .header {
@@ -544,7 +657,7 @@
 
   .success-card .btn-layout {
     width: 100%;
-    height: 2.5rem;/* 40px */
+    height: 2.5rem; /* 40px */
     display: flex;
     justify-content: center;
   }
@@ -552,7 +665,7 @@
     width: 15rem;
   }
 
-  .card-container{
+  .card-container {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -568,10 +681,11 @@
     width: 30rem;
     height: 46.5rem;
     /* Fill Container */
-    background: #F3F3F3;
+    background: $background-light-secondary;
     /* container effect */
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
-    border-radius: .625rem;
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
+    border-radius: 0.625rem;
   }
 
   .card-large {
@@ -584,10 +698,11 @@
     width: 30rem;
     height: 52rem; /* 832px */
     /* Fill Container */
-    background: #F3F3F3;
+    background: $background-light-secondary;
     /* container effect */
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
-    border-radius: .625rem;
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
+    border-radius: 0.625rem;
   }
 
   .header {
@@ -604,7 +719,7 @@
     font-weight: 700;
     font-size: 2rem;
     line-height: 1.25rem;
-    color: #113A62;
+    color: $primary-dark;
   }
 
   .header .subtitle {
@@ -614,11 +729,11 @@
     display: flex;
     align-items: center;
     text-align: center;
-    color: #8B9EB0;
+    color: $grey;
   }
 
   .header .subtitle p a {
-    color: #5585FF;
+    color: #5585ff;
     text-decoration: none;
   }
 
@@ -643,7 +758,7 @@
     line-height: 1.25rem;
     display: flex;
     align-items: center;
-    color: #FD9053;
+    color: #fd9053;
   }
 
   .form .inputs {
@@ -658,10 +773,10 @@
     gap: 1rem;
     width: inherit;
   }
-  .form .inputs .row .element{
+  .form .inputs .row .element {
     width: inherit;
   }
-  
+
   .form .inputs .select {
     display: flex;
     flex-direction: column;
@@ -669,7 +784,7 @@
     align-items: center;
   }
   .form .inputs .select .element {
-    width: 15rem;/* 240px */
+    width: 15rem; /* 240px */
   }
   .form .inputs .footer {
     width: 100%;
@@ -699,7 +814,7 @@
     line-height: 1.25rem;
     display: flex;
     align-items: center;
-    color: #FD9053;
+    color: #fd9053;
   }
 
   .form-address .inputs {
@@ -739,7 +854,7 @@
     line-height: 1.25rem;
     display: flex;
     align-items: center;
-    color: #FD9053;
+    color: #fd9053;
     margin-top: 2rem;
   }
 
@@ -749,11 +864,11 @@
     justify-content: center;
   }
 
-  .form-rfc .inputs .row-title{
-    font-size: .8125rem;
+  .form-rfc .inputs .row-title {
+    font-size: 0.8125rem;
     font-weight: 700;
     line-height: 1.25rem;
-    color: #8B9EB0;
+    color: $grey;
     text-align: center;
     margin: 1rem 0rem;
   }
@@ -762,7 +877,7 @@
     flex-direction: row;
     gap: 1rem;
   }
-  .form-rfc .inputs .buttons-ine{
+  .form-rfc .inputs .buttons-ine {
     width: 13.75rem;
     height: 2.5rem;
     display: flex;
@@ -770,14 +885,19 @@
   }
 
   .form-rfc .inputs .form-divider {
-    height: .5rem;
+    height: 0.5rem;
     margin: 1rem 0rem;
-    background: linear-gradient(138.32deg, rgba(0, 0, 0, 0.5) 8.26%, rgba(255, 255, 255, 0.5) 91.02%), #EAECF0;
+    background: linear-gradient(
+        138.32deg,
+        rgba(0, 0, 0, 0.5) 8.26%,
+        rgba(255, 255, 255, 0.5) 91.02%
+      ),
+      #eaecf0;
     background-blend-mode: soft-light, normal;
     /* n-stroke */
     border: 1px solid rgba(255, 255, 255, 0.4);
     /* n-icon-1-1-2-in */
-    box-shadow: inset -1px -1px 2px #FAFBFF, inset 1px 1px 2px #A6ABBD;
+    box-shadow: inset -1px -1px 2px #fafbff, inset 1px 1px 2px #a6abbd;
     border-radius: 5px;
     transform: rotate(-180deg);
   }
@@ -816,7 +936,7 @@
     line-height: 1.25rem;
     display: flex;
     align-items: center;
-    color: #FD9053;
+    color: #fd9053;
   }
 
   .form-large .inputs {
@@ -835,48 +955,48 @@
     height: 2.5rem;
   }
 
-.tooltip {
-  position: relative;
-  display: inline-block;
-  font-weight: 500;
-  font-size: 0.8125rem;
-  line-height: 1.25rem;
-  display: flex;
-  align-items: center;
-  color: #5585FF;
-  text-decoration: none;
-}
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    font-weight: 500;
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+    display: flex;
+    align-items: center;
+    color: #5585ff;
+    text-decoration: none;
+  }
 
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: fit-content;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 5px;
-  position: absolute;
-  z-index: 1;
-  bottom: 125%;
-  left: 50%;
-  margin-left: -60px;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: fit-content;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
 
-.tooltip .tooltiptext::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
-}
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
 
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-  opacity: 1;
-}
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
 </style>

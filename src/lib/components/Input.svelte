@@ -50,19 +50,19 @@
   />
 </div>
 
-<style>
+<style lang="scss">
   .txt-field label {
     margin-top: 1rem;
     font-size: 0.8125rem;
     font-weight: 700;
     line-height: 1.25rem;
-    color: #8b9eb0;
+    color: $grey;
   }
   .txt-field input {
     font-family: "Roboto";
     width: -webkit-fill-available;
     height: 3.125rem;
-    background: linear-gradient(91.36deg, #efeef5 0%, #e6e8ef 100%);
+    background: linear-gradient(91.36deg, background-light-accent-primary 0%, #e6e8ef 100%);
     box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     /* border: none; */
     border-radius: 4px;
@@ -74,7 +74,7 @@
     display: flex;
     align-items: center;
     justify-content: left;
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .txt-field input::placeholder {
@@ -88,7 +88,7 @@
     font-size: 0.8125rem;
     font-weight: 700;
     line-height: 1.25rem;
-    color: #8b9eb0;
+    color: $grey;
   }
   .disabled-txt-field input {
     background: transparent;
@@ -105,7 +105,7 @@
     display: flex;
     align-items: center;
     justify-content: left;
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .disabled-txt-field input::placeholder {
@@ -119,13 +119,13 @@
     font-size: 0.8125rem;
     font-weight: 700;
     line-height: 1.25rem;
-    color: #8b9eb0;
+    color: $grey;
   }
   .txt-field-slim input {
     width: -webkit-fill-available;
     min-height: 2.125rem; /* 34px */
     height: 2.125rem; /* 34px */
-    background: linear-gradient(91.36deg, #efeef5 0%, #e6e8ef 100%);
+    background: linear-gradient(91.36deg, background-light-accent-primary 0%, #e6e8ef 100%);
     box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     /* border: none; */
     border-radius: 4px;
@@ -137,7 +137,7 @@
     display: flex;
     align-items: center;
     justify-content: left;
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .txt-field-slim input::placeholder {
@@ -153,7 +153,7 @@
 
   .normal input {
     outline: none;
-    background: linear-gradient(#efeef5, #e6e8ef) padding-box,
+    background: linear-gradient(background-light-accent-primary, #e6e8ef) padding-box,
       linear-gradient(187deg, #ffffff, #d6e3f3) border-box;
     border-radius: 4px;
     border: 2px solid transparent;
@@ -207,7 +207,7 @@
     height: 100%;
     width: 100%;
     /* max-width: 20rem; */
-    background: linear-gradient(91.36deg, #efeef5 0%, #e6e8ef 100%);
+    background: linear-gradient(91.36deg, background-light-accent-primary 0%, #e6e8ef 100%);
     box-shadow: -5px -5px 8px #f2f4f8, 5px 5px 7px rgba(174, 174, 192, 0.5);
     border-radius: 5px;
   }
@@ -275,7 +275,7 @@
     border: none;
     display: flex;
     height: 100%;
-    background: #e6e9ef;
+    background: $background-light-accent-secondary;
     border: 1px solid #00c48c;
     box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
     /* background: linear-gradient(270deg, #00C48C 0%, #50FFD5 100%); */
@@ -344,7 +344,7 @@
     border: none;
     display: flex;
     height: 3.375rem;
-    background: linear-gradient(91.36deg, #e6e8ef 0%, #efeef5 100%);
+    background: linear-gradient(91.36deg, #e6e8ef 0%, background-light-accent-primary 100%);
     box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
       4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 0.625rem;
@@ -465,14 +465,14 @@
     font-size: 0.8125rem;
     font-weight: 700;
     line-height: 1.25rem;
-    color: #8b9eb0;
+    color: $grey;
     min-width: 4.25rem; /* 10px */
   }
   .txt-field-horizontal.blue label {
     font-weight: 500;
     font-size: 0.8125rem; /* 13px */
     line-height: 1.25rem; /* 20px */
-    color: #113a62;
+    color: $primary-dark;
   }
   div.txt-field-horizontal {
     width: -webkit-fill-available;
@@ -487,7 +487,7 @@
     max-width: 5rem; /* 80px */
     min-height: 2.125rem; /* 34px */
     height: 2.125rem; /* 34px */
-    background: linear-gradient(91.36deg, #efeef5 0%, #e6e8ef 100%);
+    background: linear-gradient(91.36deg, background-light-accent-primary 0%, #e6e8ef 100%);
     box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     /* border: none; */
     border-radius: 4px;
@@ -499,7 +499,7 @@
     display: flex;
     align-items: center;
     justify-content: left;
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .txt-field-horizontal input::placeholder {
@@ -529,7 +529,7 @@
     color: #00c48c;
   }
   .fill-blue label {
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .fill-orange label {

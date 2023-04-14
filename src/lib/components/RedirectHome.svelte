@@ -34,7 +34,7 @@
 	<!-- <span class="">Redirigiendo...</span> -->
 </div>
 
-<style>
+<style lang="scss">
 :root {
 --white: #fff;
 --light: #E4E9F7;

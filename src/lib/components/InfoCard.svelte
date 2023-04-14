@@ -5,13 +5,14 @@
   export let className = "";
 
   const localeParam = {
-    language: 'es-MX',
+    language: "es-MX",
     currency: {
-      style: 'currency',
-      currency: 'MXN'
-    }
-  }
+      style: "currency",
+      currency: "MXN",
+    },
+  };
 </script>
+
 <div on:click on:keypress class="card {className}">
   <div>
     <p>{title}</p>
@@ -21,18 +22,18 @@
       {#if stringData != ""}
         {stringData}
       {:else}
-       {numData}
+        {numData}
       {/if}
     </span>
   </div>
 </div>
 
-<style>
+<style lang="scss">
   .clickable {
     cursor: pointer;
   }
 
-  .card{
+  .card {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -42,7 +43,7 @@
     width: 100%;
     height: 100%;
     /* Nue Fill */
-    background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+    background: linear-gradient(91.36deg, background-light-accent-primary 0%, #e6e8ef 100%);
     /* out */
     box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
@@ -59,17 +60,17 @@
     line-height: 20px;
     text-align: center;
     /* text-placeholder */
-    color: #8C9FB1;
+    color: #8c9fb1;
   }
 
   .card span {
-    font-family: 'Roboto';
+    font-family: "Roboto";
     font-style: normal;
     font-weight: 700;
     font-size: 24px;
     line-height: 20px;
     text-align: center;
     /* Text */
-    color: #113A62;
+    color: $primary-dark;
   }
 </style>
