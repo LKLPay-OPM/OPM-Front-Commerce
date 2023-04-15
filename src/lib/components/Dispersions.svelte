@@ -1211,6 +1211,7 @@
                   <th>Saldo</th>
                   <th>Tipo</th>
                   <th class="responsive hide">Comisión</th>
+                  <th class="responsive hide">IVA</th>
                   <th class="responsive hide">Interés</th>
                   <th class="responsive hide">Depósito</th>
                   <th class="responsive hide">Saldo Final</th>
@@ -1251,6 +1252,7 @@
                         localeParam.currency
                       )}</td
                     >
+                    <td class="responsive hide" > - </td>
                     <td class="responsive hide" />
                     <td class="responsive hide"
                       >{parseFloat(dispersion.dispersion).toLocaleString(
@@ -1551,7 +1553,7 @@
     min-width: 166px;
     height: 88px;
     /* Nue Fill */
-    background: linear-gradient(91.36deg, background-light-accent-primary 0%, #e6e8ef 100%);
+    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     /* out */
     box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
@@ -1570,7 +1572,7 @@
     width: 8.75rem; /* 140px */
     height: 4.375rem; /* 70px */
     /* Nue Fill */
-    /* background: linear-gradient(91.36deg, background-light-accent-primary 0%, #E6E8EF 100%); */
+    /* background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #E6E8EF 100%); */
     /* out */
     /* box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41); */
     border-radius: 10px;

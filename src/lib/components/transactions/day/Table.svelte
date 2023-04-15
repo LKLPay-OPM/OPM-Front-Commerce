@@ -1,8 +1,6 @@
 <script>
   /* components */
   import Pagination from "$lib/components/Pagination.svelte";
-  /* css */
-  import "$lib/styles/transactions.scss";
   /* svelte */
   import { goto } from "$app/navigation";
   /* exports */
@@ -141,3 +139,6 @@
     </div>
   </div>
 </div>
+<style lang="scss">
+  @import 'src/lib/styles/transactions.scss';
+</style>

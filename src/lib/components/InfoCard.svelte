@@ -43,7 +43,7 @@
     width: 100%;
     height: 100%;
     /* Nue Fill */
-    background: linear-gradient(91.36deg, background-light-accent-primary 0%, #e6e8ef 100%);
+    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     /* out */
     box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;

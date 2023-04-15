@@ -62,7 +62,7 @@
     font-family: "Roboto";
     width: -webkit-fill-available;
     height: 3.125rem;
-    background: linear-gradient(91.36deg, background-light-accent-primary 0%, #e6e8ef 100%);
+    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     /* border: none; */
     border-radius: 4px;
@@ -125,7 +125,7 @@
     width: -webkit-fill-available;
     min-height: 2.125rem; /* 34px */
     height: 2.125rem; /* 34px */
-    background: linear-gradient(91.36deg, background-light-accent-primary 0%, #e6e8ef 100%);
+    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     /* border: none; */
     border-radius: 4px;
@@ -207,7 +207,7 @@
     height: 100%;
     width: 100%;
     /* max-width: 20rem; */
-    background: linear-gradient(91.36deg, background-light-accent-primary 0%, #e6e8ef 100%);
+    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     box-shadow: -5px -5px 8px #f2f4f8, 5px 5px 7px rgba(174, 174, 192, 0.5);
     border-radius: 5px;
   }
@@ -344,7 +344,7 @@
     border: none;
     display: flex;
     height: 3.375rem;
-    background: linear-gradient(91.36deg, #e6e8ef 0%, background-light-accent-primary 100%);
+    background: linear-gradient(91.36deg, #e6e8ef 0%, $background-light-accent-primary 100%);
     box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
       4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 0.625rem;
@@ -487,7 +487,7 @@
     max-width: 5rem; /* 80px */
     min-height: 2.125rem; /* 34px */
     height: 2.125rem; /* 34px */
-    background: linear-gradient(91.36deg, background-light-accent-primary 0%, #e6e8ef 100%);
+    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     /* border: none; */
     border-radius: 4px;

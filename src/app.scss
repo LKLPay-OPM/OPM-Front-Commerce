@@ -27,7 +27,7 @@ body {
 }
 
 .main-container {
-  background: linear-gradient(91.36deg, background-light-accent-primary 0%, #e6e8ef 100%);
+  background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
   /* out */
   box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
   border-radius: 10px;
@@ -202,5 +202,9 @@ body {
 
 .arrow-blue {
   color: $primary-light;
+  cursor: pointer;
+}
+
+.clickable {
   cursor: pointer;
 }

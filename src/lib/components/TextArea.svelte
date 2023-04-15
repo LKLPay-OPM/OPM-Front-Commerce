@@ -65,7 +65,7 @@
     height: 7rem; /* 112px */
     border: none;
     outline: none;
-    background: linear-gradient(91.36deg, background-light-accent-primary 0%, #e6e8ef 100%);
+    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     /* inner-flat */
     box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     border-radius: 4px;
