@@ -91,7 +91,7 @@
   </div>
 {/if}
 
-<style>
+<style lang="scss">
   .container {
     width: 100vw;
     height: 100vh;
@@ -104,7 +104,7 @@
     position: absolute;
     width: 27rem;
     height: 37rem;
-    background: #f3f3f3;
+    background: $background-light-secondary;
     box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
       4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
@@ -134,7 +134,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #8b9eb0;
+    color: $grey;
   }
 
   .subtitle {

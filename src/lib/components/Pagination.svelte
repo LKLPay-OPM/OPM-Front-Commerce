@@ -52,7 +52,7 @@
   </div>
 </div>
 
-<style>
+<style lang="scss">
   /* Paginación */
   .btns-pagination {
     display: flex;
@@ -66,7 +66,7 @@
     line-height: 1.25rem; /* 20px */
     text-align: center;
     /* Text */
-    color: #113a62;
+    color: $primary-dark;
     align-self: center;
   }
 

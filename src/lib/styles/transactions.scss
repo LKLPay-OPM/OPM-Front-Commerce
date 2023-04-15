@@ -34,7 +34,7 @@
     font-weight: 700;
     font-size: 16px;
     line-height: 18px;
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .transactions {
@@ -85,7 +85,7 @@
     line-height: 1.25rem; /* 20px */
     text-align: center;
     /* Text */
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .button-group {
@@ -100,7 +100,7 @@
     width: 134px;
     height: 38px;
     /* Nue Fill */
-    background: linear-gradient(91.36deg, #efeef5 0%, #e6e8ef 100%);
+    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     /* container effect */
     box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
       4px 4px 20px rgba(111, 140, 176, 0.41);
@@ -156,7 +156,7 @@
         rgba(0, 0, 0, 0.2) 0%,
         rgba(255, 255, 255, 0.2) 105.18%
       ),
-      #007aff;
+      $primary-light;
     background-blend-mode: soft-light, normal;
     /* inner blue */
     box-shadow: inset -5px -5px 8px rgba(56, 151, 255, 0.75),
@@ -197,7 +197,6 @@
     /* Inside auto layout */
 
     flex: none;
-    order: 2;
     flex-grow: 0;
   }
 
@@ -212,7 +211,7 @@
     min-width: 180px;
     height: 88px;
     /* Nue Fill */
-    background: linear-gradient(91.36deg, #efeef5 0%, #e6e8ef 100%);
+    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     /* out */
     box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
@@ -240,7 +239,7 @@
     line-height: 20px;
     text-align: center;
     /* Text */
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .transaction-form {
@@ -284,7 +283,7 @@
     text-align: center;
     font-weight: 700;
     line-height: 1.25rem; /* 20px */
-    color: #113a62;
+    color: $primary-dark;
   }
   .clarifications .title {
     font-size: 1rem; /* 16px */
@@ -305,7 +304,7 @@
     font-size: 1.25rem; /* 20px */
     line-height: 1.25rem; /* 20px */
     /* Text */
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .date-range-input {
@@ -339,7 +338,7 @@
     line-height: 1.25rem; /* 20px */
     text-align: center;
     /* Text */
-    color: #113a62;
+    color: $primary-dark;
   }
   .transaction-tables {
     display: flex;
@@ -372,7 +371,7 @@
     line-height: 18px;
     text-align: center;
     /* text-placeholder */
-    color: #113a62;
+    color: $primary-dark;
     height: 2.375rem;
   }
 
@@ -429,7 +428,7 @@
     font-weight: 700;
     font-size: 1.25rem;
     line-height: 1.25rem;
-    color: #113a62;
+    color: $primary-dark;
   }
   .details__top p {
     font-style: normal;
@@ -451,7 +450,7 @@
     font-weight: 700;
     font-size: 1rem;
     line-height: 1.125rem;
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .details__middle .details-left .item b {
@@ -479,7 +478,7 @@
     min-width: 26.75rem; /* 428px */
     min-height: 13.125rem; /* 210px */
     /* Fill Container */
-    background: #f3f3f3;
+    background: $background-light-secondary;
     /* container effect */
     box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
       4px 4px 20px rgba(111, 140, 176, 0.41);
@@ -491,7 +490,7 @@
     font-weight: 700;
     font-size: 1.25rem; /* 20px */
     line-height: 1.125rem; /* 18px */
-    color: #113a62;
+    color: $primary-dark;
   }
   .details__middle .details-center .details-card .details-card__middle {
     /* display: flex;
@@ -531,7 +530,7 @@
     font-weight: 500;
     font-size: 0.8125rem; /* 13px */
     line-height: 1.125rem; /* 18px */
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .details__middle .details-center .details-card .details-card__middle .item p {
@@ -540,7 +539,7 @@
     font-weight: 700;
     font-size: 1.25rem; /* 20px */
     line-height: 1.125rem; /* 18px */
-    color: #113a62;
+    color: $primary-dark;
   }
   .details__middle
     .details-center
@@ -554,7 +553,7 @@
     font-weight: 700;
     font-size: 1rem; /* 20px */
     line-height: 1.125rem; /* 18px */
-    color: #113a62;
+    color: $primary-dark;
   }
   .details__middle .details-center .details-card .details-card__bottom {
     /* display: flex;
@@ -603,7 +602,7 @@
     font-weight: 700;
     font-size: 0.875rem; /* 14px */
     line-height: 1.125rem; /* 18px */
-    color: #113a62;
+    color: $primary-dark;
     text-align: center;
   }
 
@@ -651,7 +650,7 @@
     font-weight: 700;
     font-size: 1rem;
     line-height: 1.125rem;
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .details__middle .details-right .item b {
@@ -719,7 +718,7 @@
     font-family: "Roboto";
     font-weight: 500;
     font-size: 1.25rem;
-    color: #113a62;
+    color: $primary-dark;
   }
   .week-table__subtitle {
     /* width: -webkit-fill-available; */
@@ -751,7 +750,7 @@
     font-family: "Roboto";
     font-weight: 500;
     font-size: 1.25rem;
-    color: #113a62;
+    color: $primary-dark;
   }
 
   th.title {
@@ -764,19 +763,19 @@
     font-weight: 700;
     font-size: 16px;
     line-height: 18px;
-    color: #113a62;
+    color: $primary-dark;
     padding: 0rem;
   }
 
   tbody.inside {
-    background: #e9edf0;
+    background: $background-light;
     /* inner-flat */
     box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     border-radius: 0px 0px 10px 10px;
   }
 
   .arrow-blue {
-    color: #007aff;
+    color: $primary-light;
   }
 
   .message {
@@ -796,7 +795,7 @@
     line-height: 1.25rem; /* 20px */
     text-align: center;
     /* Text */
-    color: #113a62;
+    color: $primary-dark;
   }
   .message .description {
     font-weight: 500;

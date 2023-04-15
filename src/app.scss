@@ -27,7 +27,7 @@ body {
 }
 
 .main-container {
-  background: linear-gradient(91.36deg, #efeef5 0%, #e6e8ef 100%);
+  background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
   /* out */
   box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
   border-radius: 10px;
@@ -35,7 +35,7 @@ body {
 
 .card-container {
   /* Fill Container */
-  background: #f3f3f3;
+  background: $background-light-secondary;
   /* container effect */
   box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
     4px 4px 20px rgba(111, 140, 176, 0.41);
@@ -43,14 +43,14 @@ body {
 }
 
 .card-inside {
-  background: #e9edf0;
+  background: $background-light;
   /* inner-flat */
   box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
   border-radius: 0px 0px 10px 10px;
 }
 
 .card-secondary {
-  background: #e9edf0;
+  background: $background-light;
   /* outer.effect */
   box-shadow: -5px -5px 8px #f2f4f8, 5px 5px 7px rgba(174, 174, 192, 0.5);
   border-radius: 10px;
@@ -58,7 +58,7 @@ body {
 
 .no-user {
   position: relative;
-  background: #e9edf0;
+  background: $background-light;
   height: 100vh;
   width: 100vw;
   transition: all 0.5s ease;
@@ -67,7 +67,7 @@ body {
 
 .main-section {
   position: relative;
-  background: #e9edf0;
+  background: $background-light;
   height: 100vh;
   left: 15rem; /* 240px */
   width: calc(100% - 15rem);
@@ -201,6 +201,10 @@ body {
 }
 
 .arrow-blue {
-  color: #007aff;
+  color: $primary-light;
+  cursor: pointer;
+}
+
+.clickable {
   cursor: pointer;
 }

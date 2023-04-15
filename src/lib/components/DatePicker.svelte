@@ -9,25 +9,33 @@
   export let icon = "";
   export let title = "";
 
-  const onInput = e => {
-    value = e.target.value
+  const onInput = (e) => {
+    value = e.target.value;
     // console.log(value)
   };
 </script>
 
 <div class="form-date">
-  <label title={title} class="label" for={id}>
-      <span class="label-text">
-        {label}
-        <!-- {#if icon != ""}
+  <label {title} class="label" for={id}>
+    <span class="label-text">
+      {label}
+      <!-- {#if icon != ""}
           <Icons name={icon} width="24" height="24"/>
         {/if} -->
-      </span>
+    </span>
   </label>
-  <input on:click type="date" {placeholder} {id} {value} on:input={onInput} {accept}>
+  <input
+    on:click
+    type="date"
+    {placeholder}
+    {id}
+    {value}
+    on:input={onInput}
+    {accept}
+  />
 </div>
 
-<style>
+<style lang="scss">
   .form-date {
     padding: 16px;
     display: flex;
@@ -48,7 +56,7 @@
     line-height: 1.25rem;
     display: flex;
     flex-direction: row;
-    color: #8B9EB0;
+    color: $grey;
   }
   
   input[type=date] {
@@ -64,10 +72,11 @@
     border: 0;
     border-radius: 3px;
     padding: 0 3px;
-    background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #E6E8EF 100%);
     /* inner-flat */
     box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0;
     border-radius: 4px;
     color: #8C9FB1;
   }
+
 </style>

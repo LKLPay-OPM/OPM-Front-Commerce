@@ -84,7 +84,7 @@
   </div>
 </div>
 
-<style>
+<style lang="scss">
   @media print {
     .noPrint {
       visibility: hidden;

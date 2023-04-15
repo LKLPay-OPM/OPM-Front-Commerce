@@ -1,8 +1,6 @@
 <script>
   /* components */
   import Icons from "$lib/components/Icons.svelte";
-  /* css */
-  import "$lib/styles/transactions.scss";
   /* exports */
   export let data;
   /* imports */
@@ -187,3 +185,6 @@
     {/if} -->
   </div>
 </div>
+<style lang="scss">
+  @import 'src/lib/styles/transactions.scss';
+</style>

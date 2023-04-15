@@ -22,8 +22,6 @@
   import ViewDay from "$lib/components/transactions/day/Table.svelte";
   import ViewWeek from "$lib/components/transactions/week/View.svelte";
   import ViewMonth from "$lib/components/transactions/month/View.svelte";
-  /* css */
-  import "$lib/styles/transactions.scss";
   /*  */
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
@@ -798,7 +796,7 @@
   <div class="middle">
     <div class="card-group">
       <div class="card">
-        <div><p>Total Vendido</p></div>
+        <div><p>Monto Total</p></div>
         <div>
           <span
             >{resume?.Amount?.toLocaleString(
@@ -884,3 +882,6 @@
     {/if}
   </div>
 </div>
+<style lang="scss">
+  @import 'src/lib/styles/transactions.scss';
+</style>

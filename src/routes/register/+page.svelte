@@ -1,18 +1,18 @@
 <script>
-    import {goto} from '$app/navigation'
-    import {loggedInUser, isLoggedIn} from '$lib/stores.js';
-    import { redirect } from '@sveltejs/kit'
-    import { onMount } from 'svelte';
-    import { registerUser } from '$lib/hooks/auth.js'
-    import Input from '$lib/components/Input.svelte';
-    import Checkbox from '$lib/components/Checkbox.svelte';
-    import { Timestamp } from 'firebase/firestore';
-    import Icons from '$lib/components/Icons.svelte';
-    import Select from '$lib/components/Select.svelte';
-    import RedirectHome from '$lib/components/RedirectHome.svelte';
-    import Logo from '$lib/assets/Logo.png';
-    import SuccessLogo from '$lib/components/Success.svelte';
-    import ErrorLogo from '$lib/components/Error.svelte';
+  import { goto } from "$app/navigation";
+  import { loggedInUser, isLoggedIn } from "$lib/stores.js";
+  import { redirect } from "@sveltejs/kit";
+  import { onMount } from "svelte";
+  import { registerUser } from "$lib/hooks/auth.js";
+  import Input from "$lib/components/Input.svelte";
+  import Checkbox from "$lib/components/Checkbox.svelte";
+  import { Timestamp } from "firebase/firestore";
+  import Icons from "$lib/components/Icons.svelte";
+  import Select from "$lib/components/Select.svelte";
+  import RedirectHome from "$lib/components/RedirectHome.svelte";
+  import Logo from "$lib/assets/Logo.png";
+  import SuccessLogo from "$lib/components/Success.svelte";
+  import ErrorLogo from "$lib/components/Error.svelte";
   let registerData = {
     uid: "",
     email: "",
@@ -48,40 +48,41 @@
     ratesDiscount: {
       amex: 0,
       credit: 0,
-      debit: 0
+      debit: 0,
     },
-  }
-  let menu = "register"
+  };
+  let menu = "register";
   let terms = false;
   let confirmPass = "";
   let emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  let passPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+  let passPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
   const makeId = (length) => {
-    var result           = '';
-    var characters       = '0123456789';
+    var result = "";
+    var characters = "0123456789";
     var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
-  }
+  };
 
   const stringSum = (string) => {
     let sum = string;
-    while(sum >= 10){
-      sum = sum.toString()
-      .split('')
-      .map(x => parseInt(x))
-      .reduce((x,y) => x + y)
+    while (sum >= 10) {
+      sum = sum
+        .toString()
+        .split("")
+        .map((x) => parseInt(x))
+        .reduce((x, y) => x + y);
     }
     return sum;
-  }
+  };
 
-  const handleRegister = async() => {
-    const id = makeId(7)
-    let sum = stringSum(id)
-    const uid = id+sum;
+  const handleRegister = async () => {
+    const id = makeId(7);
+    let sum = stringSum(id);
+    const uid = id + sum;
     // console.log("ID: ",id)
     // console.log("Validador: ", sum)
     // console.log("User ID: ", uid)
@@ -90,158 +91,203 @@
     // console.log(registerData.uid.split('', 7)) //Gets the first 7 chars of string
     // console.log(registerData.uid.slice(-1)) //Gets the last char of string
 
-    const response = await registerUser(registerData.email, registerData.password, registerData)
+    const response = await registerUser(
+      registerData.email,
+      registerData.password,
+      registerData
+    );
     /* .then(() => {
       menu = "success"
     })
     .catch(() => {
       menu = "error"
     }) */
-  }
+  };
 </script>
 
 {#if menu === "register"}
-<div class="container">
-  <div class="content">
-    <div class="logo">
-      <img src={Logo} alt="Company Logo">
-    </div>
-    <div class="form">
-      <div class="title">Regístrate en Lkl Pay</div>
-      <div class="subtitle">Simple y rápido</div>
-      <div class="form-inputs">
-        <form on:submit|preventDefault={handleRegister}>
-          <Input 
-            label="Dirección de correo electrónico" 
-            id="register-email" 
-            bind:value={registerData.email} 
-            type="email"
-            placeholder="ejemplo@correo.com"
-            className={`txt-field ${
-              registerData.email === "" ? "normal" :
-              registerData.email !== "" && registerData.email.match(emailPattern)
-              ? "valid" : "invalid"}`}
-          />
-          <Input 
-            label="Contraseña" 
-            id="register-password" 
-            bind:value={registerData.password} 
-            type="password"
-            placeholder="Contraseña"
-            className={`txt-field ${
-              registerData.password === "" ? "normal" :
-              confirmPass != "" && confirmPass === registerData.password
-              ? "valid" : "invalid"}`}
-          />
-          <div class="pass-conditions">
-            <p class="{registerData.password.match(passPattern) ? "valid":"invalid"}">
-              Tu contraseña debe de tener <br>
-              <span class="{registerData.password.length >= 8 ? "valid":"invalid"}"> 8 caracteres </span>|
-              <span class="{registerData.password.match(/[A-Z]/g) ? "valid":"invalid"}"> 1 Mayúscula </span>|
-              <span class="{registerData.password.match(/[a-z]/g) ? "valid":"invalid"}"> 1 Minúscula </span>|
-              <span class="{registerData.password.match(/[0-9]/g) ? "valid":"invalid"}"> 1 Número </span>
-            </p>
-          </div>
-          <Input 
-            label="Confirmar Contraseña" 
-            id="confirmRegisterPassword" 
-            bind:value={confirmPass} 
-            type="password"
-            placeholder="Contraseña"
-            className={`txt-field ${
-              confirmPass === "" ? "normal" :
-              confirmPass != "" && confirmPass === registerData.password
-              ? "valid" : "invalid"}`}
-          />
-          <div class="terms">
-            <div class="terms-checkbox">
-              <Checkbox bind:checked={terms}/>
+  <div class="container">
+    <div class="content">
+      <div class="logo">
+        <img src={Logo} alt="Company Logo" />
+      </div>
+      <div class="form">
+        <div class="title">Regístrate en Lkl Pay</div>
+        <div class="subtitle">Simple y rápido</div>
+        <div class="form-inputs">
+          <form on:submit|preventDefault={handleRegister}>
+            <Input
+              label="Dirección de correo electrónico"
+              id="register-email"
+              bind:value={registerData.email}
+              type="email"
+              placeholder="ejemplo@correo.com"
+              className={`txt-field ${
+                registerData.email === ""
+                  ? "normal"
+                  : registerData.email !== "" &&
+                    registerData.email.match(emailPattern)
+                  ? "valid"
+                  : "invalid"
+              }`}
+            />
+            <Input
+              label="Contraseña"
+              id="register-password"
+              bind:value={registerData.password}
+              type="password"
+              placeholder="Contraseña"
+              className={`txt-field ${
+                registerData.password === ""
+                  ? "normal"
+                  : confirmPass != "" && confirmPass === registerData.password
+                  ? "valid"
+                  : "invalid"
+              }`}
+            />
+            <div class="pass-conditions">
+              <p
+                class={registerData.password.match(passPattern)
+                  ? "valid"
+                  : "invalid"}
+              >
+                Tu contraseña debe de tener <br />
+                <span
+                  class={registerData.password.length >= 8
+                    ? "valid"
+                    : "invalid"}
+                >
+                  8 caracteres
+                </span>|
+                <span
+                  class={registerData.password.match(/[A-Z]/g)
+                    ? "valid"
+                    : "invalid"}
+                >
+                  1 Mayúscula
+                </span>|
+                <span
+                  class={registerData.password.match(/[a-z]/g)
+                    ? "valid"
+                    : "invalid"}
+                >
+                  1 Minúscula
+                </span>|
+                <span
+                  class={registerData.password.match(/[0-9]/g)
+                    ? "valid"
+                    : "invalid"}
+                >
+                  1 Número
+                </span>
+              </p>
             </div>
-            <p>
-              He Leído, entendido y acepto los <br>
-              <a href="/register#terms">Términos y Condiciones Generales</a> de Lkl Pay, <br>
-              así como su <a href="/register#privacy">Política de Privacidad</a> y, por lo tanto <br>
-              estoy de acuerdo en el uso y procesamiento de <br>
-              datos personales.
-            </p>
-          </div>
-          <div class="btn-layout">
-            <Input 
-              label="Crear Cuenta" 
-              id="registerButton" 
-              type="submit" 
-              className="{
-                registerData.email.match(emailPattern) &&
+            <Input
+              label="Confirmar Contraseña"
+              id="confirmRegisterPassword"
+              bind:value={confirmPass}
+              type="password"
+              placeholder="Contraseña"
+              className={`txt-field ${
+                confirmPass === ""
+                  ? "normal"
+                  : confirmPass != "" && confirmPass === registerData.password
+                  ? "valid"
+                  : "invalid"
+              }`}
+            />
+            <div class="terms">
+              <div class="terms-checkbox">
+                <Checkbox bind:checked={terms} />
+              </div>
+              <p>
+                He Leído, entendido y acepto los <br />
+                <a href="/register#terms">Términos y Condiciones Generales</a>
+                de Lkl Pay, <br />
+                así como su
+                <a href="/register#privacy">Política de Privacidad</a>
+                y, por lo tanto <br />
+                estoy de acuerdo en el uso y procesamiento de <br />
+                datos personales.
+              </p>
+            </div>
+            <div class="btn-layout">
+              <Input
+                label="Crear Cuenta"
+                id="registerButton"
+                type="submit"
+                className={registerData.email.match(emailPattern) &&
                 registerData.password.match(passPattern) &&
                 confirmPass != "" &&
                 confirmPass === registerData.password &&
-                terms ?
-                "btn" : "btn-disabled"
-              }" 
-              icon=""/>
+                terms
+                  ? "btn"
+                  : "btn-disabled"}
+                icon=""
+              />
+            </div>
+          </form>
+          <div class="login-link">
+            Ya tengo una cuenta.<a href="/"> Quiero Iniciar Sesión</a>
           </div>
-        </form>
-        <div class="login-link">
-          Ya tengo una cuenta.<a href="/"> Quiero Iniciar Sesión</a>
         </div>
       </div>
     </div>
   </div>
-</div>
 {:else if menu === "success"}
-<div class="container">
-  <div class="success-content">
-    <div class="logo">
-      <img src={Logo} alt="Company Logo">
-    </div>
-    <div class="form">
-      <div class="title">Bienvenido a LKL Pay</div>
-      <div class="svg">
-        <SuccessLogo/>
+  <div class="container">
+    <div class="success-content">
+      <div class="logo">
+        <img src={Logo} alt="Company Logo" />
       </div>
-      <div class="subtitle">Ingresa a tu correo para verificar tu cuenta</div>
-      <div class="btn-layout">
-        <Input 
-          label="Ir a mi Escritorio" 
-          id="goToDashboardBtn" 
-          type="button" 
-          className="btn-success" 
-          icon=""
-          on:click={() => (isLoggedIn.update(() => true))}
-          on:click={() => (goto("/home"))}
-        />
+      <div class="form">
+        <div class="title">Bienvenido a LKL Pay</div>
+        <div class="svg">
+          <SuccessLogo />
+        </div>
+        <div class="subtitle">Ingresa a tu correo para verificar tu cuenta</div>
+        <div class="btn-layout">
+          <Input
+            label="Ir a mi Escritorio"
+            id="goToDashboardBtn"
+            type="button"
+            className="btn-success"
+            icon=""
+            on:click={() => isLoggedIn.update(() => true)}
+            on:click={() => goto("/home")}
+          />
+        </div>
       </div>
     </div>
   </div>
-</div>
 {:else if menu === "error"}
-<div class="container">
-  <div class="error-content">
-    <div class="logo">
-      <img src={Logo} alt="Company Logo">
-    </div>
-    <div class="form">
-      <div class="title">Ups, Algo salió mal</div>
-      <div class="svg">
-        <ErrorLogo/>
+  <div class="container">
+    <div class="error-content">
+      <div class="logo">
+        <img src={Logo} alt="Company Logo" />
       </div>
-      <div class="subtitle">Vamos a intentar crear tu cuenta de nuevo</div>
-      <div class="btn-layout">
-        <Input 
-          label="Reiniciar Registro" 
-          id="returnToRegisterBtn" 
-          type="button" 
-          className="btn-error" 
-          icon=""
-          on:click={() => (menu = "register")}  
-        />
+      <div class="form">
+        <div class="title">Ups, Algo salió mal</div>
+        <div class="svg">
+          <ErrorLogo />
+        </div>
+        <div class="subtitle">Vamos a intentar crear tu cuenta de nuevo</div>
+        <div class="btn-layout">
+          <Input
+            label="Reiniciar Registro"
+            id="returnToRegisterBtn"
+            type="button"
+            className="btn-error"
+            icon=""
+            on:click={() => (menu = "register")}
+          />
+        </div>
       </div>
     </div>
   </div>
-</div>
 {/if}
 
-<style>
+<style lang="scss">
   .container {
     width: 100vw;
     height: 100vh;
@@ -254,8 +300,9 @@
     position: absolute;
     width: 27rem;
     height: 42rem;
-    background: #F3F3F3;
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    background: $background-light-secondary;
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     transform: matrix(1, 0, 0, 1, 0, 0);
   }
@@ -264,8 +311,9 @@
     position: absolute;
     width: 27rem;
     height: 34rem;
-    background: #F3F3F3;
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    background: $background-light-secondary;
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     transform: matrix(1, 0, 0, 1, 0, 0);
   }
@@ -273,8 +321,9 @@
     position: absolute;
     width: 27rem;
     height: 34rem;
-    background: #F3F3F3;
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    background: $background-light-secondary;
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     transform: matrix(1, 0, 0, 1, 0, 0);
   }
@@ -313,8 +362,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #8B9EB0;
-    margin-bottom: .75rem;
+    color: $grey;
+    margin-bottom: 0.75rem;
   }
 
   .subtitle {
@@ -325,21 +374,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #8B9EB0;
+    color: $grey;
   }
 
-  .pass-conditions p{
+  .pass-conditions p {
     font-weight: 700;
-    font-size: .8125rem;
+    font-size: 0.8125rem;
     line-height: 1.25rem;
   }
 
   .invalid {
-    color: #FD9053;
+    color: #fd9053;
   }
 
   .valid {
-    color: #00C48C;
+    color: #00c48c;
   }
 
   .terms {
@@ -349,21 +398,21 @@
     margin-top: 1rem;
     margin-bottom: 1rem;
     font-weight: 700;
-    font-size: .8125rem;
+    font-size: 0.8125rem;
     line-height: 1.25;
     display: flex;
     align-items: center;
-    color: #8B9EB0;
+    color: $grey;
   }
 
   .terms a {
     text-decoration: none;
-    color: #5585FF;
+    color: #5585ff;
   }
 
   .terms-checkbox {
     height: 100%;
-    margin-right: .4375rem;
+    margin-right: 0.4375rem;
     display: flex;
     align-items: start;
   }
@@ -373,17 +422,16 @@
     align-items: center;
     justify-content: center;
 
-    font-family: 'Raleway';
+    font-family: "Raleway";
     font-style: normal;
     font-weight: 700;
     font-size: 0.8125rem;
     line-height: 1.25rem;
-    color: #8B9EB0;
+    color: $grey;
   }
-  .login-link a{
-    
+  .login-link a {
     text-decoration: none;
-    color: #5585FF;
+    color: #5585ff;
   }
 
   .form-inputs {

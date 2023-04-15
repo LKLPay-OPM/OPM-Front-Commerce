@@ -29,7 +29,7 @@
   {#if loading}
     <Loader />
   {:else}
-    <Dashboard bind:transactions />
+    <Dashboard bind:data />
   {/if}
 {:else}
   <RedirectLogin />

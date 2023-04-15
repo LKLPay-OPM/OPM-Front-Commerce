@@ -1,18 +1,18 @@
 <script>
-	export let checked;
+  export let checked;
 </script>
 
 <label class="container">
-  <input type="checkbox" bind:checked={checked}>
-  <span class="checkmark"></span>
+  <input type="checkbox" bind:checked />
+  <span class="checkmark" />
 </label>
 
-<style>
+<style lang="scss">
   .container {
     display: block;
     position: relative;
     padding-left: 2.1875rem;
-    margin-bottom: .75rem;
+    margin-bottom: 0.75rem;
     cursor: pointer;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -29,15 +29,16 @@
     width: 0;
   }
 
-/* Create a custom checkbox */
+  /* Create a custom checkbox */
   .container span {
     position: absolute;
     top: 0;
     left: 0;
     height: 1.5rem;
     width: 1.5rem;
-    background: #E3EDF7;
-    box-shadow: inset -4px -4px 9px rgba(255, 255, 255, 0.6), inset 4px 4px 14px #C5D7EE;
+    background: #e3edf7;
+    box-shadow: inset -4px -4px 9px rgba(255, 255, 255, 0.6),
+      inset 4px 4px 14px #c5d7ee;
     border-radius: 6px;
   }
 
@@ -48,8 +49,9 @@
 
   /* When the checkbox is checked, add a blue background */
   .container input:checked ~ .checkmark {
-    background: linear-gradient(270deg, #50CAFF 0%, #0478FF 100%);
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    background: linear-gradient(270deg, #50caff 0%, #0478ff 100%);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 6px;
   }
 
