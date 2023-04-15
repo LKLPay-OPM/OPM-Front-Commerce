@@ -1,40 +1,68 @@
 <script>
   import { booleanStore } from "../stores";
+  import Icons from "$lib/components/Icons.svelte";
 
   const store = booleanStore(false);
   const { isOpen, open, close } = store;
   let dialog;
+  let shown = false;
   export let className = "";
+
+  const backdropClick = (event) => {
+    event.target === dialog && dialog.close(event);
+  };
 
   export const show = () => {
     dialog.showModal();
+    dialog.addEventListener("click", (e) => backdropClick(e));
+    shown = true;
   };
   export const closeModal = () => {
+    shown = false;
     dialog.close();
   };
 </script>
 
-<slot name="trigger">
-  <!-- fallback trigger to open the modal -->
-  <!-- <button on:click={open}>Open</button> -->
-</slot>
+<!-- <slot name="trigger" /> -->
 <div class="modal-container">
   <dialog class={`${className}`} bind:this={dialog}>
-    <div class="content-wrapper">
-      <div class="header">
-        <slot name="header" />
+    {#if shown}
+      <div class="content-wrapper">
+        <div class="close-modal">
+          <label class="clickable close" for="closeModalButton">
+            <i>
+              <Icons name="close" width="24" height="24" />
+            </i>
+          </label>
+          <input on:click={closeModal} id="closeModalButton" type="button" />
+        </div>
+        <div class="header">
+          <slot name="header" />
+        </div>
+        <div class="content">
+          <slot name="content" />
+        </div>
+        <div class="footer">
+          <slot name="footer" />
+        </div>
       </div>
-      <div class="content">
-        <slot name="content" />
-      </div>
-      <div class="footer">
-        <slot name="footer" />
-      </div>
-    </div>
+    {/if}
   </dialog>
 </div>
 
 <style lang="scss">
+  .close-modal {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+  .close-modal input {
+    display: none;
+  }
+
+  .close:hover {
+    color: $red;
+    transition: all 0.4s ease;
+  }
   .modal-medium {
     width: 30rem;
   }
