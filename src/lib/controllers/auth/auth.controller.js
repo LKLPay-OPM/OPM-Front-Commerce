@@ -1,31 +1,22 @@
 /* svelte */
 import { error } from "@sveltejs/kit";
 import { goto } from "$app/navigation";
-import { isLoggedIn, loggedInUser, appwriteUser } from "$lib/stores";
+import { isLoggedIn, loggedInUser, sessionUser } from "$lib/stores";
 /* services */
 import { authService } from "./services/auth.service";
-import { profilesClient } from "$lib/repos/axios";
 
 export class AuthController {
   static async login(body) {
     try {
-      const { session, user, jwt } = await authService.login(body);
-      /* const profile = await profilesClient.get(
-        '/user/profile',
-        jwt,
-      )
-      console.log(profile) */
+      const { session, user } = await authService.login(body);
       isLoggedIn.update(() => true);
-      // loggedInUser.set(user);
-      loggedInUser.set(session);
-      appwriteUser.set(user);
-      // console.log(session);
-      // console.log(user);
+      loggedInUser.set(user);
+      sessionUser.set(session);
       await goto("/");
     } catch (e) {
       isLoggedIn.update(() => false);
-      loggedInUser.set({});
-      appwriteUser.set({});
+      loggedInUser.set({ error: true });
+      sessionUser.set({ error: true });
       return { error: true };
     }
   }
@@ -35,7 +26,7 @@ export class AuthController {
       await authService.logout(id);
       isLoggedIn.update(() => false);
       loggedInUser.set({});
-      appwriteUser.set({});
+      sessionUser.set({});
     } catch (e) {
       return { error: true };
     }

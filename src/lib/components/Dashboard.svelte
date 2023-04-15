@@ -1,13 +1,5 @@
 <script>
-  import {
-    collection,
-    query,
-    orderBy,
-    limit,
-    getDocs,
-    startAt,
-    endAt,
-  } from "firebase/firestore";
+  import { collection, query, orderBy, limit, getDocs, startAt, endAt } from "firebase/firestore";
   import { loggedInUser } from "$lib/stores";
   import { db } from "$lib/firebase";
   /* componens */
@@ -86,12 +78,7 @@
     //transactions = [];
     const curr = new Date();
     const today = new Date(curr.setDate(curr.getDate())).setHours(0, 0, 0, 0); // Sets Date to today day at 00:00
-    const tomorrow = new Date(curr.setDate(curr.getDate() + 1)).setHours(
-      0,
-      0,
-      0,
-      0
-    ); // Sets Date to tomorrow at 00:00
+    const tomorrow = new Date(curr.setDate(curr.getDate() + 1)).setHours(0, 0, 0, 0); // Sets Date to tomorrow at 00:00
     // Dates in dd/MM/YY
     const strToday = new Intl.DateTimeFormat("es-MX", {
       month: "2-digit",
@@ -108,18 +95,8 @@
       collection(db, dbCollection, uid, "transactions"),
       //where('uid', '==', uid),
       orderBy("Transaction Date", "desc"),
-      startAt(
-        strTomorrow.replace(
-          pattern,
-          "$3$2$1"
-        ) /* Timestamp.fromDate(new Date(tomorrow)) */
-      ),
-      endAt(
-        strToday.replace(
-          pattern,
-          "$3$2$1"
-        ) /* Timestamp.fromDate(new Date(today)) */
-      ),
+      startAt(strTomorrow.replace(pattern, "$3$2$1") /* Timestamp.fromDate(new Date(tomorrow)) */),
+      endAt(strToday.replace(pattern, "$3$2$1") /* Timestamp.fromDate(new Date(today)) */),
       limit(10)
     );
     const querySnapshot = await getDocs(q);
@@ -164,23 +141,19 @@
           className={""}
           title="Total Vendido"
           numData={transactions
-            .reduce((prev, curr) => prev + curr["Amount"] / 100, 0)
+            ?.reduce((prev, curr) => prev + curr?.["Amount"] / 100, 0)
             ?.toLocaleString(localeParam.language, localeParam.currency)}
         />
       </div>
       <div class="card">
-        <InfoCard
-          className={""}
-          title="N° de Ventas"
-          numData={transactions.length}
-        />
+        <InfoCard className={""} title="N° de Ventas" numData={transactions.length} />
       </div>
       <div class="card">
         <InfoCard
           className={""}
           title="Saldo a Depositar"
           numData={transactions
-            .reduce((prev, curr) => prev + (curr["Amount"] / 100) * 0.965, 0)
+            ?.reduce((prev, curr) => prev + (curr["Amount"] / 100) * 0.965, 0)
             ?.toLocaleString(localeParam.language, localeParam.currency)}
         />
       </div>
@@ -233,17 +206,13 @@
                     )}</td
                   >
                   <td class="responsive"
-                    >{parseFloat(
-                      (transaction.Amount / 100) * 0.035
-                    )?.toLocaleString(
+                    >{parseFloat((transaction.Amount / 100) * 0.035)?.toLocaleString(
                       localeParam.language,
                       localeParam.currency
                     )}</td
                   >
                   <td class="responsive"
-                    >{parseFloat(
-                      (transaction.Amount / 100) * 0.965
-                    )?.toLocaleString(
+                    >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
                       localeParam.language,
                       localeParam.currency
                     )}</td

@@ -5,7 +5,7 @@
 </script>
 
 {#if $isLoggedIn === true}
-  {#if $loggedInUser.firstTimeUser == true || $onboardingSuccess == true}
+  {#if $loggedInUser?.firstTimeUser == true || $onboardingSuccess == true}
     <Onboarding />
   {:else}
     <Dashboard />

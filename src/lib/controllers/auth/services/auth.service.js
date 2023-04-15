@@ -1,13 +1,22 @@
-import { ID } from "appwrite";
+/* repo */
+import { appClient } from "$lib/repos/axios";
 /* appwrite */
-import { AppAccount, AppClient } from "$lib/repos/appwrite";
+import { AppAccount } from "$lib/repos/appwrite";
+/* jwt decode */
+import jwtDecode from "jwt-decode";
 
 class AuthService {
   async login({ email, password }) {
-    const session = await AppAccount.createEmailSession(email, password);
-    const user = await AppAccount.get();
-    const jwt = await AppAccount.createJWT();
-    return { session, user, jwt };
+    const { data } = await appClient.profiles().post("/auth/commerce/login", {
+      email,
+      password,
+    });
+
+    if (!data?.response) throw new Error("Request Failed");
+    if (!data.response?.token) throw new Error("Token not receiveed");
+
+    const user = jwtDecode(data.response.token);
+    return { session: data.response, user };
   }
 
   async logout(id) {

@@ -15,12 +15,8 @@
   /* dynamic vars */
   let loading = true;
 
-  $: {
-    console.log(data);
-  }
-
   onMount(async () => {
-    if (data?.redirect) await goto(data.path);
+    if (!$isLoggedIn) await goto("/login");
     loading = false;
   });
 </script>
@@ -29,7 +25,7 @@
   {#if loading}
     <Loader />
   {:else}
-    <Dashboard bind:transactions />
+    <Dashboard bind:data />
   {/if}
 {:else}
   <RedirectLogin />

@@ -1,11 +1,5 @@
 <script>
-  import {
-    isLoggedIn,
-    loggedInUser,
-    linkSelected,
-    appwriteUser,
-    sidebar,
-  } from "$lib/stores.js";
+  import { isLoggedIn, loggedInUser, linkSelected, sessionUser, sidebar } from "$lib/stores.js";
   // import { logout } from "$lib/hooks/auth.js";
   import { AuthController } from "$lib/controllers/auth/auth.controller";
   import { optionsSidebar } from "$lib/hooks/router.js";
@@ -22,7 +16,7 @@
   let options = [];
 
   // console.log($loggedInUser);
-  // console.log($appwriteUser);
+  // console.log($sessionUser);
 
   $: {
     if ($isLoggedIn) {
@@ -35,10 +29,7 @@
 
 <div class="navbar">
   <div class="logo-details">
-    <i
-      on:click={() => ($sidebar = !$sidebar)}
-      on:keydown={() => ($sidebar = !$sidebar)}
-    >
+    <i on:click={() => ($sidebar = !$sidebar)} on:keydown={() => ($sidebar = !$sidebar)}>
       <Icons name="menu-lines" width="24" height="24" />
     </i>
   </div>
@@ -46,10 +37,7 @@
 <div class="sidebar {$sidebar ? '' : 'close'}">
   <div class="sidebar-start">
     <div class="logo-details">
-      <i
-        on:click={() => ($sidebar = !$sidebar)}
-        on:keydown={() => ($sidebar = !$sidebar)}
-      >
+      <i on:click={() => ($sidebar = !$sidebar)} on:keydown={() => ($sidebar = !$sidebar)}>
         <Icons name="menu-lines" width="24" height="24" />
       </i>
       <a href="/">
@@ -60,10 +48,7 @@
       on:click={() => {
         $linkSelected = "Perfil";
       }}
-      on:keypress={(e) =>
-        e.key === "Enter"
-          ? ($linkSelected = "Perfil")
-          : ($linkSelected = $linkSelected)}
+      on:keypress={(e) => (e.key === "Enter" ? ($linkSelected = "Perfil") : ($linkSelected = $linkSelected))}
       href="/profile"
       class="profile-details"
     >
@@ -72,10 +57,10 @@
       </div>
       <div class="name-job">
         <div class="profile_name">
-          {$appwriteUser?.name ?? ""}
+          {$sessionUser?.name ?? ""}
         </div>
         <div class="job">
-          {$appwriteUser?.businessName ?? $appwriteUser?.email ?? ""}
+          {$sessionUser?.businessName ?? $sessionUser?.email ?? ""}
         </div>
       </div>
     </a>
@@ -85,10 +70,7 @@
           on:click={() => {
             $linkSelected = option.name;
           }}
-          on:keypress={(e) =>
-            e.key === "Enter"
-              ? ($linkSelected = option.name)
-              : ($linkSelected = $linkSelected)}
+          on:keypress={(e) => (e.key === "Enter" ? ($linkSelected = option.name) : ($linkSelected = $linkSelected))}
           class={$linkSelected === option.name ? "active-link_name" : ""}
         >
           <a href={option.path}>
@@ -96,11 +78,7 @@
               <Icons name={option.icon} width="24" height="24" />
             </i>
             <!-- <i class='bx bx-grid-alt'></i> -->
-            <span
-              class={$linkSelected === option.name
-                ? "active-link_name"
-                : "link_name"}>{option.name}</span
-            >
+            <span class={$linkSelected === option.name ? "active-link_name" : "link_name"}>{option.name}</span>
           </a>
           <ul class="sub-menu blank">
             <li><a class="link_name" href={option.path}>{option.name}</a></li>
@@ -115,20 +93,13 @@
         on:click={() => {
           $linkSelected = "Solicitudes";
         }}
-        on:keypress={(e) =>
-          e.key === "Enter"
-            ? ($linkSelected = "Solicitudes")
-            : ($linkSelected = $linkSelected)}
+        on:keypress={(e) => (e.key === "Enter" ? ($linkSelected = "Solicitudes") : ($linkSelected = $linkSelected))}
       >
         <a href="/requests">
           <i class={$linkSelected === "Solicitudes" ? "active-link_name" : ""}>
             <Icons name="adviser" width="24" height="24" />
           </i>
-          <span
-            class={$linkSelected === "Solicitudes"
-              ? "active-link_name"
-              : "link_name"}>Solicitudes</span
-          >
+          <span class={$linkSelected === "Solicitudes" ? "active-link_name" : "link_name"}>Solicitudes</span>
         </a>
         <ul class="sub-menu blank">
           <li><a class="link_name" href="/requests">Solicitudes</a></li>
@@ -138,19 +109,13 @@
         on:click={() => {
           $linkSelected = "Ayuda";
         }}
-        on:keypress={(e) =>
-          e.key === "Enter"
-            ? ($linkSelected = "Ayuda")
-            : ($linkSelected = $linkSelected)}
+        on:keypress={(e) => (e.key === "Enter" ? ($linkSelected = "Ayuda") : ($linkSelected = $linkSelected))}
       >
         <a href="/help">
           <i class={$linkSelected === "Ayuda" ? "active-link_name" : ""}>
             <Icons name="help" width="24" height="24" />
           </i>
-          <span
-            class={$linkSelected === "Ayuda" ? "active-link_name" : "link_name"}
-            >Ayuda</span
-          >
+          <span class={$linkSelected === "Ayuda" ? "active-link_name" : "link_name"}>Ayuda</span>
         </a>
         <ul class="sub-menu blank">
           <li><a class="link_name" href="/help">Ayuda</a></li>
