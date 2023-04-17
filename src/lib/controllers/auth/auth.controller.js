@@ -21,9 +21,8 @@ export class AuthController {
     }
   }
 
-  static async logout(id) {
+  static async logout() {
     try {
-      await authService.logout(id);
       isLoggedIn.update(() => false);
       loggedInUser.set({});
       sessionUser.set({});
