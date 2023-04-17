@@ -14,18 +14,17 @@
 
   export const show = () => {
     dialog.showModal();
-    dialog.addEventListener("click", (e) => backdropClick(e));
     shown = true;
   };
   export const closeModal = () => {
-    shown = false;
     dialog.close();
+    shown = false;
   };
 </script>
 
 <!-- <slot name="trigger" /> -->
 <div class="modal-container">
-  <dialog class={`${className}`} bind:this={dialog}>
+  <dialog class={`${className}`} bind:this={dialog} on:click={backdropClick}>
     {#if shown}
       <div class="content-wrapper">
         <div class="close-modal">
@@ -83,6 +82,7 @@
       4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     border: none;
+    outline: none;
   }
   div.modal-container {
     /* position: relative;
@@ -118,7 +118,7 @@
   .content {
     max-height: 50vh;
     overflow: auto;
-    margin: 15px;
+    padding: 15px;
   }
 
   .footer {

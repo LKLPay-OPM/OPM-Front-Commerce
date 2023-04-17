@@ -92,10 +92,11 @@
   color: $grey;
   font-size: 20px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  // transition: all 0.3s ease;
 }
 .sidebar .logo-details a img {
-  transition: all 0.2s ease;
+  animation: opacity;
+  animation-duration: 4s;
   height: 2rem;
 }
 .sidebar.close .text-logo > p,
