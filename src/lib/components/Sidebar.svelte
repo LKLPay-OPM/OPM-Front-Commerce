@@ -120,29 +120,6 @@
     <ul class="nav-links">
       <li
         on:click={() => {
-          $linkSelected = "Solicitudes";
-        }}
-        on:keypress={(e) =>
-          e.key === "Enter"
-            ? ($linkSelected = "Solicitudes")
-            : ($linkSelected = $linkSelected)}
-      >
-        <a href="/requests">
-          <i class={$linkSelected === "Solicitudes" ? "active-link_name" : ""}>
-            <Icons name="adviser" width="24" height="24" />
-          </i>
-          <span
-            class={$linkSelected === "Solicitudes"
-              ? "active-link_name"
-              : "link_name"}>Solicitudes</span
-          >
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="/requests">Solicitudes</a></li>
-        </ul>
-      </li>
-      <li
-        on:click={() => {
           $linkSelected = "Ayuda";
         }}
         on:keypress={(e) =>
@@ -163,7 +140,7 @@
           <li><a class="link_name" href="/help">Ayuda</a></li>
         </ul>
       </li>
-      <li>
+      <li class="logout">
         <a
           href="/login"
           on:click={async () => {

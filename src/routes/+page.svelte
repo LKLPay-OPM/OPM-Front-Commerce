@@ -2,7 +2,7 @@
   /* svelte */
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
-  import { isLoggedIn } from "$lib/stores";
+  import { isLoggedIn, linkSelected } from "$lib/stores";
   /* components */
   import Loader from "$lib/components/Loader.svelte";
   import Dashboard from "$lib/components/Dashboard.svelte";
@@ -20,6 +20,7 @@
   }
 
   onMount(async () => {
+    $linkSelected = "Inicio";
     if (data?.redirect) await goto(data.path);
     loading = false;
   });

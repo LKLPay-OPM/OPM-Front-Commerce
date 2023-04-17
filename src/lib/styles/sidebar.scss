@@ -322,6 +322,15 @@
   line-height: 1rem; /* 16px */
 }
 
+.sidebar .nav-links li.logout:hover{
+  background: none;
+
+}
+.sidebar .nav-links li.logout:hover i,
+.sidebar .nav-links li.logout:hover a .link_name {
+  color: $red;
+}
+
 @media screen {
   .sidebar {
     width: 15rem; /* 240px */
