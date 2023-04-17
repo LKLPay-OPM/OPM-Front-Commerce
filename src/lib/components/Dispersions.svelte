@@ -890,7 +890,10 @@
       <div class="title">Cantidad</div>
       <div class="description">
         <p>
-          {immediateDeposit.availableBalance.toLocaleString(localeParam.language, localeParam.currency)}
+          {immediateDeposit.availableBalance?.toLocaleString(
+            localeParam.language,
+            localeParam.currency
+          )}
         </p>
       </div>
     </div>
@@ -1116,7 +1119,12 @@
         <div class="card">
           <div><p>Saldo a Depositar</p></div>
           <div>
-            <span>{user.toDeposit.toLocaleString(localeParam.language, localeParam.currency)}</span>
+            <span
+              >{user.toDeposit?.toLocaleString(
+                localeParam.language,
+                localeParam.currency
+              )}</span
+            >
           </div>
         </div>
         <div class="button">
@@ -1174,10 +1182,15 @@
                             label={dispersion.id} type="button" className="text-button" icon=""/>
                         </td> -->
                     <td class="responsive hide">{dispersion.id}</td>
-                    <td>{parseFloat(dispersion.total).toLocaleString(localeParam.language, localeParam.currency)}</td>
+                    <td
+                      >{parseFloat(dispersion.total)?.toLocaleString(
+                        localeParam.language,
+                        localeParam.currency
+                      )}</td
+                    >
                     <td>{dispersion.type}</td>
                     <td class="responsive hide"
-                      >{parseFloat(dispersion.commission).toLocaleString(
+                      >{parseFloat(dispersion.commission)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
@@ -1185,13 +1198,13 @@
                     <td class="responsive hide"> - </td>
                     <td class="responsive hide" />
                     <td class="responsive hide"
-                      >{parseFloat(dispersion.dispersion).toLocaleString(
+                      >{parseFloat(dispersion.dispersion)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
                     >
                     <td class="responsive hide"
-                      >{parseFloat(dispersion.afterDispersion).toLocaleString(
+                      >{parseFloat(dispersion.afterDispersion)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
@@ -1257,7 +1270,10 @@
                 <div class="item">
                   <b>Total Depositado</b>
                   <p>
-                    {selectedDispersion.dispersion.toLocaleString(localeParam.language, localeParam.currency)}
+                    {selectedDispersion.dispersion?.toLocaleString(
+                      localeParam.language,
+                      localeParam.currency
+                    )}
                   </p>
                 </div>
               </div>
@@ -1269,12 +1285,20 @@
                 </div>
                 <div class="item">
                   <b>Total Ventas</b>
-                  <p>{selectedDispersion.total.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                  <p>
+                    {selectedDispersion.total?.toLocaleString(
+                      localeParam.language,
+                      localeParam.currency
+                    )}
+                  </p>
                   <span />
                 </div>
                 <div class="item">
                   <p>
-                    {selectedDispersion.commission.toLocaleString(localeParam.language, localeParam.currency)}
+                    {selectedDispersion.commission?.toLocaleString(
+                      localeParam.language,
+                      localeParam.currency
+                    )}
                   </p>
                   <!-- <span>(4.06%)</span> -->
                 </div>
