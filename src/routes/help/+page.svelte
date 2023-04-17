@@ -65,7 +65,7 @@
   </div> -->
 {/if}
 
-<style>
+<style lang="scss">
   .content {
     width: 100%;
   }
@@ -84,11 +84,11 @@
   .date p {
     margin: 2rem 0 0 0;
     font-weight: 700;
-    font-size: 1.25rem;/* 20px */
-    line-height: 1.25rem;/* 20px */
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.25rem; /* 20px */
     text-align: center;
     /* Text */
-    color: #113A62;
+    color: $primary-dark;
   }
 
   .row {
@@ -101,9 +101,9 @@
   .row > .button {
     display: grid;
     grid-auto-flow: row;
-    color: #8C9FB1;
-    height: 2.5rem;/* 40px */
-    min-width: 10rem;/* 200px */
+    color: #8c9fb1;
+    height: 2.5rem; /* 40px */
+    min-width: 10rem; /* 200px */
     align-self: self-end;
   }
 
@@ -115,39 +115,49 @@
     margin: 0rem 0rem 0rem 0rem;
   }
 
-  .col  > .button {
+  .col > .button {
     display: grid;
     grid-auto-flow: row;
-    color: #8C9FB1;
-    height: 2.5rem;/* 40px */
-    min-width: 10rem;/* 200px */
+    color: #8c9fb1;
+    height: 2.5rem; /* 40px */
+    min-width: 10rem; /* 200px */
     align-self: center;
   }
 
   .divider-vert {
     height: auto;
-    width: .5rem;
-    background: linear-gradient(138.32deg, rgba(0, 0, 0, 0.5) 8.26%, rgba(255, 255, 255, 0.5) 91.02%), #EAECF0;
+    width: 0.5rem;
+    background: linear-gradient(
+        138.32deg,
+        rgba(0, 0, 0, 0.5) 8.26%,
+        rgba(255, 255, 255, 0.5) 91.02%
+      ),
+      #eaecf0;
     background-blend-mode: soft-light, normal;
     border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: inset -1px -1px 2px #FAFBFF, inset 1px 1px 2px #A6ABBD;
+    box-shadow: inset -1px -1px 2px #fafbff, inset 1px 1px 2px #a6abbd;
     border-radius: 5px;
   }
   .divider-hor {
     width: auto;
-    height: .5rem;
-    background: linear-gradient(138.32deg, rgba(0, 0, 0, 0.5) 8.26%, rgba(255, 255, 255, 0.5) 91.02%), #EAECF0;
+    height: 0.5rem;
+    background: linear-gradient(
+        138.32deg,
+        rgba(0, 0, 0, 0.5) 8.26%,
+        rgba(255, 255, 255, 0.5) 91.02%
+      ),
+      #eaecf0;
     background-blend-mode: soft-light, normal;
     border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: inset -1px -1px 2px #FAFBFF, inset 1px 1px 2px #A6ABBD;
+    box-shadow: inset -1px -1px 2px #fafbff, inset 1px 1px 2px #a6abbd;
     border-radius: 5px;
   }
 
   .element > .option-col {
     display: grid;
     grid-auto-flow: row;
-    color: #113A62;
-    transition: all .4s ease;
+    color: $primary-dark;
+    transition: all 0.4s ease;
     cursor: pointer;
   }
 
@@ -155,19 +165,19 @@
     display: grid;
     grid-auto-flow: column;
     align-items: center;
-    color: #113A62;
-    transition: all .4s ease;
+    color: $primary-dark;
+    transition: all 0.4s ease;
     cursor: pointer;
   }
-  
+
   .element > .button {
     display: grid;
     grid-auto-flow: row;
-    color: #8C9FB1;
-    height: 2.5rem;/* 40px */
-    width: 12.5rem;/* 200px */
+    color: #8c9fb1;
+    height: 2.5rem; /* 40px */
+    width: 12.5rem; /* 200px */
   }
-  
+
   .option-col > i {
     display: grid;
     grid-auto-flow: column;
@@ -175,8 +185,8 @@
   }
   .option-col > .option-name {
     font-weight: 700;
-    font-size: 1.5rem;/* 24px */
-    line-height: 1.25rem;/* 20px */
+    font-size: 1.5rem; /* 24px */
+    line-height: 1.25rem; /* 20px */
     text-align: center;
   }
   .option-row > i {
@@ -186,8 +196,8 @@
   }
   .option-row > .option-name {
     font-weight: 700;
-    font-size: 1.5rem;/* 24px */
-    line-height: 1.25rem;/* 20px */
+    font-size: 1.5rem; /* 24px */
+    line-height: 1.25rem; /* 20px */
   }
 
   .grid-row {
@@ -208,14 +218,14 @@
     /* TEXT */
     text-align: center;
     font-weight: 700;
-    line-height: 1.25rem;/* 20px */
-    color: #113A62;
+    line-height: 1.25rem; /* 20px */
+    color: $primary-dark;
   }
   .support .title {
-    font-size: 1rem;/* 16px */
+    font-size: 1rem; /* 16px */
   }
   .support .description {
-    font-size: 1.5rem;/* 16px */
+    font-size: 1.5rem; /* 16px */
   }
   .support-description {
     display: flex;
@@ -224,9 +234,9 @@
     /* width: 50%; */
   }
 
-  .modal-buttons{
+  .modal-buttons {
     width: 70%;
-    height: 2.5rem;/* 40px */
+    height: 2.5rem; /* 40px */
     display: flex;
     justify-content: center;
     flex-direction: row;
@@ -253,7 +263,7 @@
   }
 
   .ticket > .row.title {
-    padding: 1rem 3rem 0 .5rem;
+    padding: 1rem 3rem 0 0.5rem;
   }
   .ticket > .row.description {
     padding: 0 2rem 1rem 2rem;
@@ -268,27 +278,26 @@
     flex-direction: column;
     justify-content: center;
     font-weight: 700;
-    line-height: 1.25rem;/* 20px */
-    color: #113A62;
+    line-height: 1.25rem; /* 20px */
+    color: $primary-dark;
   }
   .ticket * .row-element {
     display: flex;
     flex-direction: row;
     justify-content: center;
     font-weight: 700;
-    line-height: 1.25rem;/* 20px */
-    color: #113A62;
-    gap: .5rem;
+    line-height: 1.25rem; /* 20px */
+    color: $primary-dark;
+    gap: 0.5rem;
   }
   .ticket * .description {
-    margin: .5rem;
+    margin: 0.5rem;
     min-height: 2rem;
     text-align: left;
   }
-  
+
   .element.card-inside {
     width: 100%;
-    
   }
   .hidden {
     display: none;
@@ -309,7 +318,7 @@
     }
 
     .ticket > .row.title {
-      padding: 1rem 1rem 0 .5rem;
+      padding: 1rem 1rem 0 0.5rem;
     }
     .ticket > .row.description {
       padding: 0 2rem 1rem 2rem;
@@ -326,7 +335,7 @@
     }
 
     .ticket > .row.title {
-      padding: 1rem 1rem 0 .5rem;
+      padding: 1rem 1rem 0 0.5rem;
     }
     .ticket > .row.description {
       padding: 0 2rem 1rem 2rem;
@@ -334,7 +343,5 @@
   }
 
   @media (min-width: 768px) and (max-width: 1023px) {
-    
   }
 </style>
-

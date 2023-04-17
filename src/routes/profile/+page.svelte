@@ -73,7 +73,7 @@
           ratesBusinessType = value.ratesBusinessType[$loggedInUser.businessLine];
         })
         .catch((err) => {
-          console.error(err);
+          console.log(err);
         });
     } catch (error) {
       throw new Error(error);
@@ -210,15 +210,21 @@
               <div class="row">
                 <div class="element">
                   <div class="title-blue">Crédito</div>
-                  <div class="description text-center">{ratesBusinessType?.credit}%</div>
+                  <div class="description text-center">
+                    {ratesBusinessType?.credit}%
+                  </div>
                 </div>
                 <div class="element">
                   <div class="title-blue">Débito</div>
-                  <div class="description text-center">{ratesBusinessType?.debit}%</div>
+                  <div class="description text-center">
+                    {ratesBusinessType?.debit}%
+                  </div>
                 </div>
                 <div class="element">
                   <div class="title-blue">AMEX</div>
-                  <div class="description text-center">{ratesBusinessType?.amex}%</div>
+                  <div class="description text-center">
+                    {ratesBusinessType?.amex}%
+                  </div>
                 </div>
               </div>
             </div>
@@ -355,7 +361,7 @@
   </div>
 </div>
 
-<style>
+<style lang="scss">
   /* ========================================== */
   .container {
     width: 100%;
@@ -371,7 +377,7 @@
     line-height: 1.25rem; /* 20px */
     text-align: center;
     /* Text */
-    color: #113a62;
+    color: $primary-dark;
   }
   .padding-1 {
     padding: 1rem;
@@ -419,7 +425,7 @@
     height: 130px;
     border-radius: 25px;
     overflow: hidden;
-    background-color: #113a62;
+    background-color: $primary-dark;
   }
   .avatar img {
     height: 100%;
@@ -435,7 +441,7 @@
     font-size: 20px;
     line-height: 16px;
     text-align: center;
-    color: #113a62;
+    color: $primary-dark;
     margin: 0rem 0rem 0.5rem 0rem;
   }
   .description {
@@ -443,7 +449,7 @@
     font-size: 14px;
     line-height: 16px;
     text-align: center;
-    color: #113a62;
+    color: $primary-dark;
     display: flex;
     align-items: center;
   }
@@ -483,7 +489,7 @@
   }
 
   .arrow-blue {
-    color: #007aff;
+    color: $primary-light;
     cursor: pointer;
   }
 

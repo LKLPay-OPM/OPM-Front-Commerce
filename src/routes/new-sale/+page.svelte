@@ -212,11 +212,11 @@
           }
         })
         .catch((err) => {
-          console.error(err);
+          console.log(err);
           throw new Error(err);
         });
     } catch (error) {
-      console.error(err);
+      console.log(err);
       throw new Error(error);
     }
   };
@@ -295,7 +295,7 @@
   <RedirectLogin />
 {/if}
 
-<style>
+<style lang="scss">
   .transactions {
     /* display: flex;
     flex-direction: column;

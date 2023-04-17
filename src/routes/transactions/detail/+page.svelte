@@ -1,6 +1,4 @@
 <script>
-  /* styles */
-  import "$lib/styles/transactions.scss";
   /* components */
   import Input from "$lib/components/Input.svelte";
   import Icons from "$lib/components/Icons.svelte";
@@ -258,3 +256,6 @@
     </div>
   </div>
 </div>
+<style lang="scss">
+  @import 'src/lib/styles/transactions.scss';
+</style>

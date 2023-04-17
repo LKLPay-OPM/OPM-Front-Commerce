@@ -5,8 +5,8 @@
   export let value = "";
   export let className = "";
   export let title = "";
-  const onInput = e => {
-    value = e.target.value
+  const onInput = (e) => {
+    value = e.target.value;
   };
 </script>
 
@@ -22,57 +22,64 @@
   <input on:click {type} {placeholder} {id} {value} on:input={onInput} {step} {accept}>
 </div> -->
 <div class={className}>
-  <label title={title} class="label" for={id}>
+  <label {title} class="label" for={id}>
     <span class="label-text">
       {label}
     </span>
   </label>
-  <textarea on:input={onInput} {value} {placeholder} {id} class="text-area" rows="5"></textarea>
+  <textarea
+    on:input={onInput}
+    {value}
+    {placeholder}
+    {id}
+    class="text-area"
+    rows="5"
+  />
 </div>
-<style>
+
+<style lang="scss">
   .label {
     display: flex;
     -webkit-user-select: none;
-            user-select: none;
+    user-select: none;
     align-items: center;
-    justify-content: space-between
+    justify-content: space-between;
   }
 
   .label-text {
     display: flex;
     flex-direction: row;
     margin-top: 1rem;
-    font-size: .8125rem;
+    font-size: 0.8125rem;
     font-weight: 700;
     line-height: 1.25rem;
-    color: #8B9EB0;
+    color: $grey;
   }
 
   .text-area {
     display: flex;
     justify-content: center;
-    padding: .5rem;
-    margin: .5rem 0rem;
+    padding: 0.5rem;
+    margin: 0.5rem 0rem;
     width: 100%;
-    height: 7rem;/* 112px */
+    height: 7rem; /* 112px */
     border: none;
     outline: none;
-    background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%);
+    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     /* inner-flat */
-    box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0;
+    box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     border-radius: 4px;
-    font-size: .8125rem;
+    font-size: 0.8125rem;
     font-weight: 700;
     line-height: 1.25rem;
-    color: #113A62;
-    /* outline-color: #113A62; */
+    color: $primary-dark;
+    /* outline-color: $primary-dark; */
     /* border-color: #00C48C; */
   }
 
   .fill-blue .label-text {
-    color: #113A62;
-    font-size: .875rem;
-
+    color: $primary-dark;
+    font-size: 0.875rem;
   }
 
   /* textarea.text-area {

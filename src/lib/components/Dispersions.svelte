@@ -214,12 +214,54 @@
     dispersions = [...$loggedInUser.dispersions];
     if (dispersions.length <= 0) {
       dispersions.push(
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 }
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        }
       );
       // console.log($loggedInUser.dispersions)
       // console.log(dispersions)
@@ -251,18 +293,102 @@
     dispersions = [...$loggedInUser.dispersions];
     if (dispersions.length <= 0) {
       dispersions.push(
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 }
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        }
       );
     }
     /* const curr = new Date;
@@ -290,18 +416,102 @@
     dispersions = [...$loggedInUser.dispersions];
     if (dispersions.length <= 0) {
       dispersions.push(
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 },
-        { date: Timestamp.now(), id: "123", total: 1000, commission: 30, dispersion: 970, afterDispersion: 0 }
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        },
+        {
+          date: Timestamp.now(),
+          id: "123",
+          total: 1000,
+          commission: 30,
+          dispersion: 970,
+          afterDispersion: 0,
+        }
       );
     }
     /* var pattern = /(\d{4})\-(\d{2})\-(\d{2})/; // String pattern replace for date
@@ -612,7 +822,9 @@
             <p>Monto a Depositar</p>
           </div>
           <div class="content">
-            <p>{$loggedInUser.toDeposit?.toLocaleString(localeParam.language, localeParam.currency)}</p>
+            <p>
+              {$loggedInUser.toDeposit?.toLocaleString(localeParam.language, localeParam.currency)}
+            </p>
           </div>
         </div>
         <div class="terms">
@@ -677,7 +889,9 @@
     <div class="clarifications">
       <div class="title">Cantidad</div>
       <div class="description">
-        <p>{immediateDeposit.availableBalance.toLocaleString(localeParam.language, localeParam.currency)}</p>
+        <p>
+          {immediateDeposit.availableBalance.toLocaleString(localeParam.language, localeParam.currency)}
+        </p>
       </div>
     </div>
     <div class="clarification-description">
@@ -901,7 +1115,9 @@
         </div>
         <div class="card">
           <div><p>Saldo a Depositar</p></div>
-          <div><span>{user.toDeposit.toLocaleString(localeParam.language, localeParam.currency)}</span></div>
+          <div>
+            <span>{user.toDeposit.toLocaleString(localeParam.language, localeParam.currency)}</span>
+          </div>
         </div>
         <div class="button">
           <Input
@@ -935,6 +1151,7 @@
                   <th>Saldo</th>
                   <th>Tipo</th>
                   <th class="responsive hide">Comisión</th>
+                  <th class="responsive hide">IVA</th>
                   <th class="responsive hide">Interés</th>
                   <th class="responsive hide">Depósito</th>
                   <th class="responsive hide">Saldo Final</th>
@@ -965,6 +1182,7 @@
                         localeParam.currency
                       )}</td
                     >
+                    <td class="responsive hide"> - </td>
                     <td class="responsive hide" />
                     <td class="responsive hide"
                       >{parseFloat(dispersion.dispersion).toLocaleString(
@@ -1038,7 +1256,9 @@
                     </div> -->
                 <div class="item">
                   <b>Total Depositado</b>
-                  <p>{selectedDispersion.dispersion.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                  <p>
+                    {selectedDispersion.dispersion.toLocaleString(localeParam.language, localeParam.currency)}
+                  </p>
                 </div>
               </div>
               <div class="details-card__bottom">
@@ -1053,8 +1273,9 @@
                   <span />
                 </div>
                 <div class="item">
-                  <b>Comisión</b>
-                  <p>{selectedDispersion.commission.toLocaleString(localeParam.language, localeParam.currency)}</p>
+                  <p>
+                    {selectedDispersion.commission.toLocaleString(localeParam.language, localeParam.currency)}
+                  </p>
                   <!-- <span>(4.06%)</span> -->
                 </div>
               </div>
@@ -1097,7 +1318,6 @@
                 icon="xls-fill"
               />
               <Input
-                label=""
                 id="print"
                 type="button"
                 className="btn-plain btn-square fill-blue {dispersions.length > 0 ? '' : 'disabled'}"
@@ -1140,7 +1360,7 @@
   </div>
 </div>
 
-<style>
+<style lang="scss">
   .dispersions {
     /* display: flex;
     flex-direction: column;
@@ -1191,7 +1411,7 @@
     line-height: 1.25rem; /* 20px */
     text-align: center;
     /* Text */
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .middle {
@@ -1225,7 +1445,7 @@
     min-width: 166px;
     height: 88px;
     /* Nue Fill */
-    background: linear-gradient(91.36deg, #efeef5 0%, #e6e8ef 100%);
+    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     /* out */
     box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
@@ -1244,7 +1464,7 @@
     width: 8.75rem; /* 140px */
     height: 4.375rem; /* 70px */
     /* Nue Fill */
-    /* background: linear-gradient(91.36deg, #EFEEF5 0%, #E6E8EF 100%); */
+    /* background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #E6E8EF 100%); */
     /* out */
     /* box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41); */
     border-radius: 10px;
@@ -1272,7 +1492,7 @@
     line-height: 20px;
     text-align: center;
     /* Text */
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .dispersions-view {
@@ -1297,7 +1517,7 @@
     text-align: center;
     font-weight: 700;
     line-height: 1.25rem; /* 20px */
-    color: #113a62;
+    color: $primary-dark;
   }
   .clarifications .title {
     font-size: 1rem; /* 16px */
@@ -1332,7 +1552,7 @@
 
     /* Text */
 
-    color: #113a62;
+    color: $primary-dark;
   }
   .immediate-deposit .row-element {
     display: flex;
@@ -1347,7 +1567,7 @@
     font-weight: 700;
     font-size: 0.8125rem; /* 13px */
     line-height: 1.25rem; /* 20px */
-    color: #113a62;
+    color: $primary-dark;
   }
   .immediate-deposit .column-element .gray-title {
     display: flex;
@@ -1363,7 +1583,7 @@
     font-weight: 700;
     font-size: 1.25rem; /* 20px */
     line-height: 1.25rem; /* 20px */
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .immediate-deposit .terms {
@@ -1377,7 +1597,7 @@
     line-height: 1.25;
     display: flex;
     align-items: center;
-    color: #8b9eb0;
+    color: $grey;
   }
 
   .immediate-deposit .terms a {
@@ -1417,7 +1637,7 @@
     line-height: 1.25rem; /* 20px */
     text-align: center;
     /* Text */
-    color: #113a62;
+    color: $primary-dark;
   }
   .dispersion-tables {
     display: flex;
@@ -1454,7 +1674,7 @@
     line-height: 18px;
     text-align: center;
     /* text-placeholder */
-    color: #113a62;
+    color: $primary-dark;
     height: 2.375rem;
   }
 
@@ -1506,7 +1726,7 @@
     font-weight: 700;
     font-size: 1.25rem;
     line-height: 1.25rem;
-    color: #113a62;
+    color: $primary-dark;
   }
   .details__top p {
     font-style: normal;
@@ -1528,7 +1748,7 @@
     font-weight: 700;
     font-size: 1rem;
     line-height: 1.125rem;
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .details__middle .details-left .item b {
@@ -1555,7 +1775,7 @@
     width: 26.75rem; /* 428px */
     height: 13.125rem; /* 210px */
     /* Fill Container */
-    background: #f3f3f3;
+    background: $background-light-secondary;
     /* container effect */
     box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
@@ -1566,7 +1786,7 @@
     font-weight: 700;
     font-size: 1.25rem; /* 20px */
     line-height: 1.125rem; /* 18px */
-    color: #113a62;
+    color: $primary-dark;
   }
   .details__middle .details-center .details-card .details-card__middle {
     display: flex;
@@ -1580,7 +1800,7 @@
     font-weight: 500;
     font-size: 0.8125rem; /* 13px */
     line-height: 1.125rem; /* 18px */
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .details__middle .details-center .details-card .details-card__middle .item p {
@@ -1588,7 +1808,7 @@
     font-weight: 700;
     font-size: 1.25rem; /* 20px */
     line-height: 1.125rem; /* 18px */
-    color: #113a62;
+    color: $primary-dark;
   }
   .details__middle .details-center .details-card .details-card__bottom {
     display: flex;
@@ -1610,7 +1830,7 @@
     font-weight: 700;
     font-size: 0.875rem; /* 14px */
     line-height: 1.125rem; /* 18px */
-    color: #113a62;
+    color: $primary-dark;
     text-align: center;
   }
 
@@ -1652,7 +1872,7 @@
     font-weight: 700;
     font-size: 1rem;
     line-height: 1.125rem;
-    color: #113a62;
+    color: $primary-dark;
   }
 
   .details__middle .details-right .item b {

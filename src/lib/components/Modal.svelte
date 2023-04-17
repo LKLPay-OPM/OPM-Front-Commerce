@@ -1,40 +1,68 @@
 <script>
-	import { booleanStore } from '../stores'
+  import { booleanStore } from "../stores";
+  import Icons from "$lib/components/Icons.svelte";
 
-  const store = booleanStore(false)
-  const { isOpen, open, close } = store
+  const store = booleanStore(false);
+  const { isOpen, open, close } = store;
   let dialog;
+  let shown = false;
   export let className = "";
+
+  const backdropClick = (event) => {
+    event.target === dialog && dialog.close(event);
+  };
 
   export const show = () => {
     dialog.showModal();
-  }
+    dialog.addEventListener("click", (e) => backdropClick(e));
+    shown = true;
+  };
   export const closeModal = () => {
+    shown = false;
     dialog.close();
-  }
+  };
 </script>
 
-<slot name="trigger">
-  <!-- fallback trigger to open the modal -->
-  <!-- <button on:click={open}>Open</button> -->
-</slot>
+<!-- <slot name="trigger" /> -->
 <div class="modal-container">
   <dialog class={`${className}`} bind:this={dialog}>
-    <div class="content-wrapper">
-      <div class="header">
-        <slot name="header"/>
+    {#if shown}
+      <div class="content-wrapper">
+        <div class="close-modal">
+          <label class="clickable close" for="closeModalButton">
+            <i>
+              <Icons name="close" width="24" height="24" />
+            </i>
+          </label>
+          <input on:click={closeModal} id="closeModalButton" type="button" />
+        </div>
+        <div class="header">
+          <slot name="header" />
+        </div>
+        <div class="content">
+          <slot name="content" />
+        </div>
+        <div class="footer">
+          <slot name="footer" />
+        </div>
       </div>
-      <div class="content">
-        <slot name="content"/>
-      </div>
-      <div class="footer">
-        <slot name="footer"/>
-      </div>
-    </div>
+    {/if}
   </dialog>
 </div>
 
-<style>
+<style lang="scss">
+  .close-modal {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+  .close-modal input {
+    display: none;
+  }
+
+  .close:hover {
+    color: $red;
+    transition: all 0.4s ease;
+  }
   .modal-medium {
     width: 30rem;
   }
@@ -50,8 +78,9 @@
     padding: 0;
     position: fixed;
     inset: 0;
-    background: #F3F3F3;
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #FFFFFF, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    background: $background-light-secondary;
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     border: none;
   }
@@ -73,7 +102,7 @@
     border-radius: 0.3rem;
     background-color: white;
     overflow: hidden;
-		padding: 1rem;
+    padding: 1rem;
   }
   .header {
     margin: 10px;
@@ -84,7 +113,7 @@
     line-height: 1.25rem; /* 20px */
     display: flex;
     align-items: center;
-    color: #113A62;
+    color: $primary-dark;
   }
   .content {
     max-height: 50vh;
@@ -92,7 +121,7 @@
     margin: 15px;
   }
 
-  .footer{
+  .footer {
     display: flex;
     justify-content: center;
     flex-direction: row;
