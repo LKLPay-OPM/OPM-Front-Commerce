@@ -1,67 +1,85 @@
 /* environment */
 import { PUBLIC_DEVICES_ENDPOINT, PUBLIC_PROFILES_ENDPOINT, PUBLIC_TRANSACTIONS_ENDPOINT } from "$env/static/public";
-/* store */
-import { sessionUser } from "$lib/stores";
 /* client */
 import axios from "axios";
+/* decode */
+import jwtDecode from "jwt-decode";
+/* store */
+import { sessionUser, isLoggedIn, loggedInUser } from "$lib/stores";
+/* constants */
+import { axiosDefaultsClientFormData, axiosDefaultsClientJson } from "$lib/constants/axios";
+import { axiosWithAuth } from "$lib/utils/axios";
+
+axios.defaults.withCredentials = true;
 
 const axiosClient = axios.create({
-  headers: { "Content-Type": "application/json" },
+  ...axiosDefaultsClientJson,
   baseURL: PUBLIC_DEVICES_ENDPOINT,
-  withCredentials: true,
 });
 const axiosFormDataClient = axios.create({
-  headers: { "Content-Type": "multipart/form-data" },
+  ...axiosDefaultsClientFormData,
   baseURL: PUBLIC_DEVICES_ENDPOINT,
-  withCredentials: true,
 });
 const profilesFormDataClient = axios.create({
-  headers: { "Content-Type": "multipart/form-data" },
+  ...axiosDefaultsClientFormData,
   baseURL: PUBLIC_PROFILES_ENDPOINT,
-  withCredentials: true,
 });
 const profilesClient = axios.create({
-  headers: { "Content-Type": "application/json" },
+  ...axiosDefaultsClientJson,
   baseURL: PUBLIC_PROFILES_ENDPOINT,
-  withCredentials: true,
 });
 const axiosTransactionsClient = axios.create({
-  headers: { "Content-Type": "application/json" },
+  ...axiosDefaultsClientJson,
   baseURL: PUBLIC_TRANSACTIONS_ENDPOINT,
-  withCredentials: true,
 });
-
 const refreshTokenClient = axios.create({
-  headers: { "Content-Type": "application/json" },
+  ...axiosDefaultsClientJson,
   baseURL: PUBLIC_PROFILES_ENDPOINT,
-  withCredentials: true,
 });
-
-async function refreshToken() {
-  const response = await refreshTokenClient.post("/auth/commerce/refresh-token");
-  const sessionData = response.data;
-  return sessionData;
-}
 
 let isRefreshing = false;
 
-async function errorInterceptor(error) {
+async function refreshToken() {
+  try {
+    axiosWithAuth(refreshTokenClient);
+    const { data } = await refreshTokenClient.post("auth/commerce/refresh-token");
+
+    if (!data?.response) throw new Error("Request Failed");
+    if (!data.response?.token) throw new Error("Token not receiveed");
+
+    const user = jwtDecode(data.response.token);
+    return { session: data.response, user };
+  } catch (error) {
+    console.error("Error refreshing token:", error);
+    throw error;
+  }
+}
+
+async function errorInterceptor(error, axiosInstance) {
   const originalRequest = error.config;
   if ([401, 403].includes(error.response?.status) && !originalRequest._retry) {
     if (isRefreshing) {
-      try {
-        return profilesClient(originalRequest);
-      } catch (error) {
-        return Promise.reject(error);
-      }
+      return new Promise(function (resolve, reject) {
+        failedQueue.push({ resolve, reject });
+      })
+        .then(() => {
+          return axiosInstance(originalRequest);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
     }
     originalRequest._retry = true;
     isRefreshing = true;
     try {
-      const session = await refreshToken();
+      const { session, user } = await refreshToken();
+      isLoggedIn.update(() => true);
+      loggedInUser.set(user);
       sessionUser.set(session);
-      return profilesClient(originalRequest);
+      processQueue(null, session);
+      return axiosInstance(originalRequest);
     } catch (error) {
+      processQueue(error, null);
       return Promise.reject(error);
     } finally {
       isRefreshing = false;
@@ -70,38 +88,41 @@ async function errorInterceptor(error) {
   return Promise.reject(error);
 }
 
-const axiosInstance = axios.create({
-  headers: { "Content-Type": "application/json" },
-  withCredentials: true,
-});
+let failedQueue = [];
 
-class AppClient {
-  /**
-   * @param {import('axios').AxiosInstance} axiosInstance
-   */
-  constructor(axiosInstance) {
-    this.client = axiosInstance;
-    /* interceptores */
-    this.client.interceptors.response.use((response) => response, errorInterceptor);
-  }
+function processQueue(error, token = null) {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
 
-  profiles() {
-    this.client.defaults.baseURL = PUBLIC_PROFILES_ENDPOINT;
-    return this.client;
-  }
-
-  transactions() {
-    this.client.defaults.baseURL = PUBLIC_TRANSACTIONS_ENDPOINT;
-    return this.client;
-  }
+  failedQueue = [];
 }
 
-export const appClient = new AppClient(axiosInstance);
+/* interceptors */
+axiosClient.interceptors.response.use(
+  (response) => response,
+  (error) => errorInterceptor(error, axiosClient)
+);
+axiosFormDataClient.interceptors.response.use(
+  (response) => response,
+  (error) => errorInterceptor(error, axiosFormDataClient)
+);
+profilesFormDataClient.interceptors.response.use(
+  (response) => response,
+  (error) => errorInterceptor(error, profilesFormDataClient)
+);
+profilesClient.interceptors.response.use(
+  (response) => response,
+  (error) => errorInterceptor(error, profilesClient)
+);
+axiosTransactionsClient.interceptors.response.use(
+  (response) => response,
+  (error) => errorInterceptor(error, axiosTransactionsClient)
+);
 
-axiosClient.interceptors.response.use((response) => response, errorInterceptor);
-axiosFormDataClient.interceptors.response.use((response) => response, errorInterceptor);
-profilesFormDataClient.interceptors.response.use((response) => response, errorInterceptor);
-profilesClient.interceptors.response.use((response) => response, errorInterceptor);
-axiosTransactionsClient.interceptors.response.use((response) => response, errorInterceptor);
-
+/* exports after assigning interceptors */
 export { axiosClient, axiosFormDataClient, profilesFormDataClient, profilesClient, axiosTransactionsClient };

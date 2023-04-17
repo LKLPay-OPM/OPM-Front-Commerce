@@ -1,15 +1,5 @@
 <script>
-  import {
-    collection,
-    Timestamp,
-    query,
-    orderBy,
-    limit,
-    where,
-    getDocs,
-    startAt,
-    endAt,
-  } from "firebase/firestore";
+  import { collection, Timestamp, query, orderBy, limit, where, getDocs, startAt, endAt } from "firebase/firestore";
   import { db } from "$lib/firebase";
   /* components */
   import Input from "$lib/components/Input.svelte";
@@ -27,11 +17,7 @@
   /*  */
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
-  import {
-    generatePDF,
-    generateCSV,
-    generateXLSX,
-  } from "$lib/hooks/exportDataToFile.js";
+  import { generatePDF, generateCSV, generateXLSX } from "$lib/hooks/exportDataToFile.js";
   /* icons */
   import Icons from "$lib/components/Icons.svelte";
   /* Constants */
@@ -82,8 +68,6 @@
     monthView = false;
 
   $: {
-    console.log(data.response);
-    console.log(active);
     transactionFound();
     /* if (active === "day") {
       transactionFound();
@@ -132,7 +116,7 @@
       transactions = response.transactions;
       // return {response: response.data?.response };
     } catch (err) {
-      console.log(err);
+      console.error(err);
       throw new error(500, "Something went wrong!");
     }
   };
@@ -147,24 +131,9 @@
     var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
     //transactions = [];
     const curr = new Date();
-    const currentMonth = new Date(curr.setMonth(curr.getMonth(), 1)).setHours(
-      0,
-      0,
-      0,
-      0
-    ); // Sets Date to actual month day 1 at 00:00
-    const nextMonth = new Date(curr.setMonth(curr.getMonth() + 1, 1)).setHours(
-      0,
-      0,
-      0,
-      0
-    ); // Sets Date to next month day 1 at 00:00
-    const lastDayOfMonth = new Date(curr.setMonth(curr.getMonth(), 0)).setHours(
-      0,
-      0,
-      0,
-      0
-    ); // Sets Date to last day of month at 00:00
+    const currentMonth = new Date(curr.setMonth(curr.getMonth(), 1)).setHours(0, 0, 0, 0); // Sets Date to actual month day 1 at 00:00
+    const nextMonth = new Date(curr.setMonth(curr.getMonth() + 1, 1)).setHours(0, 0, 0, 0); // Sets Date to next month day 1 at 00:00
+    const lastDayOfMonth = new Date(curr.setMonth(curr.getMonth(), 0)).setHours(0, 0, 0, 0); // Sets Date to last day of month at 00:00
     const numDays = new Date(lastDayOfMonth).getDate();
 
     const first = new Intl.DateTimeFormat("es-MX", {
@@ -186,18 +155,8 @@
     const q = query(
       collection(db, dbCollection, uid, "transactions"),
       orderBy("Transaction Date", "desc"),
-      startAt(
-        last.replace(
-          pattern,
-          "$3$2$1"
-        ) /* Timestamp.fromDate(new Date(nextMonth)) */
-      ),
-      endAt(
-        first.replace(
-          pattern,
-          "$3$2$1"
-        ) /* Timestamp.fromDate(new Date(currentMonth)) */
-      ),
+      startAt(last.replace(pattern, "$3$2$1") /* Timestamp.fromDate(new Date(nextMonth)) */),
+      endAt(first.replace(pattern, "$3$2$1") /* Timestamp.fromDate(new Date(currentMonth)) */),
       limit(10)
     );
     const querySnapshot = await getDocs(q);
@@ -289,12 +248,8 @@
     loading = true;
     var pattern = /(\d{4})\-(\d{2})\-(\d{2})/; // String pattern replace for date
     var patternFetch = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace fetch date
-    const startRange = new Date(
-      dateRangeStart.replace(pattern, "$2-$3-$1")
-    ).setHours(0, 0, 0, 0); //Sets the date pattern and time to 00:00
-    const endRange = new Date(
-      dateRangeEnd.replace(pattern, "$2-$3-$1")
-    ).setHours(23, 59, 59, 59); //Sets the date pattern and time to 23:59
+    const startRange = new Date(dateRangeStart.replace(pattern, "$2-$3-$1")).setHours(0, 0, 0, 0); //Sets the date pattern and time to 00:00
+    const endRange = new Date(dateRangeEnd.replace(pattern, "$2-$3-$1")).setHours(23, 59, 59, 59); //Sets the date pattern and time to 23:59
 
     const first = new Intl.DateTimeFormat("es-MX", {
       month: "2-digit",
@@ -313,18 +268,8 @@
     const q = query(
       collection(db, dbCollection, uid, "transactions"),
       orderBy("Transaction Date", "desc"),
-      startAt(
-        last.replace(
-          patternFetch,
-          "$3$2$1"
-        ) /* Timestamp.fromDate(new Date(endRange)) */
-      ),
-      endAt(
-        first.replace(
-          patternFetch,
-          "$3$2$1"
-        ) /* Timestamp.fromDate(new Date(startRange)) */
-      )
+      startAt(last.replace(patternFetch, "$3$2$1") /* Timestamp.fromDate(new Date(endRange)) */),
+      endAt(first.replace(patternFetch, "$3$2$1") /* Timestamp.fromDate(new Date(startRange)) */)
       // limit(10)
     );
     const querySnapshot = await getDocs(q);
@@ -528,10 +473,7 @@
       cardIcon = "amex";
       return "AMEX";
     }
-    if (
-      mastercard.test(cc.substring(0, 4)) ||
-      mastercard2.test(cc.substring(0, 4))
-    ) {
+    if (mastercard.test(cc.substring(0, 4)) || mastercard2.test(cc.substring(0, 4))) {
       cardIcon = "master-card";
       return "MASTERCARD";
     }
@@ -566,11 +508,7 @@
 </script>
 
 <!-- MODAL TRANSACTION CLARIFICATION -->
-<Modal
-  className={`modal-medium`}
-  wrapperClass={"text-area-wrapper"}
-  bind:this={modalClarification}
->
+<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalClarification}>
   <div slot="header">
     <p>Solicitar Aclaración</p>
   </div>
@@ -623,38 +561,24 @@
     <div class="modal-range">
       <p>Fechas</p>
       <div class="date-range-input">
-        <DatePicker
-          label="Del"
-          id="date-range-start"
-          bind:value={dateRangeStart}
-        />
+        <DatePicker label="Del" id="date-range-start" bind:value={dateRangeStart} />
         <DatePicker label="Al" id="date-range-end" bind:value={dateRangeEnd} />
       </div>
       <p>Marca</p>
       <div class="input-cards">
         <i
           on:click={() => (cardBrand = "MasterCard")}
-          on:keypress={(e) =>
-            e.key === "Enter" ? (cardBrand = "MasterCard") : ""}
+          on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "MasterCard") : "")}
         >
           <Icons name="master-card" width="50" height="30" />
         </i>
-        <i
-          on:click={() => (cardBrand = "Visa")}
-          on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "Visa") : "")}
-        >
+        <i on:click={() => (cardBrand = "Visa")} on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "Visa") : "")}>
           <Icons name="visa" width="50" height="30" />
         </i>
-        <i
-          on:click={() => (cardBrand = "AMEX")}
-          on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "AMEX") : "")}
-        >
+        <i on:click={() => (cardBrand = "AMEX")} on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "AMEX") : "")}>
           <Icons name="amex" width="25" height="25" />
         </i>
-        <i
-          on:click={() => (cardBrand = "Other")}
-          on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "Other") : "")}
-        >
+        <i on:click={() => (cardBrand = "Other")} on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "Other") : "")}>
           <Icons name="bank-card-line" width="25" height="25" />
         </i>
       </div>
@@ -676,11 +600,7 @@
       id="buttonSaveModalDateRange"
       type="button"
       className={`btn-plain
-        ${
-          dateRangeStart != "" && dateRangeEnd != "" && cardBrand != ""
-            ? ""
-            : "disabled"
-        }`}
+        ${dateRangeStart != "" && dateRangeEnd != "" && cardBrand != "" ? "" : "disabled"}`}
       icon=""
     />
   </div>
@@ -725,11 +645,7 @@
           {date.getDate()} de {getMonthName(date.getMonth())} del {date.getFullYear()}
         </p>
       </div>
-      <ButtonGroup
-        active={filter}
-        options={filterByDateOptions}
-        on:click={handleFilterClick}
-      />
+      <ButtonGroup active={filter} options={filterByDateOptions} on:click={handleFilterClick} />
     </div>
     <div class="top__right">
       <div class="transaction-search-bar">
@@ -756,9 +672,7 @@
           label=""
           id="csv-export"
           type="button"
-          className="btn-plain btn-square fill-blue {transactions?.length > 0
-            ? ''
-            : 'disabled'}"
+          className="btn-plain btn-square fill-blue {transactions?.length > 0 ? '' : 'disabled'}"
           icon="csv-fill"
         />
         <Input
@@ -766,27 +680,21 @@
           label=""
           id="excel-export"
           type="button"
-          className="btn-plain btn-square fill-green {transactions?.length > 0
-            ? ''
-            : 'disabled'}"
+          className="btn-plain btn-square fill-green {transactions?.length > 0 ? '' : 'disabled'}"
           icon="xls-fill"
         />
         <Input
           label=""
           id="print"
           type="button"
-          className="btn-plain btn-square fill-blue {transactions?.length > 0
-            ? ''
-            : 'disabled'}"
+          className="btn-plain btn-square fill-blue {transactions?.length > 0 ? '' : 'disabled'}"
           icon="print"
         />
         <Input
           label=""
           id="pdf-export"
           type="button"
-          className="btn-plain btn-square fill-red {transactions?.length > 0
-            ? ''
-            : 'disabled'}"
+          className="btn-plain btn-square fill-red {transactions?.length > 0 ? '' : 'disabled'}"
           icon="pdf-fill"
         />
         <!-- <Input on:click={exportDataToCSV(transactions)} label="" id="csv-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="csv-fill"/> -->
@@ -800,33 +708,20 @@
       <div class="card">
         <div><p>Total Vendido</p></div>
         <div>
-          <span
-            >{resume?.Amount?.toLocaleString(
-              localeParam.language,
-              localeParam.currency
-            ) ?? "$0.00"}
-          </span>
+          <span>{resume?.Amount?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"} </span>
         </div>
       </div>
       <div class="card">
         <div><p>Comisión</p></div>
         <div>
-          <span
-            >{resume?.Comission?.toLocaleString(
-              localeParam.language,
-              localeParam.currency
-            ) ?? "$0.00"}
-          </span>
+          <span>{resume?.Comission?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"} </span>
         </div>
       </div>
       <div class="card">
         <div><p>Propinas</p></div>
         <div>
           <span>
-            {resume?.Tips?.toLocaleString(
-              localeParam.language,
-              localeParam.currency
-            ) ?? "$0.00"}
+            {resume?.Tips?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
           </span>
         </div>
       </div>
@@ -834,10 +729,7 @@
         <div><p>Saldo a Depositar</p></div>
         <div>
           <span>
-            {resume?.Deposit?.toLocaleString(
-              localeParam.language,
-              localeParam.currency
-            ) ?? "$0.00"}
+            {resume?.Deposit?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
           </span>
         </div>
       </div>

@@ -1,15 +1,5 @@
 <script>
-  import {
-    collection,
-    Timestamp,
-    query,
-    orderBy,
-    limit,
-    where,
-    getDocs,
-    startAt,
-    endAt,
-  } from "firebase/firestore";
+  import { collection, Timestamp, query, orderBy, limit, where, getDocs, startAt, endAt } from "firebase/firestore";
   import { db } from "$lib/firebase";
   /* components */
   import Input from "$lib/components/Input.svelte";
@@ -22,11 +12,7 @@
   /*  */
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
-  import {
-    generatePDF,
-    generateCSV,
-    generateXLSX,
-  } from "$lib/hooks/exportDataToFile.js";
+  import { generatePDF, generateCSV, generateXLSX } from "$lib/hooks/exportDataToFile.js";
   /* icons */
   import Icons from "./Icons.svelte";
   /* Constants */
@@ -43,9 +29,7 @@
   function handleFilterClick({ detail }) {
     const value = detail?.value;
     // active = value;
-    goto(
-      `?filter=${value ?? "day"}&start=${paginationStart}&end=${paginationEnd}`
-    );
+    goto(`?filter=${value ?? "day"}&start=${paginationStart}&end=${paginationEnd}`);
   }
 
   export let user;
@@ -86,8 +70,8 @@
     } else {
       notFound = false;
     }
-    if(data.response.week){
-      transactionsWeek = data.response.week
+    if (data.response.week) {
+      transactionsWeek = data.response.week;
     }
   }
   let clarificationsList = [
@@ -121,19 +105,19 @@
     loading = false;
   };
 
-  const fetchWeekDayTransactions = async(id) => {
+  const fetchWeekDayTransactions = async (id) => {
     try {
       const response = await axiosTransactionsClient.get(
-        `/transaction/${id}`,
+        `/transaction/${id}`
         // { params: { filter, start, end } }
       );
-      transactions = response.transactions
+      transactions = response.transactions;
       // return {response: response.data?.response };
     } catch (err) {
-      console.log(err)
+      console.error(err);
       throw new error(500, "Something went wrong!");
     }
-  }
+  };
 
   const fetchByMonthButton = async () => {
     active = "month";
@@ -145,24 +129,9 @@
     var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
     //transactions = [];
     const curr = new Date();
-    const currentMonth = new Date(curr.setMonth(curr.getMonth(), 1)).setHours(
-      0,
-      0,
-      0,
-      0
-    ); // Sets Date to actual month day 1 at 00:00
-    const nextMonth = new Date(curr.setMonth(curr.getMonth() + 1, 1)).setHours(
-      0,
-      0,
-      0,
-      0
-    ); // Sets Date to next month day 1 at 00:00
-    const lastDayOfMonth = new Date(curr.setMonth(curr.getMonth(), 0)).setHours(
-      0,
-      0,
-      0,
-      0
-    ); // Sets Date to last day of month at 00:00
+    const currentMonth = new Date(curr.setMonth(curr.getMonth(), 1)).setHours(0, 0, 0, 0); // Sets Date to actual month day 1 at 00:00
+    const nextMonth = new Date(curr.setMonth(curr.getMonth() + 1, 1)).setHours(0, 0, 0, 0); // Sets Date to next month day 1 at 00:00
+    const lastDayOfMonth = new Date(curr.setMonth(curr.getMonth(), 0)).setHours(0, 0, 0, 0); // Sets Date to last day of month at 00:00
     const numDays = new Date(lastDayOfMonth).getDate();
 
     const first = new Intl.DateTimeFormat("es-MX", {
@@ -184,18 +153,8 @@
     const q = query(
       collection(db, dbCollection, uid, "transactions"),
       orderBy("Transaction Date", "desc"),
-      startAt(
-        last.replace(
-          pattern,
-          "$3$2$1"
-        ) /* Timestamp.fromDate(new Date(nextMonth)) */
-      ),
-      endAt(
-        first.replace(
-          pattern,
-          "$3$2$1"
-        ) /* Timestamp.fromDate(new Date(currentMonth)) */
-      ),
+      startAt(last.replace(pattern, "$3$2$1") /* Timestamp.fromDate(new Date(nextMonth)) */),
+      endAt(first.replace(pattern, "$3$2$1") /* Timestamp.fromDate(new Date(currentMonth)) */),
       limit(10)
     );
     const querySnapshot = await getDocs(q);
@@ -287,12 +246,8 @@
     loading = true;
     var pattern = /(\d{4})\-(\d{2})\-(\d{2})/; // String pattern replace for date
     var patternFetch = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace fetch date
-    const startRange = new Date(
-      dateRangeStart.replace(pattern, "$2-$3-$1")
-    ).setHours(0, 0, 0, 0); //Sets the date pattern and time to 00:00
-    const endRange = new Date(
-      dateRangeEnd.replace(pattern, "$2-$3-$1")
-    ).setHours(23, 59, 59, 59); //Sets the date pattern and time to 23:59
+    const startRange = new Date(dateRangeStart.replace(pattern, "$2-$3-$1")).setHours(0, 0, 0, 0); //Sets the date pattern and time to 00:00
+    const endRange = new Date(dateRangeEnd.replace(pattern, "$2-$3-$1")).setHours(23, 59, 59, 59); //Sets the date pattern and time to 23:59
 
     const first = new Intl.DateTimeFormat("es-MX", {
       month: "2-digit",
@@ -311,18 +266,8 @@
     const q = query(
       collection(db, dbCollection, uid, "transactions"),
       orderBy("Transaction Date", "desc"),
-      startAt(
-        last.replace(
-          patternFetch,
-          "$3$2$1"
-        ) /* Timestamp.fromDate(new Date(endRange)) */
-      ),
-      endAt(
-        first.replace(
-          patternFetch,
-          "$3$2$1"
-        ) /* Timestamp.fromDate(new Date(startRange)) */
-      )
+      startAt(last.replace(patternFetch, "$3$2$1") /* Timestamp.fromDate(new Date(endRange)) */),
+      endAt(first.replace(patternFetch, "$3$2$1") /* Timestamp.fromDate(new Date(startRange)) */)
       // limit(10)
     );
     const querySnapshot = await getDocs(q);
@@ -526,10 +471,7 @@
       cardIcon = "amex";
       return "AMEX";
     }
-    if (
-      mastercard.test(cc.substring(0, 4)) ||
-      mastercard2.test(cc.substring(0, 4))
-    ) {
+    if (mastercard.test(cc.substring(0, 4)) || mastercard2.test(cc.substring(0, 4))) {
       cardIcon = "master-card";
       return "MASTERCARD";
     }
@@ -560,16 +502,11 @@
     option.closeModal();
   };
 
-  onMount(async () => {
-  });
+  onMount(async () => {});
 </script>
 
 <!-- MODAL TRANSACTION CLARIFICATION -->
-<Modal
-  className={`modal-medium`}
-  wrapperClass={"text-area-wrapper"}
-  bind:this={modalClarification}
->
+<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalClarification}>
   <div slot="header">
     <p>Solicitar Aclaración</p>
   </div>
@@ -622,38 +559,24 @@
     <div class="modal-range">
       <p>Fechas</p>
       <div class="date-range-input">
-        <DatePicker
-          label="Del"
-          id="date-range-start"
-          bind:value={dateRangeStart}
-        />
+        <DatePicker label="Del" id="date-range-start" bind:value={dateRangeStart} />
         <DatePicker label="Al" id="date-range-end" bind:value={dateRangeEnd} />
       </div>
       <p>Marca</p>
       <div class="input-cards">
         <i
           on:click={() => (cardBrand = "MasterCard")}
-          on:keypress={(e) =>
-            e.key === "Enter" ? (cardBrand = "MasterCard") : ""}
+          on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "MasterCard") : "")}
         >
           <Icons name="master-card" width="50" height="30" />
         </i>
-        <i
-          on:click={() => (cardBrand = "Visa")}
-          on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "Visa") : "")}
-        >
+        <i on:click={() => (cardBrand = "Visa")} on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "Visa") : "")}>
           <Icons name="visa" width="50" height="30" />
         </i>
-        <i
-          on:click={() => (cardBrand = "AMEX")}
-          on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "AMEX") : "")}
-        >
+        <i on:click={() => (cardBrand = "AMEX")} on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "AMEX") : "")}>
           <Icons name="amex" width="25" height="25" />
         </i>
-        <i
-          on:click={() => (cardBrand = "Other")}
-          on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "Other") : "")}
-        >
+        <i on:click={() => (cardBrand = "Other")} on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "Other") : "")}>
           <Icons name="bank-card-line" width="25" height="25" />
         </i>
       </div>
@@ -675,11 +598,7 @@
       id="buttonSaveModalDateRange"
       type="button"
       className={`btn-plain
-        ${
-          dateRangeStart != "" && dateRangeEnd != "" && cardBrand != ""
-            ? ""
-            : "disabled"
-        }`}
+        ${dateRangeStart != "" && dateRangeEnd != "" && cardBrand != "" ? "" : "disabled"}`}
       icon=""
     />
   </div>
@@ -725,11 +644,7 @@
             {date.getDate()} de {getMonthName(date.getMonth())} del {date.getFullYear()}
           </p>
         </div>
-        <ButtonGroup
-          active={filter}
-          options={filterByDateOptions}
-          on:click={handleFilterClick}
-        />
+        <ButtonGroup active={filter} options={filterByDateOptions} on:click={handleFilterClick} />
       </div>
       <div class="top__right">
         <div class="transaction-search-bar">
@@ -756,9 +671,7 @@
             label=""
             id="csv-export"
             type="button"
-            className="btn-plain btn-square fill-blue {transactions?.length > 0
-              ? ''
-              : 'disabled'}"
+            className="btn-plain btn-square fill-blue {transactions?.length > 0 ? '' : 'disabled'}"
             icon="csv-fill"
           />
           <Input
@@ -766,27 +679,21 @@
             label=""
             id="excel-export"
             type="button"
-            className="btn-plain btn-square fill-green {transactions?.length > 0
-              ? ''
-              : 'disabled'}"
+            className="btn-plain btn-square fill-green {transactions?.length > 0 ? '' : 'disabled'}"
             icon="xls-fill"
           />
           <Input
             label=""
             id="print"
             type="button"
-            className="btn-plain btn-square fill-blue {transactions?.length > 0
-              ? ''
-              : 'disabled'}"
+            className="btn-plain btn-square fill-blue {transactions?.length > 0 ? '' : 'disabled'}"
             icon="print"
           />
           <Input
             label=""
             id="pdf-export"
             type="button"
-            className="btn-plain btn-square fill-red {transactions?.length > 0
-              ? ''
-              : 'disabled'}"
+            className="btn-plain btn-square fill-red {transactions?.length > 0 ? '' : 'disabled'}"
             icon="pdf-fill"
           />
           <!-- <Input on:click={exportDataToCSV(transactions)} label="" id="csv-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="csv-fill"/> -->
@@ -800,33 +707,20 @@
         <div class="card">
           <div><p>Total Vendido</p></div>
           <div>
-            <span
-              >{resume.Amount?.toLocaleString(
-                localeParam.language,
-                localeParam.currency
-              ) ?? "$0.00"}
-            </span>
+            <span>{resume.Amount?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"} </span>
           </div>
         </div>
         <div class="card">
           <div><p>Comisión</p></div>
           <div>
-            <span
-              >{resume.Comission?.toLocaleString(
-                localeParam.language,
-                localeParam.currency
-              ) ?? "$0.00"}
-            </span>
+            <span>{resume.Comission?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"} </span>
           </div>
         </div>
         <div class="card">
           <div><p>Propinas</p></div>
           <div>
             <span>
-              {resume.Tips?.toLocaleString(
-                localeParam.language,
-                localeParam.currency
-              ) ?? "$0.00"}
+              {resume.Tips?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
             </span>
           </div>
         </div>
@@ -834,10 +728,7 @@
           <div><p>Saldo a Depositar</p></div>
           <div>
             <span>
-              {resume.Deposit?.toLocaleString(
-                localeParam.language,
-                localeParam.currency
-              ) ?? "$0.00"}
+              {resume.Deposit?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
             </span>
           </div>
         </div>
@@ -876,12 +767,8 @@
                       class="clickable number"
                       on:click={() => (selectedTransaction = transaction)}
                       on:click={() => (transactionDetailView = true)}
-                      on:keypress={(e) =>
-                        e.key === "Enter"
-                          ? (selectedTransaction = transaction)
-                          : ""}
-                      on:keypress={(e) =>
-                        e.key === "Enter" ? (transactionDetailView = true) : ""}
+                      on:keypress={(e) => (e.key === "Enter" ? (selectedTransaction = transaction) : "")}
+                      on:keypress={(e) => (e.key === "Enter" ? (transactionDetailView = true) : "")}
                     >
                       <td
                         >{getTransactionDate(transaction["Transaction Date"]) +
@@ -890,9 +777,7 @@
                             transaction["Transaction Time"]
                           )}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td
                       >
-                      <td class="responsive"
-                        >{transaction["Transaction Time"]}</td
-                      >
+                      <td class="responsive">{transaction["Transaction Time"]}</td>
                       <td
                         >{parseFloat(transaction.Amount / 100)?.toLocaleString(
                           localeParam.language,
@@ -900,18 +785,14 @@
                         )}</td
                       >
                       <td class="responsive"
-                        >{parseFloat(
-                          (transaction.Amount / 100) * 0.035
-                        )?.toLocaleString(
+                        >{parseFloat((transaction.Amount / 100) * 0.035)?.toLocaleString(
                           localeParam.language,
                           localeParam.currency
                         )}</td
                       >
-                      <td class="resonsive"></td>
+                      <td class="resonsive" />
                       <td class="responsive"
-                        >{parseFloat(
-                          (transaction.Amount / 100) * 0.965
-                        )?.toLocaleString(
+                        >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
                           localeParam.language,
                           localeParam.currency
                         )}</td
@@ -921,12 +802,7 @@
                 </tbody>
               </table>
               {#if count > 10}
-                <Pagination
-                  bind:paginationStart
-                  bind:paginationEnd
-                  bind:count
-                  on:pagination={handleFilterClick}
-                />
+                <Pagination bind:paginationStart bind:paginationEnd bind:count on:pagination={handleFilterClick} />
               {/if}
             </div>
           </div>
@@ -953,33 +829,20 @@
                         class="clickable"
                         on:click={fetchWeekDayTransactions(day.date)}
                         on:click={() => (dayView = !dayView)}
-                        on:keypress={(e) =>
-                          e.key === "Enter" ? fetchWeekDayTransactions(day.date) : ""}
-                        on:keypress={(e) =>
-                          e.key === "Enter" ? (dayView = !dayView) : ""}
+                        on:keypress={(e) => (e.key === "Enter" ? fetchWeekDayTransactions(day.date) : "")}
+                        on:keypress={(e) => (e.key === "Enter" ? (dayView = !dayView) : "")}
                       >
-                        <td class="element"
-                          >{day.day} - {getTransactionDate(day.date)}</td
-                        >
+                        <td class="element">{day.day} - {getTransactionDate(day.date)}</td>
                         <td class="element">{day.sold}</td>
                         <td class="element">
-                          {day.sales.toLocaleString(
-                              localeParam.language,
-                              localeParam.currency
-                            )}
+                          {day.sales.toLocaleString(localeParam.language, localeParam.currency)}
                         </td>
                         <td class="element responsive">
-                          {day.comission.toLocaleString(
-                              localeParam.language,
-                              localeParam.currency
-                            )}
+                          {day.comission.toLocaleString(localeParam.language, localeParam.currency)}
                         </td>
-                        <td class="element responsive"></td>
+                        <td class="element responsive" />
                         <td class="element responsive">
-                          {day.deposit.toLocaleString(
-                              localeParam.language,
-                              localeParam.currency
-                            )}
+                          {day.deposit.toLocaleString(localeParam.language, localeParam.currency)}
                         </td>
                         <i class="arrow arrow-blue">
                           <Icons name="arrow-fwd" width="24" height="24" />
@@ -992,25 +855,18 @@
             </div>
           </div>
         {:else}
-          <div
-            bind:this={pdfData}
-            id={`pdfTable-${selectedDay.date}`}
-            class="table-container"
-          >
+          <div bind:this={pdfData} id={`pdfTable-${selectedDay.date}`} class="table-container">
             <div class="card-container">
               <div class="row">
                 <div class="title">
                   <i
                     class="arrow-blue"
                     on:click={() => (dayView = !dayView)}
-                    on:keypress={(e) =>
-                      e.key === "Enter" ? (dayView = !dayView) : ""}
+                    on:keypress={(e) => (e.key === "Enter" ? (dayView = !dayView) : "")}
                   >
                     <Icons name="arrow-bwd" width="24" height="24" />
                   </i>
-                  {getWeekDay(selectedDay.date)} - {getTransactionDate(
-                    selectedDay.date
-                  )}
+                  {getWeekDay(selectedDay.date)} - {getTransactionDate(selectedDay.date)}
                 </div>
               </div>
               <table class="table-content">
@@ -1030,32 +886,17 @@
                     <th>
                       {selectedDay.data
                         .reduce((prev, curr) => prev + curr.Amount / 100, 0)
-                        .toLocaleString(
-                          localeParam.language,
-                          localeParam.currency
-                        )}
+                        .toLocaleString(localeParam.language, localeParam.currency)}
                     </th>
                     <th>
                       {selectedDay.data
-                        .reduce(
-                          (prev, curr) => prev + (curr.Amount / 100) * 0.035,
-                          0
-                        )
-                        .toLocaleString(
-                          localeParam.language,
-                          localeParam.currency
-                        )}
+                        .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.035, 0)
+                        .toLocaleString(localeParam.language, localeParam.currency)}
                     </th>
                     <th>
                       {selectedDay.data
-                        .reduce(
-                          (prev, curr) => prev + (curr.Amount / 100) * 0.965,
-                          0
-                        )
-                        .toLocaleString(
-                          localeParam.language,
-                          localeParam.currency
-                        )}
+                        .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.965, 0)
+                        .toLocaleString(localeParam.language, localeParam.currency)}
                     </th>
                   </tr>
                 </thead>
@@ -1065,23 +906,15 @@
                       class="clickable number"
                       on:click={() => (selectedTransaction = transaction)}
                       on:click={() => (transactionDetailView = true)}
-                      on:keypress={(e) =>
-                        e.key === "Enter"
-                          ? (selectedTransaction = transaction)
-                          : ""}
-                      on:keypress={(e) =>
-                        e.key === "Enter" ? (transactionDetailView = true) : ""}
+                      on:keypress={(e) => (e.key === "Enter" ? (selectedTransaction = transaction) : "")}
+                      on:keypress={(e) => (e.key === "Enter" ? (transactionDetailView = true) : "")}
                     >
                       <td class="responsive"
                         >{getTransactionDate(transaction["Transaction Date"]) +
                           " - " +
-                          getTransactionTime(
-                            transaction["Transaction Time"]
-                          )}</td
+                          getTransactionTime(transaction["Transaction Time"])}</td
                       >
-                      <td class="responsive"
-                        >{transaction["Transaction Time"]}</td
-                      >
+                      <td class="responsive">{transaction["Transaction Time"]}</td>
                       <td
                         >{parseFloat(transaction.Amount / 100)?.toLocaleString(
                           localeParam.language,
@@ -1089,17 +922,13 @@
                         )}</td
                       >
                       <td
-                        >{parseFloat(
-                          (transaction.Amount / 100) * 0.035
-                        )?.toLocaleString(
+                        >{parseFloat((transaction.Amount / 100) * 0.035)?.toLocaleString(
                           localeParam.language,
                           localeParam.currency
                         )}</td
                       >
                       <td
-                        >{parseFloat(
-                          (transaction.Amount / 100) * 0.965
-                        )?.toLocaleString(
+                        >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
                           localeParam.language,
                           localeParam.currency
                         )}</td
@@ -1140,44 +969,25 @@
                         class="clickable"
                         on:click={() => (selectedDay = month)}
                         on:click={() => (monthView = !monthView)}
-                        on:keypress={(e) =>
-                          e.key === "Enter" ? (selectedDay = month) : ""}
-                        on:keypress={(e) =>
-                          e.key === "Enter" ? (monthView = !monthView) : ""}
+                        on:keypress={(e) => (e.key === "Enter" ? (selectedDay = month) : "")}
+                        on:keypress={(e) => (e.key === "Enter" ? (monthView = !monthView) : "")}
                       >
                         <td class="element">{getMonthPeriod(month.date)}</td>
                         <td class="element">{month.data.length}</td>
                         <td class="element">
                           {month.data
                             .reduce((prev, curr) => prev + curr.Amount / 100, 0)
-                            .toLocaleString(
-                              localeParam.language,
-                              localeParam.currency
-                            )}
+                            .toLocaleString(localeParam.language, localeParam.currency)}
                         </td>
                         <td class="element responsive">
                           {month.data
-                            .reduce(
-                              (prev, curr) =>
-                                prev + (curr.Amount / 100) * 0.035,
-                              0
-                            )
-                            .toLocaleString(
-                              localeParam.language,
-                              localeParam.currency
-                            )}
+                            .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.035, 0)
+                            .toLocaleString(localeParam.language, localeParam.currency)}
                         </td>
                         <td class="element responsive">
                           {month.data
-                            .reduce(
-                              (prev, curr) =>
-                                prev + (curr.Amount / 100) * 0.965,
-                              0
-                            )
-                            .toLocaleString(
-                              localeParam.language,
-                              localeParam.currency
-                            )}
+                            .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.965, 0)
+                            .toLocaleString(localeParam.language, localeParam.currency)}
                         </td>
                         <i class="arrow arrow-blue">
                           <Icons name="arrow-fwd" width="24" height="24" />
@@ -1190,19 +1000,14 @@
             </div>
           </div>
         {:else}
-          <div
-            bind:this={pdfData}
-            id={`pdfTable-${selectedDay.date}`}
-            class="table-container"
-          >
+          <div bind:this={pdfData} id={`pdfTable-${selectedDay.date}`} class="table-container">
             <div class="card-container">
               <div class="row">
                 <div class="title">
                   <i
                     class="arrow-blue clickable"
                     on:click={() => (monthView = !monthView)}
-                    on:keypress={(e) =>
-                      e.key === "Enter" ? (monthView = !monthView) : ""}
+                    on:keypress={(e) => (e.key === "Enter" ? (monthView = !monthView) : "")}
                   >
                     <Icons name="arrow-bwd" width="24" height="24" />
                   </i>
@@ -1226,32 +1031,17 @@
                     <th>
                       {selectedDay.data
                         .reduce((prev, curr) => prev + curr.Amount / 100, 0)
-                        .toLocaleString(
-                          localeParam.language,
-                          localeParam.currency
-                        )}
+                        .toLocaleString(localeParam.language, localeParam.currency)}
                     </th>
                     <th>
                       {selectedDay.data
-                        .reduce(
-                          (prev, curr) => prev + (curr.Amount / 100) * 0.035,
-                          0
-                        )
-                        .toLocaleString(
-                          localeParam.language,
-                          localeParam.currency
-                        )}
+                        .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.035, 0)
+                        .toLocaleString(localeParam.language, localeParam.currency)}
                     </th>
                     <th>
                       {selectedDay.data
-                        .reduce(
-                          (prev, curr) => prev + (curr.Amount / 100) * 0.965,
-                          0
-                        )
-                        .toLocaleString(
-                          localeParam.language,
-                          localeParam.currency
-                        )}
+                        .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.965, 0)
+                        .toLocaleString(localeParam.language, localeParam.currency)}
                     </th>
                   </tr>
                 </thead>
@@ -1261,13 +1051,9 @@
                       <td class="responsive"
                         >{getTransactionDate(transaction["Transaction Date"]) +
                           " - " +
-                          getTransactionTime(
-                            transaction["Transaction Time"]
-                          )}</td
+                          getTransactionTime(transaction["Transaction Time"])}</td
                       >
-                      <td class="responsive"
-                        >{transaction["Transaction Time"]}</td
-                      >
+                      <td class="responsive">{transaction["Transaction Time"]}</td>
                       <td
                         >{parseFloat(transaction.Amount / 100)?.toLocaleString(
                           localeParam.language,
@@ -1275,17 +1061,13 @@
                         )}</td
                       >
                       <td
-                        >{parseFloat(
-                          (transaction.Amount / 100) * 0.035
-                        )?.toLocaleString(
+                        >{parseFloat((transaction.Amount / 100) * 0.035)?.toLocaleString(
                           localeParam.language,
                           localeParam.currency
                         )}</td
                       >
                       <td
-                        >{parseFloat(
-                          (transaction.Amount / 100) * 0.965
-                        )?.toLocaleString(
+                        >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
                           localeParam.language,
                           localeParam.currency
                         )}</td
@@ -1457,12 +1239,7 @@
                   </div>
                   <div class="item__content">
                     <p>
-                      <span
-                        >{"**** **** **** " +
-                          selectedTransaction["Application PAN"].substr(
-                            -4
-                          )}</span
-                      >
+                      <span>{"**** **** **** " + selectedTransaction["Application PAN"].substr(-4)}</span>
                     </p>
                   </div>
                 </div>
@@ -1488,10 +1265,7 @@
                   </div>
                   <div class="item__content">
                     <p>
-                      {(selectedTransaction.Amount / 100)?.toLocaleString(
-                        localeParam.language,
-                        localeParam.currency
-                      )}
+                      {(selectedTransaction.Amount / 100)?.toLocaleString(localeParam.language, localeParam.currency)}
                     </p>
                   </div>
                 </div>
@@ -1511,10 +1285,7 @@
                   </div>
                   <div class="item__content">
                     <p>
-                      {(
-                        (selectedTransaction.Amount / 100) *
-                        0.0406
-                      )?.toLocaleString(
+                      {((selectedTransaction.Amount / 100) * 0.0406)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}
@@ -1528,10 +1299,7 @@
                   </div>
                   <div class="item__content">
                     <p>
-                      {(
-                        (selectedTransaction.Amount / 100) *
-                        0.9594
-                      )?.toLocaleString(
+                      {((selectedTransaction.Amount / 100) * 0.9594)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}
@@ -1544,9 +1312,7 @@
             <div class="card-buttons">
               <div class="reverse-button">
                 <Input
-                  on:click={() =>
-                    (clarification.ticket =
-                      selectedTransaction["Transaction Time"])}
+                  on:click={() => (clarification.ticket = selectedTransaction["Transaction Time"])}
                   on:click={showModal(modalClarification)}
                   label="Aclaración"
                   id="reverseTransaction"
@@ -1556,22 +1322,10 @@
                 />
               </div>
               <div class="email-button">
-                <Input
-                  label="Enviar por e-mail"
-                  id="emailTransaction"
-                  type="button"
-                  className="btn-plain"
-                  icon=""
-                />
+                <Input label="Enviar por e-mail" id="emailTransaction" type="button" className="btn-plain" icon="" />
               </div>
               <div class="print-button">
-                <Input
-                  label="Imprimir Recibo"
-                  id="printTransaction"
-                  type="button"
-                  className="btn-plain"
-                  icon=""
-                />
+                <Input label="Imprimir Recibo" id="printTransaction" type="button" className="btn-plain" icon="" />
               </div>
             </div>
           </div>
@@ -1724,8 +1478,7 @@
     /* Nue Fill */
     background: linear-gradient(91.36deg, #efeef5 0%, #e6e8ef 100%);
     /* container effect */
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
-      4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     /* Inside auto layout */
     flex: none;
@@ -1773,16 +1526,10 @@
 
   .button-active {
     height: 22px;
-    background: linear-gradient(
-        317.7deg,
-        rgba(0, 0, 0, 0.2) 0%,
-        rgba(255, 255, 255, 0.2) 105.18%
-      ),
-      #007aff;
+    background: linear-gradient(317.7deg, rgba(0, 0, 0, 0.2) 0%, rgba(255, 255, 255, 0.2) 105.18%), #007aff;
     background-blend-mode: soft-light, normal;
     /* inner blue */
-    box-shadow: inset -5px -5px 8px rgba(56, 151, 255, 0.75),
-      inset 5px 5px 7px rgba(29, 79, 133, 0.5);
+    box-shadow: inset -5px -5px 8px rgba(56, 151, 255, 0.75), inset 5px 5px 7px rgba(29, 79, 133, 0.5);
 
     font-family: "Raleway";
     font-style: normal;
@@ -2102,8 +1849,7 @@
     /* Fill Container */
     background: #f3f3f3;
     /* container effect */
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
-      4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
   }
 
@@ -2123,31 +1869,15 @@
     grid-auto-flow: column;
     grid-template: auto / 10rem 6rem auto;
   }
-  .details__middle
-    .details-center
-    .details-card
-    .details-card__middle
-    .item
-    .item__title {
+  .details__middle .details-center .details-card .details-card__middle .item .item__title {
     display: flex;
     justify-content: center;
   }
-  .details__middle
-    .details-center
-    .details-card
-    .details-card__middle
-    .item
-    .item__content {
+  .details__middle .details-center .details-card .details-card__middle .item .item__content {
     display: flex;
     justify-content: center;
   }
-  .details__middle
-    .details-center
-    .details-card
-    .details-card__middle
-    .item
-    .item__title
-    b {
+  .details__middle .details-center .details-card .details-card__middle .item .item__title b {
     font-style: normal;
     font-weight: 500;
     font-size: 0.8125rem; /* 13px */
@@ -2163,13 +1893,7 @@
     line-height: 1.125rem; /* 18px */
     color: #113a62;
   }
-  .details__middle
-    .details-center
-    .details-card
-    .details-card__middle
-    .item
-    p
-    span {
+  .details__middle .details-center .details-card .details-card__middle .item p span {
     font-family: "Roboto";
     font-style: normal;
     font-weight: 700;
@@ -2186,32 +1910,16 @@
     grid-auto-flow: column;
     grid-template: auto / 10rem 6rem auto;
   }
-  .details__middle
-    .details-center
-    .details-card
-    .details-card__bottom
-    .item
-    .item__title {
+  .details__middle .details-center .details-card .details-card__bottom .item .item__title {
     display: flex;
     justify-content: center;
   }
-  .details__middle
-    .details-center
-    .details-card
-    .details-card__bottom
-    .item
-    .item__content {
+  .details__middle .details-center .details-card .details-card__bottom .item .item__content {
     display: flex;
     justify-content: center;
     flex-direction: column;
   }
-  .details__middle
-    .details-center
-    .details-card
-    .details-card__bottom
-    .item
-    .item__title
-    b {
+  .details__middle .details-center .details-card .details-card__bottom .item .item__title b {
     font-style: normal;
     font-weight: 500;
     font-size: 0.8125rem; /* 13px */
@@ -2229,12 +1937,7 @@
     text-align: center;
   }
 
-  .details__middle
-    .details-center
-    .details-card
-    .details-card__bottom
-    .item
-    span {
+  .details__middle .details-center .details-card .details-card__bottom .item span {
     font-family: "Roboto";
     display: flex;
     justify-content: center;
