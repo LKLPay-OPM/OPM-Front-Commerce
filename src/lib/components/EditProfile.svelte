@@ -1,22 +1,9 @@
 <script>
-  import {
-    collection,
-    Timestamp,
-    query,
-    orderBy,
-    limit,
-    where,
-    getDocs,
-    startAt,
-    endAt,
-  } from "firebase/firestore";
+  import { collection, Timestamp, query, orderBy, limit, where, getDocs, startAt, endAt } from "firebase/firestore";
   import { db } from "$lib/firebase";
   import { isLoggedIn, loggedInUser, redirectBankProfile } from "$lib/stores";
   import { changeEmail, changePassword } from "$lib/hooks/auth.js";
-  import {
-    updateUserIne,
-    updateUserBankAccountInfo,
-  } from "$lib/hooks/updates.js";
+  import { updateUserIne, updateUserBankAccountInfo } from "$lib/hooks/updates.js";
   import { updateUserInfo, updateUserAvatar } from "$lib/hooks/updates.js";
   import { onMount, afterUpdate } from "svelte";
   import Input from "$lib/components/Input.svelte";
@@ -78,9 +65,7 @@
       statesArray.push({ name: key, value: key });
     });
     states = statesArray;
-    stateIndex = states
-      .map((state) => state.value)
-      .indexOf(financialData.state);
+    stateIndex = states.map((state) => state.value).indexOf(financialData.state);
     townsArray = [];
     if (financialData.state) {
       townsData[financialData.state].map(function (key, index) {
@@ -100,8 +85,7 @@
       const fetch = fetchRates();
       fetch
         .then((value) => {
-          ratesBusinessType =
-            value.ratesBusinessType[$loggedInUser.businessLine];
+          ratesBusinessType = value.ratesBusinessType[$loggedInUser.businessLine];
         })
         .catch((err) => {
           console.log(err);
@@ -213,17 +197,11 @@
           <div class="element">
             <div class="avatar-container">
               <div class="avatar">
-                <img
-                  class="avatar-img"
-                  alt="imagen"
-                  src={$loggedInUser.avatar ? $loggedInUser.avatar : noUser}
-                />
+                <img class="avatar-img" alt="imagen" src={$loggedInUser.avatar ? $loggedInUser.avatar : noUser} />
                 <label for="file">
                   <input id="file" type="file" accept="image/jpeg, image/png" />
                   <div class="avatar-content">
-                    <span class="avatar-icon"
-                      ><Icons name="camera-fill" width="24" height="24" /></span
-                    >
+                    <span class="avatar-icon"><Icons name="camera-fill" width="24" height="24" /></span>
                     <span class="avatar-text">Cambiar Foto</span>
                   </div>
                 </label>
@@ -247,12 +225,7 @@
             className="btn-plain blue"
             type="button"
           />
-          <Input
-            label="Guardar"
-            id="saveData"
-            className="btn-plain blue"
-            type="button"
-          />
+          <Input label="Guardar" id="saveData" className="btn-plain blue" type="button" />
         </div>
       </div>
       <!-- Middle Section -->
@@ -346,9 +319,7 @@
             label="Carátula de Cuenta Bancaria"
             id="bankStatement"
             bind:value={bankStatement}
-            className={bankStatement != ""
-              ? "btn-success-border"
-              : "btn-plain blue"}
+            className={bankStatement != "" ? "btn-success-border" : "btn-plain blue"}
             type="file"
             accept="application/pdf"
           />
@@ -373,9 +344,7 @@
             label="Constancia de Situación Fiscal"
             id="csf"
             bind:value={financialData.csf}
-            className={financialData.csf != ""
-              ? "btn-success-border"
-              : "btn-plain blue"}
+            className={financialData.csf != "" ? "btn-success-border" : "btn-plain blue"}
             type="file"
             accept="application/pdf"
           />
@@ -385,9 +354,7 @@
             label="Opinión de Cumplimiento"
             id="complianceOpinion"
             bind:value={financialData.complianceOpinion}
-            className={financialData.complianceOpinion != ""
-              ? "btn-success-border"
-              : "btn-plain blue"}
+            className={financialData.complianceOpinion != "" ? "btn-success-border" : "btn-plain blue"}
             type="file"
             accept="application/pdf"
           />
@@ -490,9 +457,7 @@
             label="Comprobante de Domicilio"
             id="AddressProof"
             bind:value={addressProof}
-            className={addressProof != ""
-              ? "btn-success-border"
-              : "btn-plain blue"}
+            className={addressProof != "" ? "btn-success-border" : "btn-plain blue"}
             type="file"
             accept="application/pdf"
           />
@@ -691,12 +656,7 @@
   }
 
   .divider-hor {
-    background: linear-gradient(
-        138.32deg,
-        rgba(0, 0, 0, 0.5) 8.26%,
-        rgba(255, 255, 255, 0.5) 91.02%
-      ),
-      #eaecf0;
+    background: linear-gradient(138.32deg, rgba(0, 0, 0, 0.5) 8.26%, rgba(255, 255, 255, 0.5) 91.02%), #eaecf0;
     background-blend-mode: soft-light, normal;
     /* n-stroke */
 

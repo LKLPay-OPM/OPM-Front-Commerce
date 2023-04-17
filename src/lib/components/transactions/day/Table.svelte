@@ -22,9 +22,7 @@
   function handleFilterClick({ detail }) {
     // const value = detail?.value;
     // active = value;
-    goto(
-      `?filter=${active ?? "day"}&start=${paginationStart}&end=${paginationEnd}`
-    );
+    goto(`?filter=${active ?? "day"}&start=${paginationStart}&end=${paginationEnd}`);
   }
 
   const getMonthName = (month) => {
@@ -88,11 +86,7 @@
         </thead>
         <tbody>
           {#each transactions as transaction}
-            <tr
-              class="clickable number"
-              on:click={() =>
-                goto(`/transactions/detail?ticket=${transaction?._id}`)}
-            >
+            <tr class="clickable number" on:click={() => goto(`/transactions/detail?ticket=${transaction?._id}`)}>
               <td
                 >{getTransactionDate(transaction?.["Transaction Date"]) +
                   " - " +
@@ -101,25 +95,17 @@
                   )}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td
               >
               <td class="responsive">{transaction?.["Transaction Time"]}</td>
-              <td
-                >{parseFloat(transaction.Amount / 100)?.toLocaleString(
-                  localeParam.language,
-                  localeParam.currency
-                )}</td
+              <td>{parseFloat(transaction.Amount / 100)?.toLocaleString(localeParam.language, localeParam.currency)}</td
               >
               <td class="responsive"
-                >{parseFloat(
-                  (transaction.Amount / 100) * 0.035
-                )?.toLocaleString(
+                >{parseFloat((transaction.Amount / 100) * 0.035)?.toLocaleString(
                   localeParam.language,
                   localeParam.currency
                 )}</td
               >
               <td class="resonsive" />
               <td class="responsive"
-                >{parseFloat(
-                  (transaction.Amount / 100) * 0.965
-                )?.toLocaleString(
+                >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
                   localeParam.language,
                   localeParam.currency
                 )}</td
@@ -129,12 +115,7 @@
         </tbody>
       </table>
       {#if count > 10}
-        <Pagination
-          bind:paginationStart
-          bind:paginationEnd
-          bind:count
-          on:pagination={handleFilterClick}
-        />
+        <Pagination bind:paginationStart bind:paginationEnd bind:count on:pagination={handleFilterClick} />
       {/if}
     </div>
   </div>

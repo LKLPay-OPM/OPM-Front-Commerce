@@ -1,11 +1,7 @@
 <script>
   import { isLoggedIn, loggedInUser, redirectBankProfile } from "$lib/stores";
   import Loader from "$lib/components/Loader.svelte";
-  import {
-    updateUserBankAccountInfo,
-    updateUserInfo,
-    updateUserIne,
-  } from "$lib/hooks/updates.js";
+  import { updateUserBankAccountInfo, updateUserInfo, updateUserIne } from "$lib/hooks/updates.js";
   import { fetchRates } from "$lib/hooks/rates.js";
   import { Timestamp } from "firebase/firestore";
   import Input from "$lib/components/Input.svelte";
@@ -71,7 +67,7 @@
           ratesBusinessType = value.ratesBusinessType;
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
     } catch (error) {
       throw new Error(error);
@@ -82,16 +78,13 @@
     userData.uid = $loggedInUser.uid;
     const ineFront = document.getElementById("buttonIneFront").files[0];
     const ineBack = document.getElementById("buttonIneBack").files[0];
-    const bankStatement = document.getElementById("form-bank-statement")
-      .files[0];
+    const bankStatement = document.getElementById("form-bank-statement").files[0];
     /* const ine = URL.createObjectURL(
       document.getElementById('form-ine').files[0]
     ) */
-    const ineFrontType =
-      document.getElementById("buttonIneFront").files[0].type;
+    const ineFrontType = document.getElementById("buttonIneFront").files[0].type;
     const ineBackType = document.getElementById("buttonIneBack").files[0].type;
-    const bankStatementType = document.getElementById("form-bank-statement")
-      .files[0].type;
+    const bankStatementType = document.getElementById("form-bank-statement").files[0].type;
 
     /* const bankStatement = URL.createObjectURL(
       document.getElementById('form-bank-statement').files[0]
@@ -108,10 +101,7 @@
 
     userData.bankAccountInfo = bankAccountInfo;
 
-    (formINEFront = ""),
-      (formINEBack = ""),
-      (formCLABE = ""),
-      (formBankStatement = "");
+    (formINEFront = ""), (formINEBack = ""), (formCLABE = ""), (formBankStatement = "");
     // bankDataDelivered.update(() => true)
 
     // console.log(userData)
@@ -219,13 +209,7 @@
   </div>
   <div slot="content">
     <p>A continuación, ingresa los datos solicitados</p>
-    <Input
-      label="CLABE:"
-      id="form-clabe"
-      bind:value={formCLABE}
-      type="text"
-      className="txt-field normal"
-    />
+    <Input label="CLABE:" id="form-clabe" bind:value={formCLABE} type="text" className="txt-field normal" />
     <div class="modal-row">
       <div class="row-title">INE</div>
       <div class="buttons">
@@ -278,12 +262,7 @@
       type="button"
       className={` 
         ${
-          formCLABE != "" &&
-          formINEFront != "" &&
-          formINEBack != "" &&
-          formBankStatement != ""
-            ? "btn"
-            : "btn-disabled"
+          formCLABE != "" && formINEFront != "" && formINEBack != "" && formBankStatement != "" ? "btn" : "btn-disabled"
         }`}
       icon=""
     />
@@ -298,26 +277,19 @@
   <div slot="content">
     <p>A continuación, ingresa la cantidad que deseas solicitar.</p>
     <p>
-      Recuerda que se te cobrará una comisión extra de <b
-        >{rateUrgentDispersion}%</b
-      >
+      Recuerda que se te cobrará una comisión extra de <b>{rateUrgentDispersion}%</b>
       <!-- más tu comisión actual de <b>...</b> -->
     </p>
     {#if urgentDepositQty > 0 && urgentDepositQty <= $loggedInUser?.toDeposit}
       <p>
         Recibirás <b
-          >{getPercentage(
-            urgentDepositQty,
-            rateUrgentDispersion
-          ).toLocaleString(localeParam.language, localeParam.currency)}</b
-        >
-        de tus
-        <b
-          >{urgentDepositQty.toLocaleString(
+          >{getPercentage(urgentDepositQty, rateUrgentDispersion).toLocaleString(
             localeParam.language,
             localeParam.currency
           )}</b
-        > solicitados
+        >
+        de tus
+        <b>{urgentDepositQty.toLocaleString(localeParam.language, localeParam.currency)}</b> solicitados
       </p>
     {/if}
     <Input
@@ -344,11 +316,7 @@
       id="buttonSaveModalUrgentDeposit"
       type="button"
       className={`
-        ${
-          urgentDepositQty > 0 && urgentDepositQty <= $loggedInUser?.toDeposit
-            ? "btn"
-            : "btn-disabled"
-        }`}
+        ${urgentDepositQty > 0 && urgentDepositQty <= $loggedInUser?.toDeposit ? "btn" : "btn-disabled"}`}
       icon=""
     />
   </div>

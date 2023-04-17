@@ -1,8 +1,9 @@
 <script>
   /* navigation */
   import { goto } from "$app/navigation";
+  import { onMount } from "svelte";
 
-  $: {
-    goto("/transactions/day");
-  }
+  onMount(async () => {
+    await goto("/transactions/day");
+  });
 </script>

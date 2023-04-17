@@ -6,9 +6,9 @@
   /* componens */
   import InfoCard from "$lib/components/InfoCard.svelte";
   /* utils */
-  import { getMonthName, timeToLocalString, dateToLocalString } from '$lib/utils/date';
+  import { getMonthName, timeToLocalString, dateToLocalString } from "$lib/utils/date";
   /* constants */
-  import { localeParam } from '$lib/constants/locale.js';
+  import { localeParam } from "$lib/constants/locale.js";
 
   const dbCollection = "users-client";
   const uid = $loggedInUser.uid;
@@ -30,8 +30,7 @@
 
   onMount(() => {
     transactionFound();
-  })
-
+  });
 </script>
 
 <div class="container">
@@ -47,25 +46,21 @@
         <InfoCard
           className={""}
           title="Monto Total"
-          numData={resume?.Amount?.toLocaleString(localeParam.language, localeParam.currency)?? "$0.00"}
+          numData={resume?.Amount?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
         />
       </div>
       <div class="card">
-        <InfoCard
-          className={""}
-          title="N° de Ventas"
-          numData={resume?.Sold?? "0"}
-        />
+        <InfoCard className={""} title="N° de Ventas" numData={resume?.Sold ?? "0"} />
       </div>
       <div class="card">
         <InfoCard
           className={""}
           title="Saldo a Depositar"
-          numData={resume?.Deposit?.toLocaleString(localeParam.language, localeParam.currency)?? "$0.00"}
+          numData={resume?.Deposit?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
         />
       </div>
     </div>
-    <div class="transactions" style={transactions?.length<=0 ? "min-height: 25rem;":""}>
+    <div class="transactions" style={transactions?.length <= 0 ? "min-height: 25rem;" : ""}>
       <div class="top">
         <div class="top__left">
           <p><a href="/transactions">Últimas Transacciones</a></p>
@@ -86,17 +81,12 @@
             </thead>
             <tbody>
               {#each transactions as transaction}
-                <tr class="clickable"
-                  on:click={() =>
-                  goto(`/transactions/detail?ticket=${transaction?._id}`)}
-                >
+                <tr class="clickable" on:click={() => goto(`/transactions/detail?ticket=${transaction?._id}`)}>
                   <td>
                     {dateToLocalString(transaction["Transaction Date"]) +
                       " - " +
-                      timeToLocalString(
-                        transaction["Transaction Time"]
-                      )}
-                  <td class="responsive">{transaction["Transaction Time"]}</td>
+                      timeToLocalString(transaction["Transaction Time"])}
+                  </td><td class="responsive">{transaction["Transaction Time"]}</td>
                   <td
                     >{parseFloat(transaction.Amount / 100)?.toLocaleString(
                       localeParam.language,
@@ -104,23 +94,16 @@
                     )}</td
                   >
                   <td class="responsive"
-                    >{parseFloat(
-                      (transaction.Amount / 100) * 0.035
-                    )?.toLocaleString(
+                    >{parseFloat((transaction.Amount / 100) * 0.035)?.toLocaleString(
                       localeParam.language,
                       localeParam.currency
                     )}</td
                   >
                   <td class="responsive"
-                    >{transaction?.IVA?.toLocaleString(
-                      localeParam.language,
-                      localeParam.currency
-                    )}</td
+                    >{transaction?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}</td
                   >
                   <td class="responsive"
-                    >{parseFloat(
-                      (transaction.Amount / 100) * 0.965
-                    )?.toLocaleString(
+                    >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
                       localeParam.language,
                       localeParam.currency
                     )}</td
@@ -145,5 +128,5 @@
 </div>
 
 <style lang="scss">
-  @import 'src/lib/styles/dashboard.scss';
+  @import "src/lib/styles/dashboard.scss";
 </style>

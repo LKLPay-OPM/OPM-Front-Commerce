@@ -2,6 +2,8 @@
   /* svelte */
   import { goto } from "$app/navigation";
   import { onMount } from "svelte";
+  /* store */
+  import { isLoggedIn } from "$lib/stores";
   /* components */
   import Input from "$lib/components/Input.svelte";
   import Loader from "$lib/components/Loader.svelte";
@@ -11,8 +13,6 @@
   import { validateEmail, validatePassword } from "$lib/utils/input-validation";
   /* assets */
   import Logo from "$lib/assets/Logo.png";
-
-  export let data;
 
   /* consts */
   const input = {
@@ -31,7 +31,7 @@
   }
 
   onMount(async () => {
-    if (data?.redirect) await goto(data.path);
+    if ($isLoggedIn) await goto("/");
     loading = false;
   });
 </script>

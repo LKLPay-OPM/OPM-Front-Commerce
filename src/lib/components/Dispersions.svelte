@@ -1,15 +1,5 @@
 <script>
-  import {
-    collection,
-    Timestamp,
-    query,
-    orderBy,
-    limit,
-    where,
-    getDocs,
-    startAt,
-    endAt,
-  } from "firebase/firestore";
+  import { collection, Timestamp, query, orderBy, limit, where, getDocs, startAt, endAt } from "firebase/firestore";
   import { db } from "$lib/firebase";
   import { loggedInUser, redirectUrgentDispersions } from "$lib/stores";
   import Input from "$lib/components/Input.svelte";
@@ -21,11 +11,7 @@
   import TextArea from "$lib/components/TextArea.svelte";
   import ButtonGroup from "$lib/components/ButtonGroup.svelte";
   import { onMount } from "svelte";
-  import {
-    generatePDF,
-    generateCSV,
-    generateXLSX,
-  } from "$lib/hooks/exportDataToFile.js";
+  import { generatePDF, generateCSV, generateXLSX } from "$lib/hooks/exportDataToFile.js";
   import { fetchRates } from "$lib/hooks/rates.js";
 
   // import { updateDispersionStatus } from '$lib/hooks/updates.js'
@@ -118,13 +104,12 @@
           rates = value;
           // rateLklPay = value.rateLklPay;
           // rateNatural = value.rateNatural;
-          immediateDeposit.immediateDepositCommission =
-            value.rateUrgentDispersion;
+          immediateDeposit.immediateDepositCommission = value.rateUrgentDispersion;
           // ratesBusinessType = value.ratesBusinessType;
           // console.log(value.rateUrgentDispersion)
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
       // console.log(rateUrgentDispersion)
     } catch (error) {
@@ -729,28 +714,21 @@
     }
     /* .then(async() => {
     }).catch(err => {
-      console.log(err);
+      console.error(err);
       throw new Error(err);
     }); */
   });
 </script>
 
 <!-- MODAL DEPOSIT PREFERENCE-->
-<Modal
-  className={`modal-medium`}
-  wrapperClass={"text-area-wrapper"}
-  bind:this={modalImmediateDepositPreference}
->
+<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalImmediateDepositPreference}>
   <div slot="header">
     <p>Contratar Depósito Inmediato</p>
   </div>
   <div slot="content">
     <div class="immediate-deposit">
       <div class="error">
-        <p>
-          Todas tus ventas acumuladas del día hasta las 6:00pm serán depositadas
-          a las 6:30pm.
-        </p>
+        <p>Todas tus ventas acumuladas del día hasta las 6:00pm serán depositadas a las 6:30pm.</p>
       </div>
       <div class="column-element">
         <div class="blue-title">
@@ -766,9 +744,9 @@
         </div>
         <p>
           He Leído, entendido y acepto los
-          <a href="/#terms">Términos y Condiciones Generales</a> de LklPay, así
-          como su <a href="/#privacy">Política de Privacidad</a> y, por lo tanto
-          estoy de acuerdo en el uso y procesamiento de datos personales.
+          <a href="/#terms">Términos y Condiciones Generales</a> de LklPay, así como su
+          <a href="/#privacy">Política de Privacidad</a> y, por lo tanto estoy de acuerdo en el uso y procesamiento de datos
+          personales.
         </p>
       </div>
     </div>
@@ -797,11 +775,7 @@
   </div>
 </Modal>
 <!-- MODAL IMMEDIATE DEPOSIT -->
-<Modal
-  className={`modal-medium`}
-  wrapperClass={"text-area-wrapper"}
-  bind:this={modalImmediateDeposit}
->
+<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalImmediateDeposit}>
   <div slot="header">
     <p>Solicitar Depósito Urgente</p>
   </div>
@@ -810,8 +784,7 @@
       {#if immediateDeposit.availableBalance < 500}
         <div class="error">
           <p>
-            El monto mínimo para solicitar es de $500.00 mxn más el costo extra
-            del {immediateDeposit.immediateDepositCommission}%
+            El monto mínimo para solicitar es de $500.00 mxn más el costo extra del {immediateDeposit.immediateDepositCommission}%
           </p>
         </div>
       {:else}
@@ -850,10 +823,7 @@
           </div>
           <div class="content">
             <p>
-              {$loggedInUser.toDeposit?.toLocaleString(
-                localeParam.language,
-                localeParam.currency
-              )}
+              {$loggedInUser.toDeposit?.toLocaleString(localeParam.language, localeParam.currency)}
             </p>
           </div>
         </div>
@@ -863,9 +833,9 @@
           </div>
           <p>
             He Leído, entendido y acepto los
-            <a href="/#terms">Términos y Condiciones Generales</a> de LklPay,
-            así como su <a href="/#privacy">Política de Privacidad</a> y, por lo
-            tanto estoy de acuerdo en el uso y procesamiento de datos personales.
+            <a href="/#terms">Términos y Condiciones Generales</a> de LklPay, así como su
+            <a href="/#privacy">Política de Privacidad</a> y, por lo tanto estoy de acuerdo en el uso y procesamiento de
+            datos personales.
           </p>
         </div>
       {/if}
@@ -899,9 +869,7 @@
           type="button"
           className={`btn-plain
             ${
-              immediateDeposit.immediateDepositQty > 0 &&
-              immediateDeposit.immediateDepositQty > 500 &&
-              terms === true
+              immediateDeposit.immediateDepositQty > 0 && immediateDeposit.immediateDepositQty > 500 && terms === true
                 ? ""
                 : "disabled"
             }`}
@@ -913,11 +881,7 @@
 </Modal>
 
 <!-- MODAL DISPERSION CLARIFICATION -->
-<Modal
-  className={`modal-medium`}
-  wrapperClass={"text-area-wrapper"}
-  bind:this={modalClarification}
->
+<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalClarification}>
   <div slot="header">
     <p>Solicitar Aclaración</p>
   </div>
@@ -926,10 +890,7 @@
       <div class="title">Cantidad</div>
       <div class="description">
         <p>
-          {immediateDeposit.availableBalance.toLocaleString(
-            localeParam.language,
-            localeParam.currency
-          )}
+          {immediateDeposit.availableBalance.toLocaleString(localeParam.language, localeParam.currency)}
         </p>
       </div>
     </div>
@@ -965,11 +926,7 @@
   </div>
 </Modal>
 <!-- MODAL DISPERSION DETAIL CLARIFICATION -->
-<Modal
-  className={`modal-medium`}
-  wrapperClass={"text-area-wrapper"}
-  bind:this={modalDetailClarification}
->
+<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalDetailClarification}>
   <div slot="header">
     <p>Solicitar Aclaración</p>
   </div>
@@ -1022,11 +979,7 @@
   </div>
   <div slot="content">
     <div class="date-range-input">
-      <DatePicker
-        label="Del"
-        id="date-range-start"
-        bind:value={dateRangeStart}
-      />
+      <DatePicker label="Del" id="date-range-start" bind:value={dateRangeStart} />
       <DatePicker label="Al" id="date-range-end" bind:value={dateRangeEnd} />
     </div>
   </div>
@@ -1118,36 +1071,28 @@
             label=""
             id="csv-export"
             type="button"
-            className="btn-plain btn-square fill-blue {dispersions.length > 0
-              ? ''
-              : 'disabled'}"
+            className="btn-plain btn-square fill-blue {dispersions.length > 0 ? '' : 'disabled'}"
             icon="csv-fill"
           />
           <Input
             label=""
             id="excel-export"
             type="button"
-            className="btn-plain btn-square fill-green {dispersions.length > 0
-              ? ''
-              : 'disabled'}"
+            className="btn-plain btn-square fill-green {dispersions.length > 0 ? '' : 'disabled'}"
             icon="xls-fill"
           />
           <Input
             label=""
             id="print"
             type="button"
-            className="btn-plain btn-square fill-blue {dispersions.length > 0
-              ? ''
-              : 'disabled'}"
+            className="btn-plain btn-square fill-blue {dispersions.length > 0 ? '' : 'disabled'}"
             icon="print"
           />
           <Input
             label=""
             id="pdf-export"
             type="button"
-            className="btn-plain btn-square fill-red {dispersions.length > 0
-              ? ''
-              : 'disabled'}"
+            className="btn-plain btn-square fill-red {dispersions.length > 0 ? '' : 'disabled'}"
             icon="pdf-fill"
           />
           <!-- <Input on:click={exportDataToCSV(dispersions)} label="" id="csv-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/> -->
@@ -1171,12 +1116,7 @@
         <div class="card">
           <div><p>Saldo a Depositar</p></div>
           <div>
-            <span
-              >{user.toDeposit.toLocaleString(
-                localeParam.language,
-                localeParam.currency
-              )}</span
-            >
+            <span>{user.toDeposit.toLocaleString(localeParam.language, localeParam.currency)}</span>
           </div>
         </div>
         <div class="button">
@@ -1222,14 +1162,9 @@
                   <tr
                     class="clickable-table-row"
                     on:click={() => (dispersionDetailView = true)}
-                    on:keypress={(e) =>
-                      e.key === "Enter" ? (dispersionDetailView = true) : ""}
+                    on:keypress={(e) => (e.key === "Enter" ? (dispersionDetailView = true) : "")}
                   >
-                    <td
-                      >{getTransactionDate(dispersion.date) +
-                        " - " +
-                        getTransactionTime(dispersion.time)}</td
-                    >
+                    <td>{getTransactionDate(dispersion.date) + " - " + getTransactionTime(dispersion.time)}</td>
                     <!-- <td>
                           <Input
                             id='detailsTicket{dispersion.id}'
@@ -1239,12 +1174,7 @@
                             label={dispersion.id} type="button" className="text-button" icon=""/>
                         </td> -->
                     <td class="responsive hide">{dispersion.id}</td>
-                    <td
-                      >{parseFloat(dispersion.total).toLocaleString(
-                        localeParam.language,
-                        localeParam.currency
-                      )}</td
-                    >
+                    <td>{parseFloat(dispersion.total).toLocaleString(localeParam.language, localeParam.currency)}</td>
                     <td>{dispersion.type}</td>
                     <td class="responsive hide"
                       >{parseFloat(dispersion.commission).toLocaleString(
@@ -1252,7 +1182,7 @@
                         localeParam.currency
                       )}</td
                     >
-                    <td class="responsive hide" > - </td>
+                    <td class="responsive hide"> - </td>
                     <td class="responsive hide" />
                     <td class="responsive hide"
                       >{parseFloat(dispersion.dispersion).toLocaleString(
@@ -1288,9 +1218,8 @@
         <div class="details__top">
           <b>Recibo #{selectedDispersion.id}</b>
           <p>
-            {selectedDispersion.date.toDate().getDate()} de {getMonthName(
-              selectedDispersion.date.toDate().getMonth()
-            )} del {selectedDispersion.date.toDate().getFullYear()} a las {selectedDispersion.date
+            {selectedDispersion.date.toDate().getDate()} de {getMonthName(selectedDispersion.date.toDate().getMonth())} del
+            {selectedDispersion.date.toDate().getFullYear()} a las {selectedDispersion.date
               .toDate()
               .toLocaleTimeString()}
           </p>
@@ -1328,10 +1257,7 @@
                 <div class="item">
                   <b>Total Depositado</b>
                   <p>
-                    {selectedDispersion.dispersion.toLocaleString(
-                      localeParam.language,
-                      localeParam.currency
-                    )}
+                    {selectedDispersion.dispersion.toLocaleString(localeParam.language, localeParam.currency)}
                   </p>
                 </div>
               </div>
@@ -1343,21 +1269,12 @@
                 </div>
                 <div class="item">
                   <b>Total Ventas</b>
-                  <p>
-                    {selectedDispersion.total.toLocaleString(
-                      localeParam.language,
-                      localeParam.currency
-                    )}
-                  </p>
+                  <p>{selectedDispersion.total.toLocaleString(localeParam.language, localeParam.currency)}</p>
                   <span />
                 </div>
                 <div class="item">
-                  <b>Comisión</b>
                   <p>
-                    {selectedDispersion.commission.toLocaleString(
-                      localeParam.language,
-                      localeParam.currency
-                    )}
+                    {selectedDispersion.commission.toLocaleString(localeParam.language, localeParam.currency)}
                   </p>
                   <!-- <span>(4.06%)</span> -->
                 </div>
@@ -1366,8 +1283,7 @@
             <div class="card-buttons">
               <div class="clarification-button">
                 <Input
-                  on:click={() =>
-                    (detailClarification.ticket = selectedDispersion.id)}
+                  on:click={() => (detailClarification.ticket = selectedDispersion.id)}
                   on:click={showModal(modalDetailClarification)}
                   label="Aclaración"
                   id="clarificationDispersionDetail"
@@ -1377,22 +1293,10 @@
                 />
               </div>
               <div class="email-button">
-                <Input
-                  label="Enviar por e-mail"
-                  id="emailDispersion"
-                  type="button"
-                  className="btn-plain"
-                  icon=""
-                />
+                <Input label="Enviar por e-mail" id="emailDispersion" type="button" className="btn-plain" icon="" />
               </div>
               <div class="print-button">
-                <Input
-                  label="Imprimir Recibo"
-                  id="printDispersion"
-                  type="button"
-                  className="btn-plain"
-                  icon=""
-                />
+                <Input label="Imprimir Recibo" id="printDispersion" type="button" className="btn-plain" icon="" />
               </div>
             </div>
           </div>
@@ -1403,39 +1307,27 @@
                 label=""
                 id="csv-export"
                 type="button"
-                className="btn-plain btn-square fill-blue {dispersions.length >
-                0
-                  ? ''
-                  : 'disabled'}"
+                className="btn-plain btn-square fill-blue {dispersions.length > 0 ? '' : 'disabled'}"
                 icon="csv-fill"
               />
               <Input
                 label=""
                 id="excel-export"
                 type="button"
-                className="btn-plain btn-square fill-green {dispersions.length >
-                0
-                  ? ''
-                  : 'disabled'}"
+                className="btn-plain btn-square fill-green {dispersions.length > 0 ? '' : 'disabled'}"
                 icon="xls-fill"
               />
               <Input
-                label=""
                 id="print"
                 type="button"
-                className="btn-plain btn-square fill-blue {dispersions.length >
-                0
-                  ? ''
-                  : 'disabled'}"
+                className="btn-plain btn-square fill-blue {dispersions.length > 0 ? '' : 'disabled'}"
                 icon="print"
               />
               <Input
                 label=""
                 id="pdf-export"
                 type="button"
-                className="btn-plain btn-square fill-red {dispersions.length > 0
-                  ? ''
-                  : 'disabled'}"
+                className="btn-plain btn-square fill-red {dispersions.length > 0 ? '' : 'disabled'}"
                 icon="pdf-fill"
               />
               <!-- <Input on:click={
@@ -1885,8 +1777,7 @@
     /* Fill Container */
     background: $background-light-secondary;
     /* container effect */
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
-      4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
   }
 
@@ -1943,12 +1834,7 @@
     text-align: center;
   }
 
-  .details__middle
-    .details-center
-    .details-card
-    .details-card__bottom
-    .item
-    span {
+  .details__middle .details-center .details-card .details-card__bottom .item span {
     display: flex;
     justify-content: center;
     font-style: normal;

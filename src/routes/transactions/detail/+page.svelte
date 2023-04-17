@@ -49,11 +49,7 @@
   });
 </script>
 
-<Modal
-  className={`modal-medium`}
-  wrapperClass={"text-area-wrapper"}
-  bind:this={modalClarification}
->
+<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalClarification}>
   <div slot="header">
     <p>Solicitar Aclaración</p>
   </div>
@@ -151,10 +147,7 @@
             </div>
             <div class="item__content">
               <p>
-                <span
-                  >{"**** **** **** " +
-                    transaction["Application PAN"].substr(-4)}</span
-                >
+                <span>{"**** **** **** " + transaction["Application PAN"].substr(-4)}</span>
               </p>
             </div>
           </div>
@@ -180,10 +173,7 @@
             </div>
             <div class="item__content">
               <p>
-                {(transaction.Amount / 100)?.toLocaleString(
-                  localeParam.language,
-                  localeParam.currency
-                )}
+                {(transaction.Amount / 100)?.toLocaleString(localeParam.language, localeParam.currency)}
               </p>
             </div>
           </div>
@@ -203,10 +193,7 @@
             </div>
             <div class="item__content">
               <p>
-                {((transaction.Amount / 100) * 0.035)?.toLocaleString(
-                  localeParam.language,
-                  localeParam.currency
-                )}
+                {((transaction.Amount / 100) * 0.035)?.toLocaleString(localeParam.language, localeParam.currency)}
               </p>
               <p>{`(3.5%)`}</p>
             </div>
@@ -232,10 +219,7 @@
             </div>
             <div class="item__content">
               <p>
-                {((transaction.Amount / 100) * 0.965)?.toLocaleString(
-                  localeParam.language,
-                  localeParam.currency
-                )}
+                {((transaction.Amount / 100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}
               </p>
             </div>
             <span />
@@ -245,8 +229,7 @@
       <div class="card-buttons">
         <div class="reverse-button">
           <Input
-            on:click={() =>
-              (clarification.ticket = transaction["Transaction Time"])}
+            on:click={() => (clarification.ticket = transaction["Transaction Time"])}
             on:click={showModal(modalClarification)}
             label="Aclaración"
             id="reverseTransaction"
@@ -256,49 +239,19 @@
           />
         </div>
         <div class="email-button">
-          <Input
-            label="Enviar por e-mail"
-            id="emailTransaction"
-            type="button"
-            className="btn-plain"
-            icon=""
-          />
+          <Input label="Enviar por e-mail" id="emailTransaction" type="button" className="btn-plain" icon="" />
         </div>
         <div class="print-button">
-          <Input
-            label="Imprimir Recibo"
-            id="printTransaction"
-            type="button"
-            className="btn-plain"
-            icon=""
-          />
+          <Input label="Imprimir Recibo" id="printTransaction" type="button" className="btn-plain" icon="" />
         </div>
       </div>
     </div>
     <div class="details-right responsive">
       <div class="title">Reportes</div>
       <div class="export-buttons">
-        <Input
-          label=""
-          id="csv-export"
-          type="button"
-          className="btn-plain fill-blue btn-square "
-          icon="csv-fill"
-        />
-        <Input
-          label=""
-          id="excel-export"
-          type="button"
-          className="btn-plain fill-green btn-square "
-          icon="xls-fill"
-        />
-        <Input
-          label=""
-          id="pdf-export"
-          type="button"
-          className="btn-plain fill-red btn-square "
-          icon="pdf-fill"
-        />
+        <Input label="" id="csv-export" type="button" className="btn-plain fill-blue btn-square " icon="csv-fill" />
+        <Input label="" id="excel-export" type="button" className="btn-plain fill-green btn-square " icon="xls-fill" />
+        <Input label="" id="pdf-export" type="button" className="btn-plain fill-red btn-square " icon="pdf-fill" />
       </div>
     </div>
   </div>

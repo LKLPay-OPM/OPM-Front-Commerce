@@ -15,13 +15,8 @@
   /* dynamic vars */
   let loading = true;
 
-  $: {
-    console.log(data);
-  }
-
   onMount(async () => {
-    $linkSelected = "Inicio";
-    if (data?.redirect) await goto(data.path);
+    if (!$isLoggedIn) await goto("/login");
     loading = false;
   });
 </script>

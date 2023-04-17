@@ -31,11 +31,7 @@
   import Map from "$lib/components/Map.svelte";
   import { onDestroy, onMount } from "svelte";
   import { each } from "svelte/internal";
-  import {
-    generatePDF,
-    generateCSV,
-    generateXLSX,
-  } from "$lib/hooks/exportDataToFile.js";
+  import { generatePDF, generateCSV, generateXLSX } from "$lib/hooks/exportDataToFile.js";
   import { updateTransactionStatus } from "$lib/hooks/updates.js";
   import { fetchUserData } from "$lib/hooks/auth.js";
 
@@ -48,8 +44,7 @@
 
   const makeId = (length) => {
     var result = "";
-    var characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     var charactersLength = characters.length;
     for (var i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -75,11 +70,8 @@
     rate = rate / 100;
     transactionForm.user = $loggedInUser;
     transactionForm.total = parseFloat(transactionForm.total);
-    transactionForm.commission =
-      Math.round(transactionForm.total * rate * 100) / 100;
-    transactionForm.dispersion =
-      Math.round((transactionForm.total - transactionForm.commission) * 100) /
-      100;
+    transactionForm.commission = Math.round(transactionForm.total * rate * 100) / 100;
+    transactionForm.dispersion = Math.round((transactionForm.total - transactionForm.commission) * 100) / 100;
     transactionForm.id = transactionForm.id.toString();
     const terminalNumber = terminalData.serialNumber.toString();
     delete transactionForm.user.transactions;
@@ -95,19 +87,10 @@
           transactionForm.terminal = data;
           if (statusTerminal === "active") {
             try {
-              await setDoc(
-                doc(db, dbCollection, uid, "transactions", transactionForm.id),
-                transactionForm
-              )
+              await setDoc(doc(db, dbCollection, uid, "transactions", transactionForm.id), transactionForm)
                 .then(async () => {
                   await setDoc(
-                    doc(
-                      db,
-                      dbTerminals,
-                      terminalNumber,
-                      "transactions",
-                      transactionForm.uuid
-                    ),
+                    doc(db, dbTerminals, terminalNumber, "transactions", transactionForm.uuid),
                     transactionForm
                   );
                 })
@@ -285,12 +268,7 @@
             type="number"
           />
           {#if rates.length > 0}
-            <Select
-              bind:value={rate}
-              label="Tarjeta"
-              defaultText={"Elige una opción"}
-              bind:optionsList={rates}
-            />
+            <Select bind:value={rate} label="Tarjeta" defaultText={"Elige una opción"} bind:optionsList={rates} />
           {/if}
           <Input
             label="Guardar Transacción"

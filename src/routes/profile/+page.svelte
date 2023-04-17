@@ -1,22 +1,9 @@
 <script>
-  import {
-    collection,
-    Timestamp,
-    query,
-    orderBy,
-    limit,
-    where,
-    getDocs,
-    startAt,
-    endAt,
-  } from "firebase/firestore";
+  import { collection, Timestamp, query, orderBy, limit, where, getDocs, startAt, endAt } from "firebase/firestore";
   import { db } from "$lib/firebase";
   import { isLoggedIn, loggedInUser, redirectBankProfile } from "$lib/stores";
   import { changeEmail, changePassword } from "$lib/hooks/auth.js";
-  import {
-    updateUserIne,
-    updateUserBankAccountInfo,
-  } from "$lib/hooks/updates.js";
+  import { updateUserIne, updateUserBankAccountInfo } from "$lib/hooks/updates.js";
   import { updateUserInfo, updateUserAvatar } from "$lib/hooks/updates.js";
   import { onMount, afterUpdate } from "svelte";
   import Input from "$lib/components/Input.svelte";
@@ -83,8 +70,7 @@
       const fetch = fetchRates();
       fetch
         .then((value) => {
-          ratesBusinessType =
-            value.ratesBusinessType[$loggedInUser.businessLine];
+          ratesBusinessType = value.ratesBusinessType[$loggedInUser.businessLine];
         })
         .catch((err) => {
           console.log(err);
@@ -207,11 +193,7 @@
             <div class="element">
               <div class="avatar-container">
                 <div class="avatar">
-                  <img
-                    class="avatar-img"
-                    alt="imagen"
-                    src={$loggedInUser.avatar ? $loggedInUser.avatar : noUser}
-                  />
+                  <img class="avatar-img" alt="imagen" src={$loggedInUser.avatar ? $loggedInUser.avatar : noUser} />
                 </div>
               </div>
             </div>
@@ -317,8 +299,7 @@
             <div
               class="element-center arrow-blue"
               on:click={() => (branchView = !branchView)}
-              on:keypress={(e) =>
-                e.key === "Enter" ? (branchView = !branchView) : ""}
+              on:keypress={(e) => (e.key === "Enter" ? (branchView = !branchView) : "")}
             >
               <Icons name={"arrow-bwd"} width="24" height="24" />
             </div>
@@ -327,9 +308,7 @@
                 <img
                   class="avatar-img"
                   alt="imagen"
-                  src={selectedBranch.manager.avatar
-                    ? $loggedInUser.avatar
-                    : noUser}
+                  src={selectedBranch.manager.avatar ? $loggedInUser.avatar : noUser}
                 />
               </div>
             </div>
@@ -485,12 +464,7 @@
   }
 
   .divider-hor {
-    background: linear-gradient(
-        138.32deg,
-        rgba(0, 0, 0, 0.5) 8.26%,
-        rgba(255, 255, 255, 0.5) 91.02%
-      ),
-      #eaecf0;
+    background: linear-gradient(138.32deg, rgba(0, 0, 0, 0.5) 8.26%, rgba(255, 255, 255, 0.5) 91.02%), #eaecf0;
     background-blend-mode: soft-light, normal;
     /* n-stroke */
 
