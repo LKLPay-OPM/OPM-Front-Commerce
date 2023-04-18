@@ -13,7 +13,9 @@
   import noUser from "$lib/assets/no_user.png";
   import { fetchRates } from "$lib/hooks/rates.js";
   import townsData from "$lib/assets/municipios.json";
-
+  /* svelte */
+  import { createEventDispatcher } from "svelte";
+  const dispatch = createEventDispatcher();
   let statesData = Object.keys(townsData);
   let statesArray = [];
   let townsArray = [];
@@ -31,7 +33,7 @@
   let townIndex = 0;
   export let userDetails;
   let financialData = {
-    rfc: "",
+    /* rfc: "",
     businessName: userDetails.businessName,
     csf: "",
     complianceOpinion: "",
@@ -44,7 +46,7 @@
     suburb: userDetails.suburb,
     addressReference: "",
     betweenAddress: "",
-    addressProof: "",
+    addressProof: "", */
   };
   let ineFront = "",
     ineBack = "",
@@ -210,16 +212,16 @@
           </div>
           <div class="element">
             <div class="title-blue">
-              {userDetails.businessName}
+              <!-- {userDetails.businessName} -->
             </div>
             <div class="description text-center">
-              {getBusinessLineName(userDetails?.businessLine)}
+              <!-- {getBusinessLineName(userDetails?.businessLine)} -->
             </div>
           </div>
         </div>
         <div class="buttons">
           <Input
-            on:click={() => (optionSelected = 0)}
+            on:click={() => dispatch("cancel")}
             label="Cancelar"
             id="cancel"
             className="btn-plain blue"
@@ -232,31 +234,31 @@
       <div class="middle">
         <div class="title">Datos de la Persona</div>
         <div class="element">
+          <!-- bind:value={userDetails.name} -->
           <Input
             label="Nombre (s)"
             placeholder="Ejemplo de nombre"
             id="name"
-            bind:value={userDetails.name}
             className="txt-field normal fill-blue"
             type="text"
             icon=""
           />
         </div>
         <div class="element">
+          <!-- bind:value={userDetails.firstlastName} -->
           <Input
             label="Primer Apellido"
             placeholder="Apellido"
             id="firstLastName"
-            bind:value={userDetails.firstlastName}
             className="txt-field normal fill-blue"
             type="text"
             icon=""
           />
+          <!-- bind:value={userDetails.secondLastName} -->
           <Input
             label="Segundo Apellido"
             placeholder="Apellido"
             id="secondLastName"
-            bind:value={userDetails.secondLastName}
             className="txt-field normal fill-blue"
             type="text"
             icon=""
@@ -282,33 +284,33 @@
           />
         </div>
         <div class="element">
+          <!-- bind:value={userDetails.phone} -->
           <Input
             label="Teléfono"
             placeholder="331-3124-521"
             id="phone"
-            bind:value={userDetails.phone}
             className="txt-field normal fill-blue"
             type="text"
             icon=""
           />
         </div>
         <div class="element">
+          <!-- bind:value={userDetails.email} -->
           <Input
             label="Email"
             placeholder="nombre@dominio.com"
             id="email"
-            bind:value={userDetails.email}
             className="txt-field normal fill-blue"
             type="text"
             icon=""
           />
         </div>
         <div class="element">
+          <!-- bind:value={userDetails.bankAccountInfo.clabe} -->
           <Input
             label="Número CLABE"
             placeholder="123123123456789011"
             id="clabe"
-            bind:value={userDetails.bankAccountInfo.clabe}
             className="txt-field normal fill-blue"
             type="text"
             icon=""
@@ -329,31 +331,31 @@
       <div class="right">
         <div class="title">Datos Fiscales</div>
         <div class="element">
+          <!-- bind:value={userDetails.rfc} -->
           <Input
             label="RFC"
             placeholder="AAAA1234562T1"
             id="rfc"
-            bind:value={userDetails.rfc}
             className="txt-field normal fill-blue"
             type="text"
             icon=""
           />
         </div>
         <div class="element button">
+          <!-- bind:value={financialData.csf} -->
           <Input
             label="Constancia de Situación Fiscal"
             id="csf"
-            bind:value={financialData.csf}
             className={financialData.csf != "" ? "btn-success-border" : "btn-plain blue"}
             type="file"
             accept="application/pdf"
           />
         </div>
         <div class="element button">
+          <!-- bind:value={financialData.complianceOpinion} -->
           <Input
             label="Opinión de Cumplimiento"
             id="complianceOpinion"
-            bind:value={financialData.complianceOpinion}
             className={financialData.complianceOpinion != "" ? "btn-success-border" : "btn-plain blue"}
             type="file"
             accept="application/pdf"
@@ -361,11 +363,11 @@
         </div>
         <div class="title">Domicilio Fiscal</div>
         <div class="element">
+          <!-- bind:value={financialData.address} -->
           <Input
             label="Calle"
             placeholder="Circunvalación Jorge Álvarez del Castillo"
             id="address"
-            bind:value={financialData.address}
             className="txt-field normal fill-blue"
             type="text"
             icon=""
@@ -373,38 +375,38 @@
         </div>
         <div class="element">
           <div class="row-element">
+            <!-- bind:value={financialData.exteriorNumber} -->
             <Input
               placeholder="1106"
               label="N° Exterior"
               id="ExteriorNumber"
-              bind:value={financialData.exteriorNumber}
               className="txt-field-slim normal fill-blue"
               type="email"
             />
           </div>
           <div class="row-element">
+            <!-- bind:value={financialData.interiorNumber} -->
             <Input
               placeholder="NA"
               label="N° Interior"
               id="InteriorNumber"
-              bind:value={financialData.interiorNumber}
               className="txt-field-slim normal fill-blue"
               type="text"
             />
           </div>
           <div class="row-element">
+            <!-- bind:value={financialData.zipCode} -->
             <Input
               placeholder="44620"
               label="Código Postal"
               id="ZipCode"
-              bind:value={financialData.zipCode}
               className="txt-field-slim normal fill-blue"
               type="text"
             />
           </div>
         </div>
         <div class="element">
-          <Select
+          <!-- <Select
             index={stateIndex}
             classList={"blue"}
             bind:value={financialData.state}
@@ -419,34 +421,34 @@
             label="Municipio"
             defaultText={"Elige una opción"}
             bind:optionsList={towns}
-          />
+          /> -->
         </div>
         <!-- 
         {#if statesArray.length>0}
         {/if} -->
         <div class="element">
+          <!-- bind:value={financialData.address} -->
           <Input
             placeholder="Chapultepec Country"
             label="Colonia"
             id="Suburb"
-            bind:value={financialData.address}
             className="txt-field-slim normal fill-blue"
             type="text"
           />
         </div>
         <div class="element">
+          <!-- bind:value={financialData.addressReference} -->
           <Input
             placeholder="Casa con portón negro"
             label="Referencia del Domicilio"
             id="AddressReference"
-            bind:value={financialData.addressReference}
             className="txt-field-slim normal fill-blue"
             type="text"
           />
         </div>
+        <!-- bind:value={financialData.betweenAddress} -->
         <TextArea
           className={"fill-blue"}
-          bind:value={financialData.betweenAddress}
           label="Entre Calles"
           placeholder="Av. Plan de San Luis y Av. Circunvalacion Jorge Alvarez del Castillo"
           id="BetweenStreets"
