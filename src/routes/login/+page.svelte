@@ -42,11 +42,11 @@
   <div class="container">
     <div class="content">
       <div class="logo">
+        <img src={Logo} alt="Company Logo" />
         <div class="text">
           <p>LKL Pay</p>
           <small>Financial Technology</small>
         </div>
-        <img src={Logo} alt="Company Logo" />
       </div>
       <div class="form">
         <div class="title">Inicio de Sesión</div>

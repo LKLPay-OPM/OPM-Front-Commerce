@@ -95,13 +95,13 @@
     width: 1em;
     height: 1em;
     background: transparent;
-    border: 1px solid var(--gray, #ccc);
+    border: 1px solid $grey;
     border-radius: 50%;
     top: 0.2em;
   }
 
   input[type="radio"]:checked + label::before {
-    border: 1px solid var(--gray, #ccc);
+    border: 1px solid $grey;
     border-radius: 50%;
     /* Text */
     color: $primary-dark;
@@ -115,8 +115,8 @@
     height: 1rem;
     top: 0.25rem;
     left: 0.05rem;
-    background: var(--accent-color, #282828);
-    border: 1px solid var(--accent-color, #282828);
+    background: var(--accent-color);
+    border: 1px solid var(--accent-color);
     border-radius: 50%;
     transform: scale(0);
   }
@@ -127,16 +127,16 @@
   }
 
   input[type="radio"]:focus + label::before {
-    box-shadow: 0 0 0 1px var(--accent-color, #282828);
+    box-shadow: 0 0 0 1px var(--accent-color);
     border-radius: 50%;
   }
 
   input[type="radio"]:disabled + label {
-    color: darken(var(--gray, #ccc), 10);
+    color: darken($grey, 10);
   }
 
   input[type="radio"]:disabled + label::before {
-    background: var(--gray, #ccc);
+    background: $grey;
   }
   /* gravy */
 
@@ -157,7 +157,7 @@
   }
 
   input[type="radio"]:focus + label::before {
-    box-shadow: 0 0px 8px var(--accent-color, #282828);
+    box-shadow: 0 0px 8px var(--accent-color);
     border-radius: 50%;
   }
 </style>

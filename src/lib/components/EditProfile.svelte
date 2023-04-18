@@ -2,7 +2,7 @@
   import { collection, Timestamp, query, orderBy, limit, where, getDocs, startAt, endAt } from "firebase/firestore";
   import { db } from "$lib/firebase";
   import { isLoggedIn, loggedInUser, redirectBankProfile } from "$lib/stores";
-  import { changeEmail, changePassword } from "$lib/hooks/auth.js";
+  // import { changeEmail, changePassword } from "$lib/hooks/auth.js";
   import { updateUserIne, updateUserBankAccountInfo } from "$lib/hooks/updates.js";
   import { updateUserInfo, updateUserAvatar } from "$lib/hooks/updates.js";
   import { onMount, afterUpdate } from "svelte";
@@ -97,31 +97,31 @@
 
   const getBusinessLineName = (businessLine) => {
     const businessLineArray = {
-      travelAgency: { name: "Agencias de Viajes" },
-      aggregators: { name: "Agregadoras" },
-      insurers: { name: "Aseguradoras" },
-      charity: { name: "Beneficencia" },
-      collegeAndUniversities: { name: "Colegios y Universidades" },
-      fastFood: { name: "Comida Rápida" },
-      basicEducation: { name: "Educación Básica" },
-      entertainment: { name: "Entretenimiento" },
-      parkings: { name: "Estacionamientos" },
-      pharmacy: { name: "Farmacias" },
-      gasStations: { name: "Gasolineras" },
-      hospitals: { name: "Hospitales" },
-      hotels: { name: "Hoteles" },
-      doctorsAndDentists: { name: "Doctores y Dentistas" },
-      miscellaneous: { name: "Miscelánea" },
-      others: { name: "Otros" },
-      toll: { name: "Peaje" },
-      sparePartsAndHardwareStores: { name: "Refacciones y Ferreterías" },
-      carRental: { name: "Renta de Autos" },
-      restaurants: { name: "Restaurantes" },
-      beautySalons: { name: "Salones de Belleza" },
-      supermarkets: { name: "Supermercados" },
-      telecommunications: { name: "Telecomunicaciones" },
-      airTransport: { name: "Transporte Aéreo" },
-      landPassengerTransport: { name: "Transaporte Terrestre de Pasajeros" },
+      0: { name: "Agregadoras" },
+      1: { name: "Agencias de Viajes" },
+      2: { name: "Aseguradoras" },
+      3: { name: "Beneficencia" },
+      4: { name: "Colegios y Universidades" },
+      5: { name: "Comida Rápida" },
+      6: { name: "Educación Básica" },
+      7: { name: "Entretenimiento" },
+      8: { name: "Estacionamientos" },
+      9: { name: "Farmacias" },
+      10: { name: "Gasolineras" },
+      11: { name: "Hospitales" },
+      12: { name: "Hoteles" },
+      13: { name: "Doctores y Dentistas" },
+      15: { name: "Miscelánea" },
+      16: { name: "Otros" },
+      17: { name: "Peaje" },
+      18: { name: "Refacciones y Ferreterías" },
+      19: { name: "Renta de Autos" },
+      20: { name: "Restaurantes" },
+      21: { name: "Salones de Belleza" },
+      22: { name: "Supermercados" },
+      23: { name: "Telecomunicaciones" },
+      24: { name: "Transporte Aéreo" },
+      25: { name: "Transaporte Terrestre de Pasajeros" },
     };
     return businessLineArray[businessLine].name;
   };
@@ -137,17 +137,17 @@
 
   const handleChangeEmail = (currentPassword, newEmail) => {
     // console.log(currentPassword, newEmail)
-    changeEmail(currentPassword, newEmail);
+    /* changeEmail(currentPassword, newEmail);
     currPassword = "";
-    newEmail = "";
+    newEmail = ""; */
   };
 
   const handleChangePassword = (currentPassword, newPassword) => {
     // console.log(currentPassword, newPassword)
-    changePassword(currentPassword, newPassword);
+    /* changePassword(currentPassword, newPassword);
     currPassword = "";
     newPass = "";
-    repeatPassword = "";
+    repeatPassword = ""; */
   };
 
   const handleUpdateBusinessInfo = async () => {
