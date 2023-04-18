@@ -81,7 +81,10 @@ async function errorInterceptor(error, axiosInstance) {
       return axiosInstance(originalRequest);
     } catch (error) {
       processQueue(error, null);
-      if (error.response?.status === 401 || error.response?.status === 403) {
+      if (
+        (error.response?.status === 401 || error.response?.status === 403) &&
+        error.response?.data?.code === "REFRESH_TOKEN_EXPIRED"
+      ) {
         isLoggedIn.update(() => false);
         loggedInUser.set({});
         sessionUser.set({});
