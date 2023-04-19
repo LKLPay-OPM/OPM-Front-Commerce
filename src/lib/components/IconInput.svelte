@@ -3,6 +3,7 @@
   export let label = "";
   export let type = "";
   export let id = "";
+  export let name = "";
   export let placeholder = "";
   export let value = "";
   export let accept = "";
@@ -43,6 +44,7 @@
       {placeholder}
       {id}
       {value}
+      {name}
       on:input={onInput}
       {accept}
       {multiple}
@@ -131,5 +133,10 @@
     font-size: 0.8125rem; /* 13px */
     line-height: 1.125rem; /* 18px */
     color: #d9d9d9;
+  }
+
+  .fill-blue label {
+    font-size: 0.875rem;
+    color: $primary-dark;
   }
 </style>

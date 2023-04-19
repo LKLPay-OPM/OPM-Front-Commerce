@@ -5,6 +5,7 @@
   export let value = "";
   export let className = "";
   export let title = "";
+  export let name = "";
   const onInput = (e) => {
     value = e.target.value;
   };
@@ -27,14 +28,7 @@
       {label}
     </span>
   </label>
-  <textarea
-    on:input={onInput}
-    {value}
-    {placeholder}
-    {id}
-    class="text-area"
-    rows="5"
-  />
+  <textarea on:input={onInput} {value} {placeholder} {id} {name} class="text-area" rows="5" />
 </div>
 
 <style lang="scss">

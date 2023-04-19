@@ -2,6 +2,7 @@
   export let label = "";
   export let type = "";
   export let id = "";
+  export let name = "";
   export let placeholder = "";
   export let value = "";
   export let accept = "";
@@ -15,7 +16,7 @@
   };
 </script>
 
-<div class="form-date">
+<div class={`form-date ${className}`}>
   <label {title} class="label" for={id}>
     <span class="label-text">
       {label}
@@ -24,15 +25,7 @@
         {/if} -->
     </span>
   </label>
-  <input
-    on:click
-    type="date"
-    {placeholder}
-    {id}
-    {value}
-    on:input={onInput}
-    {accept}
-  />
+  <input on:click type="date" {placeholder} {id} {value} {name} on:input={onInput} {accept} />
 </div>
 
 <style lang="scss">
@@ -45,9 +38,9 @@
   .label {
     display: flex;
     -webkit-user-select: none;
-            user-select: none;
+    user-select: none;
     align-items: center;
-    justify-content: space-between
+    justify-content: space-between;
   }
 
   .label-text {
@@ -58,8 +51,8 @@
     flex-direction: row;
     color: $grey;
   }
-  
-  input[type=date] {
+
+  input[type="date"] {
     height: 35px;
     width: 10.75rem;
     margin: 0 auto;
@@ -67,16 +60,20 @@
     font-size: 18px;
     font-weight: bold;
     text-transform: uppercase;
-    background-color: lighten(#2f2f2f,40%);
+    background-color: lighten(#2f2f2f, 40%);
     outline: none;
     border: 0;
     border-radius: 3px;
     padding: 0 3px;
-    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #E6E8EF 100%);
+    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     /* inner-flat */
-    box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0;
+    box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     border-radius: 4px;
-    color: #8C9FB1;
+    color: #8c9fb1;
   }
 
+  .fill-blue span {
+    font-size: 0.875rem;
+    color: $primary-dark;
+  }
 </style>
