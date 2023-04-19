@@ -29,6 +29,7 @@ const userRoutes = (role, route) => {
       "/terminals": false,
       "/urgent": false,
       "/credits": false,
+      "/payment-link": true,
     },
     2: {
       "/login": true,
@@ -69,6 +70,7 @@ const sidebarOptions = (accountType) => {
       { name: "Mis Ventas", path: "/transactions", icon: "terminal" },
       { name: "Depósitos", path: "/dispersions", icon: "deposits" },
       { name: "Solicitudes", path: "/requests", icon: "adviser" },
+      { name: "Link de Pago", path: "/payment-link", icon: "global" },
       // {name: 'Depósito Urgente', path: '/urgent-dispersion', icon: 'terminal'},
       // {name: 'Cuenta Bancaria', path: '/bank-account', icon: 'bank-line'},
       // {name: 'Créditos', path: '/credits', icon: 'bank-line'},

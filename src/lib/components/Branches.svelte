@@ -1,10 +1,7 @@
 <script>
   import { isLoggedIn, loggedInUser, redirectBankProfile } from "$lib/stores";
-  import { changeEmail, changePassword } from "$lib/hooks/auth.js";
-  import {
-    updateUserIne,
-    updateUserBankAccountInfo,
-  } from "$lib/hooks/updates.js";
+  // import { changeEmail, changePassword } from "$lib/hooks/auth.js";
+  import { updateUserIne, updateUserBankAccountInfo } from "$lib/hooks/updates.js";
   import { updateUserInfo, updateUserAvatar } from "$lib/hooks/updates.js";
   import { onMount, afterUpdate } from "svelte";
   import Input from "$lib/components/Input.svelte";
@@ -120,9 +117,7 @@
       year: "2-digit",
     }).format(today);
 
-    const array = data.filter(
-      (date) => date["Transaction Date"] === strToday.replace(pattern, "$3$2$1")
-    );
+    const array = data.filter((date) => date["Transaction Date"] === strToday.replace(pattern, "$3$2$1"));
     return array;
   };
 
@@ -130,12 +125,8 @@
     active = "week";
     var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
     const curr = new Date();
-    const firstDay = new Date(
-      curr.setDate(curr.getDate() - curr.getDay() + 1)
-    ).setHours(0, 0, 0, 0);
-    const lastDay = new Date(
-      curr.setDate(curr.getDate() - curr.getDay() + 7)
-    ).setHours(0, 0, 0, 0);
+    const firstDay = new Date(curr.setDate(curr.getDate() - curr.getDay() + 1)).setHours(0, 0, 0, 0);
+    const lastDay = new Date(curr.setDate(curr.getDate() - curr.getDay() + 7)).setHours(0, 0, 0, 0);
 
     const first = new Intl.DateTimeFormat("es-MX", {
       month: "2-digit",
@@ -160,15 +151,8 @@
     var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
     //transactions = [];
     const curr = new Date();
-    const currentMonth = new Date(curr.setMonth(curr.getMonth(), 1)).setHours(
-      0,
-      0,
-      0,
-      0
-    ); // Sets Date to actual month day 1 at 00:00
-    const lastDayOfMonth = new Date(
-      curr.setMonth(curr.getMonth() + 1, 0)
-    ).setHours(0, 0, 0, 0); // Sets Date to last day of month at 00:00
+    const currentMonth = new Date(curr.setMonth(curr.getMonth(), 1)).setHours(0, 0, 0, 0); // Sets Date to actual month day 1 at 00:00
+    const lastDayOfMonth = new Date(curr.setMonth(curr.getMonth() + 1, 0)).setHours(0, 0, 0, 0); // Sets Date to last day of month at 00:00
 
     const first = new Intl.DateTimeFormat("es-MX", {
       month: "2-digit",
@@ -207,7 +191,7 @@
   {#if !branchView}
     <div class="card-secondary row padding-1">
       <div class="element">
-        <div class="title-blue">Ventas</div>
+        <div class="title-blue">N° de Ventas</div>
         <div class="description text-center">
           {#if active === "day"}
             {fetchByDayButton(all).length}
@@ -219,7 +203,7 @@
         </div>
       </div>
       <div class="element">
-        <div class="title-blue">Vendido</div>
+        <div class="title-blue">Monto</div>
         <div class="description text-center">
           {#if active === "day"}
             {fetchByDayButton(all)
@@ -280,17 +264,12 @@
           on:click={() => (selected = branch)}
           on:keypress={(e) => (e.key === "Enter" ? (selected = branch) : "")}
           on:click={() => (branchView = !branchView)}
-          on:keypress={(e) =>
-            e.key === "Enter" ? (branchView = !branchView) : ""}
+          on:keypress={(e) => (e.key === "Enter" ? (branchView = !branchView) : "")}
         >
           <div class="element">
             <div class="avatar-container">
               <div class="avatar">
-                <img
-                  class="avatar-img"
-                  alt="imagen"
-                  src={branch.avatar ? branch.avatar : noUser}
-                />
+                <img class="avatar-img" alt="imagen" src={branch.avatar ? branch.avatar : noUser} />
               </div>
             </div>
           </div>
@@ -304,7 +283,7 @@
             </div>
           </div>
           <div class="element-center r425 r540">
-            <div class="title-blue text-center">Ventas</div>
+            <div class="title-blue text-center">N° de Ventas</div>
             <div class="description text-center">
               {#if active === "day"}
                 {fetchByDayButton(branch.transactions).length}
@@ -316,7 +295,7 @@
             </div>
           </div>
           <div class="element-center r425">
-            <div class="title-blue text-center">Vendido</div>
+            <div class="title-blue text-center">Monto</div>
             <div class="description text-center">
               {#if active === "day"}
                 {fetchByDayButton(branch.transactions)
@@ -360,7 +339,7 @@
   {:else}
     <div class="card-secondary row padding-1">
       <div class="element">
-        <div class="title-blue">Ventas</div>
+        <div class="title-blue">N° de Ventas</div>
         <div class="description text-center">
           {#if active === "day"}
             {fetchByDayButton(selected.transactions).length}
@@ -372,7 +351,7 @@
         </div>
       </div>
       <div class="element">
-        <div class="title-blue">Vendido</div>
+        <div class="title-blue">Monto</div>
         <div class="description text-center">
           {#if active === "day"}
             {fetchByDayButton(selected.transactions)
@@ -433,8 +412,8 @@
             <thead>
               <tr>
                 <th>Fecha</th>
-                <th class="r425 r540 r768">ID</th>
-                <th>Venta</th>
+                <th class="r425 r540 r768">Ticket</th>
+                <th>Monto</th>
                 <th class="r425 r540 r768">Comisión</th>
                 <th class="r425 r540 r768">Depósito</th>
               </tr>
@@ -448,9 +427,7 @@
                         " - " +
                         getTransactionTime(transaction["Transaction Time"])}</td
                     >
-                    <td class="r425 r540 r768"
-                      >{transaction["Transaction Time"]}</td
-                    >
+                    <td class="r425 r540 r768">{transaction["Transaction Time"]}</td>
                     <td
                       >{parseFloat(transaction.Amount / 100)?.toLocaleString(
                         localeParam.language,
@@ -458,17 +435,13 @@
                       )}</td
                     >
                     <td class="r425 r540 r768"
-                      >{parseFloat(
-                        (transaction.Amount / 100) * 0.035
-                      )?.toLocaleString(
+                      >{parseFloat((transaction.Amount / 100) * 0.035)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
                     >
                     <td class="r425 r540 r768"
-                      >{parseFloat(
-                        (transaction.Amount / 100) * 0.965
-                      )?.toLocaleString(
+                      >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
@@ -483,9 +456,7 @@
                         " - " +
                         getTransactionTime(transaction["Transaction Time"])}</td
                     >
-                    <td class="r425 r540 r768"
-                      >{transaction["Transaction Time"]}</td
-                    >
+                    <td class="r425 r540 r768">{transaction["Transaction Time"]}</td>
                     <td
                       >{parseFloat(transaction.Amount / 100)?.toLocaleString(
                         localeParam.language,
@@ -493,17 +464,13 @@
                       )}</td
                     >
                     <td class="r425 r540 r768"
-                      >{parseFloat(
-                        (transaction.Amount / 100) * 0.035
-                      )?.toLocaleString(
+                      >{parseFloat((transaction.Amount / 100) * 0.035)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
                     >
                     <td class="r425 r540 r768"
-                      >{parseFloat(
-                        (transaction.Amount / 100) * 0.965
-                      )?.toLocaleString(
+                      >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
@@ -526,17 +493,13 @@
                       )}</td
                     >
                     <td class="r425"
-                      >{parseFloat(
-                        (transaction.Amount / 100) * 0.035
-                      )?.toLocaleString(
+                      >{parseFloat((transaction.Amount / 100) * 0.035)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
                     >
                     <td class="r425"
-                      >{parseFloat(
-                        (transaction.Amount / 100) * 0.965
-                      )?.toLocaleString(
+                      >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
@@ -658,12 +621,7 @@
   }
 
   .divider-hor {
-    background: linear-gradient(
-        138.32deg,
-        rgba(0, 0, 0, 0.5) 8.26%,
-        rgba(255, 255, 255, 0.5) 91.02%
-      ),
-      #eaecf0;
+    background: linear-gradient(138.32deg, rgba(0, 0, 0, 0.5) 8.26%, rgba(255, 255, 255, 0.5) 91.02%), #eaecf0;
     background-blend-mode: soft-light, normal;
     /* n-stroke */
 

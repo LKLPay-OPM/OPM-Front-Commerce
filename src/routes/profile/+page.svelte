@@ -2,7 +2,7 @@
   import { collection, Timestamp, query, orderBy, limit, where, getDocs, startAt, endAt } from "firebase/firestore";
   import { db } from "$lib/firebase";
   import { isLoggedIn, loggedInUser, redirectBankProfile } from "$lib/stores";
-  import { changeEmail, changePassword } from "$lib/hooks/auth.js";
+  // import { changeEmail, changePassword } from "$lib/hooks/auth.js";
   import { updateUserIne, updateUserBankAccountInfo } from "$lib/hooks/updates.js";
   import { updateUserInfo, updateUserAvatar } from "$lib/hooks/updates.js";
   import { onMount, afterUpdate } from "svelte";
@@ -11,6 +11,13 @@
   import Branches from "$lib/components/Branches.svelte";
   import noUser from "$lib/assets/no_user.png";
   import { fetchRates } from "$lib/hooks/rates.js";
+
+  export let data;
+  let user = data.response;
+
+  $: {
+    console.log(data.response);
+  }
 
   const localeParam = {
     language: "es-MX",
@@ -28,10 +35,10 @@
   let selectedBranch;
   let allTransactions = [];
   let branches = [
-    /* {
+    {
       id: "1",
       name: "Matriz",
-      businessLine:"restaurants",
+      businessLine: "restaurants",
       manager: {
         avatar: "",
         name: "Mario Enrique",
@@ -40,26 +47,26 @@
         email: "armando.velasco@lklpay.com.mx",
       },
       address: {
-        street:"Av. Jorge Alvarez del Castillo",
+        street: "Av. Jorge Alvarez del Castillo",
         outsideNumber: "1106",
         suburb: "Chapultepec Country",
         zipCode: "44620",
         town: "Guadalajara",
-        state: "Jalisco"
+        state: "Jalisco",
       },
-      transactions:[
+      transactions: [
         {
-          'Transaction Date': "230214",
-          'Transaction Time': "234234",
-          Amount: '000000001500',
+          "Transaction Date": "230214",
+          "Transaction Time": "234234",
+          Amount: "000000001500",
         },
         {
-          'Transaction Date': "230214",
-          'Transaction Time': "234233",
-          Amount: '000000011500',
-        }
-      ]
-    } */
+          "Transaction Date": "230214",
+          "Transaction Time": "234233",
+          Amount: "000000011500",
+        },
+      ],
+    },
   ];
 
   $: {
@@ -82,31 +89,31 @@
 
   const getBusinessLineName = (businessLine) => {
     const businessLineArray = {
-      travelAgency: { name: "Agencias de Viajes" },
-      aggregators: { name: "Agregadoras" },
-      insurers: { name: "Aseguradoras" },
-      charity: { name: "Beneficencia" },
-      collegeAndUniversities: { name: "Colegios y Universidades" },
-      fastFood: { name: "Comida Rápida" },
-      basicEducation: { name: "Educación Básica" },
-      entertainment: { name: "Entretenimiento" },
-      parkings: { name: "Estacionamientos" },
-      pharmacy: { name: "Farmacias" },
-      gasStations: { name: "Gasolineras" },
-      hospitals: { name: "Hospitales" },
-      hotels: { name: "Hoteles" },
-      doctorsAndDentists: { name: "Doctores y Dentistas" },
-      miscellaneous: { name: "Miscelánea" },
-      others: { name: "Otros" },
-      toll: { name: "Peaje" },
-      sparePartsAndHardwareStores: { name: "Refacciones y Ferreterías" },
-      carRental: { name: "Renta de Autos" },
-      restaurants: { name: "Restaurantes" },
-      beautySalons: { name: "Salones de Belleza" },
-      supermarkets: { name: "Supermercados" },
-      telecommunications: { name: "Telecomunicaciones" },
-      airTransport: { name: "Transporte Aéreo" },
-      landPassengerTransport: { name: "Transaporte Terrestre de Pasajeros" },
+      0: { name: "Agregadoras" },
+      1: { name: "Agencias de Viajes" },
+      2: { name: "Aseguradoras" },
+      3: { name: "Beneficencia" },
+      4: { name: "Colegios y Universidades" },
+      5: { name: "Comida Rápida" },
+      6: { name: "Educación Básica" },
+      7: { name: "Entretenimiento" },
+      8: { name: "Estacionamientos" },
+      9: { name: "Farmacias" },
+      10: { name: "Gasolineras" },
+      11: { name: "Hospitales" },
+      12: { name: "Hoteles" },
+      13: { name: "Doctores y Dentistas" },
+      15: { name: "Miscelánea" },
+      16: { name: "Otros" },
+      17: { name: "Peaje" },
+      18: { name: "Refacciones y Ferreterías" },
+      19: { name: "Renta de Autos" },
+      20: { name: "Restaurantes" },
+      21: { name: "Salones de Belleza" },
+      22: { name: "Supermercados" },
+      23: { name: "Telecomunicaciones" },
+      24: { name: "Transporte Aéreo" },
+      25: { name: "Transaporte Terrestre de Pasajeros" },
     };
     return businessLineArray[businessLine].name;
   };
@@ -122,14 +129,14 @@
 
   const handleChangeEmail = (currentPassword, newEmail) => {
     // console.log(currentPassword, newEmail)
-    changeEmail(currentPassword, newEmail);
+    // changeEmail(currentPassword, newEmail);
     currPassword = "";
     newEmail = "";
   };
 
   const handleChangePassword = (currentPassword, newPassword) => {
     // console.log(currentPassword, newPassword)
-    changePassword(currentPassword, newPassword);
+    // changePassword(currentPassword, newPassword);
     currPassword = "";
     newPass = "";
     repeatPassword = "";
@@ -166,18 +173,14 @@
   };
 
   onMount(async () => {
-    fetchDBRates();
-    const q = query(
+    // fetchDBRates();
+    /* const q = query(
       collection(db, dbCollection, uid, "branches")
-      //where('uid', '==', uid),
-      /* orderBy('Transaction Date', 'desc'),
-      startAt(last.replace(pattern,'$3$2$1')), endAt(first.replace(pattern,'$3$2$1')),
-      limit(10) */
     );
     const querySnapshot = await getDocs(q);
     branches = querySnapshot.docs.map((doc) => {
       return { ...doc.data() };
-    });
+    }); */
   });
 </script>
 
@@ -199,10 +202,10 @@
             </div>
             <div class="element">
               <div class="title-blue">
-                {$loggedInUser.businessName}
+                <!-- {$loggedInUser.businessName} -->
               </div>
               <div class="description text-center">
-                {getBusinessLineName($loggedInUser.businessLine)}
+                {getBusinessLineName(user.businessLine)}
               </div>
             </div>
             <div class="element">
@@ -211,24 +214,37 @@
                 <div class="element">
                   <div class="title-blue">Crédito</div>
                   <div class="description text-center">
-                    {ratesBusinessType?.credit}%
+                    <!-- {ratesBusinessType?.credit}% -->
                   </div>
                 </div>
                 <div class="element">
                   <div class="title-blue">Débito</div>
                   <div class="description text-center">
-                    {ratesBusinessType?.debit}%
+                    <!-- {ratesBusinessType?.debit}% -->
                   </div>
                 </div>
                 <div class="element">
                   <div class="title-blue">AMEX</div>
                   <div class="description text-center">
-                    {ratesBusinessType?.amex}%
+                    <!-- {ratesBusinessType?.amex}% -->
+                  </div>
+                </div>
+                <div class="element">
+                  <div class="title-blue">Internacionales</div>
+                  <div class="description text-center">
+                    <!-- {ratesBusinessType?.internationals}% -->
                   </div>
                 </div>
               </div>
             </div>
             <div class="divider-hor" />
+            <div class="element">
+              <div class="title">Asesor</div>
+              <div class="description text-left">
+                <Icons name={"user-fill"} width="24" height="24" />
+                {user.adviser ?? ""}
+              </div>
+            </div>
             <div class="element">
               <div class="title">Persona Física</div>
               <div class="description text-left">
@@ -247,15 +263,15 @@
             <div class="element">
               <div class="title">Domicilio Fiscal</div>
               <div class="description text-left">
-                {$loggedInUser.businessAddress}
-                {$loggedInUser.outsideNumber}
+                <!-- {$loggedInUser.businessAddress} -->
+                <!-- {$loggedInUser.outsideNumber} -->
               </div>
               <div class="description text-left">
-                {$loggedInUser.suburb}
-                {$loggedInUser.zipCode}
+                <!-- {$loggedInUser.suburb} -->
+                <!-- {$loggedInUser.zipCode} -->
               </div>
               <div class="description text-left">
-                {$loggedInUser.town}, {$loggedInUser.state}
+                <!-- {$loggedInUser.town}, {$loggedInUser.state} -->
               </div>
             </div>
             <div class="divider-hor" />
@@ -277,15 +293,15 @@
             <div class="element">
               <div class="title">Domicilio Operativo</div>
               <div class="description text-left">
-                {$loggedInUser.businessAddress}
-                {$loggedInUser.outsideNumber}
+                <!-- {$loggedInUser.businessAddress} -->
+                <!-- {$loggedInUser.outsideNumber} -->
               </div>
               <div class="description text-left">
-                {$loggedInUser.suburb}
-                {$loggedInUser.zipCode}
+                <!-- {$loggedInUser.suburb} -->
+                <!-- {$loggedInUser.zipCode} -->
               </div>
               <div class="description text-left">
-                {$loggedInUser.town}, {$loggedInUser.state}
+                <!-- {$loggedInUser.town}, {$loggedInUser.state} -->
               </div>
             </div>
           </div>
@@ -318,7 +334,7 @@
               {selectedBranch.name}
             </div>
             <div class="description text-center">
-              {getBusinessLineName(selectedBranch.businessLine)}
+              <!-- {getBusinessLineName(selectedBranch.businessLine)} -->
             </div>
           </div>
           <div class="divider-hor" />
@@ -326,30 +342,30 @@
             <div class="title">Responsable Sucursal</div>
             <div class="description text-left">
               <Icons name={"user-fill"} width="24" height="24" />
-              {selectedBranch.manager.name}
-              {selectedBranch.manager.firstLastName}
+              <!-- {selectedBranch.manager.name} -->
+              <!-- {selectedBranch.manager.firstLastName} -->
             </div>
             <div class="description text-left">
               <Icons name={"phone"} width="24" height="24" />
-              {selectedBranch.manager.phone}
+              <!-- {selectedBranch.manager.phone} -->
             </div>
             <div class="description text-left">
               <Icons name={"mail"} width="24" height="24" />
-              {selectedBranch.manager.email}
+              <!-- {selectedBranch.manager.email} -->
             </div>
           </div>
           <div class="element">
             <div class="title">Domicilio Sucursal</div>
             <div class="description text-left">
-              {selectedBranch.address.street}
-              {selectedBranch.address.outsideNumber}
+              <!-- {selectedBranch.address.street} -->
+              <!-- {selectedBranch.address.outsideNumber} -->
             </div>
             <div class="description text-left">
-              {selectedBranch.address.suburb}
-              {selectedBranch.address.zipCode}
+              <!-- {selectedBranch.address.suburb} -->
+              <!-- {selectedBranch.address.zipCode} -->
             </div>
             <div class="description text-left">
-              {selectedBranch.address.town}, {selectedBranch.address.state}
+              <!-- {selectedBranch.address.town}, {selectedBranch.address.state} -->
             </div>
           </div>
         </div>
@@ -401,10 +417,11 @@
   .row {
     display: grid;
     grid-auto-flow: column;
+    gap: 1rem;
   }
 
   .left {
-    min-width: 17.5rem; /* 280px */
+    // min-width: 17.5rem; /* 280px */
   }
 
   .right {
