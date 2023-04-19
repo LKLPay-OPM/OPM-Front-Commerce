@@ -3,7 +3,7 @@
   import { loggedInUser, isLoggedIn } from "$lib/stores.js";
   import { redirect } from "@sveltejs/kit";
   import { onMount } from "svelte";
-  import { registerUser } from "$lib/hooks/auth.js";
+  // import { registerUser } from "$lib/hooks/auth.js";
   import Input from "$lib/components/Input.svelte";
   import Checkbox from "$lib/components/Checkbox.svelte";
   import { Timestamp } from "firebase/firestore";
