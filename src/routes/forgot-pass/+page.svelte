@@ -1,6 +1,6 @@
 <script>
   import {loggedInUser} from '$lib/stores.js';
-  import { resetPass } from '$lib/hooks/auth.js';
+  // import { resetPass } from '$lib/hooks/auth.js';
   import Input from '$lib/components/Input.svelte';
   import Icons from '$lib/components/Icons.svelte';
 
