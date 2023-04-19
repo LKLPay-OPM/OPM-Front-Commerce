@@ -8,9 +8,6 @@ export async function load() {
   const transactions = await axiosTransactionsClient.get("/transaction");
 
   return {
-    props: {
-      transactions: transactions.data?.response,
-      // ...
-    },
+    transactions: transactions.data?.response,
   };
 }

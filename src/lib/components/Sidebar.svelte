@@ -64,10 +64,10 @@
       </div>
       <div class="name-job">
         <div class="profile_name">
-          {$sessionUser?.name ?? ""}
+          {$loggedInUser?.name ?? ""}
         </div>
         <div class="job">
-          {$sessionUser?.businessName ?? $sessionUser?.email ?? ""}
+          {$loggedInUser?.businessName ?? $loggedInUser?.email ?? ""}
         </div>
       </div>
     </a>

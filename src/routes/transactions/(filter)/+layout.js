@@ -9,7 +9,7 @@ import { axiosWithAuth } from "$lib/utils/axios";
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ url }) {
-  const regexp = new RegExp("(day|week|month)");
+  const regexp = new RegExp('(day|week|month)')
   let filter = url.pathname.match(regexp)[0];
   const start = Number(url.searchParams.get("start") ?? 0);
   const end = Number(url.searchParams.get("end") ?? 10);

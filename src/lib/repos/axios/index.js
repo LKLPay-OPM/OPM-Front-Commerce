@@ -6,6 +6,7 @@ import axios from "axios";
 import jwtDecode from "jwt-decode";
 /* store */
 import { sessionUser, isLoggedIn, loggedInUser } from "$lib/stores";
+import { goto } from "$app/navigation";
 /* constants */
 import { axiosDefaultsClientFormData, axiosDefaultsClientJson } from "$lib/constants/axios";
 import { axiosWithAuth } from "$lib/utils/axios";
@@ -80,6 +81,12 @@ async function errorInterceptor(error, axiosInstance) {
       return axiosInstance(originalRequest);
     } catch (error) {
       processQueue(error, null);
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        isLoggedIn.update(() => false);
+        loggedInUser.set({});
+        sessionUser.set({});
+        await goto("/login");
+      }
       return Promise.reject(error);
     } finally {
       isRefreshing = false;

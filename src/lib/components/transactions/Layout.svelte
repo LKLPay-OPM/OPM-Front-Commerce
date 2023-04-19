@@ -39,7 +39,7 @@
   const dbCollection = "users-client";
   const uid = user.uid;
   let transactions = data.response?.transactions ?? [];
-  let resume = data.response.resume;
+  let resume = data.response?.resume;
   let transactionsWeek = [];
   let transactionsMonth = [];
   let selectedTransaction = {};
