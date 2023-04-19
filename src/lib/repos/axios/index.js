@@ -83,7 +83,7 @@ async function errorInterceptor(error, axiosInstance) {
       processQueue(error, null);
       if (
         (error.response?.status === 401 || error.response?.status === 403) &&
-        error.response?.data?.code === "REFRESH_TOKEN_EXPIRED"
+        ["NO_TOKEN_OR_INACTIVE", "REFRESH_TOKEN_EXPIRED", "ACCESS_TOKEN_EXPIRED"].includes(error.response?.data?.code)
       ) {
         isLoggedIn.update(() => false);
         loggedInUser.set({});
