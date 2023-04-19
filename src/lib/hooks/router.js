@@ -95,6 +95,7 @@ const sidebarOptions = (accountType) => {
 };
 
 export const router = async (role, route) => {
+  console.log(role, route);
   const res = await userRoutes(role, route);
   return res;
 };

@@ -3,7 +3,6 @@
   import "$lib/styles/sidebar.scss";
   /* stores */
   import { isLoggedIn, loggedInUser, linkSelected, sessionUser, sidebar } from "$lib/stores.js";
-  // import { logout } from "$lib/hooks/auth.js";
   import { AuthController } from "$lib/controllers/auth/auth.controller";
   import { optionsSidebar } from "$lib/hooks/router.js";
   import logo from "$lib/assets/Logo.png";
