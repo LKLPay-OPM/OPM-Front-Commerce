@@ -1,29 +1,49 @@
 <script>
   import { enhance } from "$app/forms";
+  import { sessionUser } from "$lib/stores";
   import Input from "$lib/components/Input.svelte";
   import IconInput from "$lib/components/IconInput.svelte";
   import TextArea from "$lib/components/TextArea.svelte";
-  import DatePicker from "$lib/components/DatePicker.svelte";
+  import { validateEmail } from "$lib/utils/input-validation.js";
+  import { tryAgainErrorToast } from "$lib/utils/toast.js";
 
-  // export let form;
+  export let form;
+  export let data;
+  let token = $sessionUser?.token;
 
   let input = {
     amount: 0,
-    expiration: "",
     email: "",
     description: "",
   };
 
-  $: validation = input.amount > 0 && input.expiration != "" && input.email != "" && input.description != "";
+  $: validation = input.amount > 0 && validateEmail(input.email) != "" && input.description != "";
+  $: {
+    // console.log(form, data)
+  }
 </script>
-
-<pre>
-  <!-- {JSON.stringify(form, null, 2)} -->
-</pre>
 
 <div class="form-container">
   <div class="card-container">
-    <form class="form" method="POST" use:enhance>
+    <form class="form" method="POST" 
+      use:enhance={({form, data, action, cancel}) => {
+        return async ({ result }) => {
+            // `result` is an `ActionResult` object
+          if (result.type === 'error') {
+            tryAgainErrorToast();
+          }
+        };
+      }}
+    >
+      <Input
+        bind:value={token}
+        label="Correo Electrónico"
+        placeholder="email@dominio.com"
+        id="email"
+        className="txt-field normal fill-blue"
+        type="hidden"
+        name="token"
+      />
       <IconInput
         icon="dollar"
         label="Monto"
@@ -32,13 +52,7 @@
         className="txt-field normal fill-blue"
         type="number"
         name="amount"
-      />
-      <DatePicker
-        className="fill-blue"
-        name="expiration"
-        label="Vencimiento"
-        id="epiration"
-        bind:value={input.expiration}
+        min=0
       />
       <Input
         bind:value={input.email}

@@ -1,4 +1,6 @@
 <script>
+  /* styles */
+  import "toastify-js/src/toastify.css";
   import "../app.scss";
   import Sidebar from "$lib/components/Sidebar.svelte";
   import Loader from "$lib/components/Loader.svelte";
