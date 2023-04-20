@@ -1,5 +1,10 @@
 /* environment */
-import { PUBLIC_DEVICES_ENDPOINT, PUBLIC_PROFILES_ENDPOINT, PUBLIC_TRANSACTIONS_ENDPOINT, PUBLIC_ECOMMERCE_ENDPOINT } from "$env/static/public";
+import {
+  PUBLIC_DEVICES_ENDPOINT,
+  PUBLIC_PROFILES_ENDPOINT,
+  PUBLIC_TRANSACTIONS_ENDPOINT,
+  PUBLIC_ECOMMERCE_ENDPOINT,
+} from "$env/static/public";
 /* client */
 import axios from "axios";
 /* decode */
@@ -87,8 +92,11 @@ async function errorInterceptor(error, axiosInstance) {
     } catch (error) {
       processQueue(error, null);
       if (
-        (error.response?.status === 401 || error.response?.status === 403) &&
-        ["NO_TOKEN_OR_INACTIVE", "REFRESH_TOKEN_EXPIRED", "ACCESS_TOKEN_EXPIRED", "REFRESH_TOKEN_REQUIRED"].includes(error.response?.data?.code)
+        ((error.response?.status === 401 || error.response?.status === 403) &&
+          ["NO_TOKEN_OR_INACTIVE", "REFRESH_TOKEN_EXPIRED", "ACCESS_TOKEN_EXPIRED", "REFRESH_TOKEN_REQUIRED"].includes(
+            error.response?.data?.code
+          )) ||
+        ["TokenExpiredError"].includes(error.response?.data?.name)
       ) {
         isLoggedIn.update(() => false);
         loggedInUser.set({});
@@ -144,4 +152,11 @@ axiosECommerceClient.interceptors.response.use(
 );
 
 /* exports after assigning interceptors */
-export { axiosClient, axiosFormDataClient, profilesFormDataClient, profilesClient, axiosTransactionsClient, axiosECommerceClient };
+export {
+  axiosClient,
+  axiosFormDataClient,
+  profilesFormDataClient,
+  profilesClient,
+  axiosTransactionsClient,
+  axiosECommerceClient,
+};
