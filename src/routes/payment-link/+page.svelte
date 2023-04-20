@@ -5,7 +5,7 @@
   import IconInput from "$lib/components/IconInput.svelte";
   import TextArea from "$lib/components/TextArea.svelte";
   import { validateEmail } from "$lib/utils/input-validation.js";
-  import { tryAgainErrorToast } from "$lib/utils/toast.js";
+  import { tryAgainErrorToast, successCustomMsgToast } from "$lib/utils/toast.js";
 
   export let form;
   export let data;
@@ -21,6 +21,15 @@
   $: {
     // console.log(form, data)
   }
+
+  const formSuccess = () => {
+    successCustomMsgToast("Se ha generado el link de pago con éxito");
+    input = {
+      amount: 0,
+      email: "",
+      description: "",
+    };
+  }
 </script>
 
 <div class="form-container">
@@ -31,6 +40,8 @@
             // `result` is an `ActionResult` object
           if (result.type === 'error') {
             tryAgainErrorToast();
+          }else{
+            formSuccess()
           }
         };
       }}

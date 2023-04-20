@@ -1,5 +1,5 @@
 import Toastify from 'toastify-js';
-import { danger } from '$lib/constants/colors'
+import { danger, success } from '$lib/constants/colors'
 
 export const toast = (text, color) => {
   return Toastify({
@@ -20,3 +20,9 @@ export const tryAgainErrorToast = () => {
   toast("Ocurrió un error, intenta de nuevo", danger).showToast();
 }
 
+export const successCustomMsgToast = (msg) => {
+  toast(msg, success).showToast();
+}
+export const errorCustomMsgToast = (msg) => {
+  toast(msg, danger).showToast();
+}
