@@ -76,15 +76,15 @@
       />
       <TextArea
         bind:value={input.description}
-        label="Descripción"
-        placeholder="Descrpición de la transacción"
+        label="Concepto"
+        placeholder="Describe el concepto de la transacción"
         id="description"
         name="description"
         className="fill-blue"
       />
       <div class="btn-layout">
         <Input
-          label="Generar Link"
+          label="Generar Link y QR"
           id="btnGenerateLink"
           className={`${validation ? "btn" : "btn-plain disabled"}`}
           type="submit"
