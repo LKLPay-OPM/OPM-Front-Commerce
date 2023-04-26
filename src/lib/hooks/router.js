@@ -41,6 +41,7 @@ const userRoutes = (role, route) => {
       "/branch-office": false,
       "/terminals": false,
       "/urgent": true,
+      "/payment-link": true,
     },
     3: {
       "/login": true,
@@ -54,6 +55,7 @@ const userRoutes = (role, route) => {
       "/urgent": true,
       "/requests": true,
       "/help": true,
+      "/payment-link": true,
     },
   };
   return routesByRole[role][route];
@@ -70,7 +72,7 @@ const sidebarOptions = (accountType) => {
       { name: "Mis Ventas", path: "/transactions", icon: "terminal" },
       { name: "Depósitos", path: "/dispersions", icon: "deposits" },
       { name: "Solicitudes", path: "/requests", icon: "adviser" },
-      { name: "Link de Pago", path: "/payment-link", icon: "global" },
+      { name: "Link de Pago", path: "/payment-link", icon: "qr-code" },
       // {name: 'Depósito Urgente', path: '/urgent-dispersion', icon: 'terminal'},
       // {name: 'Cuenta Bancaria', path: '/bank-account', icon: 'bank-line'},
       // {name: 'Créditos', path: '/credits', icon: 'bank-line'},
@@ -84,6 +86,7 @@ const sidebarOptions = (accountType) => {
       { name: "Sucursales", path: "/branch-office", icon: "franchise" },
       { name: "Terminales", path: "/terminals", icon: "terminal" },
       { name: "Depósito Urgente", path: "/urgent", icon: "deposits" },
+      { name: "Link de Pago", path: "/payment-link", icon: "qr-code" },
       // {name: 'Depósito Urgente', path: '/urgent-dispersion', icon: 'terminal'},
       // {name: 'Cuenta Bancaria', path: '/bank-account', icon: 'bank-line'},
       // {name: 'Créditos', path: '/credits', icon: 'bank-line'},

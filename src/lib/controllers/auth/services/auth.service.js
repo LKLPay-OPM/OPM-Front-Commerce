@@ -1,7 +1,5 @@
 /* repo */
 import { profilesClient } from "$lib/repos/axios";
-/* appwrite */
-import { AppAccount } from "$lib/repos/appwrite";
 /* jwt decode */
 import jwtDecode from "jwt-decode";
 
@@ -17,14 +15,6 @@ class AuthService {
 
     const user = jwtDecode(data.response.token);
     return { session: data.response, user };
-  }
-
-  async logout(id) {
-    return await AppAccount.deleteSession(id);
-  }
-
-  async register({ email, password }) {
-    return await AppAccount.create(ID.unique(), email, password);
   }
 }
 

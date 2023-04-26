@@ -3,7 +3,6 @@
   import { loggedInUser, isLoggedIn } from "$lib/stores.js";
   import { redirect } from "@sveltejs/kit";
   import { onMount } from "svelte";
-  // import { registerUser } from "$lib/hooks/auth.js";
   import Input from "$lib/components/Input.svelte";
   import Checkbox from "$lib/components/Checkbox.svelte";
   import { Timestamp } from "firebase/firestore";
@@ -83,25 +82,6 @@
     const id = makeId(7);
     let sum = stringSum(id);
     const uid = id + sum;
-    // console.log("ID: ",id)
-    // console.log("Validador: ", sum)
-    // console.log("User ID: ", uid)
-    // registerData.uid = id+sum;
-    // console.log(registerData.uid)
-    // console.log(registerData.uid.split('', 7)) //Gets the first 7 chars of string
-    // console.log(registerData.uid.slice(-1)) //Gets the last char of string
-
-    const response = await registerUser(
-      registerData.email,
-      registerData.password,
-      registerData
-    );
-    /* .then(() => {
-      menu = "success"
-    })
-    .catch(() => {
-      menu = "error"
-    }) */
   };
 </script>
 
@@ -125,8 +105,7 @@
               className={`txt-field ${
                 registerData.email === ""
                   ? "normal"
-                  : registerData.email !== "" &&
-                    registerData.email.match(emailPattern)
+                  : registerData.email !== "" && registerData.email.match(emailPattern)
                   ? "valid"
                   : "invalid"
               }`}
@@ -146,40 +125,12 @@
               }`}
             />
             <div class="pass-conditions">
-              <p
-                class={registerData.password.match(passPattern)
-                  ? "valid"
-                  : "invalid"}
-              >
+              <p class={registerData.password.match(passPattern) ? "valid" : "invalid"}>
                 Tu contraseña debe de tener <br />
-                <span
-                  class={registerData.password.length >= 8
-                    ? "valid"
-                    : "invalid"}
-                >
-                  8 caracteres
-                </span>|
-                <span
-                  class={registerData.password.match(/[A-Z]/g)
-                    ? "valid"
-                    : "invalid"}
-                >
-                  1 Mayúscula
-                </span>|
-                <span
-                  class={registerData.password.match(/[a-z]/g)
-                    ? "valid"
-                    : "invalid"}
-                >
-                  1 Minúscula
-                </span>|
-                <span
-                  class={registerData.password.match(/[0-9]/g)
-                    ? "valid"
-                    : "invalid"}
-                >
-                  1 Número
-                </span>
+                <span class={registerData.password.length >= 8 ? "valid" : "invalid"}> 8 caracteres </span>|
+                <span class={registerData.password.match(/[A-Z]/g) ? "valid" : "invalid"}> 1 Mayúscula </span>|
+                <span class={registerData.password.match(/[a-z]/g) ? "valid" : "invalid"}> 1 Minúscula </span>|
+                <span class={registerData.password.match(/[0-9]/g) ? "valid" : "invalid"}> 1 Número </span>
               </p>
             </div>
             <Input
@@ -301,8 +252,7 @@
     width: 27rem;
     height: 42rem;
     background: $background-light-secondary;
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
-      4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     transform: matrix(1, 0, 0, 1, 0, 0);
   }
@@ -312,8 +262,7 @@
     width: 27rem;
     height: 34rem;
     background: $background-light-secondary;
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
-      4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     transform: matrix(1, 0, 0, 1, 0, 0);
   }
@@ -322,8 +271,7 @@
     width: 27rem;
     height: 34rem;
     background: $background-light-secondary;
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
-      4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     transform: matrix(1, 0, 0, 1, 0, 0);
   }

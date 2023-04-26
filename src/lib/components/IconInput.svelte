@@ -12,6 +12,7 @@
   export let title = "";
   export let multiple = false;
   export let disabled = false;
+  export let min;
 
   const onInput = (e) => {
     if (type != "number") {
@@ -49,6 +50,7 @@
       {accept}
       {multiple}
       {disabled}
+      {min}
     />
   </div>
 </div>

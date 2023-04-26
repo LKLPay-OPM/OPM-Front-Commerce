@@ -1,5 +1,10 @@
 /* environment */
-import { PUBLIC_DEVICES_ENDPOINT, PUBLIC_PROFILES_ENDPOINT, PUBLIC_TRANSACTIONS_ENDPOINT } from "$env/static/public";
+import {
+  PUBLIC_DEVICES_ENDPOINT,
+  PUBLIC_PROFILES_ENDPOINT,
+  PUBLIC_TRANSACTIONS_ENDPOINT,
+  PUBLIC_ECOMMERCE_ENDPOINT,
+} from "$env/static/public";
 /* client */
 import axios from "axios";
 /* decode */
@@ -12,6 +17,11 @@ import { axiosDefaultsClientFormData, axiosDefaultsClientJson } from "$lib/const
 import { axiosWithAuth } from "$lib/utils/axios";
 
 axios.defaults.withCredentials = true;
+
+const axiosECommerceClient = axios.create({
+  ...axiosDefaultsClientFormData,
+  baseURL: PUBLIC_ECOMMERCE_ENDPOINT,
+});
 
 const axiosClient = axios.create({
   ...axiosDefaultsClientJson,
@@ -81,7 +91,13 @@ async function errorInterceptor(error, axiosInstance) {
       return axiosInstance(originalRequest);
     } catch (error) {
       processQueue(error, null);
-      if (error.response?.status === 401 || error.response?.status === 403) {
+      if (
+        ((error.response?.status === 401 || error.response?.status === 403) &&
+          ["NO_TOKEN_OR_INACTIVE", "REFRESH_TOKEN_EXPIRED", "ACCESS_TOKEN_EXPIRED", "REFRESH_TOKEN_REQUIRED"].includes(
+            error.response?.data?.code
+          )) ||
+        ["TokenExpiredError"].includes(error.response?.data?.name)
+      ) {
         isLoggedIn.update(() => false);
         loggedInUser.set({});
         sessionUser.set({});
@@ -130,6 +146,17 @@ axiosTransactionsClient.interceptors.response.use(
   (response) => response,
   (error) => errorInterceptor(error, axiosTransactionsClient)
 );
+axiosECommerceClient.interceptors.response.use(
+  (response) => response,
+  (error) => errorInterceptor(error, axiosECommerceClient)
+);
 
 /* exports after assigning interceptors */
-export { axiosClient, axiosFormDataClient, profilesFormDataClient, profilesClient, axiosTransactionsClient };
+export {
+  axiosClient,
+  axiosFormDataClient,
+  profilesFormDataClient,
+  profilesClient,
+  axiosTransactionsClient,
+  axiosECommerceClient,
+};

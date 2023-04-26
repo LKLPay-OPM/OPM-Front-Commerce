@@ -1,6 +1,5 @@
 <script>
   import { isLoggedIn, loggedInUser, redirectBankProfile } from "$lib/stores";
-  // import { changeEmail, changePassword } from "$lib/hooks/auth.js";
   import { updateUserIne, updateUserBankAccountInfo } from "$lib/hooks/updates.js";
   import { updateUserInfo, updateUserAvatar } from "$lib/hooks/updates.js";
   import { onMount, afterUpdate } from "svelte";
