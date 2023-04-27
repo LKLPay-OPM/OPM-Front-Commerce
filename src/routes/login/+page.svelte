@@ -6,6 +6,7 @@
   import { isLoggedIn } from "$lib/stores";
   /* components */
   import Input from "$lib/components/Input.svelte";
+  import PasswordInput from "$lib/components/inputs/PasswordInput.svelte";
   import Loader from "$lib/components/Loader.svelte";
   /* controllers */
   import { AuthController } from "$lib/controllers/auth/auth.controller";
@@ -64,12 +65,11 @@
               className={`txt-field ${!error ? "normal" : "invalid"}`}
               placeholder="ejemplo@correo.com"
             />
-            <Input
+            <PasswordInput
               label="Contraseña"
               id="login-password"
               bind:value={input.password}
               name="password"
-              type="password"
               className={`txt-field ${!error ? "normal" : "invalid"}`}
               placeholder="contraseña"
             />
