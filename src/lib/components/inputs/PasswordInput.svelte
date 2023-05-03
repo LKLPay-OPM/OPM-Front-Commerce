@@ -94,16 +94,32 @@
     background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     /* border: none; */
+    border: 2px solid;
     border-radius: 4px;
     padding: 0.5rem; /* 8px */
     /* TEXT */
-    font-weight: 500;
-    font-size: 0.8125rem; /* 13px */
-    line-height: 1.125rem; /* 18px */
     display: flex;
     align-items: center;
     justify-content: space-between;
     color: $primary-dark;
+    margin: 0 0 0.5rem 0;
+
+    input {
+      font-weight: 600;
+      font-size: 0.8125rem; /* 13px */
+      line-height: 1.125rem; /* 18px */
+    }
+  }
+
+  .txt-field > .input {
+    .icon {
+      display: flex;
+      justify-content: center;
+
+      label {
+        margin: 0;
+      }
+    }
   }
 
   .txt-field.icon-right .input {
@@ -157,6 +173,23 @@
     font-size: 0.8125rem; /* 13px */
     line-height: 1.125rem; /* 18px */
     color: #d9d9d9;
+  }
+
+  .normal .input {
+    outline: none;
+    background: linear-gradient(background-light-accent-primary, #e6e8ef) padding-box,
+      linear-gradient(187deg, #ffffff, #d6e3f3) border-box;
+    border-radius: 4px;
+    border: 2px solid transparent;
+  }
+  .valid .input {
+    outline-color: #00c48c;
+    border-color: #00c48c;
+  }
+
+  .invalid > .input {
+    outline-color: #ff0000;
+    border-color: #ff0000;
   }
 
   .fill-blue label {

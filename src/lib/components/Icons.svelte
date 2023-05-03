@@ -2,7 +2,7 @@
   export let name;
   export let width = "";
   export let height = "";
-  //export let color = "";
+  export let color = "none";
 
   let icons = [
     {
@@ -457,10 +457,21 @@
   let displayIcon = icons.find((e) => e.name === name);
 </script>
 
-<svg
-  class={$$props.class}
-  {width}
-  {height}
-  viewBox="0 0 {displayIcon.box} {displayIcon.box}"
+<svg class="container {$$props.class}" {width} {height} viewBox="0 0 {displayIcon.box} {displayIcon.box}" fill={color}
   >{@html displayIcon.svg}
 </svg>
+
+<style>
+  .container {
+    align-items: center;
+    height: 100%;
+  }
+
+  .active {
+    color: #00c48c;
+  }
+
+  .inactive {
+    color: #ff0000;
+  }
+</style>
