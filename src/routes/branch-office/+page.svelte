@@ -1,24 +1,9 @@
 <script>
-  import {
-    doc,
-    getDoc,
-    updateDoc,
-    arrayUnion,
-    collection,
-    Timestamp,
-    query,
-    orderBy,
-    limit,
-    where,
-    getDocs,
-    arrayRemove,
-  } from "firebase/firestore";
   import { loggedInUser } from "$lib/stores";
   import RedirectHome from "$lib/components/RedirectHome.svelte";
   import Input from "$lib/components/Input.svelte";
   import Select from "$lib/components/Select.svelte";
   import { onMount } from "svelte";
-  import { db } from "$lib/firebase";
   import Icons from "$lib/components/Icons.svelte";
   import Branches from "$lib/components/Branches.svelte";
   import noUser from "$lib/assets/no_user.png";
@@ -64,37 +49,7 @@
     return monthsArray[month].value;
   };
 
-  const handleAddNewBranchOffice = async () => {
-    const branches = newBranch;
-    await updateDoc(doc(db, "users-client", $loggedInUser.uid), {
-      branches: arrayUnion(newBranch),
-    })
-      .then(async () => {
-        const docRef = doc(db, "users-client", $loggedInUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          try {
-            const user = docSnap.data();
-            console.log({ user });
-            loggedInUser.set(user);
-            menuAddBranch = false;
-            newBranch = {
-              name: "",
-              address: "",
-              exteriorNumber: "",
-              interiorNumber: "",
-              terminals: [],
-            };
-            //sessionStorage.setItem("userData", user);
-          } catch (error) {
-            throw new Error(error);
-          }
-        }
-      })
-      .catch((err) => {
-        throw new Error(err);
-      });
-  };
+  const handleAddNewBranchOffice = async () => {};
 
   const getBusinessLineName = (businessLine) => {
     const businessLineArray = {
@@ -145,24 +100,7 @@
     return monthsArray[month].value;
   };
 
-  onMount(async () => {
-    /* if($loggedInUser.branches?.length != 0){
-      $loggedInUser.terminals.forEach(element => {
-        unassignedTerminals.push({value: element.serialNumber, name: `${element.name} (No. de Serie ${element.serialNumber})`})
-      });
-    } */
-    const q = query(
-      collection(db, dbCollection, uid, "branches")
-      //where('uid', '==', uid),
-      /* orderBy('Transaction Date', 'desc'),
-      startAt(last.replace(pattern,'$3$2$1')), endAt(first.replace(pattern,'$3$2$1')),
-      limit(10) */
-    );
-    const querySnapshot = await getDocs(q);
-    branches = querySnapshot.docs.map((doc) => {
-      return { ...doc.data() };
-    });
-  });
+  onMount(async () => {});
 </script>
 
 <div class="container">
@@ -181,8 +119,7 @@
             <div
               class="element-center arrow-blue"
               on:click={() => (branchView = !branchView)}
-              on:keypress={(e) =>
-                e.key === "Enter" ? (branchView = !branchView) : ""}
+              on:keypress={(e) => (e.key === "Enter" ? (branchView = !branchView) : "")}
             >
               <Icons name={"arrow-bwd"} width="24" height="24" />
             </div>
@@ -191,9 +128,7 @@
                 <img
                   class="avatar-img"
                   alt="imagen"
-                  src={selectedBranch.manager.avatar
-                    ? $loggedInUser.avatar
-                    : noUser}
+                  src={selectedBranch.manager.avatar ? $loggedInUser.avatar : noUser}
                 />
               </div>
             </div>
@@ -348,12 +283,7 @@
   }
 
   .divider-hor {
-    background: linear-gradient(
-        138.32deg,
-        rgba(0, 0, 0, 0.5) 8.26%,
-        rgba(255, 255, 255, 0.5) 91.02%
-      ),
-      #eaecf0;
+    background: linear-gradient(138.32deg, rgba(0, 0, 0, 0.5) 8.26%, rgba(255, 255, 255, 0.5) 91.02%), #eaecf0;
     background-blend-mode: soft-light, normal;
     /* n-stroke */
 

@@ -1,6 +1,4 @@
 <script>
-  import { collection, Timestamp, query, orderBy, limit, where, getDocs, startAt, endAt } from "firebase/firestore";
-  import { db } from "$lib/firebase";
   import { isLoggedIn, loggedInUser, redirectBankProfile } from "$lib/stores";
   import { updateUserIne, updateUserBankAccountInfo } from "$lib/hooks/updates.js";
   import { updateUserInfo, updateUserAvatar } from "$lib/hooks/updates.js";
@@ -171,16 +169,7 @@
     return monthsArray[month].value;
   };
 
-  onMount(async () => {
-    // fetchDBRates();
-    /* const q = query(
-      collection(db, dbCollection, uid, "branches")
-    );
-    const querySnapshot = await getDocs(q);
-    branches = querySnapshot.docs.map((doc) => {
-      return { ...doc.data() };
-    }); */
-  });
+  onMount(async () => {});
 </script>
 
 <div class="container">

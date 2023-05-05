@@ -1,6 +1,4 @@
 <script>
-  import { collection, Timestamp, query, orderBy, limit, where, getDocs, startAt, endAt } from "firebase/firestore";
-  import { db } from "$lib/firebase";
   import { loggedInUser, redirectUrgentDispersions } from "$lib/stores";
   import Input from "$lib/components/Input.svelte";
   import IconInput from "$lib/components/IconInput.svelte";
@@ -17,7 +15,6 @@
   // import { updateDispersionStatus } from '$lib/hooks/updates.js'
 
   export let user;
-  const dbCollection = "users-client";
   const uid = user.uid;
   let dispersions = [];
   let selectedDispersion = {};
@@ -46,7 +43,7 @@
   let urgentDepositQty = 0; */
 
   selectedDispersion = {
-    date: Timestamp.now(),
+    date: Date.now(),
     id: "123",
     total: 13115.0,
     dispersion: 12548.5,
@@ -189,20 +186,6 @@
       // console.log($loggedInUser.dispersions)
       // console.log(dispersions)
     }
-    /* const curr = new Date;
-    const today = new Date(curr.setDate(curr.getDate())).setHours(0,0,0,0); // Sets Date to today day at 00:00
-    const tomorrow = new Date(curr.setDate(curr.getDate() + 1)).setHours(0,0,0,0); // Sets Date to tomorrow at 00:00
-
-    const q = query(
-      collection(db, dbCollection, "dispersions", uid),
-      orderBy('date', 'desc'),
-      startAt(Timestamp.fromDate(new Date(tomorrow))), endAt(Timestamp.fromDate(new Date(today))),
-      limit(10)
-    );
-    const querySnapshot = await getDocs(q);
-    dispersions = querySnapshot.docs.map((doc) => {
-      return {...doc.data()}
-    }); */
     dispersionFound();
   };
 
@@ -215,7 +198,7 @@
     if (dispersions.length <= 0) {
       dispersions.push(
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -223,7 +206,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -231,7 +214,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -239,7 +222,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -247,7 +230,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -255,7 +238,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -266,22 +249,6 @@
       // console.log($loggedInUser.dispersions)
       // console.log(dispersions)
     }
-    /* const curr = new Date;
-    const firstDay = new Date(curr.setDate(curr.getDate() - curr.getDay()+1)).setHours(0,0,0,0);
-    const lastDay = new Date(curr.setDate(curr.getDate() - curr.getDay()+7)).setHours(0,0,0,0);
-    const first = Timestamp.fromDate(new Date(firstDay));
-    const last = Timestamp.fromDate(new Date(lastDay));
-
-    const q = query(
-      collection(db, dbCollection, "dispersions", uid),
-      orderBy('date', 'desc'),
-      startAt(last), endAt(first),
-      limit(10)
-    );
-    const querySnapshot = await getDocs(q);
-    dispersions = querySnapshot.docs.map((doc) => {
-      return {...doc.data()}
-    }); */
     dispersionFound();
   };
 
@@ -294,7 +261,7 @@
     if (dispersions.length <= 0) {
       dispersions.push(
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -302,7 +269,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -310,7 +277,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -318,7 +285,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -326,7 +293,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -334,7 +301,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -342,7 +309,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -350,7 +317,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -358,7 +325,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -366,7 +333,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -374,7 +341,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -382,7 +349,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -391,20 +358,6 @@
         }
       );
     }
-    /* const curr = new Date;
-    const currentMonth = new Date(curr.setMonth(curr.getMonth(), 1)).setHours(0,0,0,0); // Sets Date to actual month day 1 at 00:00
-    const nextMonth = new Date(curr.setMonth(curr.getMonth() + 1, 1)).setHours(0,0,0,0); // Sets Date to next month day 1 at 00:00
-
-    const q = query(
-      collection(db, dbCollection, "dispersions", uid),
-      orderBy('date', 'desc'),
-      startAt(Timestamp.fromDate(new Date(nextMonth))), endAt(Timestamp.fromDate(new Date(currentMonth))),
-      limit(10)
-    );
-    const querySnapshot = await getDocs(q);
-    dispersions = querySnapshot.docs.map((doc) => {
-      return {...doc.data()}
-    }); */
     dispersionFound();
   };
 
@@ -417,7 +370,7 @@
     if (dispersions.length <= 0) {
       dispersions.push(
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -425,7 +378,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -433,7 +386,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -441,7 +394,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -449,7 +402,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -457,7 +410,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -465,7 +418,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -473,7 +426,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -481,7 +434,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -489,7 +442,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -497,7 +450,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -505,7 +458,7 @@
           afterDispersion: 0,
         },
         {
-          date: Timestamp.now(),
+          date: Date.now(),
           id: "123",
           total: 1000,
           commission: 30,
@@ -514,19 +467,6 @@
         }
       );
     }
-    /* var pattern = /(\d{4})\-(\d{2})\-(\d{2})/; // String pattern replace for date
-    const startRange = new Date(dateRangeStart.replace(pattern,'$2-$3-$1')).setHours(0,0,0,0);//Sets the date pattern and time to 00:00
-    const endRange = new Date(dateRangeEnd.replace(pattern,'$2-$3-$1')).setHours(23,59,59,59);//Sets the date pattern and time to 23:59
-    
-    const q = query(
-      collection(db, dbCollection, "dispersions", uid),
-      orderBy('date', 'desc'),
-      startAt(Timestamp.fromDate(new Date(endRange))), endAt(Timestamp.fromDate(new Date(startRange))),
-    );
-    const querySnapshot = await getDocs(q);
-    dispersions = querySnapshot.docs.map((doc) => {
-      return {...doc.data()}
-    }); */
     dispersionFound();
     // console.log(dispersions)
   };
@@ -539,7 +479,7 @@
     dispersions = [...$loggedInUser.dispersions];
     if (dispersions.length <= 0) {
       dispersions.push({
-        date: Timestamp.now(),
+        date: Date.now(),
         id: "123",
         total: 1000,
         commission: 30,
@@ -547,17 +487,6 @@
         afterDispersion: 0,
       });
     }
-    /* const ticket = ticketId.toString();
-    const q = query(
-      collection(db, dbCollection, "dispersions", uid),
-      where('id', '==', ticket),
-      orderBy('date', 'desc'),
-      limit(1)
-    );
-    const querySnapshot = await getDocs(q);
-    dispersions = querySnapshot.docs.map((doc) => {
-      return {...doc.data()}
-    }); */
     dispersionFound();
     // console.log(dispersions)
   };
