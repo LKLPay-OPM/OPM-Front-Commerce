@@ -12,20 +12,24 @@
   let innerWidth = 0;
   let innerHeight = 0;
 
-  $: {
+  async function checkRouter() {
     if ($isLoggedIn) {
-      router($loggedInUser.accountType, $page.route.id).then((response) => {
-        if ($isLoggedIn && !response) {
-          $linkSelected = "Inicio";
-          goto("/");
-        }
-      });
+      const response = await router($loggedInUser.accountType, $page.route.id);
+      if ($isLoggedIn && !response) {
+        linkSelected.set("Inicio");
+        await goto("/");
+      }
     }
+  }
+
+  $: {
     if (innerWidth <= 768) {
       $sidebar = false;
     } else {
       $sidebar = true;
     }
+
+    checkRouter();
   }
 </script>
 

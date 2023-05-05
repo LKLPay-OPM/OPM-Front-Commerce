@@ -9,11 +9,12 @@ export class AuthController {
   static async login(body) {
     try {
       const { session, user } = await authService.login(body);
-      isLoggedIn.update(() => true);
+      isLoggedIn.set(true);
       loggedInUser.set(user);
       sessionUser.set(session);
       await goto("/");
     } catch (e) {
+      console.log(123, e);
       isLoggedIn.update(() => false);
       loggedInUser.set({ error: true });
       sessionUser.set({ error: true });

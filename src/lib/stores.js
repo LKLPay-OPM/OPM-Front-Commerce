@@ -2,22 +2,23 @@
 import { writable } from "svelte/store";
 import { browser } from "$app/environment";
 
-export const sessionUser = writable(browser && (JSON.parse(localStorage.getItem("sessionUser")) || {}));
-sessionUser.subscribe((val) => browser && (localStorage.sessionUser = JSON.stringify(val)));
-
-export const loggedInUser = writable(browser && (JSON.parse(localStorage.getItem("userData")) || {}));
-loggedInUser.subscribe((val) => browser && (localStorage.userData = JSON.stringify(val)));
-
-export const bankAccountData = writable(browser && (JSON.parse(localStorage.getItem("bankAccountData")) || {}));
-bankAccountData.subscribe((val) => browser && (localStorage.bankAccountData = JSON.stringify(val)));
-
-export const isLoggedIn = writable(browser && (JSON.parse(localStorage.getItem("isLoggedIn")) || false));
-isLoggedIn.subscribe((val) => browser && (localStorage.isLoggedIn = val));
-
-export const bankDataDelivered = writable(browser && (JSON.parse(localStorage.getItem("bankDataDelivered")) || false));
-bankDataDelivered.subscribe((val) => browser && (localStorage.bankDataDelivered = val));
+export const sessionUser = browser ? writable(JSON.parse(localStorage.getItem("sessionUser")) || {}) : writable({});
+export const loggedInUser = browser ? writable(JSON.parse(localStorage.getItem("userData")) || {}) : writable({});
+export const isLoggedIn = browser ? writable(JSON.parse(localStorage.getItem("isLoggedIn")) || false) : writable(false);
+export const bankAccountData = browser
+  ? writable(JSON.parse(localStorage.getItem("bankAccountData")) || {})
+  : writable({});
+export const bankDataDelivered = browser
+  ? writable(JSON.parse(localStorage.getItem("bankDataDelivered")) || false)
+  : writable(false);
+export const linkSelected = browser ? writable(localStorage.getItem("selectedTab") || "Inicio") : writable("Inicio");
+export const sidebar = browser ? writable(JSON.parse(localStorage.getItem("sidebarState")) || true) : writable(true);
 
 export const userId = "";
+export const onboardingSuccess = writable(false);
+export const redirectBankProfile = writable(false);
+export const redirectUrgentDispersions = writable(false);
+export const previousPage = writable("");
 
 export function booleanStore(initial) {
   const isOpen = writable(initial);
@@ -29,13 +30,13 @@ export function booleanStore(initial) {
     toggle: () => update((n) => !n),
   };
 }
-export const linkSelected = writable((browser && localStorage.getItem("selectedTab")) || "Inicio");
-linkSelected.subscribe((val) => browser && (localStorage.selectedTab = val));
 
-export const sidebar = writable(browser && (JSON.parse(localStorage.getItem("sidebarState")) || true));
-sidebar.subscribe((val) => browser && (localStorage.sidebarState = val));
-
-export const onboardingSuccess = writable(false);
-export const redirectBankProfile = writable(false);
-export const redirectUrgentDispersions = writable(false);
-export const previousPage = writable("");
+if (browser) {
+  sessionUser.subscribe((val) => localStorage.setItem("sessionUser", JSON.stringify(val)));
+  loggedInUser.subscribe((val) => localStorage.setItem("userData", JSON.stringify(val)));
+  isLoggedIn.subscribe((val) => localStorage.setItem("isLoggedIn", val));
+  bankAccountData.subscribe((val) => localStorage.setItem("bankAccountData", JSON.stringify(val)));
+  bankDataDelivered.subscribe((val) => localStorage.setItem("bankDataDelivered", val));
+  linkSelected.subscribe((val) => localStorage.setItem("selectedTab", val));
+  sidebar.subscribe((val) => localStorage.setItem("sidebarState", val));
+}

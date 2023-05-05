@@ -7,7 +7,11 @@
   import { validateEmail } from "$lib/utils/input-validation.js";
   import { tryAgainErrorToast, successCustomMsgToast } from "$lib/utils/toast.js";
 
+  // export let form;
+  // export let data;
+
   let token = $sessionUser?.token;
+  let refreshToken = $sessionUser?.refreshToken;
 
   let input = {
     amount: 0,
@@ -46,7 +50,9 @@
         };
       }}
     >
-      <input type="hidden" name="token" value={token} />
+      <Input bind:value={token} id="token" type="hidden" name="token" />
+      <Input bind:value={refreshToken} id="refreshToken" type="hidden" name="refreshToken" />
+
       <IconInput
         icon="dollar"
         label="Monto"
