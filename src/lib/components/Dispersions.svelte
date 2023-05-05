@@ -10,9 +10,6 @@
   import ButtonGroup from "$lib/components/ButtonGroup.svelte";
   import { onMount } from "svelte";
   import { generatePDF, generateCSV, generateXLSX } from "$lib/hooks/exportDataToFile.js";
-  import { fetchRates } from "$lib/hooks/rates.js";
-
-  // import { updateDispersionStatus } from '$lib/hooks/updates.js'
 
   export let user;
   const uid = user.uid;
@@ -94,7 +91,7 @@
   };
 
   const fetchDBRates = () => {
-    try {
+    /* try {
       const fetch = fetchRates();
       fetch
         .then((value) => {
@@ -111,7 +108,7 @@
       // console.log(rateUrgentDispersion)
     } catch (error) {
       throw new Error(error);
-    }
+    } */
   };
 
   const dispersionFound = () => {
