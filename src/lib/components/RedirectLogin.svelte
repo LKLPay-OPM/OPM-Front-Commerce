@@ -3,13 +3,9 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
 
-  async function redirectLogin() {
-    await goto("/login");
-  }
-
   onMount(async () => {
     $linkSelected = "Login";
-    redirectLogin();
+    await goto("/login");
   });
 </script>
 
