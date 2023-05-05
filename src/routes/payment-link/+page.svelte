@@ -7,8 +7,6 @@
   import { validateEmail } from "$lib/utils/input-validation.js";
   import { tryAgainErrorToast, successCustomMsgToast } from "$lib/utils/toast.js";
 
-  export let form;
-  export let data;
   let token = $sessionUser?.token;
 
   let input = {
@@ -29,32 +27,26 @@
       email: "",
       description: "",
     };
-  }
+  };
 </script>
 
 <div class="form-container">
   <div class="card-container">
-    <form class="form" method="POST" 
-      use:enhance={({form, data, action, cancel}) => {
+    <form
+      class="form"
+      method="POST"
+      use:enhance={({ form, data, action, cancel }) => {
         return async ({ result }) => {
-            // `result` is an `ActionResult` object
-          if (result.type === 'error') {
+          // `result` is an `ActionResult` object
+          if (result.type === "error") {
             tryAgainErrorToast();
-          }else{
-            formSuccess()
+          } else {
+            formSuccess();
           }
         };
       }}
     >
-      <Input
-        bind:value={token}
-        label="Correo Electrónico"
-        placeholder="email@dominio.com"
-        id="email"
-        className="txt-field normal fill-blue"
-        type="hidden"
-        name="token"
-      />
+      <input type="hidden" name="token" value={token} />
       <IconInput
         icon="dollar"
         label="Monto"
@@ -63,7 +55,7 @@
         className="txt-field normal fill-blue"
         type="number"
         name="amount"
-        min=0
+        min="0"
       />
       <Input
         bind:value={input.email}
