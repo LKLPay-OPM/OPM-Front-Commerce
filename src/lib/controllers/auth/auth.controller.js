@@ -14,7 +14,6 @@ export class AuthController {
       sessionUser.set(session);
       await goto("/");
     } catch (e) {
-      console.log(123, e);
       isLoggedIn.update(() => false);
       loggedInUser.set({ error: true });
       sessionUser.set({ error: true });
