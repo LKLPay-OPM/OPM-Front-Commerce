@@ -1,13 +1,10 @@
 <script>
   import { isLoggedIn, loggedInUser, redirectBankProfile } from "$lib/stores";
-  import { updateUserIne, updateUserBankAccountInfo } from "$lib/hooks/updates.js";
-  import { updateUserInfo, updateUserAvatar } from "$lib/hooks/updates.js";
   import { onMount, afterUpdate } from "svelte";
   import Input from "$lib/components/Input.svelte";
   import Icons from "$lib/components/Icons.svelte";
   import ButtonGroup from "$lib/components/ButtonGroup.svelte";
   import noUser from "$lib/assets/no_user.png";
-  import { fetchRates } from "$lib/hooks/rates.js";
 
   export let selected;
   export let branches;
