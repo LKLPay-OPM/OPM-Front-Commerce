@@ -36,18 +36,7 @@
       {/if}
     </span>
   </label>
-  <input
-    on:click
-    {name}
-    {type}
-    {placeholder}
-    {id}
-    {value}
-    on:input={onInput}
-    {accept}
-    {multiple}
-    {disabled}
-  />
+  <input on:click {name} {type} {placeholder} {id} {value} on:input={onInput} {accept} {multiple} {disabled} />
 </div>
 
 <style lang="scss">
@@ -59,7 +48,6 @@
     color: $grey;
   }
   .txt-field input {
-    font-family: "Roboto";
     width: -webkit-fill-available;
     height: 3.125rem;
     background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
@@ -68,13 +56,14 @@
     border-radius: 4px;
     padding-left: 1.25rem; /* 20px */
     /* TEXT */
-    font-weight: 500;
+    font-weight: 600;
     font-size: 0.8125rem; /* 13px */
     line-height: 1.125rem; /* 18px */
     display: flex;
     align-items: center;
     justify-content: left;
     color: $primary-dark;
+    margin: 0 0 0.5rem 0;
   }
 
   .txt-field input::placeholder {
@@ -176,8 +165,7 @@
     height: 100%;
     width: 100%;
     background: linear-gradient(270deg, #0478ff 0%, #50caff 100%);
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
-      4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 0.625rem;
   }
 
@@ -247,8 +235,7 @@
     display: flex;
     height: 3.375rem;
     background: linear-gradient(270deg, #00c48c 0%, #50ffd5 100%);
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
-      4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 0.625rem;
   }
 
@@ -305,8 +292,7 @@
     display: flex;
     height: 3.375rem;
     background: linear-gradient(270deg, #fd5353 0%, #ffa450 100%);
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
-      4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 0.625rem;
   }
 
@@ -345,8 +331,7 @@
     display: flex;
     height: 3.375rem;
     background: linear-gradient(91.36deg, #e6e8ef 0%, $background-light-accent-primary 100%);
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
-      4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 0.625rem;
   }
 

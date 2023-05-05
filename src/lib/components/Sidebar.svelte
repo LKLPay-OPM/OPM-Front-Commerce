@@ -1,6 +1,4 @@
 <script>
-  /* styles */
-  import "$lib/styles/sidebar.scss";
   /* stores */
   import { isLoggedIn, loggedInUser, linkSelected, sessionUser, sidebar } from "$lib/stores.js";
   import { AuthController } from "$lib/controllers/auth/auth.controller";
@@ -83,7 +81,6 @@
             <i class={$linkSelected === option.name ? "active-link_name" : ""}>
               <Icons name={option.icon} width="24" height="24" />
             </i>
-            <!-- <i class='bx bx-grid-alt'></i> -->
             <span class={$linkSelected === option.name ? "active-link_name" : "link_name"}>{option.name}</span>
           </a>
           <ul class="sub-menu blank">
@@ -138,3 +135,7 @@
     </ul>
   </div>
 </div>
+
+<style lang="scss">
+  @import "src/lib/styles/sidebar.scss";
+</style>
