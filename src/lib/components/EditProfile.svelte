@@ -1,14 +1,11 @@
 <script>
   import { isLoggedIn, loggedInUser, redirectBankProfile } from "$lib/stores";
-  import { updateUserIne, updateUserBankAccountInfo } from "$lib/hooks/updates.js";
-  import { updateUserInfo, updateUserAvatar } from "$lib/hooks/updates.js";
   import { onMount, afterUpdate } from "svelte";
   import Input from "$lib/components/Input.svelte";
   import TextArea from "$lib/components/TextArea.svelte";
   import Select from "$lib/components/Select.svelte";
   import Icons from "$lib/components/Icons.svelte";
   import noUser from "$lib/assets/no_user.png";
-  import { fetchRates } from "$lib/hooks/rates.js";
   import townsData from "$lib/assets/municipios.json";
   /* svelte */
   import { createEventDispatcher } from "svelte";
@@ -80,7 +77,7 @@
   }
 
   const fetchDBRates = () => {
-    try {
+    /* try {
       const fetch = fetchRates();
       fetch
         .then((value) => {
@@ -91,7 +88,7 @@
         });
     } catch (error) {
       throw new Error(error);
-    }
+    } */
   };
 
   const getBusinessLineName = (businessLine) => {
