@@ -1,6 +1,4 @@
 <script>
-  import { collection, Timestamp, query, orderBy, limit, where, getDocs, startAt, endAt } from "firebase/firestore";
-  import { db } from "$lib/firebase";
   /* components */
   import Input from "$lib/components/Input.svelte";
   import Modal from "$lib/components/Modal.svelte";
@@ -119,184 +117,9 @@
     }
   };
 
-  const fetchByMonthButton = async () => {
-    active = "month";
-    transactionDetailView = false;
-    selectedTransaction = {};
-    transactionsMonth = [];
-    transactions = [];
-    loading = true;
-    var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
-    //transactions = [];
-    const curr = new Date();
-    const currentMonth = new Date(curr.setMonth(curr.getMonth(), 1)).setHours(0, 0, 0, 0); // Sets Date to actual month day 1 at 00:00
-    const nextMonth = new Date(curr.setMonth(curr.getMonth() + 1, 1)).setHours(0, 0, 0, 0); // Sets Date to next month day 1 at 00:00
-    const lastDayOfMonth = new Date(curr.setMonth(curr.getMonth(), 0)).setHours(0, 0, 0, 0); // Sets Date to last day of month at 00:00
-    const numDays = new Date(lastDayOfMonth).getDate();
+  const fetchByDateRange = async () => {};
 
-    const first = new Intl.DateTimeFormat("es-MX", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "2-digit",
-    }).format(currentMonth);
-    const last = new Intl.DateTimeFormat("es-MX", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "2-digit",
-    }).format(nextMonth);
-    const lastDayMonth = new Intl.DateTimeFormat("es-MX", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "2-digit",
-    }).format(lastDayOfMonth);
-
-    const q = query(
-      collection(db, dbCollection, uid, "transactions"),
-      orderBy("Transaction Date", "desc"),
-      startAt(last.replace(pattern, "$3$2$1") /* Timestamp.fromDate(new Date(nextMonth)) */),
-      endAt(first.replace(pattern, "$3$2$1") /* Timestamp.fromDate(new Date(currentMonth)) */),
-      limit(10)
-    );
-    const querySnapshot = await getDocs(q);
-    transactions = querySnapshot.docs.map((doc) => {
-      return { ...doc.data() };
-    });
-    let index = 0;
-    let arr = [];
-    let array = [];
-    let flag = 0;
-    let keyFirstDay, keyLastDay;
-    if (transactions?.length < 0) {
-      transactionsMonth = [];
-    } else {
-      do {
-        const d = new Date();
-        let initialDate = new Date(currentMonth).setHours(0, 0, 0, 0);
-        let m = first.replace(pattern, "$3$2$1");
-        flag = parseInt(m) + index;
-        const key = flag.toString().replace(pattern, "$3$2$1");
-        if (arr.length < 7) {
-          arr.push({
-            date: key,
-            data: transactions
-              .filter((date) => date["Transaction Date"] === flag.toString())
-              .map((doc) => {
-                return doc;
-              }),
-          });
-        } else {
-          array.push({
-            firstDay: keyFirstDay,
-            lastDay: keyLastDay,
-            objects: arr,
-          });
-          arr = [];
-          arr.push({
-            date: key,
-            data: transactions
-              .filter((date) => date["Transaction Date"] === flag.toString())
-              .map((doc) => {
-                return doc;
-              }),
-          });
-        }
-        if (arr.length === 1) {
-          keyFirstDay = flag.toString();
-        } else if (arr.length === 7) {
-          keyLastDay = flag.toString();
-        }
-        index++;
-        if (index === numDays) {
-          array.push({
-            firstDay: keyFirstDay,
-            lastDay: keyLastDay,
-            objects: arr,
-          });
-          arr = [];
-          arr.push({
-            date: key,
-            data: transactions
-              .filter((date) => date["Transaction Date"] === flag.toString())
-              .map((doc) => {
-                return doc;
-              }),
-          });
-        }
-      } while (flag < parseInt(lastDayMonth.replace(pattern, "$3$2$1")));
-      // console.log(array)
-      transactionsMonth = [...array];
-
-      transactionsMonth.map(
-        (months) => console.log(months.data)
-        /* months.map((data)=>(
-
-          console.log({data})
-        )) */
-      );
-      // console.log(transactionsMonth)
-    }
-    transactionFound();
-    //console.log(transactions)
-  };
-
-  const fetchByDateRange = async () => {
-    active = "range";
-    transactionDetailView = false;
-    selectedTransaction = {};
-    loading = true;
-    var pattern = /(\d{4})\-(\d{2})\-(\d{2})/; // String pattern replace for date
-    var patternFetch = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace fetch date
-    const startRange = new Date(dateRangeStart.replace(pattern, "$2-$3-$1")).setHours(0, 0, 0, 0); //Sets the date pattern and time to 00:00
-    const endRange = new Date(dateRangeEnd.replace(pattern, "$2-$3-$1")).setHours(23, 59, 59, 59); //Sets the date pattern and time to 23:59
-
-    const first = new Intl.DateTimeFormat("es-MX", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "2-digit",
-    }).format(startRange);
-    const last = new Intl.DateTimeFormat("es-MX", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "2-digit",
-    }).format(endRange);
-
-    // console.log(first)
-    // console.log(last)
-
-    const q = query(
-      collection(db, dbCollection, uid, "transactions"),
-      orderBy("Transaction Date", "desc"),
-      startAt(last.replace(patternFetch, "$3$2$1") /* Timestamp.fromDate(new Date(endRange)) */),
-      endAt(first.replace(patternFetch, "$3$2$1") /* Timestamp.fromDate(new Date(startRange)) */)
-      // limit(10)
-    );
-    const querySnapshot = await getDocs(q);
-    transactions = querySnapshot.docs.map((doc) => {
-      return { ...doc.data() };
-    });
-    transactionFound();
-    // console.log(transactions)
-  };
-
-  const fetchByTicketId = async () => {
-    active = "ticket";
-    transactionDetailView = false;
-    selectedTransaction = {};
-    loading = true;
-    const ticket = ticketId.toString();
-    const q = query(
-      collection(db, dbCollection, uid, "transactions"),
-      where("Transaction Time", "==", ticket),
-      orderBy("Transaction Date", "desc"),
-      limit(1)
-    );
-    const querySnapshot = await getDocs(q);
-    transactions = querySnapshot.docs.map((doc) => {
-      return { ...doc.data() };
-    });
-    transactionFound();
-    // console.log(transactions)
-  };
+  const fetchByTicketId = async () => {};
 
   const sortObject = (data) => {
     const transactionsNew = data.map((element) => {
@@ -774,6 +597,7 @@
     {/if}
   </div>
 </div>
+
 <style lang="scss">
-  @import 'src/lib/styles/transactions.scss';
+  @import "src/lib/styles/transactions.scss";
 </style>

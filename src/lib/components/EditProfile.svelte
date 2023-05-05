@@ -1,6 +1,4 @@
 <script>
-  import { collection, Timestamp, query, orderBy, limit, where, getDocs, startAt, endAt } from "firebase/firestore";
-  import { db } from "$lib/firebase";
   import { isLoggedIn, loggedInUser, redirectBankProfile } from "$lib/stores";
   import { updateUserIne, updateUserBankAccountInfo } from "$lib/hooks/updates.js";
   import { updateUserInfo, updateUserAvatar } from "$lib/hooks/updates.js";

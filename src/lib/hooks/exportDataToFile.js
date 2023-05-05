@@ -1,7 +1,6 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import * as XLSX from 'xlsx/xlsx.mjs';
-import { Timestamp } from 'firebase/firestore';
 let data = [];
 let today = new Date().toISOString().slice(0, 10);
 const headers = {

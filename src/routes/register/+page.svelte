@@ -5,7 +5,6 @@
   import { onMount } from "svelte";
   import Input from "$lib/components/Input.svelte";
   import Checkbox from "$lib/components/Checkbox.svelte";
-  import { Timestamp } from "firebase/firestore";
   import Icons from "$lib/components/Icons.svelte";
   import Select from "$lib/components/Select.svelte";
   import RedirectHome from "$lib/components/RedirectHome.svelte";
@@ -21,7 +20,7 @@
     secondLastName: "",
     firstTimeUser: true,
     depositPreference: "weekly",
-    depositDateReference: Timestamp.now(),
+    depositDateReference: Date.now(),
     statusBankAccountInfo: "pending",
     curp: "",
     rfc: "",
