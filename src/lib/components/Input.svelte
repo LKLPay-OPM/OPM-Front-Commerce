@@ -233,7 +233,7 @@
     justify-content: center;
     border: none;
     display: flex;
-    height: 3.375rem;
+    height: 100%;
     background: linear-gradient(270deg, #00c48c 0%, #50ffd5 100%);
     box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 0.625rem;
