@@ -33,6 +33,9 @@
   }
 </script>
 
+<svelte:head>
+  <title>Lkl Pay Boost</title>
+</svelte:head>
 <svelte:window bind:innerWidth bind:innerHeight />
 
 <div class="layout">

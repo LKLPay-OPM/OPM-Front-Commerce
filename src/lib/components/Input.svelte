@@ -36,7 +36,21 @@
       {/if}
     </span>
   </label>
-  <input on:click {name} {type} {placeholder} {id} {value} on:input={onInput} {accept} {multiple} {disabled} />
+  <div class="input">
+    <input
+      class="input-field"
+      on:click
+      {name}
+      {type}
+      {placeholder}
+      {id}
+      {value}
+      on:input={onInput}
+      {accept}
+      {multiple}
+      {disabled}
+    />
+  </div>
 </div>
 
 <style lang="scss">
@@ -47,14 +61,34 @@
     line-height: 1.25rem;
     color: $grey;
   }
-  .txt-field input {
+
+  .input .input-field {
+    border: none;
+    outline: none;
+    // max-width: 3.75rem;
+    min-width: 100%;
+    height: 100%;
+    background: transparent;
+    /* border: none; */
+    border-radius: 4px;
+    padding-left: 0.5rem; /* 8px */
+    /* TEXT */
+    font-weight: 500;
+    font-size: 0.8125rem; /* 13px */
+    line-height: 1.125rem; /* 18px */
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    color: $primary-dark;
+  }
+  .txt-field .input {
     width: -webkit-fill-available;
     height: 3.125rem;
     background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     /* border: none; */
     border-radius: 4px;
-    padding-left: 1.25rem; /* 20px */
+    padding: 0.5rem; /* 8px */
     /* TEXT */
     font-weight: 600;
     font-size: 0.8125rem; /* 13px */
@@ -79,7 +113,7 @@
     line-height: 1.25rem;
     color: $grey;
   }
-  .disabled-txt-field input {
+  .disabled-txt-field .input {
     background: transparent;
     border: none;
     outline: none;
@@ -110,7 +144,7 @@
     line-height: 1.25rem;
     color: $grey;
   }
-  .txt-field-slim input {
+  .txt-field-slim .input {
     width: -webkit-fill-available;
     min-height: 2.125rem; /* 34px */
     height: 2.125rem; /* 34px */
@@ -140,19 +174,19 @@
     outline: none;
   } */
 
-  .normal input {
+  .normal .input {
     outline: none;
     background: linear-gradient(background-light-accent-primary, #e6e8ef) padding-box,
       linear-gradient(187deg, #ffffff, #d6e3f3) border-box;
     border-radius: 4px;
     border: 2px solid transparent;
   }
-  .valid input {
+  .valid .input {
     outline-color: #00c48c;
     border-color: #00c48c;
   }
 
-  .invalid input {
+  .invalid .input {
     outline-color: #ff0000;
     border-color: #ff0000;
   }
@@ -182,7 +216,7 @@
     color: #ffffff;
   }
 
-  .btn input {
+  .btn .input {
     display: none;
   }
 
@@ -213,7 +247,7 @@
     color: #8c9fb1;
   }
 
-  .btn-plain input {
+  .btn-plain .input {
     display: none;
   }
 
@@ -252,7 +286,7 @@
     color: #ffffff;
   }
 
-  .btn-success input {
+  .btn-success .input {
     display: none;
   }
   div.btn-success-border {
@@ -281,7 +315,7 @@
     letter-spacing: -0.4px;
     color: #00c48c;
   }
-  .btn-success-border input {
+  .btn-success-border .input {
     display: none;
   }
   div.btn-error {
@@ -309,7 +343,7 @@
     color: #ffffff;
   }
 
-  .btn-error input {
+  .btn-error .input {
     display: none;
   }
 
@@ -349,7 +383,7 @@
     color: #a6b4c8;
   }
 
-  .btn-disabled input {
+  .btn-disabled .input {
     display: none;
   }
   .form-control {
@@ -405,7 +439,7 @@
     transition: all 0.5s ease;
   }
 
-  .button input {
+  .button .input {
     display: none;
   }
 
@@ -435,7 +469,7 @@
     transition: all 0.5s ease;
   }
 
-  .text-button input {
+  .text-button .input {
     display: none;
   }
 
@@ -467,7 +501,7 @@
     /* max-width: 100%; */
   }
 
-  .txt-field-horizontal input {
+  .txt-field-horizontal .input {
     width: -webkit-fill-available;
     max-width: 5rem; /* 80px */
     min-height: 2.125rem; /* 34px */

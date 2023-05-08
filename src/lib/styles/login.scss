@@ -120,3 +120,7 @@
   opacity: 0;
   pointer-events: none;
 }
+
+input:-internal-autofill-selected {
+  background-color: red;
+}

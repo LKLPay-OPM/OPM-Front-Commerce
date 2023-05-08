@@ -66,7 +66,7 @@
     outline: none;
     // max-width: 3.75rem;
     min-width: 80%;
-    height: 3.125rem;
+    height: 100%;
     background: transparent;
     /* border: none; */
     border-radius: 4px;
@@ -105,7 +105,7 @@
     margin: 0 0 0.5rem 0;
 
     input {
-      font-weight: 600;
+      font-weight: 500;
       font-size: 0.8125rem; /* 13px */
       line-height: 1.125rem; /* 18px */
     }
