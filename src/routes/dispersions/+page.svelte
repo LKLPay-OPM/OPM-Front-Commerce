@@ -24,7 +24,7 @@
 
   onMount(async () => {
     // await fetchByDayButton()
-    dispersions = [...$loggedInUser.dispersions];
+    // dispersions = [...$loggedInUser.dispersions];
   });
 
   const dispersionFound = () => {

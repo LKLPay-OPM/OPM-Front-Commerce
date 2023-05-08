@@ -10,9 +10,11 @@
   import ButtonGroup from "$lib/components/ButtonGroup.svelte";
   import { onMount } from "svelte";
   import { generatePDF, generateCSV, generateXLSX } from "$lib/hooks/exportDataToFile.js";
+  /* utils */
+  import { getMonthName, timeToLocalString, dateToLocalString } from "$lib/utils/date.js";
 
   export let user;
-  const uid = user.uid;
+  // const uid = user.uid;
   let dispersions = [];
   let selectedDispersion = {};
   let dispersionToArray = [];
@@ -39,20 +41,6 @@
   /* let rateLklPay, rateNatural, ratesBusinessType, rateUrgentDispersion = 0;
   let urgentDepositQty = 0; */
 
-  selectedDispersion = {
-    date: Date.now(),
-    id: "123",
-    total: 13115.0,
-    dispersion: 12548.5,
-    commission: 532.5,
-    afterDispersion: 0,
-    type: 1,
-    reference: 6326701,
-    tracking: "IACH2GJ05YW9MV",
-    clabe: "646180173742378227",
-    transactions: 37,
-  };
-
   let clarificationsList = [
     { name: "Opción 1", value: "option1" },
     { name: "Opción 2", value: "option2" },
@@ -61,7 +49,7 @@
   ];
 
   let clarification = {
-    customer: $loggedInUser.uid,
+    customer: 123 /* $loggedInUser.uid */,
     description: "",
   };
   let detailClarification = {
@@ -70,7 +58,7 @@
   };
 
   let immediateDeposit = {
-    availableBalance: $loggedInUser.toDeposit,
+    availableBalance: $loggedInUser.toDeposit ?? 0,
     immediateDepositCommission: 0,
     immediateDepositQty: 0,
     toDeposit: 0,
@@ -83,6 +71,14 @@
       currency: "MXN",
     },
   };
+
+  function handleFilterClick({ detail }) {
+    // console.log(detail);
+    active = detail?.value;
+    if (active === "2") {
+      immediateDepositPreference();
+    }
+  }
 
   const getPercentage = (num, per) => {
     const percentage = (num / 100) * per;
@@ -138,6 +134,10 @@
           commission: 35,
           dispersion: 965,
           afterDispersion: 0,
+          reference: 6326701,
+          tracking: "IACH2GJ05YW9MV",
+          clabe: "646180173742378227",
+          transactions: 37,
         },
         {
           date: "230223",
@@ -148,6 +148,10 @@
           commission: 35,
           dispersion: 965,
           afterDispersion: 0,
+          reference: 6326701,
+          tracking: "IACH2GJ05YW9MV",
+          clabe: "646180173742378227",
+          transactions: 37,
         },
         {
           date: "230223",
@@ -158,6 +162,10 @@
           commission: 35,
           dispersion: 965,
           afterDispersion: 0,
+          reference: 6326701,
+          tracking: "IACH2GJ05YW9MV",
+          clabe: "646180173742378227",
+          transactions: 37,
         },
         {
           date: "230223",
@@ -168,6 +176,10 @@
           commission: 35,
           dispersion: 965,
           afterDispersion: 0,
+          reference: 6326701,
+          tracking: "IACH2GJ05YW9MV",
+          clabe: "646180173742378227",
+          transactions: 37,
         },
         {
           date: "230224",
@@ -178,182 +190,14 @@
           commission: 35,
           dispersion: 965,
           afterDispersion: 0,
+          reference: 6326701,
+          tracking: "IACH2GJ05YW9MV",
+          clabe: "646180173742378227",
+          transactions: 37,
         }
       );
       // console.log($loggedInUser.dispersions)
       // console.log(dispersions)
-    }
-    dispersionFound();
-  };
-
-  const fetchByWeekButton = async () => {
-    active = "week";
-    dispersionDetailView = false;
-    // selectedDispersion = {};
-    loading = true;
-    dispersions = [...$loggedInUser.dispersions];
-    if (dispersions.length <= 0) {
-      dispersions.push(
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        }
-      );
-      // console.log($loggedInUser.dispersions)
-      // console.log(dispersions)
-    }
-    dispersionFound();
-  };
-
-  const fetchByMonthButton = async () => {
-    active = "month";
-    dispersionDetailView = false;
-    // selectedDispersion = {};
-    loading = true;
-    dispersions = [...$loggedInUser.dispersions];
-    if (dispersions.length <= 0) {
-      dispersions.push(
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        }
-      );
     }
     dispersionFound();
   };
@@ -363,7 +207,7 @@
     dispersionDetailView = false;
     // selectedDispersion = {};
     loading = true;
-    dispersions = [...$loggedInUser.dispersions];
+    // dispersions = [...$loggedInUser.dispersions];
     if (dispersions.length <= 0) {
       dispersions.push(
         {
@@ -473,7 +317,7 @@
     dispersionDetailView = false;
     // selectedDispersion = {};
     loading = true;
-    dispersions = [...$loggedInUser.dispersions];
+    // dispersions = [...$loggedInUser.dispersions];
     if (dispersions.length <= 0) {
       dispersions.push({
         date: Date.now(),
@@ -529,7 +373,7 @@
     fetchByDayButton();
   } */
 
-  const getMonthName = (month) => {
+  /* const getMonthName = (month) => {
     const monthsArray = {
       0: { value: "Enero" },
       1: { value: "Febrero" },
@@ -558,7 +402,7 @@
     };
 
     return monthsArray[month].value;
-  };
+  }; */
 
   const handleClarification = () => {
     console.log(clarification);
@@ -582,8 +426,8 @@
     active = "1";
   };
   const immediateDepositPreference = () => {
-    active = "2";
     showModal(modalImmediateDepositPreference);
+    active = "2";
   };
 
   let buttonGroupOptions = [
@@ -619,8 +463,8 @@
 
   const getClabe = (string) => {
     var pattern = /(\d{3})(\d{11})(\d{4})/;
-    let result = string.replace(pattern, `$1***********$3`);
-    return result;
+    return string.replace(pattern, `$1***********$3`);
+    // return result;
   };
 
   const showModal = (option) => {
@@ -632,7 +476,7 @@
   };
 
   onMount(async () => {
-    await fetchDBRates();
+    // await fetchDBRates();
     await fetchByDayButton();
     if ($redirectUrgentDispersions === true) {
       $redirectUrgentDispersions = false;
@@ -694,7 +538,7 @@
         id="buttonSaveModalImmediateDepositPreference"
         type="button"
         className={`
-          ${termsDepositPreference ? "btn" : "btn-plain disabled"}`}
+          ${termsDepositPreference ? "btn-success" : "btn-plain disabled"}`}
         icon=""
       />
     {/if}
@@ -733,6 +577,7 @@
             bind:value={immediateDeposit.immediateDepositQty}
             className="txt-field normal"
             type="number"
+            min="0"
           />
         </div>
         <div class="column-element">
@@ -749,7 +594,7 @@
           </div>
           <div class="content">
             <p>
-              {$loggedInUser.toDeposit?.toLocaleString(localeParam.language, localeParam.currency)}
+              {$loggedInUser.toDeposit?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0"}
             </p>
           </div>
         </div>
@@ -816,10 +661,7 @@
       <div class="title">Cantidad</div>
       <div class="description">
         <p>
-          {immediateDeposit.availableBalance?.toLocaleString(
-            localeParam.language,
-            localeParam.currency
-          )}
+          {immediateDeposit.availableBalance?.toLocaleString(localeParam.language, localeParam.currency)}
         </p>
       </div>
     </div>
@@ -974,7 +816,8 @@
             {date.getDate()} de {getMonthName(date.getMonth())} del {date.getFullYear()}
           </p>
         </div>
-        <ButtonGroup bind:active options={buttonGroupOptions} />
+        <ButtonGroup {active} options={buttonGroupOptions} on:click={handleFilterClick} />
+        <!-- <ButtonGroup bind:active options={buttonGroupOptions} /> -->
       </div>
       <div class="top__right">
         <div class="dispersion-search-bar">
@@ -1045,12 +888,7 @@
         <div class="card">
           <div><p>Saldo a Depositar</p></div>
           <div>
-            <span
-              >{user.toDeposit?.toLocaleString(
-                localeParam.language,
-                localeParam.currency
-              )}</span
-            >
+            <span>{user.toDeposit?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0"}</span>
           </div>
         </div>
         <div class="button">
@@ -1081,7 +919,7 @@
               <thead>
                 <tr>
                   <th>Fecha</th>
-                  <th class="responsive hide">ID</th>
+                  <th class="responsive hide">Folio</th>
                   <th>Saldo</th>
                   <th>Tipo</th>
                   <th class="responsive hide">Comisión</th>
@@ -1095,10 +933,12 @@
                 {#each dispersions as dispersion}
                   <tr
                     class="clickable-table-row"
+                    on:click={() => (selectedDispersion = dispersion)}
+                    on:keypress={(e) => (e.key === "Enter" ? (selectedDispersion = dispersion) : "")}
                     on:click={() => (dispersionDetailView = true)}
                     on:keypress={(e) => (e.key === "Enter" ? (dispersionDetailView = true) : "")}
                   >
-                    <td>{getTransactionDate(dispersion.date) + " - " + getTransactionTime(dispersion.time)}</td>
+                    <td>{dateToLocalString(dispersion.date) + " - " + timeToLocalString(dispersion.time)}</td>
                     <!-- <td>
                           <Input
                             id='detailsTicket{dispersion.id}'
@@ -1108,12 +948,7 @@
                             label={dispersion.id} type="button" className="text-button" icon=""/>
                         </td> -->
                     <td class="responsive hide">{dispersion.id}</td>
-                    <td
-                      >{parseFloat(dispersion.total)?.toLocaleString(
-                        localeParam.language,
-                        localeParam.currency
-                      )}</td
-                    >
+                    <td>{parseFloat(dispersion.total)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
                     <td>{dispersion.type}</td>
                     <td class="responsive hide"
                       >{parseFloat(dispersion.commission)?.toLocaleString(
@@ -1156,11 +991,9 @@
       <div class="dispersion-details">
         <div class="details__top">
           <b>Recibo #{selectedDispersion.id}</b>
+          <!-- getTransactionDate(dispersion.date) + " - " + getTransactionTime(dispersion.time) -->
           <p>
-            {selectedDispersion.date.toDate().getDate()} de {getMonthName(selectedDispersion.date.toDate().getMonth())} del
-            {selectedDispersion.date.toDate().getFullYear()} a las {selectedDispersion.date
-              .toDate()
-              .toLocaleTimeString()}
+            {dateToLocalString(selectedDispersion.date)} a las {timeToLocalString(selectedDispersion.time)}
           </p>
         </div>
         <div class="details__middle">
@@ -1168,7 +1001,7 @@
             <div class="title">Datos</div>
             <div class="item">
               <b>Tipo de Depósito</b>
-              <p>{depositTypeName(selectedDispersion.type)}</p>
+              <p>{selectedDispersion.type}</p>
             </div>
             <div class="item">
               <b>Referencia</b>
@@ -1196,10 +1029,7 @@
                 <div class="item">
                   <b>Total Depositado</b>
                   <p>
-                    {selectedDispersion.dispersion?.toLocaleString(
-                      localeParam.language,
-                      localeParam.currency
-                    )}
+                    {selectedDispersion.dispersion?.toLocaleString(localeParam.language, localeParam.currency)}
                   </p>
                 </div>
               </div>
@@ -1212,19 +1042,14 @@
                 <div class="item">
                   <b>Total Ventas</b>
                   <p>
-                    {selectedDispersion.total?.toLocaleString(
-                      localeParam.language,
-                      localeParam.currency
-                    )}
+                    {selectedDispersion.total?.toLocaleString(localeParam.language, localeParam.currency)}
                   </p>
                   <span />
                 </div>
                 <div class="item">
+                  <b>Comisión</b>
                   <p>
-                    {selectedDispersion.commission?.toLocaleString(
-                      localeParam.language,
-                      localeParam.currency
-                    )}
+                    {selectedDispersion.commission?.toLocaleString(localeParam.language, localeParam.currency)}
                   </p>
                   <!-- <span>(4.06%)</span> -->
                 </div>
