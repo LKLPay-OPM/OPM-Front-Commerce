@@ -82,11 +82,12 @@
     color: $primary-dark;
   }
   .txt-field .input {
-    width: -webkit-fill-available;
+    width: 100%;
     height: 3.125rem;
     background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     /* border: none; */
+    border: 2px solid;
     border-radius: 4px;
     padding: 0.5rem; /* 8px */
     /* TEXT */

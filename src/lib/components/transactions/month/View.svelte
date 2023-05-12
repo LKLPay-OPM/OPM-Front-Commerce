@@ -13,7 +13,6 @@
   let active = data?.filter ?? "month";
 
   $: {
-    console.log(transactionsMonth[0])
   }
 
   const localeParam = {
@@ -86,34 +85,21 @@
             <tr
               class="clickable"
               on:click={() => goToTransaction(month._id)}
-              on:keypress={(e) =>
-                e.key === "Enter" ? () => goToTransaction(month._id) : ""}
+              on:keypress={(e) => (e.key === "Enter" ? () => goToTransaction(month._id) : "")}
             >
               <td class="element">{getMonthPeriod(month._id)}</td>
               <td class="element">{month?.Sold ?? 0}</td>
               <td class="element">
-                {month?.Amount?.toLocaleString(
-                  localeParam.language,
-                  localeParam.currency
-                )}
+                {month?.Amount?.toLocaleString(localeParam.language, localeParam.currency)}
               </td>
               <td class="element responsive">
-                {month?.Comission?.toLocaleString(
-                  localeParam.language,
-                  localeParam.currency
-                )}
+                {month?.Comission?.toLocaleString(localeParam.language, localeParam.currency)}
               </td>
               <td class="element responsive">
-                {month?.IVA?.toLocaleString(
-                  localeParam.language,
-                  localeParam.currency
-                )}
+                {month?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}
               </td>
               <td class="element responsive">
-                {month?.Deposit?.toLocaleString(
-                  localeParam.language,
-                  localeParam.currency
-                )}
+                {month?.Deposit?.toLocaleString(localeParam.language, localeParam.currency)}
               </td>
               <i class="arrow arrow-blue">
                 <Icons name="arrow-fwd" width="24" height="24" />
@@ -125,6 +111,7 @@
     </div>
   </div>
 </div>
+
 <style lang="scss">
-  @import 'src/lib/styles/transactions.scss';
+  @import "src/lib/styles/transactions.scss";
 </style>

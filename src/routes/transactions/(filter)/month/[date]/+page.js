@@ -3,7 +3,7 @@ import { error } from "@sveltejs/kit";
 /* consts */
 import { validQueryFilters } from "$lib/constants/filter";
 /*  */
-import { axiosTransactionsClient } from "$lib/repos/axios";
+import { axiosDevicesClient } from "$lib/repos/axios";
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ url, params }) {
@@ -13,7 +13,7 @@ export async function load({ url, params }) {
   const end = Number(url.searchParams.get("end") ?? 10);
 
   try {
-    const response = await axiosTransactionsClient.get(`/transaction/month/${date}`, {
+    const response = await axiosDevicesClient.get(`/transaction/month/${date}`, {
       params: { filter, start, end },
     });
     if (validQueryFilters.includes(filter)) return { date, filter, start, end, response: response.data?.response };

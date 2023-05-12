@@ -4,7 +4,7 @@ import {
   axiosFormDataClient,
   axiosECommerceClient,
   profilesFormDataClient,
-  axiosTransactionsClient,
+  axiosDevicesClient,
 } from "$lib/repos/axios/clients/api-clients";
 import { refreshTokenClient } from "$lib/repos/axios/clients/refresh-client";
 /* interceptors */
@@ -16,14 +16,14 @@ axiosRequestInterceptor(axiosClient);
 axiosRequestInterceptor(axiosFormDataClient);
 axiosRequestInterceptor(profilesFormDataClient);
 axiosRequestInterceptor(profilesClient);
-axiosRequestInterceptor(axiosTransactionsClient);
+axiosRequestInterceptor(axiosDevicesClient);
 axiosRequestInterceptor(axiosECommerceClient);
 
 axiosResponseInterceptor(axiosClient);
 axiosResponseInterceptor(axiosFormDataClient);
 axiosResponseInterceptor(profilesFormDataClient);
 axiosResponseInterceptor(profilesClient);
-axiosResponseInterceptor(axiosTransactionsClient);
+axiosResponseInterceptor(axiosDevicesClient);
 axiosResponseInterceptor(axiosECommerceClient);
 
 /* exports after assigning interceptors */
@@ -32,7 +32,7 @@ export {
   axiosFormDataClient,
   profilesFormDataClient,
   profilesClient,
-  axiosTransactionsClient,
+  axiosDevicesClient,
   axiosECommerceClient,
   refreshTokenClient,
 };
