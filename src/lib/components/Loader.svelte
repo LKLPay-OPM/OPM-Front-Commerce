@@ -1,11 +1,12 @@
 <script>
+  export let text = "";
 </script>
 
 <div class="container">
-  <section>
+  <div class="loader-container">
     <span class="loader" />
-    <!-- <span class="">Redirigiendo...</span> -->
-  </section>
+    <span class="text">{text}</span>
+  </div>
 </div>
 
 <style lang="scss">
@@ -26,6 +27,21 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    .loader-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+
+      .text {
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: $primary-dark;
+        text-align: center;
+      }
+    }
   }
 
   .loader {
