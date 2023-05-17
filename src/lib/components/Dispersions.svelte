@@ -73,7 +73,6 @@
   };
 
   function handleFilterClick({ detail }) {
-    // console.log(detail);
     active = detail?.value;
     if (active === "2") {
       immediateDepositPreference();
@@ -84,27 +83,6 @@
     const percentage = (num / 100) * per;
     const total = num - percentage;
     return total;
-  };
-
-  const fetchDBRates = () => {
-    /* try {
-      const fetch = fetchRates();
-      fetch
-        .then((value) => {
-          rates = value;
-          // rateLklPay = value.rateLklPay;
-          // rateNatural = value.rateNatural;
-          immediateDeposit.immediateDepositCommission = value.rateUrgentDispersion;
-          // ratesBusinessType = value.ratesBusinessType;
-          // console.log(value.rateUrgentDispersion)
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-      // console.log(rateUrgentDispersion)
-    } catch (error) {
-      throw new Error(error);
-    } */
   };
 
   const dispersionFound = () => {
@@ -345,64 +323,18 @@
   };
 
   const exportDataToPDF = async (dispersions) => {
-    //alert("PDF")
-    // console.log(dispersions)
     generatePDF(dispersions, user);
   };
 
   const exportDataToExcel = async (dispersions) => {
-    // alert("Excel")
     const data = sortObject(dispersions);
-    // console.log(data)
     generateXLSX(data);
   };
 
   const exportDataToCSV = async (dispersions) => {
-    // alert("CSV")
     const data = sortObject(dispersions);
-    // console.log(data)
     generateCSV(data);
   };
-
-  /* const reverseDispersion = async(dispersion) => {
-    dispersion.total = parseFloat(dispersion.total);
-    dispersion.status = "refund";
-    // console.log(dispersion)
-    await updateDispersionStatus(dispersion);
-    dispersionDetailView = false;
-    fetchByDayButton();
-  } */
-
-  /* const getMonthName = (month) => {
-    const monthsArray = {
-      0: { value: "Enero" },
-      1: { value: "Febrero" },
-      2: { value: "Marzo" },
-      3: { value: "Abril" },
-      4: { value: "Mayo" },
-      5: { value: "Junio" },
-      6: { value: "Julio" },
-      7: { value: "Agosto" },
-      8: { value: "Septiembre" },
-      9: { value: "Octubre" },
-      10: { value: "Noviembre" },
-      11: { value: "Diciembre" },
-      "01": { value: "Enero" },
-      "02": { value: "Febrero" },
-      "03": { value: "Marzo" },
-      "04": { value: "Abril" },
-      "05": { value: "Mayo" },
-      "06": { value: "Junio" },
-      "07": { value: "Julio" },
-      "08": { value: "Agosto" },
-      "09": { value: "Septiembre" },
-      "10": { value: "Octubre" },
-      "11": { value: "Noviembre" },
-      "12": { value: "Diciembre" },
-    };
-
-    return monthsArray[month].value;
-  }; */
 
   const handleClarification = () => {
     console.log(clarification);
@@ -412,7 +344,6 @@
       immediateDeposit.immediateDepositQty,
       immediateDeposit.immediateDepositCommission
     );
-    console.log(immediateDeposit);
     immediateDeposit = {
       availableBalance: $loggedInUser.toDeposit,
       immediateDepositQty: 0,
@@ -435,32 +366,6 @@
     { value: "2", name: "Inmediato", click: immediateDepositPreference },
   ];
 
-  const depositTypeName = (id) => {
-    const types = {
-      1: { value: "Mismo Día" },
-      2: { value: "Día Siguiente" },
-    };
-    // console.log(id)
-    return types[id].value;
-  };
-
-  const getTransactionDate = (string) => {
-    var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
-    const extractMonth = string.replace(pattern, "$2");
-    const month = getMonthName(extractMonth);
-    let str = string.replace(pattern, `$3 de ${month}`);
-    // let str = string.replace(pattern, `$3 de ${month} del 20$1`)
-    // console.log(str)
-    return str;
-  };
-
-  const getTransactionTime = (string) => {
-    var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
-    let str = string.replace(pattern, `$1:$2:$3`);
-    // console.log(str)
-    return str;
-  };
-
   const getClabe = (string) => {
     var pattern = /(\d{3})(\d{11})(\d{4})/;
     return string.replace(pattern, `$1***********$3`);
@@ -482,11 +387,6 @@
       $redirectUrgentDispersions = false;
       showModal(modalImmediateDeposit);
     }
-    /* .then(async() => {
-    }).catch(err => {
-      console.error(err);
-      throw new Error(err);
-    }); */
   });
 </script>
 

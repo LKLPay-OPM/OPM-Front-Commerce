@@ -1,345 +1,70 @@
 <script>
-  let detailTicketView = false;
+  /* FAQs */
+  import { faqs } from "$lib/mock/faqs.js";
 </script>
 
-{#if !detailTicketView}
-  <!-- {#each tickets as ticket}
-    <div class="ticket card-container clickable"
-      on:click={() => selectedTicket = ticket}
-      on:keypress={(e) => e.key === 'Enter' ? () => selectedTicket = ticket : ""} 
-      on:click={() => detailTicketView = true}
-      on:keypress={(e) => e.key === 'Enter' ? () => detailTicketView = true : ""} 
-    >
-      <div class="row">
-        <div class="element">
-          <div class="item">Solicitud</div>
-          <div class="item">{ticket.id}</div>
+<section class="faq container" aria-label="Preguntas Frecuentes">
+  <header class="faq__header">
+    <h2 class="faq__header-title">Preguntas Frecuentes</h2>
+  </header>
+  <div class="faq__body">
+    {#each faqs as faq}
+      <details class="faq__panel card-container">
+        <summary class="faq__label">{faq.question}</summary>
+        <div class="faq__panel-body">
+          <p class="faq__panel-answer">{faq.answer}</p>
         </div>
-        <div class="element">
-          <div class="item">Motivo</div>
-          <div class="item">{ticket.type}</div>
-        </div>
-        <div class="element">
-          <div class="item">Estado</div>
-          <div class="item">{ticket.status}</div>
-        </div>
-        <div class="element">
-          <i class="arrow arrow-blue">
-            <Icons name="arrow-fwd" width="24" height="24"/>
-          </i>
-        </div>
-      </div>
-    </div>
-  {/each}
-{:else}
-  <div class="ticket col card-container">
-    <div class="row title">
-      <div class="row-element">
-        <div class="element return-arrow"
-          on:click={() => detailTicketView = false}
-          on:keypress={(e) => e.key === 'Enter' ? () => detailTicketView = false : ""}
-        >
-          <i class="arrow arrow-blue">
-            <Icons name="arrow-bwd" width="24" height="24"/>
-          </i>
-        </div>
-        <div class="element">
-          <div class="item">Solicitud</div>
-          <div class="item">{selectedTicket.id}</div>
-        </div>
-      </div>
-      <div class="element">
-        <div class="item">Motivo</div>
-        <div class="item">{selectedTicket.type}</div>
-      </div>
-      <div class="element">
-        <div class="item">Estado</div>
-        <div class="item">{selectedTicket.status}</div>
-      </div>
-    </div>
-    <div class="row description">
-      <div class="element card-inside">
-        <div class="description">{selectedTicket.description}</div>
-      </div>
-    </div>
-  </div> -->
-{/if}
+      </details>
+    {/each}
+  </div>
+</section>
 
 <style lang="scss">
-  .content {
-    width: 100%;
+  .container {
+    width: min(60%, 40rem);
+    margin-inline: auto;
   }
 
-  .content > .container {
+  .faq__header {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
+    justify-content: center;
   }
 
-  .content * .container {
-    /* width: 50%; */
-  }
-
-  .date p {
-    margin: 2rem 0 0 0;
+  .faq__header-title {
     font-weight: 700;
-    font-size: 1.25rem; /* 20px */
-    line-height: 1.25rem; /* 20px */
-    text-align: center;
-    /* Text */
+    font-size: 2rem;
+    line-height: 1.25rem;
     color: $primary-dark;
+    margin: 2rem 0;
   }
 
-  .row {
-    display: flex;
-    gap: 1rem; /* 16px */
-    padding: 2rem 1rem;
-    margin: 0rem 0rem 0rem 0rem;
+  .faq__panel {
+    padding: 0.5rem 1.5rem;
+    margin: 0 0 1.5rem 0;
   }
 
-  .row > .button {
-    display: grid;
-    grid-auto-flow: row;
-    color: #8c9fb1;
-    height: 2.5rem; /* 40px */
-    min-width: 10rem; /* 200px */
-    align-self: self-end;
-  }
-
-  .col {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem; /* 16px */
-    padding: 2rem 1rem;
-    margin: 0rem 0rem 0rem 0rem;
-  }
-
-  .col > .button {
-    display: grid;
-    grid-auto-flow: row;
-    color: #8c9fb1;
-    height: 2.5rem; /* 40px */
-    min-width: 10rem; /* 200px */
-    align-self: center;
-  }
-
-  .divider-vert {
-    height: auto;
-    width: 0.5rem;
-    background: linear-gradient(
-        138.32deg,
-        rgba(0, 0, 0, 0.5) 8.26%,
-        rgba(255, 255, 255, 0.5) 91.02%
-      ),
-      #eaecf0;
-    background-blend-mode: soft-light, normal;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: inset -1px -1px 2px #fafbff, inset 1px 1px 2px #a6abbd;
-    border-radius: 5px;
-  }
-  .divider-hor {
-    width: auto;
-    height: 0.5rem;
-    background: linear-gradient(
-        138.32deg,
-        rgba(0, 0, 0, 0.5) 8.26%,
-        rgba(255, 255, 255, 0.5) 91.02%
-      ),
-      #eaecf0;
-    background-blend-mode: soft-light, normal;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: inset -1px -1px 2px #fafbff, inset 1px 1px 2px #a6abbd;
-    border-radius: 5px;
-  }
-
-  .element > .option-col {
-    display: grid;
-    grid-auto-flow: row;
-    color: $primary-dark;
-    transition: all 0.4s ease;
+  .faq__label {
+    padding-block: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: $primary-light;
     cursor: pointer;
   }
 
-  .element > .option-row {
-    display: grid;
-    grid-auto-flow: column;
-    align-items: center;
+  .faq__label:is(:hover) {
+    font-weight: 800;
+    // color: $primary-dark;
+  }
+  .faq__panel-answer {
+    font-size: 1rem;
+    font-weight: 500;
     color: $primary-dark;
-    transition: all 0.4s ease;
-    cursor: pointer;
-  }
-
-  .element > .button {
-    display: grid;
-    grid-auto-flow: row;
-    color: #8c9fb1;
-    height: 2.5rem; /* 40px */
-    width: 12.5rem; /* 200px */
-  }
-
-  .option-col > i {
-    display: grid;
-    grid-auto-flow: column;
-    justify-content: center;
-  }
-  .option-col > .option-name {
-    font-weight: 700;
-    font-size: 1.5rem; /* 24px */
-    line-height: 1.25rem; /* 20px */
-    text-align: center;
-  }
-  .option-row > i {
-    display: grid;
-    grid-auto-flow: row;
-    justify-content: center;
-  }
-  .option-row > .option-name {
-    font-weight: 700;
-    font-size: 1.5rem; /* 24px */
-    line-height: 1.25rem; /* 20px */
-  }
-
-  .grid-row {
-    display: grid;
-    grid-auto-flow: row;
-    gap: 1rem;
-  }
-  .grid-col {
-    display: grid;
-    grid-auto-flow: column;
-    gap: 1rem;
-  }
-
-  .support {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    /* TEXT */
-    text-align: center;
-    font-weight: 700;
-    line-height: 1.25rem; /* 20px */
-    color: $primary-dark;
-  }
-  .support .title {
-    font-size: 1rem; /* 16px */
-  }
-  .support .description {
-    font-size: 1.5rem; /* 16px */
-  }
-  .support-description {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    /* width: 50%; */
-  }
-
-  .modal-buttons {
-    width: 70%;
-    height: 2.5rem; /* 40px */
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-    gap: 1rem;
-  }
-
-  .ticket {
-    max-width: 40rem;
-    min-width: 40rem;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem 2rem;
-    text-align: center;
-    margin: 1rem;
-  }
-  .ticket > .row {
-    display: flex;
-    justify-content: space-between;
-    padding: 0;
-  }
-
-  .ticket.col {
-    padding: 0;
-  }
-
-  .ticket > .row.title {
-    padding: 1rem 3rem 0 0.5rem;
-  }
-  .ticket > .row.description {
-    padding: 0 2rem 1rem 2rem;
-  }
-
-  .ticket * .return-arrow {
-    /* margin: 0 -3rem 0px -6rem; */
-  }
-
-  .ticket * .element {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    font-weight: 700;
-    line-height: 1.25rem; /* 20px */
-    color: $primary-dark;
-  }
-  .ticket * .row-element {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    font-weight: 700;
-    line-height: 1.25rem; /* 20px */
-    color: $primary-dark;
-    gap: 0.5rem;
-  }
-  .ticket * .description {
-    margin: 0.5rem;
-    min-height: 2rem;
-    text-align: left;
-  }
-
-  .element.card-inside {
-    width: 100%;
-  }
-  .hidden {
-    display: none;
-  }
-
-  .clickable {
-    cursor: pointer;
+    padding: 0.5rem 0;
   }
 
   @media (max-width: 425px) {
-    .ticket {
-      min-width: auto;
-      max-width: auto;
-    }
-
-    .ticket.col {
-      padding: 0;
-    }
-
-    .ticket > .row.title {
-      padding: 1rem 1rem 0 0.5rem;
-    }
-    .ticket > .row.description {
-      padding: 0 2rem 1rem 2rem;
-    }
   }
   @media (min-width: 426px) and (max-width: 540px) {
-    .ticket {
-      min-width: auto;
-      max-width: auto;
-    }
-
-    .ticket.col {
-      padding: 0;
-    }
-
-    .ticket > .row.title {
-      padding: 1rem 1rem 0 0.5rem;
-    }
-    .ticket > .row.description {
-      padding: 0 2rem 1rem 2rem;
-    }
   }
 
   @media (min-width: 768px) and (max-width: 1023px) {

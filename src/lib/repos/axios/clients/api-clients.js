@@ -2,7 +2,6 @@
 import {
   PUBLIC_DEVICES_ENDPOINT,
   PUBLIC_PROFILES_ENDPOINT,
-  PUBLIC_TRANSACTIONS_ENDPOINT,
   PUBLIC_ECOMMERCE_ENDPOINT,
 } from "$env/static/public";
 /* client */
@@ -32,7 +31,7 @@ export const profilesClient = axios.create({
   ...axiosDefaultsClientJson,
   baseURL: PUBLIC_PROFILES_ENDPOINT,
 });
-export const axiosTransactionsClient = axios.create({
+export const axiosDevicesClient = axios.create({
   ...axiosDefaultsClientJson,
-  baseURL: PUBLIC_TRANSACTIONS_ENDPOINT,
+  baseURL: PUBLIC_DEVICES_ENDPOINT,
 });

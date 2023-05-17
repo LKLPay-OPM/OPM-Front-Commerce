@@ -11,6 +11,7 @@
   import ViewWeek from "$lib/components/transactions/week/View.svelte";
   import ViewMonth from "$lib/components/transactions/month/View.svelte";
   /*  */
+  // import { linkSelected } from "$lib/";
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import { generatePDF, generateCSV, generateXLSX } from "$lib/hooks/exportDataToFile.js";
@@ -105,7 +106,7 @@
 
   const fetchWeekDayTransactions = async (id) => {
     try {
-      const response = await axiosTransactionsClient.get(
+      const response = await axiosDevicesClient.get(
         `/transaction/${id}`
         // { params: { filter, start, end } }
       );
