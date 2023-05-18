@@ -1,3 +1,5 @@
+/* svelte */
+import { error } from "@sveltejs/kit";
 /* axios */
 import { axiosDevicesClient } from "$lib/repos/axios";
 /* stores */

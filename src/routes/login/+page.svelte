@@ -37,9 +37,6 @@
   });
 </script>
 
-<svelte:head>
-  <title>Lkl Pay Boost | Login</title>
-</svelte:head>
 {#if loading}
   <Loader />
 {:else}
