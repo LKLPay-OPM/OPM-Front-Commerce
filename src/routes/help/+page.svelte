@@ -1,6 +1,6 @@
 <script>
   /* FAQs */
-  import { firstSteps } from "$lib/mock/faqs.js";
+  import { firstSteps, transactions, support } from "$lib/mock/faqs.js";
 </script>
 
 <section class="faq container" aria-label="Preguntas Frecuentes">
@@ -8,14 +8,39 @@
     <h2 class="faq__header-title">Preguntas Frecuentes</h2>
   </header>
   <div class="faq__body">
-    {#each firstSteps as faq}
-      <details class="faq__panel card-container">
-        <summary class="faq__label">{faq.question}</summary>
-        <div class="faq__panel-body">
-          <p class="faq__panel-answer">{faq.answer}</p>
-        </div>
-      </details>
-    {/each}
+    <details id="firstSteps">
+      <summary class="faq__label-title">Primeros Pasos</summary>
+      {#each firstSteps as faq}
+        <details class="faq__panel card-container">
+          <summary class="faq__label">{faq.question}</summary>
+          <div class="faq__panel-body">
+            <p class="faq__panel-answer">{faq.answer}</p>
+          </div>
+        </details>
+      {/each}
+    </details>
+    <details id="transactions">
+      <summary class="faq__label-title">Transacciones</summary>
+      {#each transactions as faq}
+        <details class="faq__panel card-container">
+          <summary class="faq__label">{faq.question}</summary>
+          <div class="faq__panel-body">
+            <p class="faq__panel-answer">{faq.answer}</p>
+          </div>
+        </details>
+      {/each}
+    </details>
+    <details id="support">
+      <summary class="faq__label-title">Soporte</summary>
+      {#each support as faq}
+        <details class="faq__panel card-container">
+          <summary class="faq__label">{faq.question}</summary>
+          <div class="faq__panel-body">
+            <p class="faq__panel-answer">{faq.answer}</p>
+          </div>
+        </details>
+      {/each}
+    </details>
   </div>
 </section>
 
@@ -55,11 +80,24 @@
     font-weight: 800;
     // color: $primary-dark;
   }
+  .faq__label-title {
+    padding-block: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $primary-dark;
+    cursor: pointer;
+  }
+
+  .faq__label-title:is(:hover) {
+    font-weight: 800;
+    // color: $primary-dark;
+  }
   .faq__panel-answer {
     font-size: 1rem;
     font-weight: 500;
     color: $primary-dark;
     padding: 0.5rem 0;
+    white-space: pre-line;
   }
 
   @media (max-width: 425px) {
