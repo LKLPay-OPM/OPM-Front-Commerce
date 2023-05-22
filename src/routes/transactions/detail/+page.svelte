@@ -49,7 +49,7 @@
   });
 </script>
 
-<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalClarification}>
+<Modal className={`modal-medium`} bind:this={modalClarification}>
   <div slot="header">
     <p>Solicitar Aclaración</p>
   </div>

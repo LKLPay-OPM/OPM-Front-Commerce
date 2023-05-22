@@ -78,8 +78,7 @@
     position: fixed;
     inset: 0;
     background: $background-light-secondary;
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
-      4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     border: none;
     outline: none;

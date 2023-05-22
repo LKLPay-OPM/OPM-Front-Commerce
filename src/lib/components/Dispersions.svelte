@@ -391,7 +391,7 @@
 </script>
 
 <!-- MODAL DEPOSIT PREFERENCE-->
-<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalImmediateDepositPreference}>
+<Modal className={`modal-medium`} bind:this={modalImmediateDepositPreference}>
   <div slot="header">
     <p>Contratar Depósito Inmediato</p>
   </div>
@@ -445,7 +445,7 @@
   </div>
 </Modal>
 <!-- MODAL IMMEDIATE DEPOSIT -->
-<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalImmediateDeposit}>
+<Modal className={`modal-medium`} bind:this={modalImmediateDeposit}>
   <div slot="header">
     <p>Solicitar Depósito Urgente</p>
   </div>
@@ -552,7 +552,7 @@
 </Modal>
 
 <!-- MODAL DISPERSION CLARIFICATION -->
-<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalClarification}>
+<Modal className={`modal-medium`} bind:this={modalClarification}>
   <div slot="header">
     <p>Solicitar Aclaración</p>
   </div>
@@ -597,7 +597,7 @@
   </div>
 </Modal>
 <!-- MODAL DISPERSION DETAIL CLARIFICATION -->
-<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalDetailClarification}>
+<Modal className={`modal-medium`} bind:this={modalDetailClarification}>
   <div slot="header">
     <p>Solicitar Aclaración</p>
   </div>

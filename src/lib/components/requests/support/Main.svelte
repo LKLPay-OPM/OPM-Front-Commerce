@@ -24,7 +24,7 @@
 </script>
 
 <!-- MODAL SUPPORT -->
-<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalSupport}>
+<Modal className={`modal-medium`} bind:this={modalSupport}>
   <div slot="header">
     <p>Solicitar Asistencia y Soporte</p>
   </div>

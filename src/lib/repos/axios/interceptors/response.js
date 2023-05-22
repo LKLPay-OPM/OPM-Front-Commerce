@@ -4,6 +4,8 @@ import { refreshTokenClient } from "$lib/repos/axios/clients/refresh-client";
 /* store */
 import { get } from "svelte/store";
 import { sessionUser, isLoggedIn, loggedInUser } from "$lib/stores";
+/* controllers */
+import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
 async function refreshToken() {
   try {
@@ -21,6 +23,7 @@ async function refreshToken() {
     return { session: data.response, user };
   } catch (error) {
     console.error("Error refreshing token:", error);
+    await appErrorResponseHandler(error);
     throw error;
   }
 }
@@ -38,6 +41,7 @@ async function refreshTokenWithCustomHeaders(token, refresh) {
     return { session: data.response, user };
   } catch (error) {
     console.error("Error refreshing token:", error);
+    await appErrorResponseHandler(error);
     throw error;
   }
 }
