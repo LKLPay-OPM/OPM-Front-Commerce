@@ -1,5 +1,8 @@
 <script>
+  /* components */
   import Icons from "$lib/components/Icons.svelte";
+  /* svelte */
+  import { createEventDispatcher } from "svelte";
   export let label = "";
   export let type = "";
   export let id = "";
@@ -13,16 +16,26 @@
   export let multiple = false;
   export let disabled = false;
   export let min;
+  export let step = ".1";
+  export let decimal = false;
+  export let inputmode = "";
+
+  const dispatch = createEventDispatcher();
 
   const onInput = (e) => {
-    if (type != "number") {
+    if (decimal) {
       value = e.target.value;
+      dispatch("format", value);
     } else {
-      if (isNaN(e.target.value)) {
+      if (type != "number") {
         value = e.target.value;
       } else {
-        // value = parseFloat(e.target.value).round(2)
-        value = Math.round(e.target.value * 100) / 100;
+        if (isNaN(e.target.value)) {
+          value = e.target.value;
+        } else {
+          // value = parseFloat(e.target.value).round(2)
+          value = Math.round(e.target.value * 100) / 100;
+        }
       }
     }
   };
@@ -41,6 +54,7 @@
     <input
       class="input-field"
       on:click
+      {inputmode}
       {type}
       {placeholder}
       {id}
@@ -51,6 +65,8 @@
       {multiple}
       {disabled}
       {min}
+      {step}
+      {decimal}
     />
   </div>
 </div>

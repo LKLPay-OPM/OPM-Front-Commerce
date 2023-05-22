@@ -11,6 +11,7 @@
   /* utils */
   import { validateEmail } from "$lib/utils/input-validation.js";
   import { tryAgainErrorToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  import { formatDecimals } from "$lib/utils/format.js";
 
   // export let form;
   // export let data;
@@ -74,6 +75,11 @@
           <input type="hidden" id="refreshToken" name="refreshToken" value={refreshToken} />
 
           <IconInput
+            on:format={(value) => {
+              if (value.detail.includes(".") && value.detail.match(/^[0-9]+(\.{1})?(([0-9]{3})?)$/g)) {
+                input.amount = formatDecimals(Number(value.detail));
+              }
+            }}
             icon="dollar"
             label="Monto"
             id="amount"
@@ -82,6 +88,8 @@
             type="number"
             name="amount"
             min="0"
+            step=".01"
+            decimal={true}
           />
           <Input
             bind:value={input.email}

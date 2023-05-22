@@ -1,6 +1,6 @@
 <script>
   /* FAQs */
-  import { faqs } from "$lib/mock/faqs.js";
+  import { firstSteps } from "$lib/mock/faqs.js";
 </script>
 
 <section class="faq container" aria-label="Preguntas Frecuentes">
@@ -8,7 +8,7 @@
     <h2 class="faq__header-title">Preguntas Frecuentes</h2>
   </header>
   <div class="faq__body">
-    {#each faqs as faq}
+    {#each firstSteps as faq}
       <details class="faq__panel card-container">
         <summary class="faq__label">{faq.question}</summary>
         <div class="faq__panel-body">
