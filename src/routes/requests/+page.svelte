@@ -9,7 +9,14 @@
   import SupportMain from "$lib/components/requests/support/Main.svelte";
   import ProfileMain from "$lib/components/requests/profile/Main.svelte";
   import Tickets from "$lib/components/requests/tickets/Main.svelte";
+
+  export let data;
+  let user = data?.user;
   let optionSelected = 0;
+
+  $: {
+    console.log(data.user);
+  }
 
   let userDetails = $loggedInUser;
 
@@ -28,9 +35,6 @@
   const menuReturn = () => {
     optionSelected = 0;
   };
-
-  $: {
-  }
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
@@ -48,7 +52,7 @@
         <ProfileMain bind:optionSelected />
       </div>
     </div>
-    <svelte:component this={menuComponents(optionSelected)} on:cancel={menuReturn} />
+    <svelte:component this={menuComponents(optionSelected)} {user} bind:optionSelected on:cancel={menuReturn} />
   </div>
 </div>
 

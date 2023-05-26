@@ -4,6 +4,8 @@
   import Modal from "$lib/components/Modal.svelte";
   import TextArea from "$lib/components/TextArea.svelte";
   import Input from "$lib/components/Input.svelte";
+  /* utils */
+  import { tryAgainErrorToast, successCustomMsgToast } from "$lib/utils/toast.js";
 
   export let optionSelected;
   let modalSupport;
@@ -12,7 +14,10 @@
     description: "",
   };
 
-  const handleSupportRequest = () => {};
+  const handleSupportRequest = () => {
+    supportDetails.description = "";
+    successCustomMsgToast("Tu petición de soporte técnico ha sido realizada");
+  };
 
   const showModal = (option) => {
     option.show();

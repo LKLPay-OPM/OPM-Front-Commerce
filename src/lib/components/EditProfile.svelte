@@ -2,6 +2,7 @@
   import { isLoggedIn, loggedInUser, redirectBankProfile } from "$lib/stores";
   import { onMount, afterUpdate } from "svelte";
   import Input from "$lib/components/Input.svelte";
+  import FileInput from "$lib/components/inputs/FileInput.svelte";
   import TextArea from "$lib/components/TextArea.svelte";
   import Select from "$lib/components/Select.svelte";
   import Icons from "$lib/components/Icons.svelte";
@@ -9,12 +10,18 @@
   import townsData from "$lib/assets/municipios.json";
   /* svelte */
   import { createEventDispatcher } from "svelte";
+  /* validations */
+  import { checkFileSize } from "$lib/utils/validations.js";
+  /* utils */
+  import { tryAgainErrorToast, successCustomMsgToast } from "$lib/utils/toast.js";
+
   const dispatch = createEventDispatcher();
   let statesData = Object.keys(townsData);
   let statesArray = [];
   let townsArray = [];
   let states, towns;
   export let optionSelected;
+  export let user;
   const localeParam = {
     language: "es-MX",
     currency: {
@@ -48,14 +55,13 @@
     avatarImg = "",
     complianceOpinion = "",
     csf = "",
-    addressProof = "";
+    addressProof = "",
+    avatarInput = "";
   const dbCollection = "users-client";
   const uid = $loggedInUser.uid;
   let ratesBusinessType;
 
   $: {
-    console.log({ optionSelected });
-    // console.log(financialData)
     statesArray = [];
     statesData.map(function (key, index) {
       statesArray.push({ name: key, value: key });
@@ -147,6 +153,8 @@
   };
 
   const handleUpdateBusinessInfo = async () => {
+    optionSelected = 0;
+    successCustomMsgToast("Tu petición para cambio de datos ha sido realizada");
     // console.log(userData);
     // await updateUserInfo(userData)
     /* .then(() => {
@@ -182,6 +190,20 @@
   });
 
   afterUpdate(() => {});
+
+  const imgUpdate = () => {
+    const file = avatarInput.files[0];
+    user.avatar = file;
+    if (file) {
+      const reader = new FileReader();
+      reader.addEventListener("load", function () {
+        avatar = reader.result;
+      });
+      reader.readAsDataURL(file);
+
+      return;
+    }
+  };
 </script>
 
 <div class="container">
@@ -193,9 +215,20 @@
           <div class="element">
             <div class="avatar-container">
               <div class="avatar">
-                <img class="avatar-img" alt="imagen" src={$loggedInUser.avatar ? $loggedInUser.avatar : noUser} />
+                <!-- <img class="avatar-img" alt="imagen" src={$loggedInUser.avatar ?? noUser} /> -->
+                <img
+                  class="avatar-img"
+                  alt="imagen"
+                  src={avatar != "" ? avatar : $loggedInUser.avatar ? $loggedInUser.avatar : noUser}
+                />
                 <label for="file">
-                  <input id="file" type="file" accept="image/jpeg, image/png" />
+                  <input
+                    on:change={imgUpdate}
+                    bind:this={avatarInput}
+                    id="file"
+                    type="file"
+                    accept="image/jpeg, image/png"
+                  />
                   <div class="avatar-content">
                     <span class="avatar-icon"><Icons name="camera-fill" width="24" height="24" /></span>
                     <span class="avatar-text">Cambiar Foto</span>
@@ -221,15 +254,15 @@
             className="btn-plain blue"
             type="button"
           />
-          <Input label="Guardar" id="saveData" className="btn-plain blue" type="button" />
+          <Input on:click={handleUpdateBusinessInfo} label="Guardar" id="saveData" className="btn-plain blue" type="button" />
         </div>
       </div>
       <!-- Middle Section -->
       <div class="middle">
         <div class="title">Datos de la Persona</div>
         <div class="element">
-          <!-- bind:value={userDetails.name} -->
           <Input
+            bind:value={user.name}
             label="Nombre (s)"
             placeholder="Ejemplo de nombre"
             id="name"
@@ -239,8 +272,8 @@
           />
         </div>
         <div class="element">
-          <!-- bind:value={userDetails.firstlastName} -->
           <Input
+            bind:value={user.firstLastName}
             label="Primer Apellido"
             placeholder="Apellido"
             id="firstLastName"
@@ -248,8 +281,8 @@
             type="text"
             icon=""
           />
-          <!-- bind:value={userDetails.secondLastName} -->
           <Input
+            bind:value={user.secondLastName}
             label="Segundo Apellido"
             placeholder="Apellido"
             id="secondLastName"
@@ -260,26 +293,26 @@
         </div>
         <div class="row-title">INE</div>
         <div class="element">
-          <Input
+          <FileInput
             label="Frente"
-            id="ineFront"
-            bind:value={ineFront}
-            className={ineFront != "" ? "btn-success-border" : "btn-plain blue"}
-            type="file"
-            accept="image/*,.pdf"
+            id="IneFront"
+            bind:file={ineFront}
+            className={`btn-plain ${
+              ineFront === "" ? "" : checkFileSize(ineFront) ? "btn-success" : "border-btn-error"
+            }`}
+            accept="image/jpeg, image/png, application/pdf"
           />
-          <Input
+          <FileInput
             label="Vuelta"
-            id="ineBack"
-            bind:value={ineBack}
-            className={ineBack != "" ? "btn-success-border" : "btn-plain blue"}
-            type="file"
-            accept="image/*,.pdf"
+            id="IneBack"
+            bind:file={ineBack}
+            className={`btn-plain ${ineBack === "" ? "" : checkFileSize(ineBack) ? "btn-success" : "border-btn-error"}`}
+            accept="image/jpeg, image/png, application/pdf"
           />
         </div>
         <div class="element">
-          <!-- bind:value={userDetails.phone} -->
           <Input
+            bind:value={user.phone}
             label="Teléfono"
             placeholder="331-3124-521"
             id="phone"
@@ -289,8 +322,8 @@
           />
         </div>
         <div class="element">
-          <!-- bind:value={userDetails.email} -->
           <Input
+            bind:value={user.email}
             label="Email"
             placeholder="nombre@dominio.com"
             id="email"
@@ -300,8 +333,8 @@
           />
         </div>
         <div class="element">
-          <!-- bind:value={userDetails.bankAccountInfo.clabe} -->
           <Input
+            bind:value={user.clabe}
             label="Número CLABE"
             placeholder="123123123456789011"
             id="clabe"
@@ -311,154 +344,157 @@
           />
         </div>
         <div class="element button">
-          <Input
+          <FileInput
             label="Carátula de Cuenta Bancaria"
             id="bankStatement"
-            bind:value={bankStatement}
-            className={bankStatement != "" ? "btn-success-border" : "btn-plain blue"}
-            type="file"
+            bind:file={bankStatement}
+            className={`btn-plain ${
+              bankStatement === "" ? "" : checkFileSize(bankStatement) ? "btn-success" : "border-btn-error"
+            }`}
             accept="application/pdf"
           />
         </div>
       </div>
       <!-- Right Section -->
-      <div class="right">
-        <div class="title">Datos Fiscales</div>
-        <div class="element">
-          <!-- bind:value={userDetails.rfc} -->
-          <Input
-            label="RFC"
-            placeholder="AAAA1234562T1"
-            id="rfc"
-            className="txt-field normal fill-blue"
-            type="text"
-            icon=""
-          />
-        </div>
-        <div class="element button">
-          <!-- bind:value={financialData.csf} -->
-          <Input
-            label="Constancia de Situación Fiscal"
-            id="csf"
-            className={financialData.csf != "" ? "btn-success-border" : "btn-plain blue"}
-            type="file"
-            accept="application/pdf"
-          />
-        </div>
-        <div class="element button">
-          <!-- bind:value={financialData.complianceOpinion} -->
-          <Input
-            label="Opinión de Cumplimiento"
-            id="complianceOpinion"
-            className={financialData.complianceOpinion != "" ? "btn-success-border" : "btn-plain blue"}
-            type="file"
-            accept="application/pdf"
-          />
-        </div>
-        <div class="title">Domicilio Fiscal</div>
-        <div class="element">
-          <!-- bind:value={financialData.address} -->
-          <Input
-            label="Calle"
-            placeholder="Circunvalación Jorge Álvarez del Castillo"
-            id="address"
-            className="txt-field normal fill-blue"
-            type="text"
-            icon=""
-          />
-        </div>
-        <div class="element">
-          <div class="row-element">
-            <!-- bind:value={financialData.exteriorNumber} -->
+      {#if $loggedInUser.accountType > 1}
+        <div class="right">
+          <div class="title">Datos Fiscales</div>
+          <div class="element">
+            <!-- bind:value={userDetails.rfc} -->
             <Input
-              placeholder="1106"
-              label="N° Exterior"
-              id="ExteriorNumber"
-              className="txt-field-slim normal fill-blue"
-              type="email"
+              label="RFC"
+              placeholder="AAAA1234562T1"
+              id="rfc"
+              className="txt-field normal fill-blue"
+              type="text"
+              icon=""
             />
           </div>
-          <div class="row-element">
-            <!-- bind:value={financialData.interiorNumber} -->
+          <div class="element button">
+            <!-- bind:value={financialData.csf} -->
             <Input
-              placeholder="NA"
-              label="N° Interior"
-              id="InteriorNumber"
+              label="Constancia de Situación Fiscal"
+              id="csf"
+              className={financialData.csf != "" ? "btn-success-border" : "btn-plain blue"}
+              type="file"
+              accept="application/pdf"
+            />
+          </div>
+          <div class="element button">
+            <!-- bind:value={financialData.complianceOpinion} -->
+            <Input
+              label="Opinión de Cumplimiento"
+              id="complianceOpinion"
+              className={financialData.complianceOpinion != "" ? "btn-success-border" : "btn-plain blue"}
+              type="file"
+              accept="application/pdf"
+            />
+          </div>
+          <div class="title">Domicilio Fiscal</div>
+          <div class="element">
+            <!-- bind:value={financialData.address} -->
+            <Input
+              label="Calle"
+              placeholder="Circunvalación Jorge Álvarez del Castillo"
+              id="address"
+              className="txt-field normal fill-blue"
+              type="text"
+              icon=""
+            />
+          </div>
+          <div class="element">
+            <div class="row-element">
+              <!-- bind:value={financialData.exteriorNumber} -->
+              <Input
+                placeholder="1106"
+                label="N° Exterior"
+                id="ExteriorNumber"
+                className="txt-field-slim normal fill-blue"
+                type="email"
+              />
+            </div>
+            <div class="row-element">
+              <!-- bind:value={financialData.interiorNumber} -->
+              <Input
+                placeholder="NA"
+                label="N° Interior"
+                id="InteriorNumber"
+                className="txt-field-slim normal fill-blue"
+                type="text"
+              />
+            </div>
+            <div class="row-element">
+              <!-- bind:value={financialData.zipCode} -->
+              <Input
+                placeholder="44620"
+                label="Código Postal"
+                id="ZipCode"
+                className="txt-field-slim normal fill-blue"
+                type="text"
+              />
+            </div>
+          </div>
+          <div class="element">
+            <!-- <Select
+              index={stateIndex}
+              classList={"blue"}
+              bind:value={financialData.state}
+              label="Estado"
+              defaultText={"Elige una opción"}
+              bind:optionsList={states}
+            />
+            <Select
+              index={townIndex}
+              classList={"blue"}
+              bind:value={financialData.town}
+              label="Municipio"
+              defaultText={"Elige una opción"}
+              bind:optionsList={towns}
+            /> -->
+          </div>
+          <!-- 
+          {#if statesArray.length>0}
+          {/if} -->
+          <div class="element">
+            <!-- bind:value={financialData.address} -->
+            <Input
+              placeholder="Chapultepec Country"
+              label="Colonia"
+              id="Suburb"
               className="txt-field-slim normal fill-blue"
               type="text"
             />
           </div>
-          <div class="row-element">
-            <!-- bind:value={financialData.zipCode} -->
+          <div class="element">
+            <!-- bind:value={financialData.addressReference} -->
             <Input
-              placeholder="44620"
-              label="Código Postal"
-              id="ZipCode"
+              placeholder="Casa con portón negro"
+              label="Referencia del Domicilio"
+              id="AddressReference"
               className="txt-field-slim normal fill-blue"
               type="text"
             />
           </div>
-        </div>
-        <div class="element">
-          <!-- <Select
-            index={stateIndex}
-            classList={"blue"}
-            bind:value={financialData.state}
-            label="Estado"
-            defaultText={"Elige una opción"}
-            bind:optionsList={states}
+          <!-- bind:value={financialData.betweenAddress} -->
+          <TextArea
+            className={"fill-blue"}
+            label="Entre Calles"
+            placeholder="Av. Plan de San Luis y Av. Circunvalacion Jorge Alvarez del Castillo"
+            id="BetweenStreets"
+            name="BetweenStreets"
           />
-          <Select
-            index={townIndex}
-            classList={"blue"}
-            bind:value={financialData.town}
-            label="Municipio"
-            defaultText={"Elige una opción"}
-            bind:optionsList={towns}
-          /> -->
+          <div class="element button">
+            <Input
+              label="Comprobante de Domicilio"
+              id="AddressProof"
+              bind:value={addressProof}
+              className={addressProof != "" ? "btn-success-border" : "btn-plain blue"}
+              type="file"
+              accept="application/pdf"
+            />
+          </div>
         </div>
-        <!-- 
-        {#if statesArray.length>0}
-        {/if} -->
-        <div class="element">
-          <!-- bind:value={financialData.address} -->
-          <Input
-            placeholder="Chapultepec Country"
-            label="Colonia"
-            id="Suburb"
-            className="txt-field-slim normal fill-blue"
-            type="text"
-          />
-        </div>
-        <div class="element">
-          <!-- bind:value={financialData.addressReference} -->
-          <Input
-            placeholder="Casa con portón negro"
-            label="Referencia del Domicilio"
-            id="AddressReference"
-            className="txt-field-slim normal fill-blue"
-            type="text"
-          />
-        </div>
-        <!-- bind:value={financialData.betweenAddress} -->
-        <TextArea
-          className={"fill-blue"}
-          label="Entre Calles"
-          placeholder="Av. Plan de San Luis y Av. Circunvalacion Jorge Alvarez del Castillo"
-          id="BetweenStreets"
-          name="BetweenStreets"
-        />
-        <div class="element button">
-          <Input
-            label="Comprobante de Domicilio"
-            id="AddressProof"
-            bind:value={addressProof}
-            className={addressProof != "" ? "btn-success-border" : "btn-plain blue"}
-            type="file"
-            accept="application/pdf"
-          />
-        </div>
-      </div>
+      {/if}
     </div>
   </div>
 </div>
@@ -522,6 +558,10 @@
     background: $background-light;
     padding: 0.5rem;
     height: fit-content;
+  }
+
+  .middle {
+    width: 100%;
   }
 
   .middle > .element,

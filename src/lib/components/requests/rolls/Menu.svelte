@@ -1,8 +1,12 @@
 <script>
   import { loggedInUser } from "$lib/stores";
+  /* components */
   import Icons from "$lib/components/Icons.svelte";
   import Input from "$lib/components/Input.svelte";
-  let optionSelected = 0;
+  /* utils */
+  import { tryAgainErrorToast, successCustomMsgToast } from "$lib/utils/toast.js";
+
+  export let optionSelected = 0;
   let rollsQty = 0;
 
   let userDetails = $loggedInUser;
@@ -12,6 +16,7 @@
 
   const requestRolls = () => {
     (optionSelected = 0), (rollsQty = 0);
+    successCustomMsgToast("Tu petición de rollos ha sido realizada");
   };
 
   $: {
