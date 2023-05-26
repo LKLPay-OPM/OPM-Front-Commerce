@@ -103,7 +103,7 @@
                   localeParam.currency
                 )}</td
               >
-              <td class="resonsive" />
+              <td class="responsive" />
               <td class="responsive"
                 >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
                   localeParam.language,
@@ -120,6 +120,7 @@
     </div>
   </div>
 </div>
+
 <style lang="scss">
-  @import 'src/lib/styles/transactions.scss';
+  @import "src/lib/styles/transactions.scss";
 </style>
