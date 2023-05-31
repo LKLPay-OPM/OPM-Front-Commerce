@@ -1,6 +1,7 @@
 <script>
   /* components */
   import Pagination from "$lib/components/Pagination.svelte";
+  import Icons from "$lib/components/Icons.svelte";
   /* svelte */
   import { goto } from "$app/navigation";
   /* exports */
@@ -82,6 +83,7 @@
             <th class="responsive">Comisión</th>
             <th class="responsive">IVA</th>
             <th class="responsive">Depósito</th>
+            <th class="responsive">Tipo</th>
           </tr>
         </thead>
         <tbody>
@@ -98,18 +100,35 @@
               <td>{parseFloat(transaction.Amount / 100)?.toLocaleString(localeParam.language, localeParam.currency)}</td
               >
               <td class="responsive"
-                >{parseFloat((transaction.Amount / 100) * 0.035)?.toLocaleString(
-                  localeParam.language,
-                  localeParam.currency
-                )}</td
+                >{transaction.comission?.toLocaleString(localeParam.language, localeParam.currency)}</td
               >
-              <td class="resonsive" />
+              <td class="responsive">{transaction.IVA?.toLocaleString(localeParam.language, localeParam.currency)}</td>
               <td class="responsive"
                 >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
                   localeParam.language,
                   localeParam.currency
                 )}</td
               >
+              <td class="responsive">
+                <i class="icon tooltip">
+                  <Icons
+                    name={transaction.type === "tpv"
+                      ? "terminal"
+                      : transaction.type === "e-commerce"
+                      ? "qr-code"
+                      : "terminal"}
+                    width="24"
+                    height="24"
+                  />
+                  <span class="tooltiptext"
+                    >{transaction.type === "tpv"
+                      ? "Terminal Punto de Venta"
+                      : transaction.type === "e-commerce"
+                      ? "Link de Pago"
+                      : ""}</span
+                  >
+                </i>
+              </td>
             </tr>
           {/each}
         </tbody>
@@ -120,6 +139,7 @@
     </div>
   </div>
 </div>
+
 <style lang="scss">
-  @import 'src/lib/styles/transactions.scss';
+  @import "src/lib/styles/transactions.scss";
 </style>

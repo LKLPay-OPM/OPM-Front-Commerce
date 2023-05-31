@@ -540,6 +540,15 @@ color: $primary-accent-dark;
 
   .sidebar.close .nav-links {
     overflow: hidden;
+    width: 0rem;
+  }
+
+  .sidebar.close {
+    .sidebar-start {
+      .nav-links {
+        overflow: hidden;
+      }
+    }
   }
 
   /* .sidebar {

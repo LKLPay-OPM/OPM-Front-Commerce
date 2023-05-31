@@ -1,7 +1,13 @@
 <script>
+  /* stores */
   import { loggedInUser } from "$lib/stores";
+  /* components */
   import Icons from "$lib/components/Icons.svelte";
   import Input from "$lib/components/Input.svelte";
+  /* utils */
+  import { tryAgainErrorToast, successCustomMsgToast } from "$lib/utils/toast.js";
+
+  export let optionSelected = 0;
   let terminals = {
     pocket: 0,
     smart: 0,
@@ -14,8 +20,9 @@
     innerHeight = 0;
 
   const requestTerminals = () => {
-    (optionSelected = 0), (submenu = 0);
+    optionSelected = 0;
     terminals = { pocket: 0, smart: 0, master: 0 };
+    successCustomMsgToast("Tu petición de terminales ha sido realizada");
   };
 
   $: {

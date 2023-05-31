@@ -15,9 +15,8 @@ export async function load({url}) {
   const end = Number(url.searchParams.get("end") ?? 10);
 
   try {
-    const user = await profilesClient.get(`/user/profile`);
     const transactions = await axiosDevicesClient.get(`/transaction`, { params: { filter, start, end } });
-    if (validQueryFilters.includes(filter)) return { user: user?.data?.response, filter, start, end, transactions: transactions.data?.response };
+    if (validQueryFilters.includes(filter)) return { filter, start, end, transactions: transactions.data?.response };
   } catch (err) {
     console.error(err);
     throw new error(500, "Something went wrong!");

@@ -15,13 +15,15 @@
   let unassignedTerminals = [];
   let assignedTerminals = [];
 
-  const dbCollection = "users-client";
-  const uid = $loggedInUser.uid;
   let ratesBusinessType;
   let branchView = false;
   let selectedBranch;
   let allTransactions = [];
   let branches = [];
+  export let data;
+  let user = data.user;
+  let transactions = data.transactions;
+  let filter = data.filter;
 
   let newBranch = {
     name: "",
@@ -111,7 +113,7 @@
     <div class="content">
       {#if !branchView}
         <div class="right">
-          <Branches bind:selected={selectedBranch} {branches} bind:branchView />
+          <Branches {filter} {transactions} bind:selected={selectedBranch} {branches} bind:branchView />
         </div>
       {:else}
         <div class="card-secondary col padding-1">
@@ -174,7 +176,7 @@
           </div>
         </div>
         <div class="right">
-          <Branches bind:selected={selectedBranch} {branches} bind:branchView />
+          <Branches {filter} {transactions} bind:selected={selectedBranch} {branches} bind:branchView />
         </div>
       {/if}
     </div>

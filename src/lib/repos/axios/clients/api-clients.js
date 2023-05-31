@@ -3,6 +3,7 @@ import {
   PUBLIC_DEVICES_ENDPOINT,
   PUBLIC_PROFILES_ENDPOINT,
   PUBLIC_ECOMMERCE_ENDPOINT,
+  PUBLIC_DEPOSITS_AND_FEES_ENDPOINT,
 } from "$env/static/public";
 /* client */
 import axios from "axios";
@@ -34,4 +35,8 @@ export const profilesClient = axios.create({
 export const axiosDevicesClient = axios.create({
   ...axiosDefaultsClientJson,
   baseURL: PUBLIC_DEVICES_ENDPOINT,
+});
+export const axiosDepositsAndFees = axios.create({
+  ...axiosDefaultsClientJson,
+  baseURL: PUBLIC_DEPOSITS_AND_FEES_ENDPOINT,
 });

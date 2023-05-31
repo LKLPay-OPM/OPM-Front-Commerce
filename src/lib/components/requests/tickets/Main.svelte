@@ -1,7 +1,7 @@
 <script>
   import { loggedInUser } from "$lib/stores";
   import Icons from "$lib/components/Icons.svelte";
-  let optionSelected = 0;
+  export let optionSelected = 0;
   let detailTicketView = false;
   let selectedTicket = {};
 

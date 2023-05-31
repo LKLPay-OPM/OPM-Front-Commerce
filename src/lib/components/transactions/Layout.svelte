@@ -330,7 +330,7 @@
 </script>
 
 <!-- MODAL TRANSACTION CLARIFICATION -->
-<Modal className={`modal-medium`} wrapperClass={"text-area-wrapper"} bind:this={modalClarification}>
+<Modal className={`modal-medium`} bind:this={modalClarification}>
   <div slot="header">
     <p>Solicitar Aclaración</p>
   </div>
@@ -539,14 +539,16 @@
           <span>{resume?.Comission?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"} </span>
         </div>
       </div>
-      <div class="card">
-        <div><p>Propinas</p></div>
-        <div>
-          <span>
-            {resume?.Tips?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
-          </span>
+      {#if (typeof resume?.Tips != "undefined" && resume?.Tips > 0) || typeof resume?.Tips != "undefined"}
+        <div class="card">
+          <div><p>Propinas</p></div>
+          <div>
+            <span>
+              {resume?.Tips?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
+            </span>
+          </div>
         </div>
-      </div>
+      {/if}
       <div class="card">
         <div><p>Saldo a Depositar</p></div>
         <div>
