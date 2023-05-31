@@ -7,10 +7,12 @@
   import noUser from "$lib/assets/no_user.png";
 
   export let data;
-  let user = data.response;
+  let user = data.user;
+  let transactions = data.transactions;
+  let filter = data.filter;
 
   $: {
-    console.log(data.response);
+    // console.log(data);
   }
 
   const localeParam = {
@@ -29,7 +31,7 @@
   let selectedBranch;
   let allTransactions = [];
   let branches = [
-    {
+    /* {
       id: "1",
       name: "Matriz",
       businessLine: "restaurants",
@@ -60,7 +62,7 @@
           Amount: "000000011500",
         },
       ],
-    },
+    }, */
   ];
 
   $: {
@@ -187,36 +189,42 @@
             </div>
             <div class="element">
               <div class="title-blue">
-                <!-- {$loggedInUser.businessName} -->
+                {user.businessName}
               </div>
               <div class="description text-center">
                 {getBusinessLineName(user.businessLine)}
               </div>
             </div>
-            <div class="element">
+            <div class="element rates">
               <div class="title">Tasas</div>
               <div class="row">
                 <div class="element">
                   <div class="title-blue">Crédito</div>
                   <div class="description text-center">
+                    3.5%
                     <!-- {ratesBusinessType?.credit}% -->
                   </div>
                 </div>
                 <div class="element">
                   <div class="title-blue">Débito</div>
                   <div class="description text-center">
+                    3.5%
                     <!-- {ratesBusinessType?.debit}% -->
                   </div>
                 </div>
                 <div class="element">
                   <div class="title-blue">AMEX</div>
                   <div class="description text-center">
+                    3.5%
                     <!-- {ratesBusinessType?.amex}% -->
                   </div>
                 </div>
+              </div>
+              <div class="row">
                 <div class="element">
                   <div class="title-blue">Internacionales</div>
                   <div class="description text-center">
+                    3.5%
                     <!-- {ratesBusinessType?.internationals}% -->
                   </div>
                 </div>
@@ -230,69 +238,71 @@
                 {user.adviser ?? ""}
               </div>
             </div>
-            <div class="element">
-              <div class="title">Persona Física</div>
-              <div class="description text-left">
-                <Icons name={"user-fill"} width="24" height="24" />
-                Mario Enrique Saldaña
+            {#if $loggedInUser.accountType > 1}
+              <div class="element">
+                <div class="title">Persona Física</div>
+                <div class="description text-left">
+                  <Icons name={"user-fill"} width="24" height="24" />
+                  Mario Enrique Saldaña
+                </div>
+                <div class="description text-left">
+                  <Icons name={"phone"} width="24" height="24" />
+                  3312412102
+                </div>
+                <div class="description text-left">
+                  <Icons name={"mail"} width="24" height="24" />
+                  armando.velasco@lklpay.com.mx
+                </div>
               </div>
-              <div class="description text-left">
-                <Icons name={"phone"} width="24" height="24" />
-                3312412102
+              <div class="element">
+                <div class="title">Domicilio Fiscal</div>
+                <div class="description text-left">
+                  <!-- {$loggedInUser.businessAddress} -->
+                  <!-- {$loggedInUser.outsideNumber} -->
+                </div>
+                <div class="description text-left">
+                  <!-- {$loggedInUser.suburb} -->
+                  <!-- {$loggedInUser.zipCode} -->
+                </div>
+                <div class="description text-left">
+                  <!-- {$loggedInUser.town}, {$loggedInUser.state} -->
+                </div>
               </div>
-              <div class="description text-left">
-                <Icons name={"mail"} width="24" height="24" />
-                armando.velasco@lklpay.com.mx
+              <div class="divider-hor" />
+              <div class="element">
+                <div class="title">Responsable General</div>
+                <div class="description text-left">
+                  <Icons name={"user-fill"} width="24" height="24" />
+                  Mario Enrique Saldaña
+                </div>
+                <div class="description text-left">
+                  <Icons name={"phone"} width="24" height="24" />
+                  3312412102
+                </div>
+                <div class="description text-left">
+                  <Icons name={"mail"} width="24" height="24" />
+                  armando.velasco@lklpay.com.mx
+                </div>
               </div>
-            </div>
-            <div class="element">
-              <div class="title">Domicilio Fiscal</div>
-              <div class="description text-left">
-                <!-- {$loggedInUser.businessAddress} -->
-                <!-- {$loggedInUser.outsideNumber} -->
+              <div class="element">
+                <div class="title">Domicilio Operativo</div>
+                <div class="description text-left">
+                  <!-- {$loggedInUser.businessAddress} -->
+                  <!-- {$loggedInUser.outsideNumber} -->
+                </div>
+                <div class="description text-left">
+                  <!-- {$loggedInUser.suburb} -->
+                  <!-- {$loggedInUser.zipCode} -->
+                </div>
+                <div class="description text-left">
+                  <!-- {$loggedInUser.town}, {$loggedInUser.state} -->
+                </div>
               </div>
-              <div class="description text-left">
-                <!-- {$loggedInUser.suburb} -->
-                <!-- {$loggedInUser.zipCode} -->
-              </div>
-              <div class="description text-left">
-                <!-- {$loggedInUser.town}, {$loggedInUser.state} -->
-              </div>
-            </div>
-            <div class="divider-hor" />
-            <div class="element">
-              <div class="title">Responsable General</div>
-              <div class="description text-left">
-                <Icons name={"user-fill"} width="24" height="24" />
-                Mario Enrique Saldaña
-              </div>
-              <div class="description text-left">
-                <Icons name={"phone"} width="24" height="24" />
-                3312412102
-              </div>
-              <div class="description text-left">
-                <Icons name={"mail"} width="24" height="24" />
-                armando.velasco@lklpay.com.mx
-              </div>
-            </div>
-            <div class="element">
-              <div class="title">Domicilio Operativo</div>
-              <div class="description text-left">
-                <!-- {$loggedInUser.businessAddress} -->
-                <!-- {$loggedInUser.outsideNumber} -->
-              </div>
-              <div class="description text-left">
-                <!-- {$loggedInUser.suburb} -->
-                <!-- {$loggedInUser.zipCode} -->
-              </div>
-              <div class="description text-left">
-                <!-- {$loggedInUser.town}, {$loggedInUser.state} -->
-              </div>
-            </div>
+            {/if}
           </div>
         </div>
         <div class="right">
-          <Branches bind:selected={selectedBranch} {branches} bind:branchView />
+          <Branches bind:filter {transactions} bind:selected={selectedBranch} {branches} bind:branchView />
         </div>
       {:else}
         <div class="card-secondary col padding-1">
@@ -355,7 +365,7 @@
           </div>
         </div>
         <div class="right">
-          <Branches bind:selected={selectedBranch} {branches} bind:branchView />
+          <Branches {filter} {transactions} bind:selected={selectedBranch} {branches} bind:branchView />
         </div>
       {/if}
     </div>
@@ -369,6 +379,13 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
+  }
+
+  .element {
+    &.rates {
+      display: grid;
+      gap: 1rem;
+    }
   }
 
   .date {

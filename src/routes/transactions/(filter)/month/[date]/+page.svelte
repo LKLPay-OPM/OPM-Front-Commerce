@@ -25,9 +25,7 @@
   function handleFilterClick({ detail }) {
     // const value = detail?.value;
     // active = value;
-    goto(
-      `?filter=${active ?? "day"}&start=${paginationStart}&end=${paginationEnd}`
-    );
+    goto(`?filter=${active ?? "day"}&start=${paginationStart}&end=${paginationEnd}`);
   }
 
   const getMonthName = (month) => {
@@ -109,6 +107,7 @@
           <th>Comisión</th>
           <th>IVA</th>
           <th>Depósito</th>
+          <th>Tipo</th>
         </tr>
       </thead>
       <thead style="height:1.5rem">
@@ -116,50 +115,30 @@
           <th class="responsive" />
           <th class="responsive" />
           <th>
-            {resume?.Amount?.toLocaleString(
-              localeParam.language,
-              localeParam.currency
-            )}
+            {resume?.Amount?.toLocaleString(localeParam.language, localeParam.currency)}
           </th>
           <th>
-            {resume?.Comission?.toLocaleString(
-              localeParam.language,
-              localeParam.currency
-            )}
+            {resume?.Comission?.toLocaleString(localeParam.language, localeParam.currency)}
           </th>
           <th class="responsive">
-            {resume?.IVA?.toLocaleString(
-              localeParam.language,
-              localeParam.currency
-            )}
+            {resume?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}
           </th>
           <th>
-            {resume?.Deposit?.toLocaleString(
-              localeParam.language,
-              localeParam.currency
-            )}
+            {resume?.Deposit?.toLocaleString(localeParam.language, localeParam.currency)}
           </th>
+          <th />
         </tr>
       </thead>
       <tbody class="inside">
         {#each transactions as transaction}
-          <tr
-            class="clickable number"
-            on:click={() =>
-              goto(`/transactions/detail?ticket=${transaction?._id}`)}
-          >
+          <tr class="clickable number" on:click={() => goto(`/transactions/detail?ticket=${transaction?._id}`)}>
             <td class="responsive"
               >{getTransactionDate(transaction["Transaction Date"]) +
                 " - " +
                 getTransactionTime(transaction["Transaction Time"])}</td
             >
             <td class="responsive">{transaction["Transaction Time"]}</td>
-            <td
-              >{parseFloat(transaction.Amount / 100)?.toLocaleString(
-                localeParam.language,
-                localeParam.currency
-              )}</td
-            >
+            <td>{parseFloat(transaction.Amount / 100)?.toLocaleString(localeParam.language, localeParam.currency)}</td>
             <td
               >{parseFloat((transaction.Amount / 100) * 0.035)?.toLocaleString(
                 localeParam.language,
@@ -167,10 +146,7 @@
               )}</td
             >
             <td class="responsive">
-              {transaction?.IVA?.toLocaleString(
-                localeParam.language,
-                localeParam.currency
-              )}
+              {transaction?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}
             </td>
             <td
               >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
@@ -178,6 +154,26 @@
                 localeParam.currency
               )}</td
             >
+            <td class="responsive">
+              <i class="icon tooltip">
+                <Icons
+                  name={transaction.type === "tpv"
+                    ? "terminal"
+                    : transaction.type === "e-commerce"
+                    ? "qr-code"
+                    : "terminal"}
+                  width="24"
+                  height="24"
+                />
+                <span class="tooltiptext"
+                  >{transaction.type === "tpv"
+                    ? "Terminal Punto de Venta"
+                    : transaction.type === "e-commerce"
+                    ? "Link de Pago"
+                    : ""}</span
+                >
+              </i>
+            </td>
           </tr>
         {/each}
       </tbody>
@@ -192,6 +188,7 @@
     {/if} -->
   </div>
 </div>
+
 <style lang="scss">
-  @import 'src/lib/styles/transactions.scss';
+  @import "src/lib/styles/transactions.scss";
 </style>

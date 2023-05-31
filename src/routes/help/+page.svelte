@@ -19,9 +19,9 @@
         </details>
       {/each}
     </details>
-    <details id="transactions">
-      <summary class="faq__label-title">Transacciones</summary>
-      {#each transactions as faq}
+    <details id="support">
+      <summary class="faq__label-title">Soporte</summary>
+      {#each support as faq}
         <details class="faq__panel card-container">
           <summary class="faq__label">{faq.question}</summary>
           <div class="faq__panel-body">
@@ -30,9 +30,9 @@
         </details>
       {/each}
     </details>
-    <details id="support">
-      <summary class="faq__label-title">Soporte</summary>
-      {#each support as faq}
+    <details id="transactions">
+      <summary class="faq__label-title">Transacciones</summary>
+      {#each transactions as faq}
         <details class="faq__panel card-container">
           <summary class="faq__label">{faq.question}</summary>
           <div class="faq__panel-body">

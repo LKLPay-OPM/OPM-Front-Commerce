@@ -5,12 +5,21 @@
   import Icons from "$lib/components/Icons.svelte";
   import ButtonGroup from "$lib/components/ButtonGroup.svelte";
   import noUser from "$lib/assets/no_user.png";
+  /* navigation */
+  import { goto } from "$app/navigation";
+  /* constants */
+  import { filterByDateOptions } from "$lib/constants/filter";
 
   export let selected;
+  export let transactions;
   export let branches;
   export let branchView = false;
   export let all;
-  export let active = "day";
+  export let filter;
+  function handleFilterClick({ detail }) {
+    const value = detail?.value;
+    goto(`?filter=${value}`);
+  }
 
   let pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
 
@@ -169,187 +178,112 @@
     return array;
   };
 
-  let buttonGroupOptions = [
-    { value: "day", name: "Día", click: fetchByDayButton },
-    { value: "week", name: "Semana", click: fetchByWeekButton },
-    { value: "month", name: "Mes", click: fetchByMonthButton },
-  ];
-
-  onMount(async () => {
-    fetchByDayButton();
-  });
+  onMount(async () => {});
 </script>
 
 <div class="container">
   <div class="element text-center">
-    <ButtonGroup bind:active options={buttonGroupOptions} />
+    <ButtonGroup active={filter} options={filterByDateOptions} on:click={handleFilterClick} />
   </div>
   {#if !branchView}
     <div class="card-secondary row padding-1">
       <div class="element">
         <div class="title-blue">N° de Ventas</div>
         <div class="description text-center">
-          {#if active === "day"}
-            {fetchByDayButton(all).length}
-          {:else if active === "week"}
-            {fetchByWeekButton(all).length}
-          {:else if active === "month"}
-            {fetchByMonthButton(all).length}
-          {/if}
+          {transactions?.resume?.Sold ?? "0"}
         </div>
       </div>
       <div class="element">
         <div class="title-blue">Monto</div>
         <div class="description text-center">
-          {#if active === "day"}
-            {fetchByDayButton(all)
-              .reduce((prev, curr) => prev + curr.Amount / 100, 0)
-              .toLocaleString(localeParam.language, localeParam.currency)}
-          {:else if active === "week"}
-            {fetchByWeekButton(all)
-              .reduce((prev, curr) => prev + curr.Amount / 100, 0)
-              .toLocaleString(localeParam.language, localeParam.currency)}
-          {:else if active === "month"}
-            {fetchByMonthButton(all)
-              .reduce((prev, curr) => prev + curr.Amount / 100, 0)
-              .toLocaleString(localeParam.language, localeParam.currency)}
-          {/if}
+          {transactions?.resume?.Amount?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
         </div>
       </div>
       <div class="element r425">
         <div class="title-blue">Comisión</div>
         <div class="description text-center">
-          {#if active === "day"}
-            {fetchByDayButton(all)
-              .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.035, 0)
-              .toLocaleString(localeParam.language, localeParam.currency)}
-          {:else if active === "week"}
-            {fetchByWeekButton(all)
-              .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.035, 0)
-              .toLocaleString(localeParam.language, localeParam.currency)}
-          {:else if active === "month"}
-            {fetchByMonthButton(all)
-              .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.035, 0)
-              .toLocaleString(localeParam.language, localeParam.currency)}
-          {/if}
+          {transactions?.resume?.Comission?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
         </div>
       </div>
       <div class="element r425">
         <div class="title-blue">A Depositar</div>
         <div class="description text-center">
-          {#if active === "day"}
-            {fetchByDayButton(all)
-              .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.965, 0)
-              .toLocaleString(localeParam.language, localeParam.currency)}
-          {:else if active === "week"}
-            {fetchByWeekButton(all)
-              .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.965, 0)
-              .toLocaleString(localeParam.language, localeParam.currency)}
-          {:else if active === "month"}
-            {fetchByMonthButton(all)
-              .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.965, 0)
-              .toLocaleString(localeParam.language, localeParam.currency)}
-          {/if}
+          {transactions?.resume?.Deposit?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
         </div>
       </div>
     </div>
     <div class="card-container padding-2">
-      {#each branches as branch, index}
-        <div
-          class="card-secondary row padding-1 clickable"
-          on:click={() => (selected = branch)}
-          on:keypress={(e) => (e.key === "Enter" ? (selected = branch) : "")}
-          on:click={() => (branchView = !branchView)}
-          on:keypress={(e) => (e.key === "Enter" ? (branchView = !branchView) : "")}
-        >
-          <div class="element">
-            <div class="avatar-container">
-              <div class="avatar">
-                <img class="avatar-img" alt="imagen" src={branch.avatar ? branch.avatar : noUser} />
-              </div>
-            </div>
+      {#if branches.length <= 0}
+        <div class="message">
+          <div class="msg">
+            <p>Aún no tienes Sucursales</p>
           </div>
-          <div class="element-center min-width">
-            <div class="title-blue text-left">
-              {branch.name}
-            </div>
-            <div class="description text-left">
-              {branch.manager.name}
-              {branch.manager.firstLastName}
-            </div>
-          </div>
-          <div class="element-center r425 r540">
-            <div class="title-blue text-center">N° de Ventas</div>
-            <div class="description text-center">
-              {#if active === "day"}
-                {fetchByDayButton(branch.transactions).length}
-              {:else if active === "week"}
-                {fetchByWeekButton(branch.transactions).length}
-              {:else if active === "month"}
-                {fetchByMonthButton(branch.transactions).length}
-              {/if}
-            </div>
-          </div>
-          <div class="element-center r425">
-            <div class="title-blue text-center">Monto</div>
-            <div class="description text-center">
-              {#if active === "day"}
-                {fetchByDayButton(branch.transactions)
-                  .reduce((prev, curr) => prev + curr.Amount / 100, 0)
-                  .toLocaleString(localeParam.language, localeParam.currency)}
-              {:else if active === "week"}
-                {fetchByWeekButton(branch.transactions)
-                  .reduce((prev, curr) => prev + curr.Amount / 100, 0)
-                  .toLocaleString(localeParam.language, localeParam.currency)}
-              {:else if active === "month"}
-                {fetchByMonthButton(branch.transactions)
-                  .reduce((prev, curr) => prev + curr.Amount / 100, 0)
-                  .toLocaleString(localeParam.language, localeParam.currency)}
-              {/if}
-            </div>
-          </div>
-          <div class="element-center r425 r540">
-            <div class="title-blue text-center">Comisión</div>
-            <div class="description text-center">
-              {#if active === "day"}
-                {fetchByDayButton(branch.transactions)
-                  .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.035, 0)
-                  .toLocaleString(localeParam.language, localeParam.currency)}
-              {:else if active === "week"}
-                {fetchByWeekButton(branch.transactions)
-                  .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.035, 0)
-                  .toLocaleString(localeParam.language, localeParam.currency)}
-              {:else if active === "month"}
-                {fetchByMonthButton(branch.transactions)
-                  .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.035, 0)
-                  .toLocaleString(localeParam.language, localeParam.currency)}
-              {/if}
-            </div>
-          </div>
-          <div class="element-center arrow-blue">
-            <Icons name={"arrow-fwd"} width="24" height="24" />
+          <div class="description">
+            <p>Aquí podrás ver el listado de tus sucursales agregadas</p>
           </div>
         </div>
-      {/each}
+      {:else}
+        {#each branches as branch, index}
+          <div
+            class="card-secondary row padding-1 clickable"
+            on:click={() => (selected = branch)}
+            on:keypress={(e) => (e.key === "Enter" ? (selected = branch) : "")}
+            on:click={() => (branchView = !branchView)}
+            on:keypress={(e) => (e.key === "Enter" ? (branchView = !branchView) : "")}
+          >
+            <div class="element">
+              <div class="avatar-container">
+                <div class="avatar">
+                  <img class="avatar-img" alt="imagen" src={branch.avatar ? branch.avatar : noUser} />
+                </div>
+              </div>
+            </div>
+            <div class="element-center min-width">
+              <div class="title-blue text-left">
+                {branch.name}
+              </div>
+              <div class="description text-left">
+                {branch.manager.name}
+                {branch.manager.firstLastName}
+              </div>
+            </div>
+            <div class="element-center r425 r540">
+              <div class="title-blue text-center">N° de Ventas</div>
+              <div class="description text-center" />
+            </div>
+            <div class="element-center r425">
+              <div class="title-blue text-center">Monto</div>
+              <div class="description text-center" />
+            </div>
+            <div class="element-center r425 r540">
+              <div class="title-blue text-center">Comisión</div>
+              <div class="description text-center" />
+            </div>
+            <div class="element-center arrow-blue">
+              <Icons name={"arrow-fwd"} width="24" height="24" />
+            </div>
+          </div>
+        {/each}
+      {/if}
     </div>
   {:else}
     <div class="card-secondary row padding-1">
       <div class="element">
         <div class="title-blue">N° de Ventas</div>
         <div class="description text-center">
-          {#if active === "day"}
+          <!-- {#if active === "day"}
             {fetchByDayButton(selected.transactions).length}
           {:else if active === "week"}
             {fetchByWeekButton(selected.transactions).length}
           {:else if active === "month"}
             {fetchByMonthButton(selected.transactions).length}
-          {/if}
+          {/if} -->
         </div>
       </div>
       <div class="element">
         <div class="title-blue">Monto</div>
         <div class="description text-center">
-          {#if active === "day"}
+          <!-- {#if active === "day"}
             {fetchByDayButton(selected.transactions)
               .reduce((prev, curr) => prev + curr.Amount / 100, 0)
               .toLocaleString(localeParam.language, localeParam.currency)}
@@ -361,13 +295,13 @@
             {fetchByMonthButton(selected.transactions)
               .reduce((prev, curr) => prev + curr.Amount / 100, 0)
               .toLocaleString(localeParam.language, localeParam.currency)}
-          {/if}
+          {/if} -->
         </div>
       </div>
       <div class="element r425 r540 r768">
         <div class="title-blue">Comisión</div>
         <div class="description text-center">
-          {#if active === "day"}
+          <!-- {#if active === "day"}
             {fetchByDayButton(selected.transactions)
               .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.035, 0)
               .toLocaleString(localeParam.language, localeParam.currency)}
@@ -379,13 +313,13 @@
             {fetchByMonthButton(selected.transactions)
               .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.035, 0)
               .toLocaleString(localeParam.language, localeParam.currency)}
-          {/if}
+          {/if} -->
         </div>
       </div>
       <div class="element r425 r540 r768">
         <div class="title-blue">A Depositar</div>
         <div class="description text-center">
-          {#if active === "day"}
+          <!-- {#if active === "day"}
             {fetchByDayButton(selected.transactions)
               .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.965, 0)
               .toLocaleString(localeParam.language, localeParam.currency)}
@@ -397,7 +331,7 @@
             {fetchByMonthButton(selected.transactions)
               .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.965, 0)
               .toLocaleString(localeParam.language, localeParam.currency)}
-          {/if}
+          {/if} -->
         </div>
       </div>
     </div>
@@ -415,7 +349,7 @@
               </tr>
             </thead>
             <tbody>
-              {#if active === "day"}
+              <!-- {#if active === "day"}
                 {#each fetchByDayButton(selected.transactions) as transaction}
                   <tr class="">
                     <td
@@ -502,7 +436,7 @@
                     >
                   </tr>
                 {/each}
-              {/if}
+              {/if} -->
             </tbody>
           </table>
         </div>
@@ -717,6 +651,31 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+  }
+
+  .message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 20rem;
+    gap: 0.5rem;
+    .msg {
+      font-weight: 700;
+      font-size: 1.25rem; /* 16px */
+      line-height: 1.25rem; /* 20px */
+      text-align: center;
+      /* Text */
+      color: $primary-dark;
+    }
+    .description {
+      justify-content: center;
+      font-weight: 500;
+      font-size: 1rem; /* 16px */
+      line-height: 1.25rem; /* 20px */
+      text-align: center;
+      /* Text */
+      color: $grey;
+    }
   }
 
   @media (max-width: 425px) {

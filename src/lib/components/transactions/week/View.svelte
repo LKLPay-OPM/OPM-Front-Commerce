@@ -1,6 +1,7 @@
 <script>
   /* components */
   import Icons from "$lib/components/Icons.svelte";
+  import Pagination from "$lib/components/Pagination.svelte";
   /* svelte */
   import { goto } from "$app/navigation";
   /* exports */
@@ -10,6 +11,10 @@
   let paginationStart = data?.start ?? 0;
   let paginationEnd = data?.end ?? 10;
   let active = data?.filter ?? "day";
+
+  $: {
+    console.log({ data });
+  }
 
   const localeParam = {
     language: "es-MX",
@@ -22,9 +27,7 @@
   function handleFilterClick({ detail }) {
     // const value = detail?.value;
     // active = value;
-    goto(
-      `?filter=${active ?? "day"}&start=${paginationStart}&end=${paginationEnd}`
-    );
+    goto(`?filter=${active ?? "day"}&start=${paginationStart}&end=${paginationEnd}`);
   }
 
   const getMonthName = (month) => {
@@ -89,30 +92,19 @@
             <tr
               class="clickable"
               on:click={() => goToTransaction(day.date)}
-              on:keypress={(e) =>
-                e.key === "Enter" ? () => goToTransaction(day.date) : ""}
+              on:keypress={(e) => (e.key === "Enter" ? () => goToTransaction(day.date) : "")}
             >
-              <td class="element">{day.day} - {getTransactionDate(day.date)}</td
-              >
+              <td class="element">{day.day} - {getTransactionDate(day.date)}</td>
               <td class="element">{day.sold}</td>
               <td class="element">
-                {day.sales.toLocaleString(
-                  localeParam.language,
-                  localeParam.currency
-                )}
+                {day.sales.toLocaleString(localeParam.language, localeParam.currency)}
               </td>
               <td class="element responsive">
-                {day.comission.toLocaleString(
-                  localeParam.language,
-                  localeParam.currency
-                )}
+                {day.comission.toLocaleString(localeParam.language, localeParam.currency)}
               </td>
               <td class="element responsive" />
               <td class="element responsive">
-                {day.deposit.toLocaleString(
-                  localeParam.language,
-                  localeParam.currency
-                )}
+                {day.deposit.toLocaleString(localeParam.language, localeParam.currency)}
               </td>
               <i class="arrow arrow-blue">
                 <Icons name="arrow-fwd" width="24" height="24" />
@@ -121,9 +113,13 @@
           {/each}
         </tbody>
       </table>
+      <!-- {#if count > 10}
+        <Pagination bind:paginationStart bind:paginationEnd bind:count on:pagination={handleFilterClick} />
+      {/if} -->
     </div>
   </div>
 </div>
+
 <style lang="scss">
-  @import 'src/lib/styles/transactions.scss';
+  @import "src/lib/styles/transactions.scss";
 </style>

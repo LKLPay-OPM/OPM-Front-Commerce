@@ -499,7 +499,7 @@
           </div>
           <div class="content">
             <p>
-              {resume?.depositBalance?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0"}
+              ${(immediateDeposit.immediateDepositQty * .013).toFixed(2) ?? "$0"}
             </p>
           </div>
         </div>
