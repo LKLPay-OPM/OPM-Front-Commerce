@@ -109,9 +109,7 @@
             <input type="button" id="copy" name="copy" on:click={copyToClipboard} />
           </div>
         </span>
-        <textarea readonly bind:this={link} id="link" name="link">
-          {linkData.url}
-        </textarea>
+        <textarea readonly bind:this={link} id="link" name="link">{linkData.url}</textarea>
       </div>
       <div class="column-element">
         <span>Monto</span>
