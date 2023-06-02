@@ -5,6 +5,8 @@ import { axiosDevicesClient } from "$lib/repos/axios";
 /* stores */
 import { get } from "svelte/store";
 import { isLoggedIn } from "$lib/stores.js";
+/* controllers */
+import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
 export const ssr = false;
 
@@ -16,7 +18,10 @@ export async function load() {
         transactions: transactions.data?.response,
       };
     } catch (err) {
-      throw new error(500, "Something went wrong!");
+      const handler = await appErrorResponseHandler(err);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
     }
   }
 }

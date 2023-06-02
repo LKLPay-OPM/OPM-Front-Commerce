@@ -8,9 +8,11 @@
   import IconInput from "$lib/components/IconInput.svelte";
   import TextArea from "$lib/components/TextArea.svelte";
   import Loader from "$lib/components/Loader.svelte";
+  import Modal from "$lib/components/Modal.svelte";
+  import Icons from "$lib/components/Icons.svelte";
   /* utils */
   import { validateEmail } from "$lib/utils/input-validation.js";
-  import { tryAgainErrorToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  import { tryAgainErrorToast, successCustomMsgToast, errorCustomMsgToast } from "$lib/utils/toast.js";
   import { formatDecimals } from "$lib/utils/format.js";
 
   // export let form;
@@ -18,6 +20,8 @@
 
   let token = $sessionUser?.token;
   let refreshToken = $sessionUser?.refreshToken;
+  let modalPaymentLinkData;
+  let link;
   let loading = false;
 
   let input = {
@@ -26,20 +30,112 @@
     description: "",
   };
 
+  let linkData = {
+    amount: "",
+    url: "",
+    description: "",
+    email: "",
+  };
+
   $: validation = input.amount > 0 && validateEmail(input.email) != "";
   $: {
     // console.log(form, data)
   }
 
-  const formSuccess = () => {
-    successCustomMsgToast("Se ha generado el link de pago con éxito");
+  const formSuccess = (link) => {
+    // successCustomMsgToast("Se ha generado el link de pago con éxito");
+    linkData = {
+      amount: link?.data?.response?.amount ?? "",
+      url: link?.data?.response?.url ?? "",
+      description: link?.data?.response?.description ?? "",
+      email: link?.data?.response?.email ?? "",
+    };
+
     input = {
       amount: 0,
       email: "",
       description: "",
     };
   };
+
+  const selectText = () => {
+    const input = document.getElementById("amount");
+    input.select();
+  };
+
+  const copyToClipboard = () => {
+    try {
+      navigator.clipboard.writeText(`${link.value}`);
+      successCustomMsgToast(`Enlace copiado con éxito`);
+    } catch (err) {
+      try {
+        const area = link;
+        area.select();
+        document.execCommand("copy");
+        successCustomMsgToast(`Enlace copiado con éxito`);
+      } catch (error) {
+        console.error(err);
+        errorCustomMsgToast(`Ocurrió un error al copiar el enlace`);
+      }
+    }
+  };
+
+  const showModal = (option) => {
+    option.show();
+  };
+
+  const closeModal = (option) => {
+    option.closeModal();
+  };
 </script>
+
+<Modal className={`modal-small`} bind:this={modalPaymentLinkData}>
+  <div slot="header">
+    <div class="svg">
+      <p>Recibo Generado</p>
+      <span><Icons name="success-circle" width="24" height="24" /></span>
+    </div>
+  </div>
+  <div slot="content">
+    <div class="thin-divider" />
+    <div class="modal-content">
+      <div class="column-element">
+        <span class="copy-link">
+          Enlace
+          <div class="copy-link__icon">
+            <label for="copy">
+              <Icons name="file-copy" width="16" height="16" />
+            </label>
+            <input type="button" id="copy" name="copy" on:click={copyToClipboard} />
+          </div>
+        </span>
+        <textarea readonly bind:this={link} id="link" name="link">{linkData.url}</textarea>
+      </div>
+      <div class="column-element">
+        <span>Monto</span>
+        <p>{linkData.amount}</p>
+      </div>
+      <div class="column-element">
+        <span>Concepto</span>
+        <p>{linkData.description}</p>
+      </div>
+      <div class="column-element">
+        <span>E-Mail</span>
+        <p>{linkData.email}</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-buttons" slot="footer">
+    <Input
+      on:click={closeModal(modalPaymentLinkData)}
+      label="Cerrar"
+      id="buttonCloseModalImmediateDepositPreference"
+      type="button"
+      className="btn-success"
+      icon=""
+    />
+  </div>
+</Modal>
 
 {#if loading}
   <Loader text="Generando Link de pago y QR, por favor espere..." />
@@ -60,20 +156,21 @@
           use:enhance={({ form, data, action, cancel }) => {
             loading = true;
             return async ({ result }) => {
+              console.log(result);
               // `result` is an `ActionResult` object
               if (result.type === "error") {
                 loading = false;
                 tryAgainErrorToast();
               } else {
                 loading = false;
-                formSuccess();
+                formSuccess(result);
+                showModal(modalPaymentLinkData);
               }
             };
           }}
         >
           <input type="hidden" id="token" name="token" value={token} />
           <input type="hidden" id="refreshToken" name="refreshToken" value={refreshToken} />
-
           <IconInput
             on:format={(value) => {
               if (value.detail.includes(".") && value.detail.match(/^[0-9]+(\.{1})?(([0-9]{3})?)$/g)) {
@@ -90,6 +187,7 @@
             min="0"
             step=".01"
             decimal={true}
+            on:click={selectText}
           />
           <Input
             bind:value={input.email}
@@ -123,6 +221,74 @@
 {/if}
 
 <style lang="scss">
+  .svg {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    span {
+      color: $secondary-dark;
+    }
+  }
+
+  .thin-divider {
+    width: 100%;
+    border: 1px solid $grey;
+    margin: 0 0 10px 0;
+  }
+
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    .column-element {
+      display: flex;
+      flex-direction: column;
+      margin: 0 0 10px 0;
+      span {
+        font-weight: 600;
+        color: $primary-dark;
+        font-size: 1.125rem;
+        &.copy-link {
+          display: flex;
+        }
+        .copy-link__icon {
+          color: $primary-dark;
+          label {
+            cursor: pointer;
+          }
+          input {
+            display: none;
+          }
+          &:hover {
+            color: $primary-light;
+          }
+        }
+      }
+      p,
+      textarea {
+        font-weight: 400;
+        color: $primary-dark;
+        font-size: 0.875;
+        word-wrap: break-word;
+      }
+
+      textarea {
+        resize: none;
+        border: none;
+        outline: none;
+        overflow: hidden;
+
+        &::selection {
+          color: $primary-light;
+          background: transparent;
+        }
+      }
+    }
+  }
+
+  .modal-buttons {
+    width: 100%;
+    height: 2.5rem;
+  }
   .container {
     width: 100%;
     height: 100%;
