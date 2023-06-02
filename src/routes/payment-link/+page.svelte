@@ -331,7 +331,6 @@
   }
   .form-container {
     width: 100%;
-    height: 100%;
     margin: 2rem 0;
     display: flex;
     justify-content: center;
