@@ -65,6 +65,9 @@
   .modal-medium {
     width: 30rem;
   }
+  .modal-small {
+    width: 20rem;
+  }
   dialog::backdrop {
     background-color: rgba(0, 0, 0, 0.4);
   }
@@ -110,9 +113,9 @@
     font-weight: 700;
     font-size: 1.25rem; /* 20px */
     line-height: 1.25rem; /* 20px */
-    display: flex;
     align-items: center;
     color: $primary-dark;
+    width: 100%;
   }
   .content {
     max-height: 50vh;

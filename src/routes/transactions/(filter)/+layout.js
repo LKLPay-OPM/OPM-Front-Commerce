@@ -4,6 +4,8 @@ import { error } from "@sveltejs/kit";
 import { validQueryFilters } from "$lib/constants/filter";
 /* client */
 import { axiosDevicesClient } from "$lib/repos/axios";
+/* controllers */
+import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
 export const ssr = false;
 
@@ -18,6 +20,9 @@ export async function load({ url }) {
     const response = await axiosDevicesClient.get(`/transaction`, { params: { filter, start, end } });
     if (validQueryFilters.includes(filter)) return { filter, start, end, response: response.data?.response };
   } catch (err) {
-    throw new error(500, "Something went wrong!");
+    const handler = await appErrorResponseHandler(err);
+    const code = handler?.code ?? 500;
+    const message = handler?.message ?? "¡Algo salió mal!";
+    throw new error(code, message);
   }
 }
