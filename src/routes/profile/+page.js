@@ -20,6 +20,9 @@ export async function load({url}) {
     if (validQueryFilters.includes(filter)) return { user: user?.data?.response, filter, start, end, transactions: transactions.data?.response };
   } catch (err) {
     console.error(err);
-    throw new error(500, "Something went wrong!");
+    const handler = await appErrorResponseHandler(err);
+    const code = handler?.code ?? 500;
+    const message = handler?.message ?? "¡Algo salió mal!";
+    throw new error(code, message);
   }
 }

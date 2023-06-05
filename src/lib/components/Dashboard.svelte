@@ -86,15 +86,15 @@
                     {dateToLocalString(transaction["Transaction Date"]) +
                       " - " +
                       timeToLocalString(transaction["Transaction Time"])}
-                  </td><td class="responsive">{transaction["Transaction Time"]}</td>
+                  </td><td class="responsive">{transaction.id}</td>
                   <td
-                    >{parseFloat(transaction.Amount / 100)?.toLocaleString(
+                    >{transaction.Amount?.toLocaleString(
                       localeParam.language,
                       localeParam.currency
                     )}</td
                   >
                   <td class="responsive"
-                    >{parseFloat((transaction.Amount / 100) * 0.035)?.toLocaleString(
+                    >{transaction.comission?.toLocaleString(
                       localeParam.language,
                       localeParam.currency
                     )}</td
@@ -103,7 +103,7 @@
                     >{transaction?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}</td
                   >
                   <td class="responsive"
-                    >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
+                    >{transaction.deposit?.toLocaleString(
                       localeParam.language,
                       localeParam.currency
                     )}</td

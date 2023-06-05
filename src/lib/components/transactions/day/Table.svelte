@@ -96,18 +96,14 @@
                     transaction["Transaction Time"]
                   )}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td
               >
-              <td class="responsive">{transaction?.["Transaction Time"]}</td>
-              <td>{parseFloat(transaction.Amount / 100)?.toLocaleString(localeParam.language, localeParam.currency)}</td
-              >
+              <td class="responsive">{transaction?.id}</td>
+              <td>{transaction.Amount?.toLocaleString(localeParam.language, localeParam.currency)}</td>
               <td class="responsive"
                 >{transaction.comission?.toLocaleString(localeParam.language, localeParam.currency)}</td
               >
               <td class="responsive">{transaction.IVA?.toLocaleString(localeParam.language, localeParam.currency)}</td>
               <td class="responsive"
-                >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
-                  localeParam.language,
-                  localeParam.currency
-                )}</td
+                >{transaction.deposit?.toLocaleString(localeParam.language, localeParam.currency)}</td
               >
               <td class="responsive">
                 <i class="icon tooltip">

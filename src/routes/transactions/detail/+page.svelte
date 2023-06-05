@@ -156,15 +156,16 @@
               <b>Tipo de Tarjeta</b>
             </div>
             <div class="item__content">
-              {#if getCardBrand(transaction["Application PAN"]) === "MASTERCARD"}
-                <p><Icons name="mastercard" width="24" height="24" /></p>
+              <!-- icon={`${formData.cardNumber.length >= 4 ?  : ""}`} -->
+              <p><Icons name={`${getCardBrand(transaction["Application PAN"]).toLowerCase()}`} width="24" height="24" /></p>
+              <!-- {#if getCardBrand(transaction["Application PAN"]) === "MASTERCARD"}
               {:else if getCardBrand(transaction["Application PAN"]) === "VISA"}
                 <Icons name="visa" width="50" height="30" />
               {:else if getCardBrand(transaction["Application PAN"]) === "AMEX"}
                 <Icons name="amex" width="25" height="25" />
               {:else if getCardBrand(transaction["Application PAN"]) !== "MASTERCARD" || getCardBrand(transaction["Application PAN"]) !== "VISA" || getCardBrand(transaction["Application PAN"]) !== "AMEX"}
                 <Icons name="bank-card-line" width="25" height="25" />
-              {/if}
+              {/if} -->
             </div>
           </div>
           <div class="item">
@@ -174,7 +175,7 @@
             <div class="item__content last">
               <p>
                 <span>
-                  {(transaction.Amount / 100)?.toLocaleString(localeParam.language, localeParam.currency)}
+                  {transaction.Amount?.toLocaleString(localeParam.language, localeParam.currency)}
                 </span>
               </p>
             </div>
@@ -206,7 +207,7 @@
             </div>
             <div class="item__content">
               <p>
-                {((transaction.Amount / 100) * 0.035 * 0.16)?.toLocaleString(
+                {transaction.IVA?.toLocaleString(
                   localeParam.language,
                   localeParam.currency
                 )}
@@ -221,7 +222,7 @@
             </div>
             <div class="item__content last">
               <p>
-                {((transaction.Amount / 100) * 0.965)?.toLocaleString(localeParam.language, localeParam.currency)}
+                {transaction.deposit?.toLocaleString(localeParam.language, localeParam.currency)}
               </p>
             </div>
             <span />
