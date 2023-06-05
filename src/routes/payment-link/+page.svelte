@@ -14,6 +14,8 @@
   import { validateEmail } from "$lib/utils/input-validation.js";
   import { tryAgainErrorToast, successCustomMsgToast, errorCustomMsgToast } from "$lib/utils/toast.js";
   import { formatDecimals } from "$lib/utils/format.js";
+  /* constants */
+  import { localeParam } from "$lib/constants/locale.js";
 
   // export let form;
   // export let data;
@@ -113,7 +115,7 @@
       </div>
       <div class="column-element">
         <span>Monto</span>
-        <p>{linkData.amount}</p>
+        <p>{linkData.amount.toLocaleString(localeParam.language, localeParam.currency)}</p>
       </div>
       <div class="column-element">
         <span>Concepto</span>
@@ -211,7 +213,7 @@
               label="Generar Enlace"
               id="btnGenerateLink"
               className={`${validation ? "btn-success" : "btn-plain disabled"}`}
-              type="submit"
+              type={`${validation ? "submit" : "button"}`}
             />
           </div>
         </form>
