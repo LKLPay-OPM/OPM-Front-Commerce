@@ -238,7 +238,7 @@
                 {user.adviser ?? ""}
               </div>
             </div>
-            {#if $loggedInUser.accountType > 1}
+            {#if $loggedInUser.accountType > 0}
               <div class="element">
                 <div class="title">Persona Física</div>
                 <div class="description text-left">

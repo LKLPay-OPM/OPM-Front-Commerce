@@ -4,6 +4,7 @@ import {
   PUBLIC_PROFILES_ENDPOINT,
   PUBLIC_ECOMMERCE_ENDPOINT,
   PUBLIC_DEPOSITS_AND_FEES_ENDPOINT,
+  PUBLIC_FRAUD_PREVENTION_MANAGEMENT_ENDPOINT,
 } from "$env/static/public";
 /* client */
 import axios from "axios";
@@ -39,4 +40,8 @@ export const axiosDevicesClient = axios.create({
 export const axiosDepositsAndFees = axios.create({
   ...axiosDefaultsClientJson,
   baseURL: PUBLIC_DEPOSITS_AND_FEES_ENDPOINT,
+});
+export const axiosFraudPreventionManagement = axios.create({
+  ...axiosDefaultsClientJson,
+  baseURL: PUBLIC_FRAUD_PREVENTION_MANAGEMENT_ENDPOINT,
 });

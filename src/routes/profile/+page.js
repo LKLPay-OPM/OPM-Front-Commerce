@@ -4,6 +4,8 @@ import { error } from "@sveltejs/kit";
 import { validQueryFilters } from "$lib/constants/filter";
 /* client */
 import { profilesClient, axiosDevicesClient } from "$lib/repos/axios";
+/* controllers */
+import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
 export const ssr = false;
 
