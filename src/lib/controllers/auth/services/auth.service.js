@@ -1,10 +1,12 @@
-/* repo */
-import { profilesClient } from "$lib/repos/axios";
+import { browser } from '$app/environment';
 /* jwt decode */
 import jwtDecode from "jwt-decode";
 
 class AuthService {
   async login({ email, password }) {
+    /* repo */
+    const { profilesClient } = browser ? await (async () => await import("$lib/repos/axios"))() : await (async () => await import("$lib/repos/axios/clients/api-clients"))();
+
     const { data } = await profilesClient.post("auth/commerce/login", {
       email,
       password,

@@ -13,9 +13,14 @@ import { axiosDefaultsClientFormData, axiosDefaultsClientJson } from "$lib/const
 
 axios.defaults.withCredentials = true;
 
+
 export const axiosECommerceClient = axios.create({
   ...axiosDefaultsClientFormData,
   baseURL: PUBLIC_ECOMMERCE_ENDPOINT,
+});
+export const axiosFraudPreventionManagement = axios.create({
+  ...axiosDefaultsClientFormData,
+  baseURL: PUBLIC_FRAUD_PREVENTION_MANAGEMENT_ENDPOINT,
 });
 export const axiosClient = axios.create({
   ...axiosDefaultsClientJson,
@@ -40,8 +45,4 @@ export const axiosDevicesClient = axios.create({
 export const axiosDepositsAndFees = axios.create({
   ...axiosDefaultsClientJson,
   baseURL: PUBLIC_DEPOSITS_AND_FEES_ENDPOINT,
-});
-export const axiosFraudPreventionManagement = axios.create({
-  ...axiosDefaultsClientJson,
-  baseURL: PUBLIC_FRAUD_PREVENTION_MANAGEMENT_ENDPOINT,
 });

@@ -4,7 +4,7 @@ import { error } from "@sveltejs/kit";
 import { axiosRequestInterceptorWithCustomHeaders } from "$lib/repos/axios/interceptors/request";
 import { axiosResponseInterceptorWithCustomHeaders } from "$lib/repos/axios/interceptors/response";
 /* endpoints */
-import { axiosFraudPreventionManagement, profilesClient } from "$lib/repos/axios/clients/api-clients";
+import { axiosFraudPreventionManagement, profilesClient } from "$lib/repos/axios";
 /* controllers */
 import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
@@ -20,10 +20,6 @@ export const actions = {
     formData.delete("refreshToken");
     let response;
     try {
-      axiosRequestInterceptorWithCustomHeaders(axiosFraudPreventionManagement, {
-        Authorization: `Bearer ${token}`,
-        "X-Refresh-Token": refreshToken,
-      });
       axiosRequestInterceptorWithCustomHeaders(profilesClient, {
         Authorization: `Bearer ${token}`,
         "X-Refresh-Token": refreshToken,
@@ -31,8 +27,12 @@ export const actions = {
       axiosResponseInterceptorWithCustomHeaders(profilesClient, token, refreshToken);
       const user = await profilesClient.get(`/user/profile`);
       formData.append("commerceName", user?.data?.response?.businessName ?? user?.data?.response?.name);
+      axiosRequestInterceptorWithCustomHeaders(axiosFraudPreventionManagement, {
+        Authorization: `Bearer ${token}`,
+        "X-Refresh-Token": refreshToken,
+      });
       axiosResponseInterceptorWithCustomHeaders(axiosFraudPreventionManagement, token, refreshToken);
-      response = await axiosFraudPreventionManagement.post(`/payment/generate/link`, formData);
+      response = await axiosFraudPreventionManagement.post(`/generate/link`, formData);
       return { response: response.data?.response };
     } catch (err) {
       console.error(err);

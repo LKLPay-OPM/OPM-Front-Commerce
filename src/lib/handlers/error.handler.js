@@ -2,7 +2,7 @@
 import { AuthController } from "$lib/controllers/auth/auth.controller";
 
 export async function appErrorResponseHandler (error){
-  console.log(error)
+  console.log(error?.response?.data)
   if(error?.response?.data?.code === "NO_TOKEN_OR_INACTIVE"){
     await AuthController.logout();
   }
