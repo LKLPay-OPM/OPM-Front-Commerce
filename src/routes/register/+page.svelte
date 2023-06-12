@@ -1,87 +1,51 @@
 <script>
+  /* svelte */
+  import { error } from "@sveltejs/kit";
   import { goto } from "$app/navigation";
-  import { loggedInUser, isLoggedIn } from "$lib/stores.js";
-  import { redirect } from "@sveltejs/kit";
-  import { onMount } from "svelte";
+  import { isLoggedIn, loggedInUser, sessionUser } from "$lib/stores";
+  /* components */
   import Input from "$lib/components/Input.svelte";
+  import PasswordInput from "$lib/components/inputs/PasswordInput.svelte";
   import Checkbox from "$lib/components/Checkbox.svelte";
-  import Icons from "$lib/components/Icons.svelte";
-  import Select from "$lib/components/Select.svelte";
-  import RedirectHome from "$lib/components/RedirectHome.svelte";
   import Logo from "$lib/assets/Logo.png";
   import SuccessLogo from "$lib/components/Success.svelte";
   import ErrorLogo from "$lib/components/Error.svelte";
+  /* constants */
+  import { emailPattern, passwordPattern } from "$lib/constants/pattern";
+  /* controllers */
+  import { appErrorResponseHandler } from "$lib/handlers/error.handler";
+  import { AuthController } from "$lib/controllers/auth/auth.controller";
+
+  let customMessage = "";
   let registerData = {
-    uid: "",
     email: "",
     password: "",
-    name: "",
-    firstLastName: "",
-    secondLastName: "",
-    firstTimeUser: true,
-    depositPreference: "weekly",
-    depositDateReference: Date.now(),
-    statusBankAccountInfo: "pending",
-    curp: "",
-    rfc: "",
-    accountType: "",
-    businessName: "",
-    businessLine: "",
-    businessAddress: "",
-    outsideNumber: "",
-    insideNumber: "",
-    zipCode: "",
-    state: "",
-    town: "",
-    suburb: "",
-    avatar: "",
-    phone: "",
-    officeHours: "",
-    monthlyAverage: "",
-    total: 0,
-    totalCommissions: 0,
-    toDeposit: 0,
-    dispersions: [],
-    terminals: [],
-    ratesDiscount: {
-      amex: 0,
-      credit: 0,
-      debit: 0,
-    },
   };
   let menu = "register";
   let terms = false;
   let confirmPass = "";
-  let emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  let passPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-
-  const makeId = (length) => {
-    var result = "";
-    var characters = "0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  };
-
-  const stringSum = (string) => {
-    let sum = string;
-    while (sum >= 10) {
-      sum = sum
-        .toString()
-        .split("")
-        .map((x) => parseInt(x))
-        .reduce((x, y) => x + y);
-    }
-    return sum;
-  };
+  let registerResponse = {};
 
   const handleRegister = async () => {
-    const id = makeId(7);
-    let sum = stringSum(id);
-    const uid = id + sum;
+    const { error: err, message: msg, session, user } = await AuthController.register(registerData);
+    registerResponse = {session, user};
+    menu = "success";
+    if (err) {
+      menu = "error";
+      const handler = await appErrorResponseHandler(msg);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      customMessage = message;
+      throw new error(code, message);
+    }
   };
+
+  const redirectHome = () => {
+    isLoggedIn.set(true);
+    loggedInUser.set(registerResponse.user);
+    sessionUser.set(registerResponse.session);
+    goto("/")
+  }
 </script>
 
 {#if menu === "register"}
@@ -109,11 +73,10 @@
                   : "invalid"
               }`}
             />
-            <Input
+            <PasswordInput
               label="Contraseña"
               id="register-password"
               bind:value={registerData.password}
-              type="password"
               placeholder="Contraseña"
               className={`txt-field ${
                 registerData.password === ""
@@ -124,19 +87,23 @@
               }`}
             />
             <div class="pass-conditions">
-              <p class={registerData.password.match(passPattern) ? "valid" : "invalid"}>
-                Tu contraseña debe de tener <br />
-                <span class={registerData.password.length >= 8 ? "valid" : "invalid"}> 8 caracteres </span>|
-                <span class={registerData.password.match(/[A-Z]/g) ? "valid" : "invalid"}> 1 Mayúscula </span>|
-                <span class={registerData.password.match(/[a-z]/g) ? "valid" : "invalid"}> 1 Minúscula </span>|
-                <span class={registerData.password.match(/[0-9]/g) ? "valid" : "invalid"}> 1 Número </span>
-              </p>
+              <div class={registerData.password.match(passwordPattern) ? "valid" : "invalid"}>
+                <p class="description">Tu contraseña debe de tener</p>
+                <p class="conditions">
+                  <span class={registerData.password.length >= 8 ? "valid" : "invalid"}> 8 caracteres </span>|
+                  <span class={registerData.password.match(/[A-Z]/g) ? "valid" : "invalid"}> 1 Mayúscula </span>|
+                  <span class={registerData.password.match(/[a-z]/g) ? "valid" : "invalid"}> 1 Minúscula </span>|
+                  <span class={registerData.password.match(/[0-9]/g) ? "valid" : "invalid"}> 1 Número </span>|
+                  <span class={registerData.password.match(/(?=.*[^\da-zA-Z])/g) ? "valid" : "invalid"}>
+                    1 Símbolo
+                  </span>
+                </p>
+              </div>
             </div>
-            <Input
+            <PasswordInput
               label="Confirmar Contraseña"
               id="confirmRegisterPassword"
               bind:value={confirmPass}
-              type="password"
               placeholder="Contraseña"
               className={`txt-field ${
                 confirmPass === ""
@@ -167,7 +134,7 @@
                 id="registerButton"
                 type="submit"
                 className={registerData.email.match(emailPattern) &&
-                registerData.password.match(passPattern) &&
+                registerData.password.match(passwordPattern) &&
                 confirmPass != "" &&
                 confirmPass === registerData.password &&
                 terms
@@ -203,8 +170,7 @@
             type="button"
             className="btn-success"
             icon=""
-            on:click={() => isLoggedIn.update(() => true)}
-            on:click={() => goto("/home")}
+            on:click={redirectHome}
           />
         </div>
       </div>
@@ -221,6 +187,7 @@
         <div class="svg">
           <ErrorLogo />
         </div>
+        <div class="subtitle">{customMessage}</div>
         <div class="subtitle">Vamos a intentar crear tu cuenta de nuevo</div>
         <div class="btn-layout">
           <Input
@@ -249,7 +216,6 @@
   .content {
     position: absolute;
     width: 27rem;
-    height: 42rem;
     background: $background-light-secondary;
     box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
@@ -283,8 +249,7 @@
   }
 
   .logo img {
-    width: 18rem;
-    height: 3.375rem;
+    width: 5rem;
   }
 
   .form {
@@ -325,9 +290,14 @@
   }
 
   .pass-conditions p {
+    display: flex;
     font-weight: 700;
-    font-size: 0.8125rem;
+    font-size: 0.7rem;
     line-height: 1.25rem;
+
+    &.conditions {
+      justify-content: space-between;
+    }
   }
 
   .invalid {

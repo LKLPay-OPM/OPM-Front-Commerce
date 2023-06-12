@@ -92,7 +92,7 @@
   font-size: 0.8125rem;
   line-height: 1.25rem;
   text-decoration: none;
-  color: #5585ff;
+  color: $primary-light
 }
 
 .register-link {
@@ -123,4 +123,18 @@
 
 input:-internal-autofill-selected {
   background-color: red;
+}
+
+.register-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  a {
+    font-weight: 700;
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+    text-decoration: none;
+    color: $primary-light;
+  }
 }

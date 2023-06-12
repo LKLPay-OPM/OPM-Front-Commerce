@@ -42,10 +42,10 @@
       on:input={onInput}
     />
     <div class="icon">
-      <label for="passwordIcon">
+      <label for={`passwordIcon-${id}`}>
         <i><svelte:component this={iconComponents(toggle)} /></i>
       </label>
-      <input on:click={() => (toggle = !toggle)} id="passwordIcon" type="button" />
+      <input on:click={() => (toggle = !toggle)} id={`passwordIcon-${id}`} type="button" />
     </div>
   </div>
 </div>

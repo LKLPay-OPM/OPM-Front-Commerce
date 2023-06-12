@@ -34,10 +34,17 @@ export class AuthController {
 
   static async register(body) {
     try {
-      const data = await authService.login(body);
-      return res.status(200).json({ data });
+      const {session,user} = await authService.register(body);
+      return { session, user };
+      /* isLoggedIn.set(true);
+      loggedInUser.set(user);
+      sessionUser.set(session); */
     } catch (e) {
-      throw error(500, String(e));
+      // console.log(e)
+      isLoggedIn.update(() => false);
+      loggedInUser.set({ error: true });
+      sessionUser.set({ error: true });
+      return { error: true, message: e };
     }
   }
 }

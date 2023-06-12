@@ -83,6 +83,9 @@
                 icon=""
               />
             </div>
+            <div class="register-link">
+              <a href="/register">Quiero crear una cuenta</a>
+            </div>
           </form>
         </div>
       </div>

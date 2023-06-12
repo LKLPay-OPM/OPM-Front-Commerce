@@ -189,10 +189,10 @@
             </div>
             <div class="element">
               <div class="title-blue">
-                {user.businessName}
+                {user.businessName ?? ""}
               </div>
               <div class="description text-center">
-                {getBusinessLineName(user.businessLine)}
+                {getBusinessLineName(user.businessLine) ?? ""}
               </div>
             </div>
             <div class="element rates">
