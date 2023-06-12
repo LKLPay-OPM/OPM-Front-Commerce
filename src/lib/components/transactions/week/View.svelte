@@ -13,6 +13,8 @@
   let paginationStart = data?.start ?? 0;
   let paginationEnd = data?.end ?? 10;
   let active = data?.filter ?? "day";
+  let innerWidth = 0,
+    innerHeight = 0;
 
   $: {
     console.log({ data });
@@ -37,6 +39,7 @@
   };
 </script>
 
+<svelte:window bind:innerWidth bind:innerHeight />
 <div class="transaction-tables">
   <div id="pdfTable" class="table-container">
     <div class="card-container">
@@ -58,7 +61,7 @@
               on:click={() => goToTransaction(day.date)}
               on:keypress={(e) => (e.key === "Enter" ? () => goToTransaction(day.date) : "")}
             >
-              <td class="element">{day.day} - {dateToLocalStringShort(day.date)}</td>
+              <td class="element">{innerWidth <= 540 ? "" : `${day.day} - `}{dateToLocalStringShort(day.date)}</td>
               <td class="element">{day.sold}</td>
               <td class="element">
                 {day.sales?.toLocaleString(localeParam.language, localeParam.currency)}
@@ -87,5 +90,5 @@
 </div>
 
 <style lang="scss">
-  @import "src/lib/styles/transactions.scss";
+  @import "src/lib/styles/transactions/views/week.scss";
 </style>

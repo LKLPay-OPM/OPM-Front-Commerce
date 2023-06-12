@@ -139,5 +139,5 @@
 </div>
 
 <style lang="scss">
-  @import "src/lib/styles/transactions.scss";
+  @import "src/lib/styles/transactions/tables/day.scss";
 </style>

@@ -296,7 +296,7 @@
       return "AMEX";
     }
     if (mastercard.test(cc.substring(0, 4)) || mastercard2.test(cc.substring(0, 4))) {
-      cardIcon = "master-card";
+      cardIcon = "mastercard";
       return "MASTERCARD";
     }
     if (disco1.test(cc) || disco2.test(cc) || disco3.test(cc)) {
@@ -392,7 +392,7 @@
           on:click={() => (cardBrand = "MasterCard")}
           on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "MasterCard") : "")}
         >
-          <Icons name="master-card" width="50" height="30" />
+          <Icons name="mastercard" width="50" height="30" />
         </i>
         <i on:click={() => (cardBrand = "Visa")} on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "Visa") : "")}>
           <Icons name="visa" width="50" height="30" />
@@ -602,5 +602,5 @@
 </div>
 
 <style lang="scss">
-  @import "src/lib/styles/transactions.scss";
+  @import "src/lib/styles/transactions/layout.scss";
 </style>

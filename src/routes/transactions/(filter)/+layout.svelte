@@ -20,7 +20,7 @@
   {#if loading == true}
     <Loader />
   {:else}
-    <LayoutTransactions bind:user={$loggedInUser} {data}>
+    <LayoutTransactions user={$loggedInUser} {data}>
       <slot />
     </LayoutTransactions>
   {/if}

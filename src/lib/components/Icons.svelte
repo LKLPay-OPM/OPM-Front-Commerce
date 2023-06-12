@@ -201,19 +201,6 @@
     },
     {
       box: 24,
-      name: "mastercard",
-      svg: `
-      <svg width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <g fill="none" fill-rule="evenodd">
-          <circle cx="7" cy="12" r="7" fill="#EA001B"/>
-          <circle cx="17" cy="12" r="7" fill="#FFA200" fill-opacity=".8"/>
-        </g>
-      </svg>
-      
-      `,
-    },
-    {
-      box: 24,
       name: "arrow",
       svg: `
       xmlns="http://www.w3.org/2000/svg">
@@ -328,21 +315,16 @@
       `,
     },
     {
-      box: 50,
+      box: 24,
       name: "mastercard",
       svg: `
-      <svg width="50" height="50" viewBox="0 0 41 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_32_1442)">
-      <path d="M25.5175 22.1752H14.6552V2.65405H25.5177L25.5175 22.1752Z" fill="#FF5F00"/>
-      <path d="M15.3438 12.415C15.3438 8.45518 17.1979 4.92771 20.0851 2.65445C17.8997 0.93118 15.1966 -0.00409879 12.4134 1.35031e-05C5.55751 1.35031e-05 0 5.55833 0 12.415C0 19.2718 5.55751 24.8301 12.4134 24.8301C15.1966 24.8342 17.8998 23.899 20.0853 22.1756C17.1983 19.9028 15.3438 16.3751 15.3438 12.415Z" fill="#EB001B"/>
-      <path d="M40.1721 12.415C40.1721 19.2718 34.6146 24.8301 27.7587 24.8301C24.9752 24.8342 22.2717 23.8989 20.0858 22.1756C22.9738 19.9024 24.8279 16.3751 24.8279 12.415C24.8279 8.45497 22.9738 4.92771 20.0858 2.65445C22.2716 0.931232 24.975 -0.00402671 27.7585 1.30321e-05C34.6144 1.30321e-05 40.1719 5.55833 40.1719 12.415" fill="#F79E1B"/>
-      </g>
-      <defs>
-      <clipPath id="clip0_32_1442">
-      <rect width="40.6249" height="25" fill="white"/>
-      </clipPath>
-      </defs>
+      <svg width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <g fill="none" fill-rule="evenodd">
+          <circle cx="7" cy="12" r="7" fill="#EA001B"/>
+          <circle cx="17" cy="12" r="7" fill="#FFA200" fill-opacity=".8"/>
+        </g>
       </svg>
+      
       `,
     },
     {

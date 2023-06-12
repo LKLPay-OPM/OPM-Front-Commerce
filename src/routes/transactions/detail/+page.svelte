@@ -157,7 +157,9 @@
             </div>
             <div class="item__content">
               <!-- icon={`${formData.cardNumber.length >= 4 ?  : ""}`} -->
-              <p><Icons name={`${getCardBrand(transaction["Application PAN"]).toLowerCase()}`} width="24" height="24" /></p>
+              <p>
+                <Icons name={`${getCardBrand(transaction["Application PAN"]).toLowerCase()}`} width="24" height="24" />
+              </p>
               <!-- {#if getCardBrand(transaction["Application PAN"]) === "MASTERCARD"}
               {:else if getCardBrand(transaction["Application PAN"]) === "VISA"}
                 <Icons name="visa" width="50" height="30" />
@@ -207,10 +209,7 @@
             </div>
             <div class="item__content">
               <p>
-                {transaction.IVA?.toLocaleString(
-                  localeParam.language,
-                  localeParam.currency
-                )}
+                {transaction.IVA?.toLocaleString(localeParam.language, localeParam.currency)}
               </p>
               <p>{`(16%)`}</p>
             </div>
@@ -254,137 +253,12 @@
       <div class="export-buttons">
         <Input label="" id="csv-export" type="button" className="btn-plain fill-blue btn-square " icon="csv-fill" />
         <Input label="" id="excel-export" type="button" className="btn-plain fill-green btn-square " icon="xls-fill" />
-        <Input label="" id="pdf-export" type="button" className="btn-plain fill-red btn-square " icon="pdf-fill" />
+        <Input label="" id="pdf-export" type="" className="btn-plain fill-red btn-square " icon="pdf-fill" />
       </div>
     </div>
   </div>
 </div>
 
 <style lang="scss">
-  @import "src/lib/styles/transactions.scss";
-
-  .details-card {
-    &.visa::after {
-      background: linear-gradient(330deg, rgb(0, 0, 0), rgb(0, 88, 161), /* rgb(124, 157, 203), */ rgb(255, 255, 255));
-      animation: opacity 1s ease-in forwards, rotate 5s normal infinite;
-      content: "";
-      width: 140%;
-      height: 0;
-      z-index: -1;
-      padding-bottom: 140%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    &.mastercard::after {
-      background: linear-gradient(330deg, rgb(0, 0, 0), rgb(179, 25, 25), /* rgb(204, 124, 124), */ rgb(255, 255, 255));
-      animation: opacity 1s ease-in forwards, rotate 5s normal infinite;
-      content: "";
-      width: 140%;
-      height: 0;
-      z-index: -1;
-      padding-bottom: 140%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    &.amex::after {
-      background: linear-gradient(330deg, rgb(0, 0, 0), rgb(8, 143, 143), /* rgb(95, 158, 160), */ rgb(255, 255, 255));
-      animation: opacity 1s ease forwards, rotate 5s normal infinite;
-      content: "";
-      width: 140%;
-      height: 0;
-      z-index: -1;
-      padding-bottom: 140%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    &.discover::after {
-      background: linear-gradient(330deg, rgb(0, 0, 0), rgb(128, 6, 0), rgb(255, 255, 255));
-      animation: opacity 1s ease forwards, rotate 5s normal infinite;
-      content: "";
-      width: 140%;
-      height: 0;
-      z-index: -1;
-      padding-bottom: 140%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    &.diners::after {
-      background: linear-gradient(330deg, rgb(0, 0, 0), rgb(5, 150, 186), rgb(255, 255, 255));
-      // background: linear-gradient(330deg, rgb(3, 72, 136), rgb(5, 150, 186));
-      animation: opacity 1s ease forwards, rotate 10s normal infinite;
-      content: "";
-      width: 140%;
-      height: 0;
-      z-index: -1;
-      padding-bottom: 140%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    &.jcb::after {
-      background: linear-gradient(330deg, rgb(0, 0, 0), rgb(0, 14, 128), rgb(255, 255, 255));
-      animation: opacity 1s ease forwards, rotate 5s normal infinite;
-      content: "";
-      width: 140%;
-      height: 0;
-      z-index: -1;
-      padding-bottom: 140%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    &.otra::after {
-      background: linear-gradient(330deg, rgb(0, 0, 0), $grey, $background-light);
-      animation: opacity 1s ease forwards, rotate 5s normal infinite;
-      content: "";
-      width: 140%;
-      height: 0;
-      z-index: -1;
-      padding-bottom: 140%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    &.visa,
-    &.mastercard,
-    &.amex,
-    &.jcb,
-    &.diners,
-    &.otra,
-    &.discover {
-      position: relative;
-      z-index: 3;
-      overflow: hidden;
-    }
-  }
-
-  .details-card {
-    .item__content {
-      align-items: center;
-      background: rgba(219, 219, 219, 0.6);
-      min-height: 2.5rem;
-      border-radius: 0px;
-      &.first {
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-      }
-      &.last {
-        border-top-right-radius: 4px;
-        border-bottom-right-radius: 4px;
-      }
-    }
-  }
+  @import "src/lib/styles/transactions/detail.scss";
 </style>
