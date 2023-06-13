@@ -99,5 +99,5 @@
 </div>
 
 <style lang="scss">
-  @import "src/lib/styles/requests.scss";
+  @import "src/lib/styles/requests/tickets/main.scss";
 </style>

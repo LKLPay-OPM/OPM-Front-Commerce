@@ -219,15 +219,6 @@
     gap: 1rem;
   }
 
-  .row {
-    display: grid;
-    grid-auto-flow: column;
-  }
-
-  .left {
-    min-width: 17.5rem; /* 280px */
-  }
-
   .right {
     width: -webkit-fill-available;
     display: flex;

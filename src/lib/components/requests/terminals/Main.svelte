@@ -30,5 +30,5 @@
 </div>
 
 <style lang="scss">
-  @import "src/lib/styles/requests.scss";
+  @import "src/lib/styles/requests/terminals/main.scss";
 </style>

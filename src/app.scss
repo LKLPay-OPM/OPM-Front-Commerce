@@ -280,3 +280,11 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: $primary-dark;
 }
+
+/* MEDIA QUERIES */
+@media print
+{    
+  .no-print, .no-print * {
+    display: none !important;
+  }
+}

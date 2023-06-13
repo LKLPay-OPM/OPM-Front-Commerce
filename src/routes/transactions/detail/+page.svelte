@@ -9,29 +9,35 @@
   /* utils */
   import { dateToLocalString, timeToLocalString } from "$lib/utils/date.js";
   import { getCardBrand } from "$lib/utils/brands.js";
+  import { successCustomMsgToast, errorCustomMsgToast } from "$lib/utils/toast.js";
   /* constants */
   import { localeParam } from "$lib/constants/locale.js";
   /* stores */
   import { previousPage } from "$lib/stores";
 
   import { onMount } from "svelte";
+  /* svelte */
+  import { error } from "@sveltejs/kit";
+  /* client */
+  import { axiosDevicesClient } from "$lib/repos/axios";
+  /* interceptor */
+  import { interceptor } from "$lib/utils/interceptors";
+  /* controllers */
+  import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
   export let data;
   let transaction = data?.response;
   let cardIcon = "";
   let modalClarification;
   let clarification = {
-    ticket: "",
+    ticket: transaction._id,
     description: "",
   };
 
   $: {
-    console.log(transaction);
-    // console.log(previousPage);
   }
+
   const returnToPreviousPage = () => {
-    // console.log($previousPage);
-    // goto($previousPage);
     history.back();
   };
 
@@ -44,9 +50,22 @@
   const handleClarification = () => {
     console.log(clarification);
   };
-  onMount(async () => {
-    console.log($previousPage);
-  });
+
+  const sendTransactionByEmail = async () => {
+    try {
+      const response = await axiosDevicesClient.post(`/transaction/detail/${transaction._id}/email`);
+      successCustomMsgToast(`Correo enviado con éxito a tu dirección asociada a Lkl Pay`);
+      return { ...response.data?.response };
+    } catch (err) {
+      errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
+      const handler = await appErrorResponseHandler(err);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
+    }
+  };
+
+  onMount(async () => {});
 </script>
 
 <Modal className={`modal-medium`} bind:this={modalClarification}>
@@ -93,7 +112,7 @@
   </div>
 </Modal>
 
-<div class="return">
+<div class="return no-print">
   <Input
     on:click={returnToPreviousPage}
     label="Regresar"
@@ -156,18 +175,9 @@
               <b>Tipo de Tarjeta</b>
             </div>
             <div class="item__content">
-              <!-- icon={`${formData.cardNumber.length >= 4 ?  : ""}`} -->
               <p>
                 <Icons name={`${getCardBrand(transaction["Application PAN"]).toLowerCase()}`} width="24" height="24" />
               </p>
-              <!-- {#if getCardBrand(transaction["Application PAN"]) === "MASTERCARD"}
-              {:else if getCardBrand(transaction["Application PAN"]) === "VISA"}
-                <Icons name="visa" width="50" height="30" />
-              {:else if getCardBrand(transaction["Application PAN"]) === "AMEX"}
-                <Icons name="amex" width="25" height="25" />
-              {:else if getCardBrand(transaction["Application PAN"]) !== "MASTERCARD" || getCardBrand(transaction["Application PAN"]) !== "VISA" || getCardBrand(transaction["Application PAN"]) !== "AMEX"}
-                <Icons name="bank-card-line" width="25" height="25" />
-              {/if} -->
             </div>
           </div>
           <div class="item">
@@ -228,10 +238,9 @@
           </div>
         </div>
       </div>
-      <div class="card-buttons">
+      <div class="card-buttons no-print">
         <div class="reverse-button">
           <Input
-            on:click={() => (clarification.ticket = transaction["Transaction Time"])}
             on:click={showModal(modalClarification)}
             label="Aclaración"
             id="reverseTransaction"
@@ -241,14 +250,28 @@
           />
         </div>
         <div class="email-button">
-          <Input label="Enviar por e-mail" id="emailTransaction" type="button" className="btn-plain" icon="" />
+          <Input
+            on:click={sendTransactionByEmail}
+            label="Enviar por e-mail"
+            id="emailTransaction"
+            type="button"
+            className="btn-plain"
+            icon=""
+          />
         </div>
         <div class="print-button">
-          <Input label="Imprimir Recibo" id="printTransaction" type="button" className="btn-plain" icon="" />
+          <Input
+            on:click={() => window.print()}
+            label="Imprimir Recibo"
+            id="printTransaction"
+            type="button"
+            className="btn-plain"
+            icon=""
+          />
         </div>
       </div>
     </div>
-    <div class="details-right responsive">
+    <div class="details-right no-print responsive">
       <div class="title">Reportes</div>
       <div class="export-buttons">
         <Input label="" id="csv-export" type="button" className="btn-plain fill-blue btn-square " icon="csv-fill" />
