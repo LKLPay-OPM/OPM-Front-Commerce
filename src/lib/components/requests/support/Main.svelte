@@ -73,7 +73,7 @@
     />
   </div>
 </Modal>
-<div class="element" class:hidden={optionSelected !== 0 && optionSelected !== 3}>
+<div class="element">
   <div
     on:click={showModal(modalSupport)}
     on:keypress={(e) => (e.key === "Enter" ? showModal(modalSupport) : "")}

@@ -1,15 +1,13 @@
 <script>
-  import { loggedInUser } from "$lib/stores";
   /* components */
   import Icons from "$lib/components/Icons.svelte";
   import Input from "$lib/components/Input.svelte";
+  import QuantityInput from "$lib/components/QuantityInput.svelte";
   /* utils */
-  import { tryAgainErrorToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  import { successCustomMsgToast } from "$lib/utils/toast.js";
 
   export let optionSelected = 0;
   let rollsQty = 0;
-
-  let userDetails = $loggedInUser;
 
   let innerWidth = 0,
     innerHeight = 0;
@@ -18,10 +16,6 @@
     (optionSelected = 0), (rollsQty = 0);
     successCustomMsgToast("Tu petición de rollos ha sido realizada");
   };
-
-  $: {
-    // console.log($loggedInUser.state)
-  }
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
@@ -38,14 +32,7 @@
     <div class="divider-hor" />
     <div class="element">
       <div class={innerWidth <= 540 ? "col" : "row"}>
-        <Input
-          placeholder=""
-          label="Cantidad"
-          id="rollsQty"
-          bind:value={rollsQty}
-          className="txt-field-slim normal fill-blue"
-          type="number"
-        />
+        <QuantityInput bind:value={rollsQty} />
         <div class="button">
           <Input
             on:click={requestRolls}

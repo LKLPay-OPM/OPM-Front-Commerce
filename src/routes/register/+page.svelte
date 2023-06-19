@@ -28,7 +28,7 @@
 
   const handleRegister = async () => {
     const { error: err, message: msg, session, user } = await AuthController.register(registerData);
-    registerResponse = {session, user};
+    registerResponse = { session, user };
     menu = "success";
     if (err) {
       menu = "error";
@@ -44,8 +44,8 @@
     isLoggedIn.set(true);
     loggedInUser.set(registerResponse.user);
     sessionUser.set(registerResponse.session);
-    goto("/")
-  }
+    goto("/");
+  };
 </script>
 
 {#if menu === "register"}
@@ -81,7 +81,7 @@
               className={`txt-field ${
                 registerData.password === ""
                   ? "normal"
-                  : confirmPass != "" && confirmPass === registerData.password
+                  : registerData.password.match(passwordPattern)
                   ? "valid"
                   : "invalid"
               }`}
@@ -106,9 +106,11 @@
               bind:value={confirmPass}
               placeholder="Contraseña"
               className={`txt-field ${
-                confirmPass === ""
+                registerData.password === ""
                   ? "normal"
-                  : confirmPass != "" && confirmPass === registerData.password
+                  : registerData.password != "" &&
+                    confirmPass === registerData.password &&
+                    confirmPass.match(passwordPattern)
                   ? "valid"
                   : "invalid"
               }`}

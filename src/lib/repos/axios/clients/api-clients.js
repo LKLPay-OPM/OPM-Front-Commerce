@@ -5,6 +5,7 @@ import {
   PUBLIC_ECOMMERCE_ENDPOINT,
   PUBLIC_DEPOSITS_AND_FEES_ENDPOINT,
   PUBLIC_FRAUD_PREVENTION_MANAGEMENT_ENDPOINT,
+  PUBLIC_TICKETS_ENDPOINT,
 } from "$env/static/public";
 /* client */
 import axios from "axios";
@@ -45,4 +46,8 @@ export const axiosDevicesClient = axios.create({
 export const axiosDepositsAndFees = axios.create({
   ...axiosDefaultsClientJson,
   baseURL: PUBLIC_DEPOSITS_AND_FEES_ENDPOINT,
+});
+export const ticketsClient = axios.create({
+  ...axiosDefaultsClientJson,
+  baseURL: PUBLIC_TICKETS_ENDPOINT,
 });

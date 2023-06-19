@@ -3,7 +3,9 @@ import { error } from "@sveltejs/kit";
 /* consts */
 import { validQueryFilters } from "$lib/constants/filter";
 /* client */
-import { profilesClient } from "$lib/repos/axios";
+import { profilesClient, ticketsClient } from "$lib/repos/axios";
+/* controllers */
+import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
 export const ssr = false;
 
@@ -11,9 +13,12 @@ export const ssr = false;
 export async function load() {
   try {
     const user = await profilesClient.get(`/user/profile`);
-    return { user: user.data?.response };
+    const tickets = await ticketsClient.get(`/clarification`);
+    return { user: user.data?.response, tickets: tickets.data?.response };
   } catch (err) {
-    console.error(err);
-    throw new error(500, "Something went wrong!");
+    const handler = await appErrorResponseHandler(err);
+    const code = handler?.code ?? 500;
+    const message = handler?.message ?? "¡Algo salió mal!";
+    throw new error(code, message);
   }
 }

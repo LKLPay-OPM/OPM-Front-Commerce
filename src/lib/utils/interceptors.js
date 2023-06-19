@@ -7,6 +7,7 @@ import { get } from "svelte/store";
 
 export function interceptor(client) {
   const session = get(sessionUser);
+  console.log(session);
   axiosRequestInterceptorWithCustomHeaders(client, {
     Authorization: `Bearer ${session.token}`,
     "X-Refresh-Token": session.refreshToken,

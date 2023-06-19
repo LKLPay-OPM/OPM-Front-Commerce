@@ -2,6 +2,7 @@
 import { emailPattern, passwordPattern } from "$lib/constants/pattern";
 
 export const checkFileSize = (file) => {
+  if (!file?.size) return false
   var size = file.size / 1024 / 1024;
   const isValid = size < 5
   return isValid;

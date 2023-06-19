@@ -5,7 +5,7 @@
   export let optionSelected;
 </script>
 
-<div class="element" class:hidden={optionSelected !== 0 && optionSelected !== 4}>
+<div class="element">
   <div
     on:click={() => (optionSelected = 4)}
     on:keypress={(e) => (e.key === "Enter" ? () => (optionSelected = 4) : "")}

@@ -8,15 +8,15 @@
   export let optionSelected;
 </script>
 
-<div class="element" class:hidden={optionSelected !== 0 && optionSelected !== 1}>
-  <div class="arrow-fwd-btn" class:hidden={optionSelected === 0}>
+<div class="element">
+  <!-- <div class="arrow-fwd-btn" class:hidden={optionSelected === 0}>
     <label for="return">
       <i class="arrow-blue">
         <Icons name="arrow-bwd" width="24" height="24" />
       </i>
     </label>
     <input on:click={() => dispatch("cancel")} id="return" type="button" />
-  </div>
+  </div> -->
   <div
     on:click={() => (optionSelected = 1)}
     on:keypress={(e) => (e.key === "Enter" ? () => (optionSelected = 1) : "")}

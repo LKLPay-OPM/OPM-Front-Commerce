@@ -42,12 +42,15 @@
   };
 
   onMount(async () => {
-    if (!$isLoggedIn) await goto("/login");
+    if (!$isLoggedIn) {
+      await goto("/login");
+    } else {
+      if (!modalValidation) {
+        modalUserData.show();
+      }
+    }
     loading = false;
     $linkSelected = "Inicio";
-    if (!modalValidation) {
-      modalUserData.show();
-    }
   });
 </script>
 
@@ -118,7 +121,7 @@
       </div>
       <div style="margin: 1rem 0 0 0;" class="row">
         <FileInput
-          label="Estado de Cuenta"
+          label="Carátula de Estado de Cuenta"
           id="bankStatement"
           bind:file={userData.bankStatement}
           className={`btn-plain ${
@@ -128,7 +131,7 @@
               ? "btn-success"
               : "border-btn-error"
           }`}
-          accept="application/pdf"
+          accept="image/jpeg, image/png, application/pdf"
         />
       </div>
     </div>

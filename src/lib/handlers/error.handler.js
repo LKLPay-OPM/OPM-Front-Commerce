@@ -12,6 +12,9 @@ export async function appErrorResponseHandler (error){
   if(error?.response?.data?.code === "EMAIL_EXISTS"){
     return { code: error?.response?.status, message: error?.response?.data?.message}
   }
+  if(error?.response?.data?.code === "ERR_BAD_REQUEST"){
+    return { code: error?.response?.status, message: error?.response?.data?.message}
+  }
   if(error?.response?.status === 404){
     return { code: error?.response?.status, message: "No se encontró el recurso solicitado"}
   }

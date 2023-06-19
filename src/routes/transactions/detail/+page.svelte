@@ -14,14 +14,11 @@
   import { localeParam } from "$lib/constants/locale.js";
   /* stores */
   import { previousPage } from "$lib/stores";
-
-  import { onMount } from "svelte";
   /* svelte */
+  import { onMount } from "svelte";
   import { error } from "@sveltejs/kit";
   /* client */
-  import { axiosDevicesClient } from "$lib/repos/axios";
-  /* interceptor */
-  import { interceptor } from "$lib/utils/interceptors";
+  import { axiosDevicesClient, ticketsClient } from "$lib/repos/axios";
   /* controllers */
   import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
@@ -30,7 +27,7 @@
   let cardIcon = "";
   let modalClarification;
   let clarification = {
-    ticket: transaction._id,
+    transaction: transaction._id,
     description: "",
   };
 
@@ -47,8 +44,18 @@
   const closeModal = (option) => {
     option.closeModal();
   };
-  const handleClarification = () => {
-    console.log(clarification);
+  const handleClarification = async () => {
+    try {
+      const response = await ticketsClient.post(`/clarification/transaction`, clarification);
+      successCustomMsgToast(`Tu ticket de aclaración se ha generado con éxito`);
+      return { ...response.data?.response };
+    } catch (err) {
+      errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
+      const handler = await appErrorResponseHandler(err);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
+    }
   };
 
   const sendTransactionByEmail = async () => {
@@ -76,7 +83,7 @@
     <div class="clarifications">
       <div class="title">Recibo N°</div>
       <div class="description">
-        <p>{clarification.ticket}</p>
+        <p>{clarification.transaction}</p>
       </div>
       <!-- <Select bind:optionsList={clarificationsList} defaultText={"Elige una opción"} label="Tipo de Aclaración" id="clarificationType" bind:value={clarification.type}/> -->
     </div>
@@ -91,14 +98,6 @@
     </div>
   </div>
   <div class="modal-buttons" slot="footer">
-    <Input
-      on:click={closeModal(modalClarification)}
-      label="Cerrar"
-      id="buttonCloseModalClarification"
-      type="button"
-      className="btn-plain"
-      icon=""
-    />
     <Input
       on:click={() => handleClarification()}
       on:click={closeModal(modalClarification)}
@@ -139,15 +138,15 @@
       </div>
       <div class="item">
         <b>TVR</b>
-        <p>{transaction?.TVR}</p>
+        <p>{transaction?.TVR ?? "N/A"}</p>
       </div>
       <div class="item">
         <b>AID</b>
-        <p>{transaction["Terminal Capabilities"]}</p>
+        <p>{transaction["Terminal Capabilities"] ?? "N/A"}</p>
       </div>
       <div class="item">
         <b>TSI</b>
-        <p>{transaction["Additional Terminal Capabilities"]}</p>
+        <p>{transaction["Additional Terminal Capabilities"] ?? "N/A"}</p>
       </div>
       <div class="item">
         <b>Tipo de Tarjeta</b>
