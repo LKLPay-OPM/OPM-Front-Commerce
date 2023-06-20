@@ -4,6 +4,7 @@
   /* components */
   import Icons from "$lib/components/Icons.svelte";
   import Input from "$lib/components/Input.svelte";
+  import QuantityInput from "$lib/components/inputs/QuantityInput.svelte";
   /* utils */
   import { tryAgainErrorToast, successCustomMsgToast } from "$lib/utils/toast.js";
 
@@ -45,30 +46,9 @@
     <div class="element">
       <div class="col">
         <div class={innerWidth <= 540 ? "grid-row" : "grid-col"}>
-          <Input
-            placeholder=""
-            label="Pocket"
-            id="PocketTerminalQty"
-            bind:value={terminals.pocket}
-            className="txt-field-horizontal normal blue"
-            type="number"
-          />
-          <Input
-            placeholder=""
-            label="Smart"
-            id="SmartTerminalQty"
-            bind:value={terminals.smart}
-            className="txt-field-horizontal normal blue"
-            type="number"
-          />
-          <Input
-            placeholder=""
-            label="Master"
-            id="MasterTerminalQty"
-            bind:value={terminals.master}
-            className="txt-field-horizontal normal blue"
-            type="number"
-          />
+          <QuantityInput id="pocket" label="Pocket" className="label__top" bind:value={terminals.pocket} />
+          <QuantityInput id="smart" label="Smart" className="label__top" bind:value={terminals.smart} />
+          <QuantityInput id="master" label="Master" className="label__top" bind:value={terminals.master} />
         </div>
         <div class="button">
           <Input

@@ -49,14 +49,14 @@
     betweenAddress: "",
     addressProof: "", */
   };
-  let ineFront = "",
-    ineBack = "",
-    bankStatement = "",
-    avatarImg = "",
-    complianceOpinion = "",
-    csf = "",
-    addressProof = "",
-    avatarInput = "";
+  let ineFront = "";
+  let ineBack = "";
+  let bankStatement = "";
+  let avatarImg = "";
+  let complianceOpinion = "";
+  let csf = "";
+  let addressProof = "";
+  let avatarInput = "";
   const dbCollection = "users-client";
   const uid = $loggedInUser.uid;
   let ratesBusinessType;
@@ -210,8 +210,10 @@
   <div class="card-container padding-2">
     <div class="content">
       <!-- Left Section -->
-      <div class="left">
-        <div class="card-secondary col padding-1">
+      <!-- <div class="left" /> -->
+      <!-- Middle Section -->
+      <div class="middle">
+        <div class="col padding-1">
           <div class="element">
             <div class="avatar-container">
               <div class="avatar">
@@ -262,9 +264,6 @@
             type="button"
           />
         </div>
-      </div>
-      <!-- Middle Section -->
-      <div class="middle">
         <div class="title">Datos de la Persona</div>
         <div class="element">
           <Input
@@ -272,7 +271,7 @@
             label="Nombre (s)"
             placeholder="Ejemplo de nombre"
             id="name"
-            className="txt-field normal fill-blue"
+            className="txt-field-slim normal fill-blue"
             type="text"
             icon=""
           />
@@ -283,7 +282,7 @@
             label="Primer Apellido"
             placeholder="Apellido"
             id="firstLastName"
-            className="txt-field normal fill-blue"
+            className="txt-field-slim normal fill-blue"
             type="text"
             icon=""
           />
@@ -292,7 +291,7 @@
             label="Segundo Apellido"
             placeholder="Apellido"
             id="secondLastName"
-            className="txt-field normal fill-blue"
+            className="txt-field-slim normal fill-blue"
             type="text"
             icon=""
           />
@@ -322,7 +321,7 @@
             label="Teléfono"
             placeholder="331-3124-521"
             id="phone"
-            className="txt-field normal fill-blue"
+            className="txt-field-slim normal fill-blue"
             type="text"
             icon=""
           />
@@ -333,7 +332,7 @@
             label="Email"
             placeholder="nombre@dominio.com"
             id="email"
-            className="txt-field normal fill-blue"
+            className="txt-field-slim normal fill-blue"
             type="text"
             icon=""
           />
@@ -344,7 +343,7 @@
             label="Número CLABE"
             placeholder="123123123456789011"
             id="clabe"
-            className="txt-field normal fill-blue"
+            className="txt-field-slim normal fill-blue"
             type="text"
             icon=""
           />
@@ -371,27 +370,27 @@
               label="RFC"
               placeholder="AAAA1234562T1"
               id="rfc"
-              className="txt-field normal fill-blue"
+              className="txt-field-slim normal fill-blue"
               type="text"
               icon=""
             />
           </div>
           <div class="element button">
-            <!-- bind:value={financialData.csf} -->
+            <!-- bind:value={csf} -->
             <Input
               label="Constancia de Situación Fiscal"
               id="csf"
-              className={financialData.csf != "" ? "btn-success-border" : "btn-plain blue"}
+              className={csf != "" ? "btn-success-border" : "btn-plain blue"}
               type="file"
               accept="application/pdf"
             />
           </div>
           <div class="element button">
-            <!-- bind:value={financialData.complianceOpinion} -->
+            <!-- bind:value={complianceOpinion} -->
             <Input
               label="Opinión de Cumplimiento"
               id="complianceOpinion"
-              className={financialData.complianceOpinion != "" ? "btn-success-border" : "btn-plain blue"}
+              className={complianceOpinion != "" ? "btn-success-border" : "btn-plain blue"}
               type="file"
               accept="application/pdf"
             />
@@ -403,7 +402,7 @@
               label="Calle"
               placeholder="Circunvalación Jorge Álvarez del Castillo"
               id="address"
-              className="txt-field normal fill-blue"
+              className="txt-field-slim normal fill-blue"
               type="text"
               icon=""
             />

@@ -11,7 +11,7 @@
   /* controllers */
   import { AuthController } from "$lib/controllers/auth/auth.controller";
   /* utils */
-  import { validateEmail, validatePassword } from "$lib/utils/input-validation";
+  import { validateEmail, validatePassword } from "$lib/utils/input";
   /* assets */
   import Logo from "$lib/assets/Logo.png";
 

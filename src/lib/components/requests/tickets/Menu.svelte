@@ -26,7 +26,16 @@
 
 <!-- component -->
 <div class="tickets-list" class:hidden={optionSelected !== 0}>
-  {#if !detailTicketView}
+  {#if tickets.length <= 0}
+    <div class="message">
+      <div class="msg">
+        <p>No has realizado Solicitudes</p>
+      </div>
+      <div class="description">
+        <p>Aquí podrás ver tu listado de Solicitudes realizadas</p>
+      </div>
+    </div>
+  {:else}
     {#each tickets as ticket}
       <div class="ticket card-container clickable">
         <div class="row">
@@ -39,7 +48,6 @@
           <WriteComment
             placeholder="Abrir más detalles"
             on:click={() => {
-              console.log("quesito");
               selectedTicket = ticket;
             }}
           />
@@ -49,30 +57,6 @@
         </div>
       </div>
     {/each}
-  {:else}
-    <div class="ticket col card-container">
-      <div class="row title">
-        <div class="row-element">
-          <div
-            class="element return-arrow"
-            on:click={() => (detailTicketView = false)}
-            on:keypress={(e) => (e.key === "Enter" ? () => (detailTicketView = false) : "")}
-          >
-            <i class="arrow arrow-blue">
-              <Icons name="arrow-bwd" width="24" height="24" />
-            </i>
-          </div>
-          <RowElement title="Solicitud" description={selectedTicket._id} />
-        </div>
-        <RowElement title="Motivo" description={ticketTypeHandler(selectedTicket.type)} />
-        <RowElement title="Estado" description={selectedTicket.status} />
-      </div>
-      <div class="row description">
-        <div class="element card-inside">
-          <div class="description">{selectedTicket.description}</div>
-        </div>
-      </div>
-    </div>
   {/if}
 </div>
 
@@ -89,5 +73,30 @@
     &:not(:last-child) {
       margin-bottom: 16px;
     }
+  }
+
+  .message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: inherit;
+    gap: 0.5rem;
+  }
+
+  .message .msg {
+    font-weight: 700;
+    font-size: 1.25rem; /* 16px */
+    line-height: 1.25rem; /* 20px */
+    text-align: center;
+    /* Text */
+    color: $primary-dark;
+  }
+  .message .description {
+    font-weight: 500;
+    font-size: 1rem; /* 16px */
+    line-height: 1.25rem; /* 20px */
+    text-align: center;
+    /* Text */
+    color: #8c9fb1;
   }
 </style>

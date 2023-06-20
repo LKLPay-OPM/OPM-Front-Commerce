@@ -1,18 +1,15 @@
 <script>
+  /* navigation */
+  import { goto } from "$app/navigation";
   /* components */
   import Icons from "$lib/components/Icons.svelte";
-  /* svelte */
-  import { createEventDispatcher } from "svelte";
-  const dispatch = createEventDispatcher();
-
-  export let optionSelected;
 </script>
 
 <div class="element">
   <div
-    on:click={() => (optionSelected = 0)}
-    on:keypress={(e) => (e.key === "Enter" ? () => (optionSelected = 0) : "")}
-    class={`option-col ${optionSelected === 0 ? "option-selected" : "clickable"}`}
+    on:click={() => goto("/requests/tickets")}
+    on:keypress={(e) => (e.key === "Enter" ? () => goto("/requests/tickets") : "")}
+    class={`option-col clickable`}
   >
     <i>
       <Icons name="tickets" width="50" height="50" />

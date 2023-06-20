@@ -1,10 +1,13 @@
 <script>
   /* utils */
   import { onlyNumbers } from "$lib/utils/validations";
+  import { selectText } from "$lib/utils/input";
   /* constants */
-  import { selectText } from "$lib/constants/input.js";
 
   export let value = 0;
+  export let className = "";
+  export let label = "";
+  export let id = "";
   let input;
 
   function add() {
@@ -16,23 +19,28 @@
   }
 </script>
 
-<div class="quantity-input__container">
-  <button on:click={less}>-</button>
-  <div>
-    <input
-      bind:this={input}
-      on:click={selectText(input)}
-      type="text"
-      placeholder="0"
-      on:input={onlyNumbers}
-      bind:value
-    />
+<div class={`container__quantity-input ${className != "" ? className : "label__none"}`}>
+  <label for={id} class="label">
+    <span>{label}</span>
+  </label>
+  <div class="quantity-input__container">
+    <button on:click={less}>-</button>
+    <div>
+      <input
+        {id}
+        bind:this={input}
+        on:click={selectText(input)}
+        type="text"
+        placeholder="0"
+        on:input={onlyNumbers}
+        bind:value
+      />
+    </div>
+    <button on:click={add}>+</button>
   </div>
-  <button on:click={add}>+</button>
 </div>
 
 <style lang="scss">
-  /* my code*/
   .quantity-input__container {
     display: grid;
     grid-template-columns: 3rem 3rem 3rem;
@@ -79,6 +87,35 @@
         border-bottom-right-radius: 3px;
         border-left-width: 0;
       }
+    }
+  }
+
+  .container__quantity-input {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    label {
+      font-weight: 500;
+      font-size: 0.8125rem;
+      line-height: 1.25rem;
+      color: $primary-dark;
+    }
+  }
+
+  .label__top {
+    flex-direction: column;
+    span {
+      background: transparent;
+    }
+  }
+
+  .label__side {
+    flex-direction: row;
+  }
+
+  .label__none {
+    .label {
+      display: none;
     }
   }
 </style>

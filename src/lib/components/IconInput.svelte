@@ -1,8 +1,8 @@
 <script>
   /* components */
   import Icons from "$lib/components/Icons.svelte";
+  import { selectText } from "$lib/utils/input.js";
   /* constants */
-  import { selectText } from "$lib/constants/input.js";
   /* svelte */
   import { createEventDispatcher } from "svelte";
   export let label = "";

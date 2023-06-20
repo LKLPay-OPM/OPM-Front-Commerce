@@ -10,3 +10,7 @@ export function validatePassword(text = "") {
   if (text.match(passwordPattern)) return true;
   return false;
 }
+
+export function selectText(input) {
+  input.select();
+};

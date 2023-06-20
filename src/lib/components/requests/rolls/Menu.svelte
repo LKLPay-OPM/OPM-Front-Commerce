@@ -2,7 +2,7 @@
   /* components */
   import Icons from "$lib/components/Icons.svelte";
   import Input from "$lib/components/Input.svelte";
-  import QuantityInput from "$lib/components/QuantityInput.svelte";
+  import QuantityInput from "$lib/components/inputs/QuantityInput.svelte";
   /* utils */
   import { successCustomMsgToast } from "$lib/utils/toast.js";
 
