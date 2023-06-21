@@ -1,7 +1,7 @@
 /* svelte */
 import { error } from "@sveltejs/kit";
 /* axios */
-import { axiosDevicesClient } from "$lib/repos/axios";
+import { axiosDevicesClient, profilesClient } from "$lib/repos/axios";
 /* stores */
 import { get } from "svelte/store";
 import { isLoggedIn } from "$lib/stores.js";
@@ -14,8 +14,9 @@ export async function load() {
   if(get(isLoggedIn)){
     try {
       const transactions = await axiosDevicesClient.get("/transaction");
+      const user = await profilesClient.get("/user/profile");
       return {
-        transactions: transactions.data?.response,
+        transactions: transactions.data?.response, user: user.data?.response
       };
     } catch (err) {
       const handler = await appErrorResponseHandler(err);

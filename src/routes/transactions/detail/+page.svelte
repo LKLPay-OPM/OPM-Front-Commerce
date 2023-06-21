@@ -9,29 +9,32 @@
   /* utils */
   import { dateToLocalString, timeToLocalString } from "$lib/utils/date.js";
   import { getCardBrand } from "$lib/utils/brands.js";
+  import { successCustomMsgToast, errorCustomMsgToast } from "$lib/utils/toast.js";
   /* constants */
   import { localeParam } from "$lib/constants/locale.js";
   /* stores */
   import { previousPage } from "$lib/stores";
-
+  /* svelte */
   import { onMount } from "svelte";
+  import { error } from "@sveltejs/kit";
+  /* client */
+  import { axiosDevicesClient, ticketsClient } from "$lib/repos/axios";
+  /* controllers */
+  import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
   export let data;
   let transaction = data?.response;
   let cardIcon = "";
   let modalClarification;
   let clarification = {
-    ticket: "",
+    transaction: transaction._id,
     description: "",
   };
 
   $: {
-    console.log(transaction);
-    // console.log(previousPage);
   }
+
   const returnToPreviousPage = () => {
-    // console.log($previousPage);
-    // goto($previousPage);
     history.back();
   };
 
@@ -41,12 +44,35 @@
   const closeModal = (option) => {
     option.closeModal();
   };
-  const handleClarification = () => {
-    console.log(clarification);
+  const handleClarification = async () => {
+    try {
+      const response = await ticketsClient.post(`/clarification/transaction`, clarification);
+      successCustomMsgToast(`Tu ticket de aclaración se ha generado con éxito`);
+      return { ...response.data?.response };
+    } catch (err) {
+      errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
+      const handler = await appErrorResponseHandler(err);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
+    }
   };
-  onMount(async () => {
-    console.log($previousPage);
-  });
+
+  const sendTransactionByEmail = async () => {
+    try {
+      const response = await axiosDevicesClient.post(`/transaction/detail/${transaction._id}/email`);
+      successCustomMsgToast(`Correo enviado con éxito a tu dirección asociada a Lkl Pay`);
+      return { ...response.data?.response };
+    } catch (err) {
+      errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
+      const handler = await appErrorResponseHandler(err);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
+    }
+  };
+
+  onMount(async () => {});
 </script>
 
 <Modal className={`modal-medium`} bind:this={modalClarification}>
@@ -57,7 +83,7 @@
     <div class="clarifications">
       <div class="title">Recibo N°</div>
       <div class="description">
-        <p>{clarification.ticket}</p>
+        <p>{clarification.transaction}</p>
       </div>
       <!-- <Select bind:optionsList={clarificationsList} defaultText={"Elige una opción"} label="Tipo de Aclaración" id="clarificationType" bind:value={clarification.type}/> -->
     </div>
@@ -73,14 +99,6 @@
   </div>
   <div class="modal-buttons" slot="footer">
     <Input
-      on:click={closeModal(modalClarification)}
-      label="Cerrar"
-      id="buttonCloseModalClarification"
-      type="button"
-      className="btn-plain"
-      icon=""
-    />
-    <Input
       on:click={() => handleClarification()}
       on:click={closeModal(modalClarification)}
       label="Enviar Aclaración"
@@ -93,7 +111,7 @@
   </div>
 </Modal>
 
-<div class="return">
+<div class="return no-print">
   <Input
     on:click={returnToPreviousPage}
     label="Regresar"
@@ -120,15 +138,15 @@
       </div>
       <div class="item">
         <b>TVR</b>
-        <p>{transaction?.TVR}</p>
+        <p>{transaction?.TVR ?? "N/A"}</p>
       </div>
       <div class="item">
         <b>AID</b>
-        <p>{transaction["Terminal Capabilities"]}</p>
+        <p>{transaction["Terminal Capabilities"] ?? "N/A"}</p>
       </div>
       <div class="item">
         <b>TSI</b>
-        <p>{transaction["Additional Terminal Capabilities"]}</p>
+        <p>{transaction["Additional Terminal Capabilities"] ?? "N/A"}</p>
       </div>
       <div class="item">
         <b>Tipo de Tarjeta</b>
@@ -156,16 +174,9 @@
               <b>Tipo de Tarjeta</b>
             </div>
             <div class="item__content">
-              <!-- icon={`${formData.cardNumber.length >= 4 ?  : ""}`} -->
-              <p><Icons name={`${getCardBrand(transaction["Application PAN"]).toLowerCase()}`} width="24" height="24" /></p>
-              <!-- {#if getCardBrand(transaction["Application PAN"]) === "MASTERCARD"}
-              {:else if getCardBrand(transaction["Application PAN"]) === "VISA"}
-                <Icons name="visa" width="50" height="30" />
-              {:else if getCardBrand(transaction["Application PAN"]) === "AMEX"}
-                <Icons name="amex" width="25" height="25" />
-              {:else if getCardBrand(transaction["Application PAN"]) !== "MASTERCARD" || getCardBrand(transaction["Application PAN"]) !== "VISA" || getCardBrand(transaction["Application PAN"]) !== "AMEX"}
-                <Icons name="bank-card-line" width="25" height="25" />
-              {/if} -->
+              <p>
+                <Icons name={`${getCardBrand(transaction["Application PAN"]).toLowerCase()}`} width="24" height="24" />
+              </p>
             </div>
           </div>
           <div class="item">
@@ -207,10 +218,7 @@
             </div>
             <div class="item__content">
               <p>
-                {transaction.IVA?.toLocaleString(
-                  localeParam.language,
-                  localeParam.currency
-                )}
+                {transaction.IVA?.toLocaleString(localeParam.language, localeParam.currency)}
               </p>
               <p>{`(16%)`}</p>
             </div>
@@ -229,10 +237,9 @@
           </div>
         </div>
       </div>
-      <div class="card-buttons">
+      <div class="card-buttons no-print">
         <div class="reverse-button">
           <Input
-            on:click={() => (clarification.ticket = transaction["Transaction Time"])}
             on:click={showModal(modalClarification)}
             label="Aclaración"
             id="reverseTransaction"
@@ -242,149 +249,38 @@
           />
         </div>
         <div class="email-button">
-          <Input label="Enviar por e-mail" id="emailTransaction" type="button" className="btn-plain" icon="" />
+          <Input
+            on:click={sendTransactionByEmail}
+            label="Enviar por e-mail"
+            id="emailTransaction"
+            type="button"
+            className="btn-plain"
+            icon=""
+          />
         </div>
         <div class="print-button">
-          <Input label="Imprimir Recibo" id="printTransaction" type="button" className="btn-plain" icon="" />
+          <Input
+            on:click={() => window.print()}
+            label="Imprimir Recibo"
+            id="printTransaction"
+            type="button"
+            className="btn-plain"
+            icon=""
+          />
         </div>
       </div>
     </div>
-    <div class="details-right responsive">
+    <div class="details-right no-print responsive">
       <div class="title">Reportes</div>
       <div class="export-buttons">
         <Input label="" id="csv-export" type="button" className="btn-plain fill-blue btn-square " icon="csv-fill" />
         <Input label="" id="excel-export" type="button" className="btn-plain fill-green btn-square " icon="xls-fill" />
-        <Input label="" id="pdf-export" type="button" className="btn-plain fill-red btn-square " icon="pdf-fill" />
+        <Input label="" id="pdf-export" type="" className="btn-plain fill-red btn-square " icon="pdf-fill" />
       </div>
     </div>
   </div>
 </div>
 
 <style lang="scss">
-  @import "src/lib/styles/transactions.scss";
-
-  .details-card {
-    &.visa::after {
-      background: linear-gradient(330deg, rgb(0, 0, 0), rgb(0, 88, 161), /* rgb(124, 157, 203), */ rgb(255, 255, 255));
-      animation: opacity 1s ease-in forwards, rotate 5s normal infinite;
-      content: "";
-      width: 140%;
-      height: 0;
-      z-index: -1;
-      padding-bottom: 140%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    &.mastercard::after {
-      background: linear-gradient(330deg, rgb(0, 0, 0), rgb(179, 25, 25), /* rgb(204, 124, 124), */ rgb(255, 255, 255));
-      animation: opacity 1s ease-in forwards, rotate 5s normal infinite;
-      content: "";
-      width: 140%;
-      height: 0;
-      z-index: -1;
-      padding-bottom: 140%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    &.amex::after {
-      background: linear-gradient(330deg, rgb(0, 0, 0), rgb(8, 143, 143), /* rgb(95, 158, 160), */ rgb(255, 255, 255));
-      animation: opacity 1s ease forwards, rotate 5s normal infinite;
-      content: "";
-      width: 140%;
-      height: 0;
-      z-index: -1;
-      padding-bottom: 140%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    &.discover::after {
-      background: linear-gradient(330deg, rgb(0, 0, 0), rgb(128, 6, 0), rgb(255, 255, 255));
-      animation: opacity 1s ease forwards, rotate 5s normal infinite;
-      content: "";
-      width: 140%;
-      height: 0;
-      z-index: -1;
-      padding-bottom: 140%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    &.diners::after {
-      background: linear-gradient(330deg, rgb(0, 0, 0), rgb(5, 150, 186), rgb(255, 255, 255));
-      // background: linear-gradient(330deg, rgb(3, 72, 136), rgb(5, 150, 186));
-      animation: opacity 1s ease forwards, rotate 10s normal infinite;
-      content: "";
-      width: 140%;
-      height: 0;
-      z-index: -1;
-      padding-bottom: 140%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    &.jcb::after {
-      background: linear-gradient(330deg, rgb(0, 0, 0), rgb(0, 14, 128), rgb(255, 255, 255));
-      animation: opacity 1s ease forwards, rotate 5s normal infinite;
-      content: "";
-      width: 140%;
-      height: 0;
-      z-index: -1;
-      padding-bottom: 140%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    &.otra::after {
-      background: linear-gradient(330deg, rgb(0, 0, 0), $grey, $background-light);
-      animation: opacity 1s ease forwards, rotate 5s normal infinite;
-      content: "";
-      width: 140%;
-      height: 0;
-      z-index: -1;
-      padding-bottom: 140%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    &.visa,
-    &.mastercard,
-    &.amex,
-    &.jcb,
-    &.diners,
-    &.otra,
-    &.discover {
-      position: relative;
-      z-index: 3;
-      overflow: hidden;
-    }
-  }
-
-  .details-card {
-    .item__content {
-      align-items: center;
-      background: rgba(219, 219, 219, 0.6);
-      min-height: 2.5rem;
-      border-radius: 0px;
-      &.first {
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-      }
-      &.last {
-        border-top-right-radius: 4px;
-        border-bottom-right-radius: 4px;
-      }
-    }
-  }
+  @import "src/lib/styles/transactions/detail.scss";
 </style>

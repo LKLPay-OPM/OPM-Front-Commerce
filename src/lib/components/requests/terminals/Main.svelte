@@ -1,26 +1,15 @@
 <script>
+  /* navigation */
+  import { goto } from "$app/navigation";
   /* components */
   import Icons from "$lib/components/Icons.svelte";
-  /* svelte */
-  import { createEventDispatcher } from "svelte";
-  const dispatch = createEventDispatcher();
-
-  export let optionSelected;
 </script>
 
-<div class="element" class:hidden={optionSelected !== 0 && optionSelected !== 2}>
-  <div class="arrow-fwd-btn" class:hidden={optionSelected === 0}>
-    <label for="return">
-      <i class="arrow-blue">
-        <Icons name="arrow-bwd" width="24" height="24" />
-      </i>
-    </label>
-    <input on:click={() => dispatch("cancel")} id="return" type="button" />
-  </div>
+<div class="element">
   <div
-    on:click={() => (optionSelected = 2)}
-    on:keypress={(e) => (e.key === "Enter" ? () => (optionSelected = 2) : "")}
-    class={`option-col ${optionSelected === 2 ? "option-selected" : "clickable"}`}
+    on:click={() => goto("/requests/terminals")}
+    on:keypress={(e) => (e.key === "Enter" ? () => goto("/requests/terminals") : "")}
+    class={`option-col clickable`}
   >
     <i>
       <Icons name="detailed-terminal" width="50" height="50" />
@@ -30,5 +19,39 @@
 </div>
 
 <style lang="scss">
-  @import "src/lib/styles/requests.scss";
+  .element {
+    display: flex;
+    margin: 1rem 0;
+    justify-content: center;
+    & > .option-col {
+      display: grid;
+      grid-auto-flow: column;
+      color: $primary-dark;
+      transition: all 0.4s ease;
+      align-items: center;
+      // cursor: pointer;
+      & > i {
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: center;
+      }
+      & > .option-name {
+        font-weight: 700;
+        font-size: 1.5rem; /* 24px */
+        line-height: 1.25rem; /* 20px */
+        text-align: center;
+      }
+    }
+  }
+
+  .clickable {
+    cursor: pointer;
+  }
+
+  @media (max-width: 425px) {
+  }
+  @media (min-width: 426px) and (max-width: 540px) {
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+  }
 </style>

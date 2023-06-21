@@ -27,14 +27,14 @@
   }
 </script>
 
-<div class="navbar">
+<div class="navbar no-print">
   <div class="logo-details">
     <i on:click={() => ($sidebar = !$sidebar)} on:keydown={() => ($sidebar = !$sidebar)}>
       <Icons name="menu-lines" width="24" height="24" />
     </i>
   </div>
 </div>
-<div class="sidebar {$sidebar ? '' : 'close'}">
+<div class="sidebar no-print {$sidebar ? '' : 'close'}">
   <div class="sidebar-start">
     <div class="logo-details">
       <i on:click={() => ($sidebar = !$sidebar)} on:keydown={() => ($sidebar = !$sidebar)}>

@@ -1,6 +1,8 @@
 <script>
   /* components */
   import Icons from "$lib/components/Icons.svelte";
+  import { selectText } from "$lib/utils/input.js";
+  /* constants */
   /* svelte */
   import { createEventDispatcher } from "svelte";
   export let label = "";
@@ -19,6 +21,7 @@
   export let step = ".1";
   export let decimal = false;
   export let inputmode = "";
+  let input;
 
   const dispatch = createEventDispatcher();
 
@@ -53,7 +56,8 @@
     {/if}
     <input
       class="input-field"
-      on:click
+      bind:this={input}
+      on:click={selectText(input)}
       {inputmode}
       {type}
       {placeholder}

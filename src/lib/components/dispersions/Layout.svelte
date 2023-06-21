@@ -499,7 +499,7 @@
           </div>
           <div class="content">
             <p>
-              ${(immediateDeposit.immediateDepositQty * .013).toFixed(2) ?? "$0"}
+              ${(immediateDeposit.immediateDepositQty * 0.013).toFixed(2) ?? "$0"}
             </p>
           </div>
         </div>
@@ -775,5 +775,5 @@
 </div>
 
 <style lang="scss">
-  @import "src/lib/styles/dispersions.scss";
+  @import "src/lib/styles/dispersions/layout.scss";
 </style>

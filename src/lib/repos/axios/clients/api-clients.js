@@ -4,6 +4,8 @@ import {
   PUBLIC_PROFILES_ENDPOINT,
   PUBLIC_ECOMMERCE_ENDPOINT,
   PUBLIC_DEPOSITS_AND_FEES_ENDPOINT,
+  PUBLIC_FRAUD_PREVENTION_MANAGEMENT_ENDPOINT,
+  PUBLIC_TICKETS_ENDPOINT,
 } from "$env/static/public";
 /* client */
 import axios from "axios";
@@ -12,9 +14,14 @@ import { axiosDefaultsClientFormData, axiosDefaultsClientJson } from "$lib/const
 
 axios.defaults.withCredentials = true;
 
+
 export const axiosECommerceClient = axios.create({
   ...axiosDefaultsClientFormData,
   baseURL: PUBLIC_ECOMMERCE_ENDPOINT,
+});
+export const axiosFraudPreventionManagement = axios.create({
+  ...axiosDefaultsClientFormData,
+  baseURL: PUBLIC_FRAUD_PREVENTION_MANAGEMENT_ENDPOINT,
 });
 export const axiosClient = axios.create({
   ...axiosDefaultsClientJson,
@@ -39,4 +46,8 @@ export const axiosDevicesClient = axios.create({
 export const axiosDepositsAndFees = axios.create({
   ...axiosDefaultsClientJson,
   baseURL: PUBLIC_DEPOSITS_AND_FEES_ENDPOINT,
+});
+export const ticketsClient = axios.create({
+  ...axiosDefaultsClientJson,
+  baseURL: PUBLIC_TICKETS_ENDPOINT,
 });

@@ -4,6 +4,8 @@
   import Icons from "$lib/components/Icons.svelte";
   /* svelte */
   import { goto } from "$app/navigation";
+  /* utils */
+  import { timeToLocalString, dateToLocalString } from "$lib/utils/date";
   /* exports */
   export let data;
   let transactions = data?.response?.transactions ?? [];
@@ -90,9 +92,9 @@
           {#each transactions as transaction}
             <tr class="clickable number" on:click={() => goto(`/transactions/detail?ticket=${transaction?._id}`)}>
               <td
-                >{getTransactionDate(transaction?.["Transaction Date"]) +
+                >{dateToLocalString(transaction["Transaction Date"]) +
                   " - " +
-                  getTransactionTime(
+                  timeToLocalString(
                     transaction["Transaction Time"]
                   )}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td
               >
@@ -137,5 +139,5 @@
 </div>
 
 <style lang="scss">
-  @import "src/lib/styles/transactions.scss";
+  @import "src/lib/styles/transactions/tables/day.scss";
 </style>

@@ -43,9 +43,10 @@
     width: 100%;
     justify-content: right; */
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     flex-direction: column;
     width: 100%;
+    height: 100%;
   }
 
   .return {
@@ -388,8 +389,8 @@
     color: #000000;
     text-align: center;
     border-bottom: 1px solid #8c9fb1;
-    padding: 0.625rem 0rem 0.625rem 0rem;
-    min-width: 10rem;
+    padding: .5rem;
+    min-width: 5rem;
   }
 
   th:first-child {
@@ -397,7 +398,6 @@
   }
   td:first-child {
     text-align: left;
-    padding: 0 0 0 0.625rem;
   }
 
   .modal-buttons {

@@ -107,7 +107,7 @@
           <th>Comisión</th>
           <th>IVA</th>
           <th>Depósito</th>
-          <th>Tipo</th>
+          <th class="responsive">Tipo</th>
         </tr>
       </thead>
       <thead style="height:1.5rem">
@@ -120,7 +120,7 @@
           <th>
             {resume?.Comission?.toLocaleString(localeParam.language, localeParam.currency)}
           </th>
-          <th class="responsive">
+          <th>
             {resume?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}
           </th>
           <th>
@@ -140,9 +140,7 @@
             <td class="responsive">{transaction.id}</td>
             <td>{transaction.Amount?.toLocaleString(localeParam.language, localeParam.currency)}</td>
             <td>{transaction.comission?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-            <td class="responsive">
-              {transaction?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}
-            </td>
+            <td>{transaction?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}</td>
             <td>{transaction.deposit?.toLocaleString(localeParam.language, localeParam.currency)}</td>
             <td class="responsive">
               <i class="icon tooltip">
@@ -180,5 +178,5 @@
 </div>
 
 <style lang="scss">
-  @import "src/lib/styles/transactions.scss";
+  @import "src/lib/styles/transactions/tables/month.scss";
 </style>

@@ -146,14 +146,14 @@
     color: $grey;
   }
   .txt-field-slim .input {
-    width: -webkit-fill-available;
+    width: 100%;
     min-height: 2.125rem; /* 34px */
     height: 2.125rem; /* 34px */
     background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     /* border: none; */
     border-radius: 4px;
-    padding-left: 1.25rem;
+    padding-left: 0.5rem;
     /* TEXT */
     font-weight: 500;
     font-size: 0.8125rem; /* 13px */
@@ -162,6 +162,10 @@
     align-items: center;
     justify-content: left;
     color: $primary-dark;
+
+    .input-field {
+      padding-left: 0;
+    }
   }
 
   .txt-field-slim input::placeholder {

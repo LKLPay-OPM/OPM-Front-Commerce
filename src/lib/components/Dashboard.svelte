@@ -3,8 +3,9 @@
   import { onMount } from "svelte";
   import { loggedInUser } from "$lib/stores";
   import { goto } from "$app/navigation";
-  /* componens */
+  /* components */
   import InfoCard from "$lib/components/InfoCard.svelte";
+  import Icons from "$lib/components/Icons.svelte";
   /* utils */
   import { getMonthName, timeToLocalString, dateToLocalString } from "$lib/utils/date";
   /* constants */
@@ -77,6 +78,7 @@
                 <th class="responsive">Comisión</th>
                 <th class="responsive">IVA</th>
                 <th class="responsive">Dispersión</th>
+                <th class="responsive">Tipo</th>
               </tr>
             </thead>
             <tbody>
@@ -87,27 +89,36 @@
                       " - " +
                       timeToLocalString(transaction["Transaction Time"])}
                   </td><td class="responsive">{transaction.id}</td>
-                  <td
-                    >{transaction.Amount?.toLocaleString(
-                      localeParam.language,
-                      localeParam.currency
-                    )}</td
-                  >
+                  <td>{transaction.Amount?.toLocaleString(localeParam.language, localeParam.currency)}</td>
                   <td class="responsive"
-                    >{transaction.comission?.toLocaleString(
-                      localeParam.language,
-                      localeParam.currency
-                    )}</td
+                    >{transaction.comission?.toLocaleString(localeParam.language, localeParam.currency)}</td
                   >
                   <td class="responsive"
                     >{transaction?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}</td
                   >
                   <td class="responsive"
-                    >{transaction.deposit?.toLocaleString(
-                      localeParam.language,
-                      localeParam.currency
-                    )}</td
+                    >{transaction.deposit?.toLocaleString(localeParam.language, localeParam.currency)}</td
                   >
+                  <td class="responsive">
+                    <i class="icon tooltip">
+                      <Icons
+                        name={transaction.type === "tpv"
+                          ? "terminal"
+                          : transaction.type === "e-commerce"
+                          ? "qr-code"
+                          : "terminal"}
+                        width="24"
+                        height="24"
+                      />
+                      <span class="tooltiptext"
+                        >{transaction.type === "tpv"
+                          ? "Terminal Punto de Venta"
+                          : transaction.type === "e-commerce"
+                          ? "Link de Pago"
+                          : ""}</span
+                      >
+                    </i>
+                  </td>
                 </tr>
               {/each}
             </tbody>

@@ -2,14 +2,32 @@
   import { isLoggedIn, loggedInUser, redirectBankProfile } from "$lib/stores";
   import { onMount, afterUpdate } from "svelte";
   import Input from "$lib/components/Input.svelte";
+  import FileInput from "$lib/components/inputs/FileInput.svelte";
+  import TextNumberInput from "$lib/components/inputs/TextNumberInput.svelte";
   import Icons from "$lib/components/Icons.svelte";
   import Branches from "$lib/components/Branches.svelte";
   import noUser from "$lib/assets/no_user.png";
+  import Modal from "$lib/components/Modal.svelte";
+  /* utils */
+  import { checkFileSize } from "$lib/utils/validations.js";
 
   export let data;
   let user = data.user;
   let transactions = data.transactions;
   let filter = data.filter;
+  let modalName;
+  let modalCLABE;
+
+  let bankStatement = "";
+  let ineFront = "";
+  let ineBack = "";
+
+  /* let userData = {
+    id: "",
+    name: "",
+    firstLastName: "",
+    secondLastName: "",
+  } */
 
   $: {
     // console.log(data);
@@ -68,20 +86,7 @@
   $: {
   }
 
-  const fetchDBRates = () => {
-    /* try {
-      const fetch = fetchRates();
-      fetch
-        .then((value) => {
-          ratesBusinessType = value.ratesBusinessType[$loggedInUser.businessLine];
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } catch (error) {
-      throw new Error(error);
-    } */
-  };
+  const fetchDBRates = () => {};
 
   const getBusinessLineName = (businessLine) => {
     const businessLineArray = {
@@ -138,15 +143,8 @@
     repeatPassword = "";
   };
 
-  const handleUpdateBusinessInfo = async () => {
-    // console.log(userData);
-    // await updateUserInfo(userData)
-    /* .then(() => {
-      updateBusinessInfo = !updateBusinessInfo;
-    })
-    .catch((error) => {
-      throw new Error(error)
-    }) */
+  const handleUpdateName = async () => {
+    console.log(user);
   };
 
   const getMonth = (month) => {
@@ -168,8 +166,139 @@
     return monthsArray[month].value;
   };
 
+  const openModal = (option) => {
+    // console.log(option)
+    option.show();
+  };
+
+  const closeModal = (option) => {
+    option.closeModal();
+  };
+
   onMount(async () => {});
 </script>
+
+<!-- MODAL UPDATE NAME -->
+<Modal className={`modal-medium`} bind:this={modalName}>
+  <div slot="header">
+    <p>Ingresa tu Nombre</p>
+  </div>
+  <div slot="content">
+    <div class="element">
+      <div class="row">
+        <Input
+          placeholder="Nombre"
+          label="Nombre (s)"
+          id="name"
+          bind:value={user.name}
+          className="txt-field-slim normal blue"
+          type="text"
+        />
+      </div>
+      <div class="row">
+        <Input
+          placeholder="Primer Apellido"
+          label="Primer Apellido"
+          id="firstLastName"
+          bind:value={user.firstLastName}
+          className="txt-field-slim normal blue"
+          type="text"
+        />
+        <Input
+          placeholder="Segundo Apellido"
+          label="Segundo Apellido"
+          id="secondLastName"
+          bind:value={user.secondLastName}
+          className="txt-field-slim normal blue"
+          type="text"
+        />
+      </div>
+      <div style="margin: 1rem 0 0 0;" class="row">
+        <FileInput
+          label="INE Frente"
+          id="IneFront"
+          bind:file={ineFront}
+          className={`btn-plain ${ineFront === "" ? "" : checkFileSize(ineFront) ? "btn-success" : "border-btn-error"}`}
+          accept="image/jpeg, image/png, application/pdf"
+        />
+        <FileInput
+          label="INE Vuelta"
+          id="IneBack"
+          bind:file={ineBack}
+          className={`btn-plain ${ineBack === "" ? "" : checkFileSize(ineBack) ? "btn-success" : "border-btn-error"}`}
+          accept="image/jpeg, image/png, application/pdf"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="modal-buttons" slot="footer">
+    <Input
+      on:click={() => handleUpdateName()}
+      on:click={closeModal(modalName)}
+      label="Enviar Cambio"
+      id="buttonSaveModalName"
+      type="button"
+      className={`
+        ${
+          user.name != "" &&
+          user.firstLastName != "" &&
+          ineFront != "" &&
+          ineBack != "" &&
+          checkFileSize(ineFront) &&
+          checkFileSize(ineBack)
+            ? "btn"
+            : "btn-plain disabled"
+        }`}
+      icon=""
+    />
+  </div>
+</Modal>
+
+<!-- MODAL UPDATE CLABE -->
+<Modal className={`modal-medium`} bind:this={modalCLABE}>
+  <div slot="header">
+    <p>Ingresa tu CLABE</p>
+  </div>
+  <div slot="content">
+    <div class="element">
+      <div class="row">
+        <TextNumberInput
+          bind:value={user.clabe}
+          placeholder="CLABE"
+          label="CLABE"
+          id="CLABE"
+          name="CLABE"
+          className="txt-field-slim normal blue"
+          type="text"
+          maxlength={"16"}
+        />
+      </div>
+      <div style="margin: 1rem 0 0 0;" class="row">
+        <FileInput
+          label="Estado de Cuenta"
+          id="bankStatement"
+          bind:file={bankStatement}
+          className={`btn-plain ${
+            bankStatement === "" ? "" : checkFileSize(bankStatement) ? "btn-success" : "border-btn-error"
+          }`}
+          accept="application/pdf"
+        />
+      </div>
+    </div>
+  </div>
+  <div style="margin: 1rem 0 0 0;" class="modal-buttons" slot="footer">
+    <Input
+      on:click={() => handleUpdateName()}
+      on:click={closeModal(modalCLABE)}
+      label="Enviar Cambio"
+      id="buttonSaveModalCLABE"
+      type="button"
+      className={`
+        ${user.clabe != "" && bankStatement != "" && checkFileSize(bankStatement) ? "btn" : "btn-plain disabled"}`}
+      icon=""
+    />
+  </div>
+</Modal>
 
 <div class="container">
   <div class="date">
@@ -189,10 +318,17 @@
             </div>
             <div class="element">
               <div class="title-blue">
-                {user.businessName}
+                {#if user.businessName || user.name}
+                  {user.businessName ?? user.name}
+                {:else}
+                  <div class="trigger">
+                    <label for="nameModalTrigger">Ingresa tu Nombre</label>
+                    <input id="nameModalTrigger" type="button" on:click={openModal(modalName)} />
+                  </div>
+                {/if}
               </div>
               <div class="description text-center">
-                {getBusinessLineName(user.businessLine)}
+                <!-- {getBusinessLineName(user.businessLine) ?? ""} -->
               </div>
             </div>
             <div class="element rates">
@@ -235,8 +371,21 @@
               <div class="title">Asesor</div>
               <div class="description text-left">
                 <Icons name={"user-fill"} width="24" height="24" />
-                {user.adviser ?? ""}
+                {user.adviser ?? "Por Asignar"}
               </div>
+            </div>
+            <div class="element">
+              {#if user.clabe}
+                <div class="title">Cuenta CLABE</div>
+                <div class="description text-left">
+                  {user.clabe ?? ""}
+                </div>
+              {:else}
+                <div class="trigger">
+                  <label class="title" for="clabeModalTrigger">Ingresa tu CLABE</label>
+                  <input id="clabeModalTrigger" type="button" on:click={openModal(modalCLABE)} />
+                </div>
+              {/if}
             </div>
             {#if $loggedInUser.accountType > 1}
               <div class="element">
@@ -374,6 +523,15 @@
 
 <style lang="scss">
   /* ========================================== */
+  .trigger {
+    label {
+      cursor: pointer;
+    }
+    input {
+      display: none;
+    }
+  }
+
   .container {
     width: 100%;
     display: flex;
@@ -512,6 +670,14 @@
     cursor: pointer;
   }
 
+  .modal-buttons {
+    width: 70%;
+    height: 2.5rem; /* 40px */
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 1rem;
+  }
   @media (max-width: 425px) {
     .content {
       flex-direction: column;

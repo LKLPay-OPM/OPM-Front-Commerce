@@ -11,7 +11,7 @@
   import Modal from "$lib/components/Modal.svelte";
   import Icons from "$lib/components/Icons.svelte";
   /* utils */
-  import { validateEmail } from "$lib/utils/input-validation.js";
+  import { validateEmail } from "$lib/utils/input";
   import { tryAgainErrorToast, successCustomMsgToast, errorCustomMsgToast } from "$lib/utils/toast.js";
   import { formatDecimals } from "$lib/utils/format.js";
   /* constants */
@@ -25,6 +25,7 @@
   let modalPaymentLinkData;
   let link;
   let loading = false;
+  let amountInput;
 
   let input = {
     amount: 0,
@@ -60,10 +61,10 @@
     };
   };
 
-  const selectText = () => {
+  /* const selectText = () => {
     const input = document.getElementById("amount");
     input.select();
-  };
+  }; */
 
   const copyToClipboard = () => {
     try {
@@ -189,7 +190,6 @@
             min="0"
             step=".01"
             decimal={true}
-            on:click={selectText}
           />
           <Input
             bind:value={input.email}

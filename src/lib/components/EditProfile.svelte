@@ -49,14 +49,14 @@
     betweenAddress: "",
     addressProof: "", */
   };
-  let ineFront = "",
-    ineBack = "",
-    bankStatement = "",
-    avatarImg = "",
-    complianceOpinion = "",
-    csf = "",
-    addressProof = "",
-    avatarInput = "";
+  let ineFront = "";
+  let ineBack = "";
+  let bankStatement = "";
+  let avatarImg = "";
+  let complianceOpinion = "";
+  let csf = "";
+  let addressProof = "";
+  let avatarInput = "";
   const dbCollection = "users-client";
   const uid = $loggedInUser.uid;
   let ratesBusinessType;
@@ -210,8 +210,10 @@
   <div class="card-container padding-2">
     <div class="content">
       <!-- Left Section -->
-      <div class="left">
-        <div class="card-secondary col padding-1">
+      <!-- <div class="left" /> -->
+      <!-- Middle Section -->
+      <div class="middle">
+        <div class="col padding-1">
           <div class="element">
             <div class="avatar-container">
               <div class="avatar">
@@ -254,11 +256,14 @@
             className="btn-plain blue"
             type="button"
           />
-          <Input on:click={handleUpdateBusinessInfo} label="Guardar" id="saveData" className="btn-plain blue" type="button" />
+          <Input
+            on:click={handleUpdateBusinessInfo}
+            label="Guardar"
+            id="saveData"
+            className="btn-plain blue"
+            type="button"
+          />
         </div>
-      </div>
-      <!-- Middle Section -->
-      <div class="middle">
         <div class="title">Datos de la Persona</div>
         <div class="element">
           <Input
@@ -266,7 +271,7 @@
             label="Nombre (s)"
             placeholder="Ejemplo de nombre"
             id="name"
-            className="txt-field normal fill-blue"
+            className="txt-field-slim normal fill-blue"
             type="text"
             icon=""
           />
@@ -277,7 +282,7 @@
             label="Primer Apellido"
             placeholder="Apellido"
             id="firstLastName"
-            className="txt-field normal fill-blue"
+            className="txt-field-slim normal fill-blue"
             type="text"
             icon=""
           />
@@ -286,7 +291,7 @@
             label="Segundo Apellido"
             placeholder="Apellido"
             id="secondLastName"
-            className="txt-field normal fill-blue"
+            className="txt-field-slim normal fill-blue"
             type="text"
             icon=""
           />
@@ -316,7 +321,7 @@
             label="Teléfono"
             placeholder="331-3124-521"
             id="phone"
-            className="txt-field normal fill-blue"
+            className="txt-field-slim normal fill-blue"
             type="text"
             icon=""
           />
@@ -327,7 +332,7 @@
             label="Email"
             placeholder="nombre@dominio.com"
             id="email"
-            className="txt-field normal fill-blue"
+            className="txt-field-slim normal fill-blue"
             type="text"
             icon=""
           />
@@ -338,7 +343,7 @@
             label="Número CLABE"
             placeholder="123123123456789011"
             id="clabe"
-            className="txt-field normal fill-blue"
+            className="txt-field-slim normal fill-blue"
             type="text"
             icon=""
           />
@@ -365,27 +370,27 @@
               label="RFC"
               placeholder="AAAA1234562T1"
               id="rfc"
-              className="txt-field normal fill-blue"
+              className="txt-field-slim normal fill-blue"
               type="text"
               icon=""
             />
           </div>
           <div class="element button">
-            <!-- bind:value={financialData.csf} -->
+            <!-- bind:value={csf} -->
             <Input
               label="Constancia de Situación Fiscal"
               id="csf"
-              className={financialData.csf != "" ? "btn-success-border" : "btn-plain blue"}
+              className={csf != "" ? "btn-success-border" : "btn-plain blue"}
               type="file"
               accept="application/pdf"
             />
           </div>
           <div class="element button">
-            <!-- bind:value={financialData.complianceOpinion} -->
+            <!-- bind:value={complianceOpinion} -->
             <Input
               label="Opinión de Cumplimiento"
               id="complianceOpinion"
-              className={financialData.complianceOpinion != "" ? "btn-success-border" : "btn-plain blue"}
+              className={complianceOpinion != "" ? "btn-success-border" : "btn-plain blue"}
               type="file"
               accept="application/pdf"
             />
@@ -397,7 +402,7 @@
               label="Calle"
               placeholder="Circunvalación Jorge Álvarez del Castillo"
               id="address"
-              className="txt-field normal fill-blue"
+              className="txt-field-slim normal fill-blue"
               type="text"
               icon=""
             />
@@ -500,246 +505,5 @@
 </div>
 
 <style lang="scss">
-  /* ========================================== */
-  .container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  .date {
-    font-style: normal;
-    font-weight: 700;
-    font-size: 1.25rem; /* 20px */
-    line-height: 1.25rem; /* 20px */
-    text-align: center;
-    /* Text */
-    color: $primary-dark;
-  }
-  .padding-1 {
-    padding: 1rem;
-  }
-
-  .padding-2 {
-    padding: 2rem;
-  }
-  .content {
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-    width: -webkit-fill-available;
-  }
-  .col {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .row {
-    display: grid;
-    grid-auto-flow: column;
-  }
-
-  .left {
-    min-width: 17.5rem; /* 280px */
-  }
-
-  .left > .buttons {
-    margin: 1rem;
-    display: grid;
-    grid-auto-flow: column;
-    gap: 0.5rem;
-    min-height: 2rem;
-  }
-
-  .middle,
-  .right {
-    background: $background-light;
-    padding: 0.5rem;
-    height: fit-content;
-  }
-
-  .middle {
-    width: 100%;
-  }
-
-  .middle > .element,
-  .right > .element {
-    display: grid;
-    grid-auto-flow: column;
-    gap: 0.5rem;
-    min-height: 2rem;
-  }
-  .middle > .element.button,
-  .right > .element.button {
-    margin: 1rem 0;
-  }
-
-  .middle > .row-title {
-    color: $primary-dark;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    display: flex;
-    flex-direction: row;
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
-    font-weight: 700;
-  }
-
-  .right > .elements-row {
-    display: grid;
-    /* grid-auto-flow: column; */
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.625rem; /* 10px */
-    min-height: 2rem; /* 32px */
-    max-width: inherit;
-  }
-
-  .element > .row-element {
-    max-width: 95px;
-  }
-
-  .right {
-    width: -webkit-fill-available;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .avatar-container {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-  }
-  .avatar {
-    position: relative;
-    width: 130px;
-    height: 130px;
-    border-radius: 25px;
-    overflow: hidden;
-    background-color: $primary-dark;
-  }
-  .avatar img {
-    height: 100%;
-    width: 100%;
-    border-radius: 25px;
-    object-fit: cover;
-    justify-content: center;
-    cursor: pointer;
-  }
-
-  /*  */
-  .avatar:hover .avatar-img {
-    opacity: 0.5;
-  }
-  .avatar-content {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-  }
-  .avatar:hover .avatar-content {
-    opacity: 1;
-    cursor: pointer;
-  }
-  .avatar-text {
-    text-transform: uppercase;
-    font-size: 12px;
-    width: 50%;
-    text-align: center;
-    cursor: pointer;
-  }
-  .avatar-icon {
-    color: white;
-  }
-  .avatar input {
-    display: none;
-  }
-
-  .title-blue {
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 16px;
-    text-align: center;
-    color: $primary-dark;
-    margin: 0rem 0rem 0.5rem 0rem;
-  }
-  .description {
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 16px;
-    text-align: center;
-    color: $primary-dark;
-    display: flex;
-    align-items: center;
-  }
-
-  .title {
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 16px;
-    text-align: left;
-    color: #fd9053;
-    margin: 0rem 0rem 0.5rem 0rem;
-  }
-
-  .divider-hor {
-    background: linear-gradient(138.32deg, rgba(0, 0, 0, 0.5) 8.26%, rgba(255, 255, 255, 0.5) 91.02%), #eaecf0;
-    background-blend-mode: soft-light, normal;
-    /* n-stroke */
-
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    /* n-icon-1-1-2-in */
-
-    box-shadow: inset -1px -1px 2px #fafbff, inset 1px 1px 2px #a6abbd;
-    border-radius: 5px;
-    height: 0.5rem; /* 8px */
-    width: -webkit-fill-available;
-  }
-
-  .text-center {
-    display: flex;
-    justify-content: center;
-    text-align: center;
-  }
-  .text-left {
-    display: flex;
-    justify-content: left;
-    text-align: left;
-  }
-
-  .arrow-blue {
-    color: $primary-light;
-    cursor: pointer;
-  }
-
-  .hidden {
-    display: none;
-  }
-
-  @media (max-width: 425px) {
-    .content {
-      flex-direction: column;
-    }
-  }
-
-  @media (max-width: 540px) {
-    .content {
-      flex-direction: column;
-    }
-  }
-
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .content {
-      flex-direction: column;
-    }
-  }
+  @import "src/lib/styles/profile/edit.scss";
 </style>

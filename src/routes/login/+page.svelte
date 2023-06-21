@@ -11,7 +11,7 @@
   /* controllers */
   import { AuthController } from "$lib/controllers/auth/auth.controller";
   /* utils */
-  import { validateEmail, validatePassword } from "$lib/utils/input-validation";
+  import { validateEmail, validatePassword } from "$lib/utils/input";
   /* assets */
   import Logo from "$lib/assets/Logo.png";
 
@@ -82,6 +82,9 @@
                 className={validateEmail(input.email) && validatePassword(input.password) ? "btn" : "btn-disabled"}
                 icon=""
               />
+            </div>
+            <div class="register-link">
+              <a href="/register">Quiero crear una cuenta</a>
             </div>
           </form>
         </div>

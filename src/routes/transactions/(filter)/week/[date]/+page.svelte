@@ -112,18 +112,10 @@
         <tr>
           <th class="responsive" />
           <th class="responsive" />
-          <th>
-            {resume?.Amount?.toLocaleString(localeParam.language, localeParam.currency)}
-          </th>
-          <th>
-            {resume?.Comission?.toLocaleString(localeParam.language, localeParam.currency)}
-          </th>
-          <th class="responsive">
-            {resume?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}
-          </th>
-          <th>
-            {resume?.Deposit?.toLocaleString(localeParam.language, localeParam.currency)}
-          </th>
+          <th>{resume?.Amount?.toLocaleString(localeParam.language, localeParam.currency)}</th>
+          <th>{resume?.Comission?.toLocaleString(localeParam.language, localeParam.currency)}</th>
+          <th>{resume?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}</th>
+          <th>{resume?.Deposit?.toLocaleString(localeParam.language, localeParam.currency)}</th>
           <th class="responsive" />
         </tr>
       </thead>
@@ -138,10 +130,8 @@
             <td class="responsive">{transaction.id}</td>
             <td>{transaction.Amount?.toLocaleString(localeParam.language, localeParam.currency)}</td>
             <td>{transaction?.comission?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-            <td class="responsive">
-              {transaction?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}
-            </td>
-            <td> {transaction?.deposit?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+            <td>{transaction?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+            <td>{transaction?.deposit?.toLocaleString(localeParam.language, localeParam.currency)}</td>
             <td class="responsive">
               <i class="icon tooltip">
                 <Icons
@@ -173,5 +163,5 @@
 </div>
 
 <style lang="scss">
-  @import "src/lib/styles/transactions.scss";
+  @import "src/lib/styles/transactions/tables/week.scss";
 </style>
