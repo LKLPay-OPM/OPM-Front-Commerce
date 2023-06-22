@@ -27,8 +27,8 @@
     display: block;
     width: 100%;
     font-size: 15px;
-    &:hover,
-    &:focus {
+    &:hover {
+      cursor: pointer;
       background-color: lighten($grey, $amount: 28);
     }
   }

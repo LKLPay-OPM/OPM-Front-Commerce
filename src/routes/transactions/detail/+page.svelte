@@ -46,7 +46,7 @@
   };
   const handleClarification = async () => {
     try {
-      const response = await ticketsClient.post(`/clarification/transaction`, clarification);
+      const response = await ticketsClient.post(`/ticket/clarification/transaction`, clarification);
       successCustomMsgToast(`Tu ticket de aclaración se ha generado con éxito`);
       return { ...response.data?.response };
     } catch (err) {

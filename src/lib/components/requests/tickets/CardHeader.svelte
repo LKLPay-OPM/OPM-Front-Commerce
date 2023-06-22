@@ -1,17 +1,18 @@
 <script>
+  /* components */
+  import StatusBadge from "$lib/components/requests/StatusBadge.svelte";
+  /* variables */
   export let id;
   export let type;
   export let status;
-  export let statusClass = "green";
+  // export let statusClass = "green";
 </script>
 
 <div class="card-header">
   <div class="card-left">
-    <p>{type ?? "mucho sex"}</p>
+    <p>{type ?? ""}</p>
   </div>
-  <div class="card-right {statusClass}">
-    <p>{status ?? "Queso"}</p>
-  </div>
+  <StatusBadge {status} />
 </div>
 <div class="card-subtitle">
   <p>#{id}</p>
@@ -34,30 +35,6 @@
       text-overflow: ellipsis;
       font-weight: 600;
       text-align: left;
-    }
-    .card-right {
-      p {
-        text-align: right;
-        position: relative;
-        z-index: 1;
-        display: inline-block;
-        &::before {
-          position: absolute;
-          content: "";
-          top: 50%;
-          left: -12px;
-          transform: translateY(-50%);
-          width: 4px;
-          height: 4px;
-          border-radius: 50%;
-          z-index: 2;
-        }
-      }
-      &.green {
-        p::before {
-          background-color: green;
-        }
-      }
     }
   }
 

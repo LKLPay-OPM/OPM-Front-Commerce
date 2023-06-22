@@ -40,6 +40,9 @@ function getTimeEllapsed(time) {
   const formatter = new Intl.RelativeTimeFormat('es-MX')
 
   console.log(time)
+  if (time < 60){
+    return 'Hace un momento';
+  }
   if (time < 3600) {
     const minutes = Math.floor(time / 60);
     return formatter.format(minutes * -1, 'minute');
@@ -52,12 +55,8 @@ function getTimeEllapsed(time) {
     const days = Math.floor(time / 86400);
     return formatter.format(days * -1, 'day');
   }
-  if (time >= 604800) {
-    const weeks = Math.floor(time / 604800);
-    return formatter.format(weeks * -1, 'week');
-  }
-  const seconds = Math.floor(time);
-  return formatter.format(seconds * -1, 'second');
+  const weeks = Math.floor(time / 604800);
+  return formatter.format(weeks * -1, 'week');
 }
 
 /**
