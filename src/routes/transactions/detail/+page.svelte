@@ -10,6 +10,7 @@
   import { dateToLocalString, timeToLocalString } from "$lib/utils/date.js";
   import { getCardBrand } from "$lib/utils/brands.js";
   import { successCustomMsgToast, errorCustomMsgToast } from "$lib/utils/toast.js";
+  import { copyLinkToClipboard } from "$lib/utils/copyToClipboard.js";
   /* constants */
   import { localeParam } from "$lib/constants/locale.js";
   /* stores */
@@ -26,9 +27,18 @@
   let transaction = data?.response;
   let cardIcon = "";
   let modalClarification;
+  let modalCancel;
+  let link;
   let clarification = {
     transaction: transaction._id,
     description: "",
+  };
+
+  let cancelData = {
+    amount: "",
+    url: "",
+    description: "",
+    email: "",
   };
 
   $: {
@@ -72,6 +82,18 @@
     }
   };
 
+  const cancelTransaction = async () => {
+    console.log(transaction);
+    try {
+      const response = await axiosFraudPreventionManagement.post(`/cancel`, { idTransaction: transaction.id });
+      cancelData = {
+        url: response?.data?.response?.url,
+      };
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   onMount(async () => {});
 </script>
 
@@ -106,6 +128,54 @@
       type="button"
       className={`
         ${clarification.description != "" ? "btn" : "btn-plain disabled"}`}
+      icon=""
+    />
+  </div>
+</Modal>
+
+<Modal className={`modal-small`} bind:this={modalCancel}>
+  <div slot="header">
+    <div class="svg">
+      <p>Datos de Cancelación</p>
+      <span><Icons name="success-circle" width="24" height="24" /></span>
+    </div>
+  </div>
+  <div slot="content">
+    <div class="thin-divider" />
+    <div class="modal-content">
+      <div class="column-element">
+        <span class="copy-link">
+          Enlace
+          <div class="copy-link__icon">
+            <label for="copy">
+              <Icons name="file-copy" width="16" height="16" />
+            </label>
+            <input type="button" id="copy" name="copy" on:click={copyLinkToClipboard(link)} />
+          </div>
+        </span>
+        <textarea readonly bind:this={link} id="link" name="link">{cancelData.url}</textarea>
+      </div>
+      <div class="column-element">
+        <span>Monto</span>
+        <p>{cancelData.amount.toLocaleString(localeParam.language, localeParam.currency)}</p>
+      </div>
+      <div class="column-element">
+        <span>Concepto</span>
+        <p>{cancelData.description}</p>
+      </div>
+      <div class="column-element">
+        <span>E-Mail</span>
+        <p>{cancelData.email}</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-buttons" slot="footer">
+    <Input
+      on:click={closeModal(modalPaymentcancelData)}
+      label="Cerrar"
+      id="buttonCloseModalImmediateDepositPreference"
+      type="button"
+      className="btn-success"
       icon=""
     />
   </div>
@@ -237,38 +307,6 @@
           </div>
         </div>
       </div>
-      <div class="card-buttons no-print">
-        <div class="reverse-button">
-          <Input
-            on:click={showModal(modalClarification)}
-            label="Aclaración"
-            id="reverseTransaction"
-            type="button"
-            className="btn-plain"
-            icon=""
-          />
-        </div>
-        <div class="email-button">
-          <Input
-            on:click={sendTransactionByEmail}
-            label="Enviar por e-mail"
-            id="emailTransaction"
-            type="button"
-            className="btn-plain"
-            icon=""
-          />
-        </div>
-        <div class="print-button">
-          <Input
-            on:click={() => window.print()}
-            label="Imprimir Recibo"
-            id="printTransaction"
-            type="button"
-            className="btn-plain"
-            icon=""
-          />
-        </div>
-      </div>
     </div>
     <div class="details-right no-print responsive">
       <div class="title">Reportes</div>
@@ -279,8 +317,83 @@
       </div>
     </div>
   </div>
+  <div class="details__bottom">
+    <div class="card-buttons no-print">
+      <div class="reverse-button">
+        {#if transaction.type === "e-commerce"}
+          <Input
+            on:click={cancelTransaction}
+            label="Cancelar"
+            id="reverseTransaction"
+            type="button"
+            className="border-btn-error"
+            icon=""
+          />
+        {/if}
+      </div>
+      <div class="clarification-button">
+        <Input
+          on:click={showModal(modalClarification)}
+          label="Aclaración"
+          id="transactionClarification"
+          type="button"
+          className="btn-plain"
+          icon=""
+        />
+      </div>
+      <div class="email-button">
+        <Input
+          on:click={sendTransactionByEmail}
+          label="Enviar por e-mail"
+          id="emailTransaction"
+          type="button"
+          className="btn-plain"
+          icon=""
+        />
+      </div>
+      <div class="print-button">
+        <Input
+          on:click={() => window.print()}
+          label="Imprimir Recibo"
+          id="printTransaction"
+          type="button"
+          className="btn-plain"
+          icon=""
+        />
+      </div>
+    </div>
+  </div>
 </div>
 
 <style lang="scss">
   @import "src/lib/styles/transactions/detail.scss";
+
+  .details__bottom {
+    width: 100%;
+    // display: flex;
+    .card-buttons {
+      width: 100%;
+      height: 2.5rem; /* 40px */
+      display: flex;
+      margin-top: 2rem; /* 32px */
+      gap: 1rem; /* 16px */
+      justify-content: center;
+      .reverse-button {
+        display: flex;
+        width: 6rem; /* 80px */
+      }
+      .clarification-button {
+        display: flex;
+        width: 6rem; /* 80px */
+      }
+      .email-button {
+        display: flex;
+        width: 7.5rem; /* 120px */
+      }
+      .print-button {
+        display: flex;
+        width: 7.5rem; /* 120px */
+      }
+    }
+  }
 </style>

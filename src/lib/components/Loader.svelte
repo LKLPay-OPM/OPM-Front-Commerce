@@ -1,10 +1,15 @@
 <script>
+  import Logo from "$lib/assets/Logo.png";
+  import Circulo from "$lib/assets/Circulo.png";
   export let text = "";
 </script>
 
 <div class="container">
   <div class="loader-container">
-    <span class="loader" />
+    <div class="loader">
+      <img class="logo" src={Logo} alt="Logo" />
+      <img class="circle" src={Circulo} alt="Círculo" />
+    </div>
     <span class="text">{text}</span>
   </div>
 </div>
@@ -40,26 +45,74 @@
         font-size: 1.125rem;
         color: $primary-dark;
         text-align: center;
+        z-index: 100;
       }
     }
   }
 
   .loader {
-    width: 48px;
-    height: 48px;
-    border: 5px solid var(--white);
-    border-bottom-color: var(--brand-light);
-    border-radius: 50%;
-    display: inline-block;
-    box-sizing: border-box;
-    animation: loader 1s linear infinite;
+    position: relative;
+    height: 200px;
+    width: 200px;
+    .logo {
+      top: 50%;
+      left: 50%;
+      // transform: translate(-50%, -50%);
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      animation: logo 2s linear infinite;
+    }
+    .circle {
+      top: 50%;
+      left: 50%;
+      // transform: translate(-50%, -50%);
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      filter: invert(20%);
+      animation: circle 10s linear infinite;
+    }
   }
-  @keyframes loader {
+  @keyframes logo {
     0% {
-      transform: rotate(0deg);
+      scale: 1.1;
+      rotate: 0deg;
+      translate: -50% -50%;
+      // transform: scale(1.1) rotate(0deg);
+    }
+    50% {
+      scale: 0.8;
+      rotate: 180deg;
+      translate: -50% -50%;
+      // transform: scale(0.8) rotate(180deg);
     }
     100% {
-      transform: rotate(360deg);
+      scale: 1;
+      rotate: 360deg;
+      translate: -50% -50%;
+      // transform: scale(1) rotate(360deg);
+    }
+  }
+
+  @keyframes circle {
+    0% {
+      // scale: 1.1;
+      rotate: 0deg;
+      translate: -50% -50%;
+      // transform: scale(1.1) rotate(0deg);
+    }
+    50% {
+      // scale: 0.8;
+      rotate: -180deg;
+      translate: -50% -50%;
+      // transform: scale(0.8) rotate(180deg);
+    }
+    100% {
+      // scale: 1;
+      rotate: -360deg;
+      translate: -50% -50%;
+      // transform: scale(1) rotate(360deg);
     }
   }
 </style>

@@ -14,6 +14,7 @@
   import { validateEmail } from "$lib/utils/input";
   import { tryAgainErrorToast, successCustomMsgToast, errorCustomMsgToast } from "$lib/utils/toast.js";
   import { formatDecimals } from "$lib/utils/format.js";
+  import { copyLinkToClipboard } from "$lib/utils/copyToClipboard.js";
   /* constants */
   import { localeParam } from "$lib/constants/locale.js";
 
@@ -66,23 +67,6 @@
     input.select();
   }; */
 
-  const copyToClipboard = () => {
-    try {
-      navigator.clipboard.writeText(`${link.value}`);
-      successCustomMsgToast(`Enlace copiado con éxito`);
-    } catch (err) {
-      try {
-        const area = link;
-        area.select();
-        document.execCommand("copy");
-        successCustomMsgToast(`Enlace copiado con éxito`);
-      } catch (error) {
-        console.error(err);
-        errorCustomMsgToast(`Ocurrió un error al copiar el enlace`);
-      }
-    }
-  };
-
   const showModal = (option) => {
     option.show();
   };
@@ -109,7 +93,7 @@
             <label for="copy">
               <Icons name="file-copy" width="16" height="16" />
             </label>
-            <input type="button" id="copy" name="copy" on:click={copyToClipboard} />
+            <input type="button" id="copy" name="copy" on:click={copyLinkToClipboard(link)} />
           </div>
         </span>
         <textarea readonly bind:this={link} id="link" name="link">{linkData.url}</textarea>
