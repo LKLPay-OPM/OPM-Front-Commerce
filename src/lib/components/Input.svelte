@@ -559,4 +559,40 @@
   .fill-orange label {
     color: #fd9053;
   }
+
+  div.border-btn-error {
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+    border: none;
+    display: flex;
+    height: 100%;
+    background: #e6e9ef;
+    border: 1px solid #fd5353;
+    box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
+    border-radius: 0.625rem;
+    &:hover {
+      background: #fd5353;
+    }
+  }
+
+  .border-btn-error label {
+    width: 100%;
+    cursor: pointer;
+    /* TEXT */
+    font-weight: 800;
+    font-size: 1.3125;
+    line-height: 1.25rem;
+    text-align: center;
+    justify-content: center;
+    letter-spacing: -0.4px;
+    color: #fd5353;
+    &:hover {
+      color: #e6e9ef;
+    }
+  }
+
+  .border-btn-error .input {
+    display: none;
+  }
 </style>

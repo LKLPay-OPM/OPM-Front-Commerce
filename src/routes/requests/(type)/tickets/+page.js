@@ -12,7 +12,7 @@ export const ssr = false;
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
   try {
-    const tickets = await ticketsClient.get(`/clarification`);
+    const tickets = await ticketsClient.get(`/ticket`);
     return { tickets: tickets.data?.response };
   } catch (err) {
     const handler = await appErrorResponseHandler(err);

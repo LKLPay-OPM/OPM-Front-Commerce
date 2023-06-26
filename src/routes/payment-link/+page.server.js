@@ -32,7 +32,7 @@ export const actions = {
         "X-Refresh-Token": refreshToken,
       });
       axiosResponseInterceptorWithCustomHeaders(axiosFraudPreventionManagement, token, refreshToken);
-      response = await axiosFraudPreventionManagement.post(`/generate/link`, formData);
+      response = await axiosFraudPreventionManagement.post(`/link`, formData);
       return { response: response.data?.response };
     } catch (err) {
       console.error(err);

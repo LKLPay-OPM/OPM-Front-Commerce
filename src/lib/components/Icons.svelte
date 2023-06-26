@@ -373,7 +373,7 @@
       svg: `
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
         viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-      <style type="text/css">
+      <style>
         .st0{fill:#FFFFFF;}
         .st1{fill:#F48120;}
         .st2{fill:#231F20;}
@@ -442,7 +442,7 @@
       svg: `
         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
         viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-        <style type="text/css">
+        <style>
           .st0{fill:#FFFFFF;}
           .st1{fill:url(#SVGID_1_);}
           .st2{fill:url(#SVGID_00000032637442639506543640000003536983196343298225_);}

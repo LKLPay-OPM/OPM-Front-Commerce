@@ -1,6 +1,7 @@
 <script>
+  /* navigation */
+  import { goto } from "$app/navigation";
   /* components */
-  import Icons from "$lib/components/Icons.svelte";
   import RowElement from "$lib/components/requests/tickets/RowElement.svelte";
   import CardHeader from "$lib/components/requests/tickets/CardHeader.svelte";
   import CardFooter from "$lib/components/requests/tickets/CardFooter.svelte";
@@ -37,7 +38,7 @@
     </div>
   {:else}
     {#each tickets as ticket}
-      <div class="ticket card-container clickable">
+      <div class="ticket card-container">
         <div class="row">
           <CardHeader id={ticket._id} type={ticketTypeHandler(ticket.type)} status={ticket.status} />
         </div>
@@ -48,7 +49,7 @@
           <WriteComment
             placeholder="Abrir más detalles"
             on:click={() => {
-              selectedTicket = ticket;
+              goto(`/requests/tickets/${ticket._id}`);
             }}
           />
         </div>
