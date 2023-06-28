@@ -1,6 +1,4 @@
 <script>
-  /* svelte */
-  import { enhance } from "$app/forms";
   /* stores */
   import { sessionUser } from "$lib/stores";
   /* components */
@@ -15,18 +13,17 @@
   import { tryAgainErrorToast, successCustomMsgToast, errorCustomMsgToast } from "$lib/utils/toast.js";
   import { formatDecimals } from "$lib/utils/format.js";
   import { copyLinkToClipboard } from "$lib/utils/copyToClipboard.js";
+  /* controllers */
+  import { ProfileController } from "$lib/controllers/profile/profile.controller";
+  import { PaymentLinkController } from "$lib/controllers/payment-links/payment-link.controller";
   /* constants */
   import { localeParam } from "$lib/constants/locale.js";
-
-  // export let form;
-  // export let data;
 
   let token = $sessionUser?.token;
   let refreshToken = $sessionUser?.refreshToken;
   let modalPaymentLinkData;
   let link;
   let loading = false;
-  let amountInput;
 
   let input = {
     amount: 0,
@@ -42,17 +39,14 @@
   };
 
   $: validation = input.amount > 0 && validateEmail(input.email) != "";
-  $: {
-    // console.log(form, data)
-  }
 
   const formSuccess = (link) => {
     // successCustomMsgToast("Se ha generado el link de pago con éxito");
     linkData = {
-      amount: link?.data?.response?.amount ?? "",
-      url: link?.data?.response?.url ?? "",
-      description: link?.data?.response?.description ?? "",
-      email: link?.data?.response?.email ?? "",
+      amount: link?.response?.amount ?? "",
+      url: link?.response?.url ?? "",
+      description: link?.response?.description ?? "",
+      email: link?.response?.email ?? "",
     };
 
     input = {
@@ -62,17 +56,27 @@
     };
   };
 
-  /* const selectText = () => {
-    const input = document.getElementById("amount");
-    input.select();
-  }; */
-
   const showModal = (option) => {
     option.show();
   };
 
   const closeModal = (option) => {
     option.closeModal();
+  };
+
+  const generateLink = async () => {
+    loading = true;
+    try {
+      const { response } = await ProfileController.getProfile();
+      input.commerceName = response?.businessName ?? response?.name ?? "";
+      const link = await PaymentLinkController.generate(input);
+      formSuccess(link);
+      showModal(modalPaymentLinkData);
+    } catch (e) {
+      tryAgainErrorToast();
+    } finally {
+      loading = false;
+    }
   };
 </script>
 
@@ -137,25 +141,7 @@
           <p>Ingresa los datos y genera un enlace</p>
         </div>
         <div class="divider-hor" />
-        <form
-          class="form"
-          method="POST"
-          use:enhance={({ form, data, action, cancel }) => {
-            loading = true;
-            return async ({ result }) => {
-              console.log(result);
-              // `result` is an `ActionResult` object
-              if (result.type === "error") {
-                loading = false;
-                tryAgainErrorToast();
-              } else {
-                loading = false;
-                formSuccess(result);
-                showModal(modalPaymentLinkData);
-              }
-            };
-          }}
-        >
+        <form class="form" on:submit|preventDefault={generateLink}>
           <input type="hidden" id="token" name="token" value={token} />
           <input type="hidden" id="refreshToken" name="refreshToken" value={refreshToken} />
           <IconInput

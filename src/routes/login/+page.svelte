@@ -2,9 +2,8 @@
   /* svelte */
   import { goto } from "$app/navigation";
   import { onMount } from "svelte";
-  import { enhance } from "$app/forms";
   /* store */
-  import { isLoggedIn, loggedInUser, sessionUser } from "$lib/stores";
+  import { isLoggedIn } from "$lib/stores";
   /* components */
   import Input from "$lib/components/Input.svelte";
   import PasswordInput from "$lib/components/inputs/PasswordInput.svelte";
@@ -54,25 +53,7 @@
         <div class="title">Inicio de Sesión</div>
         <div class={`subtitle ${!error ? "hidden" : ""}`}>Verifica que tus datos sean correctos</div>
         <div class="form-inputs">
-          <form
-            method="POST"
-            use:enhance={({ form, data, action, cancel }) => {
-              loading = true;
-              return async ({ result }) => {
-                // `result` is an `ActionResult` object
-                if (result.type === "error") {
-                  loading = false;
-                  error = true;
-                } else {
-                  loading = false;
-                  isLoggedIn.set(true);
-                  loggedInUser.set(result?.data?.user);
-                  sessionUser.set(result?.data?.session);
-                  goto("/");
-                }
-              };
-            }}
-          >
+          <form on:submit|preventDefault={handleLogin}>
             <Input
               label="Correo Electrónico"
               id="login-email"
