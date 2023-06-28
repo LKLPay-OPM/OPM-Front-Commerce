@@ -1,5 +1,5 @@
 <script>
-  import Logo from "$lib/assets/Logo.png";
+  import Logo from "$lib/assets/Logo RGB.svg";
   import Circulo from "$lib/assets/Circulo.png";
   export let text = "";
 </script>
@@ -7,6 +7,7 @@
 <div class="container">
   <div class="loader-container">
     <div class="loader">
+      <!-- <i class="logo">{Logo}</i> -->
       <img class="logo" src={Logo} alt="Logo" />
       <img class="circle" src={Circulo} alt="Círculo" />
     </div>

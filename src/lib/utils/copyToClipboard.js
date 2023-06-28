@@ -1,3 +1,5 @@
+/* utils */
+import { errorCustomMsgToast, successCustomMsgToast } from "$lib/utils/toast.js";
 export function copyLinkToClipboard(data) {
   try {
     navigator.clipboard.writeText(`${data.value}`);
@@ -13,4 +15,4 @@ export function copyLinkToClipboard(data) {
       errorCustomMsgToast(`Ocurrió un error al copiar el enlace`);
     }
   }
-};
+}

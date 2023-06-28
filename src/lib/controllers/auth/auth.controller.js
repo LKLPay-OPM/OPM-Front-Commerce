@@ -2,6 +2,7 @@
 import { error } from "@sveltejs/kit";
 import { goto } from "$app/navigation";
 import { isLoggedIn, loggedInUser, sessionUser } from "$lib/stores";
+import { setCookie, getCookie } from "$lib/utils/cookie.js";
 /* services */
 import { authService } from "./services/auth.service";
 
@@ -9,10 +10,11 @@ export class AuthController {
   static async login(body) {
     try {
       const { session, user } = await authService.login(body);
-      isLoggedIn.set(true);
+      /* isLoggedIn.set(true);
       loggedInUser.set(user);
-      sessionUser.set(session);
-      await goto("/");
+      sessionUser.set(session); */
+      // await goto("/");
+      return { session, user, loggedIn: true };
     } catch (e) {
       isLoggedIn.update(() => false);
       loggedInUser.set({ error: true });
@@ -34,13 +36,12 @@ export class AuthController {
 
   static async register(body) {
     try {
-      const {session,user} = await authService.register(body);
-      return { session, user };
+      const { session, user } = await authService.register(body);
+      return { session, user, isLoggedIn: true };
       /* isLoggedIn.set(true);
       loggedInUser.set(user);
       sessionUser.set(session); */
     } catch (e) {
-      // console.log(e)
       isLoggedIn.update(() => false);
       loggedInUser.set({ error: true });
       sessionUser.set({ error: true });
