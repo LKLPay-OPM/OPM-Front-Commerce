@@ -41,7 +41,32 @@
     email: "",
   };
 
+  let cancel = {
+    amount: data?.response?.Amount,
+    // giro:,
+    // cardNumber:,
+    // expirationDate:,
+    // idTransaction:,
+    // idAfiliate:,
+    // afiliateNumber:,
+    // idAggregator:,
+    // authorization:,
+    pos: "ECOMCOD1",
+    pos: "CODECOM1+0000000",
+    // originalElements:,
+    email: data?.response?.["Cardholder Email"],
+    name: data?.response?.["Cardholder Name"],
+    phone: data?.response?.["Cardholder Phone"],
+    date: data?.response?.["Transaction Date"],
+    time: data?.response?.["Transaction Time"],
+    pointsBBVA: data?.response?.["Points BBVA"],
+    msi: data?.response?.MSI,
+    commerce: data?.response?.commerce,
+  };
+
   $: {
+    console.log(cancel);
+    console.log(data.response);
   }
 
   const returnToPreviousPage = () => {

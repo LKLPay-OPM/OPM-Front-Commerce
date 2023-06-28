@@ -34,7 +34,7 @@ export class AuthController {
 
   static async register(body) {
     try {
-      const {session,user} = await authService.register(body);
+      const { session, user } = await authService.register(body);
       return { session, user };
       /* isLoggedIn.set(true);
       loggedInUser.set(user);
