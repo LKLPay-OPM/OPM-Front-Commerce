@@ -7,8 +7,10 @@ import { axiosResponseInterceptorWithCustomHeaders } from "$lib/repos/axios/inte
 import { axiosFraudPreventionManagement, profilesClient } from "$lib/repos/axios";
 /* controllers */
 import { appErrorResponseHandler } from "$lib/handlers/error.handler";
+/* uutils */
+import { interceptor } from "$lib/utils/interceptors";
 
-export const ssr = false;
+// export const ssr = false;
 
 /** @type {import('./$types').Actions} */
 export const actions = {
@@ -20,18 +22,20 @@ export const actions = {
     formData.delete("refreshToken");
     let response;
     try {
-      axiosRequestInterceptorWithCustomHeaders(profilesClient, {
+      /*       axiosRequestInterceptorWithCustomHeaders(profilesClient, {
         Authorization: `Bearer ${token}`,
         "X-Refresh-Token": refreshToken,
       });
-      axiosResponseInterceptorWithCustomHeaders(profilesClient, token, refreshToken);
+      axiosResponseInterceptorWithCustomHeaders(profilesClient, token, refreshToken); */
+      interceptor(profilesClient, token, refreshToken);
       const user = await profilesClient.get(`/user/profile`);
       formData.append("commerceName", user?.data?.response?.businessName ?? user?.data?.response?.name);
-      axiosRequestInterceptorWithCustomHeaders(axiosFraudPreventionManagement, {
+      /* axiosRequestInterceptorWithCustomHeaders(axiosFraudPreventionManagement, {
         Authorization: `Bearer ${token}`,
         "X-Refresh-Token": refreshToken,
       });
-      axiosResponseInterceptorWithCustomHeaders(axiosFraudPreventionManagement, token, refreshToken);
+      axiosResponseInterceptorWithCustomHeaders(axiosFraudPreventionManagement, token, refreshToken); */
+      interceptor(axiosFraudPreventionManagement, token, refreshToken);
       response = await axiosFraudPreventionManagement.post(`/link`, formData);
       return { response: response.data?.response };
     } catch (err) {

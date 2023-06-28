@@ -1,16 +1,11 @@
 /* interceptor */
-import { axiosRequestInterceptorWithCustomHeaders } from "$lib/repos/axios/interceptors/request";
-import { axiosResponseInterceptorWithCustomHeaders } from "$lib/repos/axios/interceptors/response";
-/* svelte */
-import { sessionUser } from "$lib/stores";
-import { get } from "svelte/store";
+import { axiosRequestInterceptorWithCustomHeaders } from "$lib/repos/axios/interceptors/server-side/request";
+import { axiosResponseInterceptorWithCustomHeaders } from "$lib/repos/axios/interceptors/server-side/response";
 
-export function interceptor(client) {
-  const session = get(sessionUser);
-  console.log(session);
+export function interceptor(client, token, refreshToken, cookies) {
   axiosRequestInterceptorWithCustomHeaders(client, {
-    Authorization: `Bearer ${session.token}`,
-    "X-Refresh-Token": session.refreshToken,
+    Authorization: `Bearer ${token}`,
+    "X-Refresh-Token": refreshToken,
   });
-  axiosResponseInterceptorWithCustomHeaders(client, session.token, session.refreshToken);
+  axiosResponseInterceptorWithCustomHeaders(client, token, refreshToken, cookies);
 }
