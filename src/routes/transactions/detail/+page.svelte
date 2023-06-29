@@ -43,17 +43,17 @@
 
   let cancel = {
     amount: data?.response?.Amount,
-    // giro:,
-    // cardNumber:,
-    // expirationDate:,
-    // idTransaction:,
-    // idAfiliate:,
-    // afiliateNumber:,
-    // idAggregator:,
-    // authorization:,
-    pos: "ECOMCOD1",
-    pos: "CODECOM1+0000000",
-    // originalElements:,
+    ["SIC Code"]: data?.response?.["SIC Code"],
+    cardNumber: data?.response?.cardNumber,
+    expirationDate: data?.response?.expirationDate,
+    idTransaction: data?.response?.idTransaction,
+    idAfiliate: data?.response?.idAfiliate,
+    afiliateNumber: data?.response?.afiliateNumber,
+    idAggregator: data?.response?.idAggregator,
+    authorization: data?.response?.authorization,
+    POS: data?.response?.POS,
+    terminal: data?.response?.terminal,
+    originalElements: data?.response?.originalElements,
     email: data?.response?.["Cardholder Email"],
     name: data?.response?.["Cardholder Name"],
     phone: data?.response?.["Cardholder Phone"],
@@ -65,7 +65,6 @@
   };
 
   $: {
-    console.log(cancel);
     console.log(data.response);
   }
 
@@ -107,10 +106,11 @@
     }
   };
 
+  /* Función cancelar transacción */
   const cancelTransaction = async () => {
     console.log(transaction);
     try {
-      const response = await axiosFraudPreventionManagement.post(`/cancel`, { idTransaction: transaction.id });
+      const response = await axiosFraudPreventionManagement.post(`/cancel`, cancel);
       cancelData = {
         url: response?.data?.response?.url,
       };
@@ -196,7 +196,7 @@
   </div>
   <div class="modal-buttons" slot="footer">
     <Input
-      on:click={closeModal(modalPaymentcancelData)}
+      on:click={closeModal(modalCancel)}
       label="Cerrar"
       id="buttonCloseModalImmediateDepositPreference"
       type="button"
