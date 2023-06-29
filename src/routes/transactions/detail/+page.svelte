@@ -19,7 +19,7 @@
   import { onMount } from "svelte";
   import { error } from "@sveltejs/kit";
   /* client */
-  import { axiosDevicesClient, ticketsClient } from "$lib/repos/axios";
+  import { axiosDevicesClient, ticketsClient, axiosFraudPreventionManagement } from "$lib/repos/axios";
   /* controllers */
   import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
@@ -41,27 +41,34 @@
     email: "",
   };
 
+  let linkCancel = {
+    amount: data?.response?.Amount,
+    email: data?.response?.["Cardholder Email"],
+    commerceName: data?.response?.commerceName ?? "",
+  }
+
   let cancel = {
     amount: data?.response?.Amount,
     ["SIC Code"]: data?.response?.["SIC Code"],
-    cardNumber: data?.response?.cardNumber,
-    expirationDate: data?.response?.expirationDate,
-    idTransaction: data?.response?.idTransaction,
-    idAfiliate: data?.response?.idAfiliate,
-    afiliateNumber: data?.response?.afiliateNumber,
-    idAggregator: data?.response?.idAggregator,
+    ["Application PAN"]: data?.response?.["Application PAN"],
+    expirationDate: "",
+    ["Id Transaction"]: data?.response?.["Id Transaction"],
+    ["Id Afiliate"]: data?.response?.["Id Afiliate"],
+    ["Afiliate Number"]: data?.response?.["Afiliate Number"],
+    ["Id Aggregator"]: data?.response?.["Id Aggregator"],
     authorization: data?.response?.authorization,
     POS: data?.response?.POS,
-    terminal: data?.response?.terminal,
+    ["Id Terminal"]: data?.response?.["Id Terminal"],
     originalElements: data?.response?.originalElements,
     email: data?.response?.["Cardholder Email"],
-    name: data?.response?.["Cardholder Name"],
-    phone: data?.response?.["Cardholder Phone"],
-    date: data?.response?.["Transaction Date"],
-    time: data?.response?.["Transaction Time"],
-    pointsBBVA: data?.response?.["Points BBVA"],
-    msi: data?.response?.MSI,
+    ["Cardholder Name"]: data?.response?.["Cardholder Name"],
+    ["Cardholder Phone"]: data?.response?.["Cardholder Phone"],
+    ["Transaction Date"]: data?.response?.["Transaction Date"],
+    ["Transaction Time"]: data?.response?.["Transaction Time"],
+    ["Points BBVA"]: data?.response?.["Points BBVA"],
+    MSI: data?.response?.MSI,
     commerce: data?.response?.commerce,
+    commerceName: data?.response?.commerceName ?? "",
   };
 
   $: {
@@ -108,9 +115,9 @@
 
   /* Función cancelar transacción */
   const cancelTransaction = async () => {
-    console.log(transaction);
+    console.log(linkCancel);
     try {
-      const response = await axiosFraudPreventionManagement.post(`/cancel`, cancel);
+      const response = await axiosFraudPreventionManagement.post(`/link/cancel`, linkCancel);
       cancelData = {
         url: response?.data?.response?.url,
       };
