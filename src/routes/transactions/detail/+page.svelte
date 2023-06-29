@@ -115,9 +115,9 @@
 
   /* Función cancelar transacción */
   const cancelTransaction = async () => {
-    console.log(linkCancel);
+    console.log(cancel);
     try {
-      const response = await axiosFraudPreventionManagement.post(`/link/cancel`, linkCancel);
+      const response = await axiosFraudPreventionManagement.post(`/link/cancel`, cancel);
       cancelData = {
         url: response?.data?.response?.url,
       };
