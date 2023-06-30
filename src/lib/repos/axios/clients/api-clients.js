@@ -14,13 +14,16 @@ import { axiosDefaultsClientFormData, axiosDefaultsClientJson } from "$lib/const
 
 axios.defaults.withCredentials = true;
 
-
 export const axiosECommerceClient = axios.create({
   ...axiosDefaultsClientFormData,
   baseURL: PUBLIC_ECOMMERCE_ENDPOINT,
 });
 export const axiosFraudPreventionManagement = axios.create({
   ...axiosDefaultsClientFormData,
+  baseURL: PUBLIC_FRAUD_PREVENTION_MANAGEMENT_ENDPOINT,
+});
+export const axiosFraudPreventionManagementJSON = axios.create({
+  ...axiosDefaultsClientJson,
   baseURL: PUBLIC_FRAUD_PREVENTION_MANAGEMENT_ENDPOINT,
 });
 export const axiosClient = axios.create({

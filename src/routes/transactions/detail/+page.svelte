@@ -19,7 +19,7 @@
   import { onMount } from "svelte";
   import { error } from "@sveltejs/kit";
   /* client */
-  import { axiosDevicesClient, ticketsClient, axiosFraudPreventionManagement } from "$lib/repos/axios";
+  import { axiosDevicesClient, ticketsClient, axiosFraudPreventionManagementJSON } from "$lib/repos/axios";
   /* controllers */
   import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
@@ -40,12 +40,6 @@
     description: "",
     email: "",
   };
-
-  let linkCancel = {
-    amount: data?.response?.Amount,
-    email: data?.response?.["Cardholder Email"],
-    commerceName: data?.response?.commerceName ?? "",
-  }
 
   let cancel = {
     amount: data?.response?.Amount,
@@ -115,12 +109,17 @@
 
   /* Función cancelar transacción */
   const cancelTransaction = async () => {
-    console.log(cancel);
     try {
-      const response = await axiosFraudPreventionManagement.post(`/link/cancel`, cancel);
+      const response = await axiosFraudPreventionManagementJSON.post(`/link/cancel`, cancel);
+      console.log(response?.data?.response)
       cancelData = {
+        amount: response?.data?.response?.amount,
         url: response?.data?.response?.url,
+        description: response?.data?.response?.description,
+        email: response?.data?.response?.email,
       };
+      // formSuccess(link);
+      modalCancel.show();
     } catch (err) {
       console.log(err);
     }
@@ -400,6 +399,69 @@
 <style lang="scss">
   @import "src/lib/styles/transactions/detail.scss";
 
+  .svg {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    span {
+      color: $secondary-dark;
+    }
+  }
+
+  .thin-divider {
+    width: 100%;
+    border: 1px solid $grey;
+    margin: 0 0 10px 0;
+  }
+
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    .column-element {
+      display: flex;
+      flex-direction: column;
+      margin: 0 0 10px 0;
+      span {
+        font-weight: 600;
+        color: $primary-dark;
+        font-size: 1.125rem;
+        &.copy-link {
+          display: flex;
+        }
+        .copy-link__icon {
+          color: $primary-dark;
+          label {
+            cursor: pointer;
+          }
+          input {
+            display: none;
+          }
+          &:hover {
+            color: $primary-light;
+          }
+        }
+      }
+      p,
+      textarea {
+        font-weight: 400;
+        color: $primary-dark;
+        font-size: 0.875;
+        word-wrap: break-word;
+      }
+
+      textarea {
+        resize: none;
+        border: none;
+        outline: none;
+        overflow: hidden;
+
+        &::selection {
+          color: $primary-light;
+          background: transparent;
+        }
+      }
+    }
+  }
   .details__bottom {
     width: 100%;
     // display: flex;
