@@ -4,7 +4,7 @@
   import Pagination from "$lib/components/Pagination.svelte";
   /* utils */
   import { getMonthName, dateToLocalStringShort } from "$lib/utils/date";
-  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal"; 
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   /* svelte */
   import { goto } from "$app/navigation";
   /* exports */
