@@ -15,6 +15,7 @@
   import { generatePDF, generateCSV, generateXLSX } from "$lib/hooks/exportDataToFile.js";
   /* utils */
   import { getMonthName, timeToLocalString, dateToLocalString } from "$lib/utils/date.js";
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
 
   export let user;
   export let data;
@@ -67,14 +68,6 @@
     immediateDepositCommission: 0,
     immediateDepositQty: 0,
     toDeposit: 0,
-  };
-
-  const localeParam = {
-    language: "es-MX",
-    currency: {
-      style: "currency",
-      currency: "MXN",
-    },
   };
 
   function handleFilterClick({ detail }) {
@@ -464,7 +457,6 @@
         </div>
       {:else}
         <div class="row-element">
-          <!-- <p>{immediateDeposit.availableBalance.toLocaleString(localeParam.language, localeParam.currency)}</p> -->
           <IconInput
             icon="dollar"
             label="Saldo Disponible"
@@ -565,7 +557,7 @@
       <div class="title">Cantidad</div>
       <div class="description">
         <p>
-          {immediateDeposit.availableBalance?.toLocaleString(localeParam.language, localeParam.currency)}
+          {currencyFormatLocal(immediateDeposit.availableBalance)}
         </p>
       </div>
     </div>
@@ -745,7 +737,7 @@
         <div class="card">
           <div><p>Saldo a Depositar</p></div>
           <div>
-            <span>{resume.depositBalance?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0"}</span>
+            <span>{currencyFormatLocal(resume.depositBalance ?? 0)}</span>
           </div>
         </div>
         <div class="button">

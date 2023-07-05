@@ -9,6 +9,8 @@
   import { goto } from "$app/navigation";
   /* constants */
   import { filterByDateOptions } from "$lib/constants/filter";
+  /* utils */
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
 
   export let selected;
   export let transactions;
@@ -22,14 +24,6 @@
   }
 
   let pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
-
-  const localeParam = {
-    language: "es-MX",
-    currency: {
-      style: "currency",
-      currency: "MXN",
-    },
-  };
 
   $: {
     // console.log(all)
@@ -196,19 +190,19 @@
       <div class="element">
         <div class="title-blue">Monto</div>
         <div class="description text-center">
-          {transactions?.resume?.Amount?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
+          {currencyFormatLocal(transactions?.resume?.Amount ?? 0)}
         </div>
       </div>
       <div class="element r425">
         <div class="title-blue">Comisión</div>
         <div class="description text-center">
-          {transactions?.resume?.Comission?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
+          {currencyFormatLocal(transactions?.resume?.Comission ?? 0)}
         </div>
       </div>
       <div class="element r425">
         <div class="title-blue">A Depositar</div>
         <div class="description text-center">
-          {transactions?.resume?.Deposit?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
+          {currencyFormatLocal(transactions?.resume?.Deposit ?? 0)}
         </div>
       </div>
     </div>

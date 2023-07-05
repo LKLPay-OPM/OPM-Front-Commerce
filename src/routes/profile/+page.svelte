@@ -22,25 +22,6 @@
   let ineFront = "";
   let ineBack = "";
 
-  /* let userData = {
-    id: "",
-    name: "",
-    firstLastName: "",
-    secondLastName: "",
-  } */
-
-  $: {
-    // console.log(data);
-  }
-
-  const localeParam = {
-    language: "es-MX",
-    currency: {
-      style: "currency",
-      currency: "MXN",
-    },
-  };
-
   const dbCollection = "users-client";
   const uid = $loggedInUser.uid;
   let date = new Date();

@@ -6,6 +6,7 @@
   import { goto } from "$app/navigation";
   /* utils */
   import { timeToLocalString, dateToLocalString } from "$lib/utils/date";
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   /* exports */
   export let data;
   let transactions = data?.response?.transactions ?? [];
@@ -14,13 +15,9 @@
   let paginationEnd = data?.end ?? 10;
   let active = data?.filter ?? "day";
 
-  const localeParam = {
-    language: "es-MX",
-    currency: {
-      style: "currency",
-      currency: "MXN",
-    },
-  };
+  $: {
+    console.log(data.response.transactions);
+  }
 
   function handleFilterClick({ detail }) {
     // const value = detail?.value;
@@ -99,13 +96,13 @@
                   )}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td
               >
               <td class="responsive">{transaction?.id}</td>
-              <td>{transaction.Amount?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+              <td>{currencyFormatLocal(transaction.Amount)}</td>
               <td class="responsive"
-                >{transaction.comission?.toLocaleString(localeParam.language, localeParam.currency)}</td
+                >{currencyFormatLocal(transaction.comission)}</td
               >
-              <td class="responsive">{transaction.IVA?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+              <td class="responsive">{currencyFormatLocal(transaction.IVA)}</td>
               <td class="responsive"
-                >{transaction.deposit?.toLocaleString(localeParam.language, localeParam.currency)}</td
+                >{currencyFormatLocal(transaction.deposit)}</td
               >
               <td class="responsive">
                 <i class="icon tooltip">

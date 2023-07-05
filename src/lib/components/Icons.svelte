@@ -316,6 +316,15 @@
     },
     {
       box: 24,
+      name: "otra",
+      svg: `
+      xmlns="http://www.w3.org/2000/svg">
+      <path fill="none" d="M0 0h24v24H0z"/>
+      <path fill="currentColor" d="M3 3h18a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm17 8H4v8h16v-8zm0-2V5H4v4h16zm-6 6h4v2h-4v-2z"/>
+      `,
+    },
+    {
+      box: 24,
       name: "mastercard",
       svg: `
       <svg width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

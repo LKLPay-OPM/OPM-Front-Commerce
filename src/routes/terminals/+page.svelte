@@ -23,14 +23,6 @@
     },
   ];
 
-  const localeParam = {
-    language: "es-MX",
-    currency: {
-      style: "currency",
-      currency: "MXN",
-    },
-  };
-
   let date = new Date();
 
   const getMonth = (month) => {
@@ -78,10 +70,7 @@
                   <td>{terminal.branch}</td>
                   <td class="r425 r540">{terminal.type}</td>
                   <td
-                    >{parseFloat(terminal.transactions / 100).toLocaleString(
-                      localeParam.language,
-                      localeParam.currency
-                    )}</td
+                    >{currencyFormatLocal(parseFloat(terminal.transactions / 100))}</td
                   >
                 </tr>
               {/each}

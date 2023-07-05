@@ -8,8 +8,7 @@
   import Icons from "$lib/components/Icons.svelte";
   /* utils */
   import { getMonthName, timeToLocalString, dateToLocalString } from "$lib/utils/date";
-  /* constants */
-  import { localeParam } from "$lib/constants/locale.js";
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
 
   const dbCollection = "users-client";
   const uid = $loggedInUser.uid;
@@ -44,21 +43,13 @@
   <div class="content">
     <div class="card-group">
       <div class="card">
-        <InfoCard
-          className={""}
-          title="Monto Total"
-          numData={resume?.Amount?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
-        />
+        <InfoCard className={""} title="Monto Total" numData={currencyFormatLocal(resume?.Amount ?? 0)} />
       </div>
       <div class="card">
         <InfoCard className={""} title="N° de Ventas" numData={resume?.Sold ?? "0"} />
       </div>
       <div class="card">
-        <InfoCard
-          className={""}
-          title="Saldo a Depositar"
-          numData={resume?.Deposit?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
-        />
+        <InfoCard className={""} title="Saldo a Depositar" numData={currencyFormatLocal(resume?.Deposit ?? 0)} />
       </div>
     </div>
     <div class="transactions" style={transactions?.length <= 0 ? "min-height: 25rem;" : ""}>
@@ -89,16 +80,10 @@
                       " - " +
                       timeToLocalString(transaction["Transaction Time"])}
                   </td><td class="responsive">{transaction.id}</td>
-                  <td>{transaction.Amount?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                  <td class="responsive"
-                    >{transaction.comission?.toLocaleString(localeParam.language, localeParam.currency)}</td
-                  >
-                  <td class="responsive"
-                    >{transaction?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}</td
-                  >
-                  <td class="responsive"
-                    >{transaction.deposit?.toLocaleString(localeParam.language, localeParam.currency)}</td
-                  >
+                  <td>{currencyFormatLocal(transaction?.Amount)}</td>
+                  <td class="responsive">{currencyFormatLocal(transaction?.comission)}</td>
+                  <td class="responsive">{currencyFormatLocal(transaction?.IVA)}</td>
+                  <td class="responsive">{currencyFormatLocal(transaction?.deposit)}</td>
                   <td class="responsive">
                     <i class="icon tooltip">
                       <Icons

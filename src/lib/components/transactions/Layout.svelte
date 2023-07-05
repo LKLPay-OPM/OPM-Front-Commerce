@@ -19,6 +19,8 @@
   import Icons from "$lib/components/Icons.svelte";
   /* Constants */
   import { filterByDateOptions } from "$lib/constants/filter";
+  /* utils */
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   /* variables */
   export let data;
   let active = data.filter;
@@ -85,14 +87,6 @@
   let clarification = {
     ticket: "",
     description: "",
-  };
-
-  const localeParam = {
-    language: "es-MX",
-    currency: {
-      style: "currency",
-      currency: "MXN",
-    },
   };
 
   const transactionFound = () => {
@@ -530,13 +524,13 @@
       <div class="card">
         <div><p>Monto Total</p></div>
         <div>
-          <span>{resume?.Amount?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"} </span>
+          <span>{currencyFormatLocal(resume?.Amount ?? 0)} </span>
         </div>
       </div>
       <div class="card">
         <div><p>Comisión</p></div>
         <div>
-          <span>{resume?.Comission?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"} </span>
+          <span>{currencyFormatLocal(resume?.Comission ?? 0)} </span>
         </div>
       </div>
       {#if (typeof resume?.Tips != "undefined" && resume?.Tips > 0) || typeof resume?.Tips != "undefined"}
@@ -544,7 +538,7 @@
           <div><p>Propinas</p></div>
           <div>
             <span>
-              {resume?.Tips?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
+              {currencyFormatLocal(resume?.Tips ?? 0)}
             </span>
           </div>
         </div>
@@ -553,7 +547,7 @@
         <div><p>Saldo a Depositar</p></div>
         <div>
           <span>
-            {resume?.Deposit?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
+            {currencyFormatLocal(resume?.Deposit ?? 0)}
           </span>
         </div>
       </div>
