@@ -1,4 +1,5 @@
 <script>
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   let terminals = [
     {
       name: "Matriz 1",
@@ -69,9 +70,7 @@
                   <td class="r425 r540">{terminal.serial}</td>
                   <td>{terminal.branch}</td>
                   <td class="r425 r540">{terminal.type}</td>
-                  <td
-                    >{currencyFormatLocal(parseFloat(terminal.transactions / 100))}</td
-                  >
+                  <td>{currencyFormatLocal(parseFloat(terminal.transactions / 100))}</td>
                 </tr>
               {/each}
             </tbody>

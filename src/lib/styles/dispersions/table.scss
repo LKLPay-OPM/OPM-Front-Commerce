@@ -138,7 +138,7 @@ td:first-child {
   }
 }
 
-@media (max-width: 540px) {
+@media (max-width: $md) {
   .date {
     grid-auto-flow: column;
   }
@@ -167,7 +167,7 @@ td:first-child {
   }
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: $md) and (max-width: $xl) {
   .hide {
     display: none;
   }

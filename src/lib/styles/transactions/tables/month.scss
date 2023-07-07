@@ -120,7 +120,7 @@ tbody.inside {
   }
 }
 
-@media (max-width: 540px) {
+@media (max-width: $md) {
   .table-container {
     display: block;
     width: 100%;

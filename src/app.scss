@@ -24,7 +24,8 @@ input:-webkit-autofill:focus {
 }
 
 body {
-  overflow: hidden;
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 .text {
@@ -84,6 +85,7 @@ body {
   box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
     4px 4px 20px rgba(111, 140, 176, 0.41);
   border-radius: 10px;
+  margin: 1rem 0;
 }
 
 .card-inside {
@@ -103,7 +105,8 @@ body {
 .no-user {
   position: relative;
   background: $background-light;
-  height: 100vh;
+  // height: 100vh;
+  height: -webkit-fill-available;
   width: 100vw;
   transition: all 0.5s ease;
   overflow-y: auto;
@@ -113,6 +116,7 @@ body {
   position: relative;
   background: $background-light;
   height: 100vh;
+  // height: -webkit-fill-available;
   left: 15rem; /* 240px */
   width: calc(100% - 15rem);
   transition: all 0.5s ease;
@@ -142,52 +146,11 @@ body {
   font-weight: 600;
 }
 
-@media screen {
-  .main-section {
-    left: 15rem; /* 240px */
-    width: calc(100% - 15rem);
-  }
-  .sidebar.close ~ .main-section {
-    left: 4.875rem; /* 78px */
-    width: calc(100% - 4.875rem);
-  }
-}
-
-@media (max-width: 540px) {
-  .main-section {
-    padding: 0 0 10rem 0;
-  }
-}
-
-@media (max-width: 768px) {
-  .main-section {
-    left: 0rem;
-    top: 50px;
-    padding: 0 0 10rem 0;
-    width: 100%;
-  }
-
-  .sidebar.close ~ .main-section {
-    left: 0rem;
-    width: 100%;
-  }
-}
-@media (min-width: 769px) and (max-width: 1024px) {
-  .main-section {
-    left: 4.875rem; /* 78px */
-    width: calc(100% - 4.875rem);
-  }
-
-  .sidebar.close ~ .main-section {
-    left: 4.875rem; /* 78px */
-    width: calc(100% - 4.875rem);
-  }
-}
-
 .page-title {
   display: flex;
   justify-content: center;
   width: 100%;
+  color: $primary-dark;
 }
 
 /* Styles for Login, Register and Forgot Pass forms */
@@ -286,5 +249,43 @@ body {
 {    
   .no-print, .no-print * {
     display: none !important;
+  }
+}
+
+/* MEDIA */
+@media screen {
+  .main-section {
+    left: 15rem; /* 240px */
+    width: calc(100% - 15rem);
+  }
+  .sidebar.close ~ .main-section {
+    left: 4.875rem; /* 78px */
+    width: calc(100% - 4.875rem);
+  }
+}
+
+@media (max-width: $md) {
+  body {
+    overflow-y: auto;
+  }
+  .main-section {
+    left: 0rem;
+    top: 50px;
+  }
+  
+  .sidebar.close ~ .main-section {
+    left: 0rem;
+    width: 100%;
+  }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  .main-section {
+    left: 4.875rem; /* 78px */
+    width: calc(100% - 4.875rem);
+  }
+
+  .sidebar.close ~ .main-section {
+    left: 4.875rem; /* 78px */
+    width: calc(100% - 4.875rem);
   }
 }

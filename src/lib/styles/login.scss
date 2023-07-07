@@ -138,3 +138,35 @@ input:-internal-autofill-selected {
     color: $primary-light;
   }
 }
+
+/* MEDIA */
+/* XSmall Screen */
+@media screen and (max-width: $xs) {
+  .content {
+    min-width: 24rem;
+  }
+}
+/* Small Screen */
+@media screen and (min-width: $xs) and (max-width: $sm) {
+  .content {
+    min-width: 24rem;
+    width: fit-content;
+  }
+}
+/* Medium Screen */
+@media screen and (min-width: $sm) and (max-width: $md) {
+  .content {
+    min-width: 27rem;
+    width: fit-content;
+  }
+}
+
+/* Large Screen */
+@media screen and (min-width: $md) and (max-width: $lg) {
+  
+}
+
+/* XLarge Screen */
+@media screen and (min-width: $lg) and (max-width: $xl) {
+
+}

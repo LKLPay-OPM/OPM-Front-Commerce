@@ -99,7 +99,7 @@
           <th class="responsive">Ticket</th>
           <th>Ventas</th>
           <th>Comisión</th>
-          <th>IVA</th>
+          <th class="responsive">IVA</th>
           <th>Depósito</th>
           <th class="responsive">Tipo</th>
         </tr>
@@ -114,7 +114,7 @@
           <th>
             {currencyFormatLocal(resume?.Comission)}
           </th>
-          <th>
+          <th class="responsive">
             {currencyFormatLocal(resume?.IVA)}
           </th>
           <th>
@@ -134,7 +134,7 @@
             <td class="responsive">{transaction.id}</td>
             <td>{currencyFormatLocal(transaction.Amount)}</td>
             <td>{currencyFormatLocal(transaction.comission)}</td>
-            <td>{currencyFormatLocal(transaction?.IVA)}</td>
+            <td class="responsive">{currencyFormatLocal(transaction?.IVA)}</td>
             <td>{currencyFormatLocal(transaction.deposit)}</td>
             <td class="responsive">
               <i class="icon tooltip">

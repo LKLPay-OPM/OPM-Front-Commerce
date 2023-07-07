@@ -1,0 +1,23 @@
+/* MEDIA */
+/* XSmall Screen */
+@media screen and (max-width: $xs) {
+  
+}
+/* Small Screen */
+@media screen and (min-width:$xs) and (max-width: $sm) {
+  
+}
+/* Medium Screen */
+@media screen and (min-width: $sm) and (max-width: $md) {
+
+}
+
+/* Large Screen */
+@media screen and (min-width: $md) and (max-width: $lg) {
+  
+}
+
+/* XLarge Screen */
+@media screen and (min-width: $lg) and (max-width: $xl) {
+
+}

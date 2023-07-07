@@ -63,28 +63,23 @@
           <table class="table-content">
             <thead>
               <tr>
-                <th>Fecha</th>
-                <th class="responsive">Ticket</th>
+                <th class="sm">Ticket</th>
                 <th>Cobro</th>
-                <th class="responsive">Comisión</th>
-                <th class="responsive">IVA</th>
-                <th class="responsive">Dispersión</th>
-                <th class="responsive">Tipo</th>
+                <th class="">Comisión</th>
+                <th class="sm md">IVA</th>
+                <th class="">Dispersión</th>
+                <th class="">Tipo</th>
               </tr>
             </thead>
             <tbody>
               {#each transactions as transaction}
                 <tr class="clickable" on:click={() => goto(`/transactions/detail?ticket=${transaction?._id}`)}>
-                  <td>
-                    {dateToLocalString(transaction["Transaction Date"]) +
-                      " - " +
-                      timeToLocalString(transaction["Transaction Time"])}
-                  </td><td class="responsive">{transaction.id}</td>
+                  <td class="sm">{transaction.id}</td>
                   <td>{currencyFormatLocal(transaction?.Amount)}</td>
-                  <td class="responsive">{currencyFormatLocal(transaction?.comission)}</td>
-                  <td class="responsive">{currencyFormatLocal(transaction?.IVA)}</td>
-                  <td class="responsive">{currencyFormatLocal(transaction?.deposit)}</td>
-                  <td class="responsive">
+                  <td class="">{currencyFormatLocal(transaction?.comission)}</td>
+                  <td class="sm md">{currencyFormatLocal(transaction?.IVA)}</td>
+                  <td class="">{currencyFormatLocal(transaction?.deposit)}</td>
+                  <td class="">
                     <i class="icon tooltip">
                       <Icons
                         name={transaction.type === "tpv"

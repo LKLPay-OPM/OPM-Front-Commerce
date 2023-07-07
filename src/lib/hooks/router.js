@@ -32,7 +32,7 @@ const userRoutes = (role, route) => {
       "/requests": true,
       "/dispersions": true,
       "/branch-office": true,
-      "/terminals": false,
+      "/terminals": true,
       "/urgent": false,
       "/credits": false,
       "/payment-link": true,
