@@ -13,11 +13,10 @@
   import { tryAgainErrorToast, successCustomMsgToast, errorCustomMsgToast } from "$lib/utils/toast.js";
   import { formatDecimals } from "$lib/utils/format.js";
   import { copyLinkToClipboard } from "$lib/utils/copyToClipboard.js";
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   /* controllers */
   import { ProfileController } from "$lib/controllers/profile/profile.controller";
   import { PaymentLinkController } from "$lib/controllers/payment-links/payment-link.controller";
-  /* constants */
-  import { localeParam } from "$lib/constants/locale.js";
 
   let token = $sessionUser?.token;
   let refreshToken = $sessionUser?.refreshToken;
@@ -104,7 +103,7 @@
       </div>
       <div class="column-element">
         <span>Monto</span>
-        <p>{linkData.amount.toLocaleString(localeParam.language, localeParam.currency)}</p>
+        <p>{currencyFormatLocal(linkData.amount)}</p>
       </div>
       <div class="column-element">
         <span>Concepto</span>

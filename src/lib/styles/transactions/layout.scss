@@ -227,7 +227,8 @@
 
 
 /* MEDIA QUERIES */
-  @media (max-width: 540px) {
+/* Small Screen */
+  @media (max-width: $sm) {
     .top {
       display: flex;
       flex-direction: column;
@@ -265,8 +266,56 @@
       padding: 2rem 2rem;
     }
 
-    .transactions-view {
-      padding: 0rem 0rem 5rem 0rem;
+    .date-range-input {
+      display: block;
+    }
+
+    .message {
+      min-height: 10rem;
+      margin: 0 1rem;
+    }
+  }
+/* Small Screen */
+  @media (min-width: $sm) and (max-width: $md) {
+    .top {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .top__left {
+      .buttons {
+        justify-content: center;
+        align-items: center;
+        width: -webkit-fill-available;
+      }
+      & * .element {
+        width: 15rem;
+      }
+    }
+
+    .middle {
+      & > .card-group {
+        flex-direction: column;
+        height: auto;
+        width: 100%;
+
+        & > .card {
+          margin: 0 1rem;
+        }
+      }
+  
+      & * .card {
+        width: -webkit-fill-available;
+      }
+    }
+
+    .card-container {
+      padding: 2rem 2rem;
+    }
+
+    .transactions {
+      margin: 1rem 0 0 0;
     }
 
     .date-range-input {
@@ -278,8 +327,8 @@
       margin: 0 1rem;
     }
   }
-
-  @media (min-width: 768px) and (max-width: 1023px) {
+/* Large Screen */
+  @media (min-width: $md) and (max-width: $lg) {
     .top__left {
       min-width: 15rem;
     }

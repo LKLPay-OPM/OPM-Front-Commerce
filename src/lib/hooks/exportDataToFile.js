@@ -1,192 +1,188 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import * as XLSX from 'xlsx/xlsx.mjs';
+import * as XLSX from "xlsx/xlsx.mjs";
+/* utils */
+import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
 let data = [];
 let today = new Date().toISOString().slice(0, 10);
 const headers = {
-  date: 'Fecha',
-  id: 'Ticket',
-  total: 'Total',
-  commission: 'Comisión',
-  deposit: 'Depósito',
-  card: 'Tarjeta'
+  date: "Fecha",
+  id: "Ticket",
+  total: "Total",
+  commission: "Comisión",
+  deposit: "Depósito",
+  card: "Tarjeta",
 };
-const localeParam = {
-  language: 'es-MX',
-  currency: {
-    style: 'currency',
-    currency: 'MXN'
-  }
-}
 
 export const generatePDF = (arrayData, clientData) => {
   var client = clientData;
   // console.log(arrayData)
-  var img = document.createElement('img');
+  var img = document.createElement("img");
   img.src = client.avatar;
   data = arrayData;
   let total = 0;
-  data.forEach(element => {
+  data.forEach((element) => {
     total = total + parseInt(element.total);
     element.date = element.date.toDate().toLocaleString();
-    element.total = parseFloat(element.total).toLocaleString(localeParam.language, localeParam.currency)
+    element.total = currencyFormatLocal(element.total);
   });
   const d = new Date();
   const today = d.toLocaleString();
   // console.log(data)
-  var doc = new jsPDF()
+  var doc = new jsPDF();
 
   autoTable(doc, {
     body: [
       [
         {
-          content: 'Lkl Pay',
+          content: "Lkl Pay",
           styles: {
-            halign: 'left',
+            halign: "left",
             fontSize: 20,
-            textColor: '#ffffff'
-          }
+            textColor: "#ffffff",
+          },
         },
         {
-          content: 'Ventas',
+          content: "Ventas",
           styles: {
-            halign: 'center',
+            halign: "center",
             fontSize: 20,
-            textColor: '#ffffff'
-          }
+            textColor: "#ffffff",
+          },
         },
         // doc.addImage(img, 'JPEG', 30, 20),
       ],
     ],
-    theme: 'plain',
+    theme: "plain",
     styles: {
-      fillColor: '#3366ff'
-    }
+      fillColor: "#3366ff",
+    },
   });
 
   autoTable(doc, {
     body: [
       [
         {
-          content: 'Reference: #INV0001'
-          +`\nDate: ${today}`
-          +'\nInvoice number: 123456',
+          content: "Reference: #INV0001" + `\nDate: ${today}` + "\nInvoice number: 123456",
           styles: {
-            halign: 'right'
-          }
-        }
+            halign: "right",
+          },
+        },
       ],
     ],
-    theme: 'plain'
+    theme: "plain",
   });
 
   autoTable(doc, {
     body: [
       [
         {
-          content: 'Billed to:'
-          +'\nJohn Doe'
-          +'\nBilling Address line 1'
-          +'\nBilling Address line 2'
-          +'\nZip code - City'
-          +'\nCountry',
+          content:
+            "Billed to:" +
+            "\nJohn Doe" +
+            "\nBilling Address line 1" +
+            "\nBilling Address line 2" +
+            "\nZip code - City" +
+            "\nCountry",
           styles: {
-            halign: 'left'
-          }
+            halign: "left",
+          },
         },
         {
-          content: 'Shipping address:'
-          +'\nJohn Doe'
-          +'\nShipping Address line 1'
-          +'\nShipping Address line 2'
-          +'\nZip code - City'
-          +'\nCountry',
+          content:
+            "Shipping address:" +
+            "\nJohn Doe" +
+            "\nShipping Address line 1" +
+            "\nShipping Address line 2" +
+            "\nZip code - City" +
+            "\nCountry",
           styles: {
-            halign: 'left'
-          }
+            halign: "left",
+          },
         },
         {
-          content: 'From:'
-          +'\nCompany name'
-          +'\nShipping Address line 1'
-          +'\nShipping Address line 2'
-          +'\nZip code - City'
-          +'\nCountry',
+          content:
+            "From:" +
+            "\nCompany name" +
+            "\nShipping Address line 1" +
+            "\nShipping Address line 2" +
+            "\nZip code - City" +
+            "\nCountry",
           styles: {
-            halign: 'right'
-          }
-        }
+            halign: "right",
+          },
+        },
       ],
     ],
-    theme: 'plain'
+    theme: "plain",
   });
 
   autoTable(doc, {
     body: [
       [
         {
-          content: 'Total Generado:',
+          content: "Total Generado:",
           styles: {
-            halign:'right',
-            fontSize: 14
-          }
-        }
+            halign: "right",
+            fontSize: 14,
+          },
+        },
       ],
       [
         {
-          content: `${total.toLocaleString(localeParam.language, localeParam.currency)}`,
+          content: `${currencyFormatLocal(total)}`,
           styles: {
-            halign:'right',
+            halign: "right",
             fontSize: 20,
-            textColor: '#3366ff'
-          }
-        }
+            textColor: "#3366ff",
+          },
+        },
       ],
       [
         {
-          content: 'Due date: 2022-02-01',
+          content: "Due date: 2022-02-01",
           styles: {
-            halign:'right'
-          }
-        }
-      ]
+            halign: "right",
+          },
+        },
+      ],
     ],
-    theme: 'plain'
+    theme: "plain",
   });
 
   autoTable(doc, {
     body: [
       [
         {
-          content: 'Resúmen de Ventas',
+          content: "Resúmen de Ventas",
           styles: {
-            halign:'left',
-            fontSize: 14
-          }
-        }
-      ]
+            halign: "left",
+            fontSize: 14,
+          },
+        },
+      ],
     ],
-    theme: 'plain'
+    theme: "plain",
   });
 
   /* Sales Table Content */
   autoTable(doc, {
     body: data,
     columns: [
-      { header: 'Ticket', dataKey: 'id' },
-      { header: 'Total', dataKey: 'total' },
-      { header: 'Fecha', dataKey: 'date' },
-      { header: 'Estado', dataKey: 'status' },
+      { header: "Ticket", dataKey: "id" },
+      { header: "Total", dataKey: "total" },
+      { header: "Fecha", dataKey: "date" },
+      { header: "Estado", dataKey: "status" },
     ],
-    theme: 'striped',
-    headStyles:{
-      halign: 'center',
-      fillColor: '#343a40'
+    theme: "striped",
+    headStyles: {
+      halign: "center",
+      fillColor: "#343a40",
     },
-    bodyStyles:{
-      halign: 'center',
-    }
-  })
+    bodyStyles: {
+      halign: "center",
+    },
+  });
 
   /* autoTable(doc, {
     head: [['Items', 'Category', 'Quantity', 'Price', 'Tax', 'Amount']],
@@ -206,130 +202,127 @@ export const generatePDF = (arrayData, clientData) => {
     body: [
       [
         {
-          content: 'Subtotal:',
-          styles:{
-            halign:'right'
-          }
+          content: "Subtotal:",
+          styles: {
+            halign: "right",
+          },
         },
         {
-          content: '$3600',
-          styles:{
-            halign:'right'
-          }
-        },
-      ],
-      [
-        {
-          content: 'Total tax:',
-          styles:{
-            halign:'right'
-          }
-        },
-        {
-          content: '$400',
-          styles:{
-            halign:'right'
-          }
+          content: "$3600",
+          styles: {
+            halign: "right",
+          },
         },
       ],
       [
         {
-          content: 'Total amount:',
-          styles:{
-            halign:'right'
-          }
+          content: "Total tax:",
+          styles: {
+            halign: "right",
+          },
         },
         {
-          content: '$4000',
-          styles:{
-            halign:'right'
-          }
+          content: "$400",
+          styles: {
+            halign: "right",
+          },
+        },
+      ],
+      [
+        {
+          content: "Total amount:",
+          styles: {
+            halign: "right",
+          },
+        },
+        {
+          content: "$4000",
+          styles: {
+            halign: "right",
+          },
         },
       ],
     ],
-    theme: 'plain'
+    theme: "plain",
   });
 
   autoTable(doc, {
     body: [
       [
         {
-          content: 'Terms & notes',
+          content: "Terms & notes",
           styles: {
-            halign: 'left',
-            fontSize: 14
-          }
-        }
+            halign: "left",
+            fontSize: 14,
+          },
+        },
       ],
       [
         {
-          content: 'lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia'
-          +'molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum'
-          +'numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium',
+          content:
+            "lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia" +
+            "molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum" +
+            "numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium",
           styles: {
-            halign: 'left'
-          }
-        }
+            halign: "left",
+          },
+        },
       ],
     ],
-    theme: "plain"
+    theme: "plain",
   });
-  
+
   autoTable(doc, {
     body: [
       [
         {
-          content: 'This is a centered footer',
+          content: "This is a centered footer",
           styles: {
-            halign: 'center'
-          }
-        }
-      ]
+            halign: "center",
+          },
+        },
+      ],
     ],
-    theme: "plain"
+    theme: "plain",
   });
-    
-  doc.output('dataurlnewwindow'); 
-  doc.output('save', `reporteDeTransacciones_${today}.pdf`);   
-}
+
+  doc.output("dataurlnewwindow");
+  doc.output("save", `reporteDeTransacciones_${today}.pdf`);
+};
 
 export const generateCSV = (arrayData, clientData) => {
   data = arrayData;
 
   const exportCSVFile = (headers, items, fileName) => {
-    items.unshift(headers)
-    const data = items.map(item => {
+    items.unshift(headers);
+    const data = items.map((item) => {
       return [item.date, item.id, item.total, item.commission, item.deposit, item.card];
     });
     const workBook = XLSX.utils.book_new(); //create new workbook
-    const workSheetData = [
-      ...data
-    ];
+    const workSheetData = [...data];
     // console.log(workSheetData)
     const workSheet = XLSX.utils.aoa_to_sheet(workSheetData);
     XLSX.utils.book_append_sheet(workBook, workSheet, "Transacciones");
     // const csv = XLSX.utils.sheet_to_csv(workSheet)
-    XLSX.writeFile(workBook, fileName)
-  }
+    XLSX.writeFile(workBook, fileName);
+  };
   exportCSVFile(headers, data, `reporteDeTransacciones_${today}.csv`);
-}
+};
 
 export const generateXLSX = (arrayData) => {
   data = arrayData;
   const exportXLSXFile = (headers, items, fileName) => {
-    items.unshift(headers)
-    const data = items.map(item => {
+    items.unshift(headers);
+    const data = items.map((item) => {
       return [item.date, item.id, item.total, item.commission, item.deposit, item.card];
     });
     const workBook = XLSX.utils.book_new(); //create new workbook
-    const workSheetData = [
-      ...data
-    ];
+    const workSheetData = [...data];
     // console.log(workSheetData)
     const workSheet = XLSX.utils.aoa_to_sheet(workSheetData);
     XLSX.utils.book_append_sheet(workBook, workSheet, "Transacciones");
-    XLSX.writeFile(workBook, fileName)
-  }
+    XLSX.writeFile(workBook, fileName);
+  };
 
   exportXLSXFile(headers, data, `reporte_${today}.xlsx`);
-}
+};

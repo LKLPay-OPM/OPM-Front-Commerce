@@ -6,6 +6,7 @@
   import { goto } from "$app/navigation";
   /* utils */
   import { timeToLocalString, dateToLocalString } from "$lib/utils/date";
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   /* exports */
   export let data;
   let transactions = data?.response?.transactions ?? [];
@@ -14,13 +15,9 @@
   let paginationEnd = data?.end ?? 10;
   let active = data?.filter ?? "day";
 
-  const localeParam = {
-    language: "es-MX",
-    currency: {
-      style: "currency",
-      currency: "MXN",
-    },
-  };
+  $: {
+    console.log(data.response.transactions);
+  }
 
   function handleFilterClick({ detail }) {
     // const value = detail?.value;
@@ -79,35 +76,29 @@
       <table class="table-content">
         <thead>
           <tr>
-            <th>Fecha</th>
-            <th class="responsive">N° Ticket</th>
+            <!-- <th>Fecha</th> -->
+            <th class="sm">N° Ticket</th>
             <th>Monto</th>
-            <th class="responsive">Comisión</th>
-            <th class="responsive">IVA</th>
-            <th class="responsive">Depósito</th>
-            <th class="responsive">Tipo</th>
+            <th class="">Comisión</th>
+            <th class="sm md">IVA</th>
+            <th class="">Depósito</th>
+            <th class="">Tipo</th>
           </tr>
         </thead>
         <tbody>
           {#each transactions as transaction}
             <tr class="clickable number" on:click={() => goto(`/transactions/detail?ticket=${transaction?._id}`)}>
-              <td
+              <!-- <td
                 >{dateToLocalString(transaction["Transaction Date"]) +
                   " - " +
-                  timeToLocalString(
-                    transaction["Transaction Time"]
-                  )}<!-- {transaction.date?.toDate().getDate()} {getMonthName(transaction.date?.toDate().getMonth())} {transaction.date?.toDate().getFullYear()} - {transaction.date?.toDate().toLocaleTimeString()} --></td
-              >
-              <td class="responsive">{transaction?.id}</td>
-              <td>{transaction.Amount?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-              <td class="responsive"
-                >{transaction.comission?.toLocaleString(localeParam.language, localeParam.currency)}</td
-              >
-              <td class="responsive">{transaction.IVA?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-              <td class="responsive"
-                >{transaction.deposit?.toLocaleString(localeParam.language, localeParam.currency)}</td
-              >
-              <td class="responsive">
+                  timeToLocalString(transaction["Transaction Time"])}
+              </td> -->
+              <td class="sm">{transaction?.id}</td>
+              <td>{currencyFormatLocal(transaction.Amount)}</td>
+              <td class="">{currencyFormatLocal(transaction.comission)}</td>
+              <td class="sm md">{currencyFormatLocal(transaction.IVA)}</td>
+              <td class="">{currencyFormatLocal(transaction.deposit)}</td>
+              <td class="">
                 <i class="icon tooltip">
                   <Icons
                     name={transaction.type === "tpv"

@@ -274,7 +274,11 @@
   gap: 1rem;
 }
 
-@media (max-width: 540px) {
+@media (max-width: $md) {
+  .dispersions {
+    margin: 1rem 0 0 0;
+  }
+
   .top {
     display: flex;
     flex-direction: column;
@@ -313,7 +317,7 @@
   }
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: $md) and (max-width: $xl) {
   .middle > .card-group {
     /* flex-direction: column; */
     height: auto;

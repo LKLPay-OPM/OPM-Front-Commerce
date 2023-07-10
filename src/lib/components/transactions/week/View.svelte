@@ -4,6 +4,7 @@
   import Pagination from "$lib/components/Pagination.svelte";
   /* utils */
   import { getMonthName, dateToLocalStringShort } from "$lib/utils/date";
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   /* svelte */
   import { goto } from "$app/navigation";
   /* exports */
@@ -19,14 +20,6 @@
   $: {
     console.log({ data });
   }
-
-  const localeParam = {
-    language: "es-MX",
-    currency: {
-      style: "currency",
-      currency: "MXN",
-    },
-  };
 
   function handleFilterClick({ detail }) {
     // const value = detail?.value;
@@ -64,16 +57,16 @@
               <td class="element">{innerWidth <= 540 ? "" : `${day.day} - `}{dateToLocalStringShort(day.date)}</td>
               <td class="element">{day.sold}</td>
               <td class="element">
-                {day.sales?.toLocaleString(localeParam.language, localeParam.currency)}
+                {currencyFormatLocal(day.sales)}
               </td>
               <td class="element responsive">
-                {day.comission?.toLocaleString(localeParam.language, localeParam.currency)}
+                {currencyFormatLocal(day.comission)}
               </td>
               <td class="element responsive">
-                {day.iva?.toLocaleString(localeParam.language, localeParam.currency)}
+                {currencyFormatLocal(day.iva)}
               </td>
               <td class="element responsive">
-                {day.deposit?.toLocaleString(localeParam.language, localeParam.currency)}
+                {currencyFormatLocal(day.deposit)}
               </td>
               <i class="arrow arrow-blue">
                 <Icons name="arrow-fwd" width="24" height="24" />

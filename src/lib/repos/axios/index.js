@@ -7,7 +7,8 @@ import {
   axiosDevicesClient,
   axiosDepositsAndFees,
   axiosFraudPreventionManagement,
-  ticketsClient
+  axiosFraudPreventionManagementJSON,
+  ticketsClient,
 } from "$lib/repos/axios/clients/api-clients";
 import { refreshTokenClient } from "$lib/repos/axios/clients/refresh-client";
 /* interceptors */
@@ -23,6 +24,7 @@ axiosRequestInterceptor(axiosDevicesClient);
 axiosRequestInterceptor(axiosECommerceClient);
 axiosRequestInterceptor(axiosDepositsAndFees);
 axiosRequestInterceptor(axiosFraudPreventionManagement);
+axiosRequestInterceptor(axiosFraudPreventionManagementJSON);
 axiosRequestInterceptor(ticketsClient);
 
 axiosResponseInterceptor(axiosClient);
@@ -33,6 +35,7 @@ axiosResponseInterceptor(axiosDevicesClient);
 axiosResponseInterceptor(axiosECommerceClient);
 axiosResponseInterceptor(axiosDepositsAndFees);
 axiosResponseInterceptor(axiosFraudPreventionManagement);
+axiosResponseInterceptor(axiosFraudPreventionManagementJSON);
 axiosResponseInterceptor(ticketsClient);
 
 /* exports after assigning interceptors */
@@ -46,5 +49,6 @@ export {
   refreshTokenClient,
   axiosDepositsAndFees,
   axiosFraudPreventionManagement,
+  axiosFraudPreventionManagementJSON,
   ticketsClient,
 };

@@ -2,6 +2,8 @@
   /* components */
   import Icons from "$lib/components/Icons.svelte";
   import Pagination from "$lib/components/Pagination.svelte";
+  /* utils */
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
 
   /* exports */
   export let data;
@@ -14,18 +16,6 @@
   let count = data?.response?.count ?? 0;
   let paginationStart = data?.start ?? 0;
   let paginationEnd = data?.end ?? 10;
-
-  $: {
-    // console.log(data.response);
-  }
-
-  const localeParam = {
-    language: "es-MX",
-    currency: {
-      style: "currency",
-      currency: "MXN",
-    },
-  };
 
   function handleFilterClick({ detail }) {
     // const value = detail?.value;
@@ -112,10 +102,10 @@
         <tr>
           <th class="responsive" />
           <th class="responsive" />
-          <th>{resume?.Amount?.toLocaleString(localeParam.language, localeParam.currency)}</th>
-          <th>{resume?.Comission?.toLocaleString(localeParam.language, localeParam.currency)}</th>
-          <th>{resume?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}</th>
-          <th>{resume?.Deposit?.toLocaleString(localeParam.language, localeParam.currency)}</th>
+          <th>{currencyFormatLocal(resume?.Amount)}</th>
+          <th>{currencyFormatLocal(resume?.Comission)}</th>
+          <th>{currencyFormatLocal(resume?.IVA)}</th>
+          <th>{currencyFormatLocal(resume?.Deposit)}</th>
           <th class="responsive" />
         </tr>
       </thead>
@@ -128,10 +118,10 @@
                 getTransactionTime(transaction["Transaction Time"])}</td
             >
             <td class="responsive">{transaction.id}</td>
-            <td>{transaction.Amount?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-            <td>{transaction?.comission?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-            <td>{transaction?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-            <td>{transaction?.deposit?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+            <td>{currencyFormatLocal(transaction?.Amount)}</td>
+            <td>{currencyFormatLocal(transaction?.comission)}</td>
+            <td>{currencyFormatLocal(transaction?.IVA)}</td>
+            <td>{currencyFormatLocal(transaction?.deposit)}</td>
             <td class="responsive">
               <i class="icon tooltip">
                 <Icons

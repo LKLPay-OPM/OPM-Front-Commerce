@@ -367,4 +367,32 @@
     margin-bottom: 1.125rem;
     margin-top: 1.125rem;
   }
+
+  /* MEDIA */
+  /* XSmall Screen */
+  @media screen and (max-width: $xs) {
+    .content {
+      width: 26rem;
+    }
+  }
+  /* Small Screen */
+  @media screen and (min-width: $xs) and (max-width: $sm) {
+    .content {
+      width: fit-content;
+    }
+  }
+  /* Medium Screen */
+  @media screen and (min-width: $sm) and (max-width: $md) {
+    .content {
+      width: fit-content;
+    }
+  }
+
+  /* Large Screen */
+  @media screen and (min-width: $md) and (max-width: $lg) {
+  }
+
+  /* XLarge Screen */
+  @media screen and (min-width: $lg) and (max-width: $xl) {
+  }
 </style>

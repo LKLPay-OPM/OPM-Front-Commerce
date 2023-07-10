@@ -20,14 +20,6 @@
     console.log(data);
   }
 
-  const localeParam = {
-    language: "es-MX",
-    currency: {
-      style: "currency",
-      currency: "MXN",
-    },
-  };
-
   onMount(async () => {
     // await fetchByDayButton()
     // dispersions = [...$loggedInUser.dispersions];

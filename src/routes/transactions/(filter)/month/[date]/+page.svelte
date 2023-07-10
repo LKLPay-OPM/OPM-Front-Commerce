@@ -5,6 +5,8 @@
   export let data;
   /* imports */
   import { goto } from "$app/navigation";
+  /* utils */
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
 
   let resume = data?.response?.resume;
   let yearMonth = data?.response?.yearMonth;
@@ -13,14 +15,6 @@
   $: {
     console.log(data.response);
   }
-
-  const localeParam = {
-    language: "es-MX",
-    currency: {
-      style: "currency",
-      currency: "MXN",
-    },
-  };
 
   function handleFilterClick({ detail }) {
     // const value = detail?.value;
@@ -105,7 +99,7 @@
           <th class="responsive">Ticket</th>
           <th>Ventas</th>
           <th>Comisión</th>
-          <th>IVA</th>
+          <th class="responsive">IVA</th>
           <th>Depósito</th>
           <th class="responsive">Tipo</th>
         </tr>
@@ -115,16 +109,16 @@
           <th class="responsive" />
           <th class="responsive" />
           <th>
-            {resume?.Amount?.toLocaleString(localeParam.language, localeParam.currency)}
+            {currencyFormatLocal(resume?.Amount)}
           </th>
           <th>
-            {resume?.Comission?.toLocaleString(localeParam.language, localeParam.currency)}
+            {currencyFormatLocal(resume?.Comission)}
+          </th>
+          <th class="responsive">
+            {currencyFormatLocal(resume?.IVA)}
           </th>
           <th>
-            {resume?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}
-          </th>
-          <th>
-            {resume?.Deposit?.toLocaleString(localeParam.language, localeParam.currency)}
+            {currencyFormatLocal(resume?.Deposit)}
           </th>
           <th />
         </tr>
@@ -138,10 +132,10 @@
                 getTransactionTime(transaction["Transaction Time"])}</td
             >
             <td class="responsive">{transaction.id}</td>
-            <td>{transaction.Amount?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-            <td>{transaction.comission?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-            <td>{transaction?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-            <td>{transaction.deposit?.toLocaleString(localeParam.language, localeParam.currency)}</td>
+            <td>{currencyFormatLocal(transaction.Amount)}</td>
+            <td>{currencyFormatLocal(transaction.comission)}</td>
+            <td class="responsive">{currencyFormatLocal(transaction?.IVA)}</td>
+            <td>{currencyFormatLocal(transaction.deposit)}</td>
             <td class="responsive">
               <i class="icon tooltip">
                 <Icons

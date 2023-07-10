@@ -3,6 +3,8 @@
   import Icons from "$lib/components/Icons.svelte";
   /* svelte */
   import { goto } from "$app/navigation";
+  /* utils */
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   /* exports */
   export let data;
 
@@ -11,17 +13,6 @@
   let paginationStart = data?.start ?? 0;
   let paginationEnd = data?.end ?? 10;
   let active = data?.filter ?? "month";
-
-  $: {
-  }
-
-  const localeParam = {
-    language: "es-MX",
-    currency: {
-      style: "currency",
-      currency: "MXN",
-    },
-  };
 
   const getMonthName = (month) => {
     const monthsArray = {
@@ -90,16 +81,16 @@
               <td class="element">{getMonthPeriod(month._id)}</td>
               <td class="element">{month?.Sold ?? 0}</td>
               <td class="element">
-                {month?.Amount?.toLocaleString(localeParam.language, localeParam.currency)}
+                {currencyFormatLocal(month?.Amount)}
               </td>
               <td class="element responsive">
-                {month?.Comission?.toLocaleString(localeParam.language, localeParam.currency)}
+                {currencyFormatLocal(month?.Comission)}
               </td>
               <td class="element responsive">
-                {month?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}
+                {currencyFormatLocal(month?.IVA)}
               </td>
               <td class="element responsive">
-                {month?.Deposit?.toLocaleString(localeParam.language, localeParam.currency)}
+                {currencyFormatLocal(month?.Deposit)}
               </td>
               <i class="arrow arrow-blue">
                 <Icons name="arrow-fwd" width="24" height="24" />

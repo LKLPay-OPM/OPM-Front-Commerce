@@ -1,7 +1,9 @@
 <script>
+  /* svelte */
   import { isLoggedIn, loggedInUser } from "$lib/stores";
   import { page } from "$app/stores";
   import { onMount } from "svelte";
+  /* components */
   import Loader from "$lib/components/Loader.svelte";
   import Slider from "$lib/components/Slider.svelte";
   import Select from "$lib/components/Select.svelte";
@@ -12,14 +14,8 @@
   import Icons from "$lib/components/Icons.svelte";
   import noUser from "$lib/assets/no_user.png";
   import Logo from "$lib/assets/Logo.png";
-
-  const localeParam = {
-    language: "es-MX",
-    currency: {
-      style: "currency",
-      currency: "MXN",
-    },
-  };
+  /* utils */
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
 
   let monthlyAverage = 0;
   let sliderValue = 0;
@@ -63,19 +59,11 @@
   $: {
     if (radioValue === "1") {
       installments = installmentsPreference;
-      installmentsTotal =
-        Math.round(
-          ((sliderValue + sliderValue * (percentage / 100)) / installments) *
-            100
-        ) / 100;
+      installmentsTotal = Math.round(((sliderValue + sliderValue * (percentage / 100)) / installments) * 100) / 100;
       total = sliderValue + sliderValue * percentage;
     } else if (radioValue === "2") {
       installments = installmentsPreference / 7.5;
-      installmentsTotal =
-        Math.round(
-          ((sliderValue + sliderValue * (percentage / 100)) / installments) *
-            100
-        ) / 100;
+      installmentsTotal = Math.round(((sliderValue + sliderValue * (percentage / 100)) / installments) * 100) / 100;
       total = sliderValue + sliderValue * percentage;
     }
   }
@@ -114,10 +102,7 @@
         <div>
           <Slider
             bind:value={sliderValue}
-            label={monthlyAveragePercentage(monthlyAverage).toLocaleString(
-              localeParam.language,
-              localeParam.currency
-            )}
+            label={currencyFormatLocal(monthlyAveragePercentage(monthlyAverage))}
             min="0"
             max={monthlyAveragePercentage(monthlyAverage)}
             step="1"
@@ -125,23 +110,13 @@
         </div>
         <div class="total">
           <p>
-            <span
-              >{sliderValue.toLocaleString(
-                localeParam.language,
-                localeParam.currency
-              )}</span
-            >
+            <span>{currencyFormatLocal(sliderValue)}</span>
           </p>
         </div>
         <div class="payments-months">
           <div class="element">
             <p>Pagos</p>
-            <Radio
-              bind:options={radioOptions}
-              fontSize={16}
-              legend=""
-              bind:userSelected={radioValue}
-            />
+            <Radio bind:options={radioOptions} fontSize={16} legend="" bind:userSelected={radioValue} />
           </div>
           <div class="vertical-divider" />
           <div class="element">
@@ -166,10 +141,7 @@
           <div class="element">
             <span>Monto Por Pago</span>
             <p>
-              {installmentsTotal.toLocaleString(
-                localeParam.language,
-                localeParam.currency
-              )}
+              {currencyFormatLocal(installmentsTotal)}
             </p>
           </div>
           <!-- <p>
@@ -217,8 +189,7 @@
     /* Fill Container */
     background: $background-light-secondary;
     /* container effect */
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
-      4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 0.625rem;
   }
 
@@ -278,12 +249,7 @@
     display: flex;
     justify-content: center;
     width: 10px;
-    background: linear-gradient(
-        138.32deg,
-        rgba(0, 0, 0, 0.5) 8.26%,
-        rgba(255, 255, 255, 0.5) 91.02%
-      ),
-      #eaecf0;
+    background: linear-gradient(138.32deg, rgba(0, 0, 0, 0.5) 8.26%, rgba(255, 255, 255, 0.5) 91.02%), #eaecf0;
     background-blend-mode: soft-light, normal;
     /* n-stroke */
 

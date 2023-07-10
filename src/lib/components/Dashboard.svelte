@@ -8,8 +8,7 @@
   import Icons from "$lib/components/Icons.svelte";
   /* utils */
   import { getMonthName, timeToLocalString, dateToLocalString } from "$lib/utils/date";
-  /* constants */
-  import { localeParam } from "$lib/constants/locale.js";
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
 
   const dbCollection = "users-client";
   const uid = $loggedInUser.uid;
@@ -44,21 +43,13 @@
   <div class="content">
     <div class="card-group">
       <div class="card">
-        <InfoCard
-          className={""}
-          title="Monto Total"
-          numData={resume?.Amount?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
-        />
+        <InfoCard className={""} title="Monto Total" numData={currencyFormatLocal(resume?.Amount ?? 0)} />
       </div>
       <div class="card">
         <InfoCard className={""} title="N° de Ventas" numData={resume?.Sold ?? "0"} />
       </div>
       <div class="card">
-        <InfoCard
-          className={""}
-          title="Saldo a Depositar"
-          numData={resume?.Deposit?.toLocaleString(localeParam.language, localeParam.currency) ?? "$0.00"}
-        />
+        <InfoCard className={""} title="Saldo a Depositar" numData={currencyFormatLocal(resume?.Deposit ?? 0)} />
       </div>
     </div>
     <div class="transactions" style={transactions?.length <= 0 ? "min-height: 25rem;" : ""}>
@@ -72,34 +63,23 @@
           <table class="table-content">
             <thead>
               <tr>
-                <th>Fecha</th>
-                <th class="responsive">Ticket</th>
+                <th class="sm">Ticket</th>
                 <th>Cobro</th>
-                <th class="responsive">Comisión</th>
-                <th class="responsive">IVA</th>
-                <th class="responsive">Dispersión</th>
-                <th class="responsive">Tipo</th>
+                <th class="">Comisión</th>
+                <th class="sm md">IVA</th>
+                <th class="">Dispersión</th>
+                <th class="">Tipo</th>
               </tr>
             </thead>
             <tbody>
               {#each transactions as transaction}
                 <tr class="clickable" on:click={() => goto(`/transactions/detail?ticket=${transaction?._id}`)}>
-                  <td>
-                    {dateToLocalString(transaction["Transaction Date"]) +
-                      " - " +
-                      timeToLocalString(transaction["Transaction Time"])}
-                  </td><td class="responsive">{transaction.id}</td>
-                  <td>{transaction.Amount?.toLocaleString(localeParam.language, localeParam.currency)}</td>
-                  <td class="responsive"
-                    >{transaction.comission?.toLocaleString(localeParam.language, localeParam.currency)}</td
-                  >
-                  <td class="responsive"
-                    >{transaction?.IVA?.toLocaleString(localeParam.language, localeParam.currency)}</td
-                  >
-                  <td class="responsive"
-                    >{transaction.deposit?.toLocaleString(localeParam.language, localeParam.currency)}</td
-                  >
-                  <td class="responsive">
+                  <td class="sm">{transaction.id}</td>
+                  <td>{currencyFormatLocal(transaction?.Amount)}</td>
+                  <td class="">{currencyFormatLocal(transaction?.comission)}</td>
+                  <td class="sm md">{currencyFormatLocal(transaction?.IVA)}</td>
+                  <td class="">{currencyFormatLocal(transaction?.deposit)}</td>
+                  <td class="">
                     <i class="icon tooltip">
                       <Icons
                         name={transaction.type === "tpv"

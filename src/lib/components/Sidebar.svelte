@@ -1,32 +1,35 @@
 <script>
   /* stores */
-  import { isLoggedIn, loggedInUser, linkSelected, sessionUser, sidebar } from "$lib/stores.js";
+  import { isLoggedIn, loggedInUser, linkSelected, sidebar } from "$lib/stores.js";
+  /* controllers */
   import { AuthController } from "$lib/controllers/auth/auth.controller";
+  /* router */
   import { optionsSidebar } from "$lib/hooks/router.js";
+  /* assets */
   import logo from "$lib/assets/Logo.png";
   import noUser from "$lib/assets/no_user.png";
-  import { page } from "$app/stores";
-  import { onMount, afterUpdate } from "svelte";
+  /* components */
   import Icons from "$lib/components/Icons.svelte";
 
-  /* let loggedInUser = $page.data.loggedInUser;
-  let isLoggedIn = $page.data.isLoggedIn; */
-
-  // export let sidebar = true;
   let options = [];
-
-  // console.log($loggedInUser);
-  // console.log($sessionUser);
+  let innerWidth;
+  let innerHeight;
 
   $: {
     if ($isLoggedIn) {
       optionsSidebar($loggedInUser.accountType).then((response) => {
         options = response;
       });
+      if (innerWidth <= 1000) {
+        $sidebar = false;
+      } else {
+        $sidebar = true;
+      }
     }
   }
 </script>
 
+<svelte:window bind:innerWidth bind:innerHeight />
 <div class="navbar no-print">
   <div class="logo-details">
     <i on:click={() => ($sidebar = !$sidebar)} on:keydown={() => ($sidebar = !$sidebar)}>

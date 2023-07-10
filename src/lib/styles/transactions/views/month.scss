@@ -84,7 +84,8 @@
     color: $primary-light;
   }
 
-  @media (max-width: 540px) {
+  /* Medium Screen */
+  @media (max-width: $md) {
     .top__left * .element {
       width: 15rem;
     }

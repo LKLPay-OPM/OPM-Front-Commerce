@@ -22,13 +22,6 @@
   let states, towns;
   export let optionSelected;
   export let user;
-  const localeParam = {
-    language: "es-MX",
-    currency: {
-      style: "currency",
-      currency: "MXN",
-    },
-  };
 
   let stateIndex = 0;
   let townIndex = 0;

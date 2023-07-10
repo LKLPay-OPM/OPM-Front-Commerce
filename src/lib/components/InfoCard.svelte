@@ -3,14 +3,6 @@
   export let numData;
   export let stringData = "";
   export let className = "";
-
-  const localeParam = {
-    language: "es-MX",
-    currency: {
-      style: "currency",
-      currency: "MXN",
-    },
-  };
 </script>
 
 <div on:click on:keypress class="card {className}">

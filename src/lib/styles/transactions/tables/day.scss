@@ -96,8 +96,8 @@
   }
 
 /* MEDIA QUERIES */
-
-  @media (max-width: 540px) {
+/* Small Screen */
+  @media (max-width: $md) {
     .table-container {
       display: block;
       width: 100%;
@@ -117,7 +117,32 @@
       margin: 0;
     }
 
-    .responsive {
+    .sm {
+      display: none;
+    }
+  }
+  /* Medium & Large Screen */
+  @media (min-width: $md) and (max-width: $lg) {
+    .table-container {
+      display: block;
+      width: 100%;
+    }
+
+    .card-container {
+      padding: 2rem 2rem;
+    }
+
+    .transaction-tables {
+      margin: auto;
+    }
+
+    .table-content {
+      min-width: auto;
+      width: 100%;
+      margin: 0;
+    }
+
+    .md {
       display: none;
     }
   }

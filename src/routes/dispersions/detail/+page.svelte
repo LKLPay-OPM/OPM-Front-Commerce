@@ -9,8 +9,7 @@
   /* utils */
   import { dateToLocalString, timeToLocalString } from "$lib/utils/date.js";
   import { getCardBrand } from "$lib/utils/brands.js";
-  /* constants */
-  import { localeParam } from "$lib/constants/locale.js";
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   /* stores */
   import { previousPage } from "$lib/stores";
 
@@ -142,7 +141,7 @@
           <div class="item">
             <b>Total Depositado</b>
             <p>
-              <!-- {selectedDispersion.dispersion?.toLocaleString(localeParam.language, localeParam.currency)} -->
+              <!-- {currencyFormatLocal(selectedDispersion.dispersion)} -->
             </p>
           </div>
         </div>
@@ -155,14 +154,14 @@
           <div class="item">
             <b>Total Ventas</b>
             <p>
-              <!-- {selectedDispersion.total?.toLocaleString(localeParam.language, localeParam.currency)} -->
+              <!-- {currencyFormatLocal(selectedDispersion.total)} -->
             </p>
             <span />
           </div>
           <div class="item">
             <b>Comisión</b>
             <p>
-              <!-- {selectedDispersion.commission?.toLocaleString(localeParam.language, localeParam.currency)} -->
+              <!-- {currencyFormatLocal(selectedDispersion.commission)} -->
             </p>
             <!-- <span>(4.06%)</span> -->
           </div>

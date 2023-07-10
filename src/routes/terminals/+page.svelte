@@ -1,4 +1,5 @@
 <script>
+  import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   let terminals = [
     {
       name: "Matriz 1",
@@ -22,14 +23,6 @@
       transactions: "000000265880",
     },
   ];
-
-  const localeParam = {
-    language: "es-MX",
-    currency: {
-      style: "currency",
-      currency: "MXN",
-    },
-  };
 
   let date = new Date();
 
@@ -77,12 +70,7 @@
                   <td class="r425 r540">{terminal.serial}</td>
                   <td>{terminal.branch}</td>
                   <td class="r425 r540">{terminal.type}</td>
-                  <td
-                    >{parseFloat(terminal.transactions / 100).toLocaleString(
-                      localeParam.language,
-                      localeParam.currency
-                    )}</td
-                  >
+                  <td>{currencyFormatLocal(parseFloat(terminal.transactions / 100))}</td>
                 </tr>
               {/each}
             </tbody>
