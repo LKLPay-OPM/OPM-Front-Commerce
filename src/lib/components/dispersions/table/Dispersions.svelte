@@ -10,7 +10,7 @@
   <div id="pdfTable" class="table-container">
     <div>
       {#each dispersions as dispersion}
-        <div class="card-container table-container table">
+        <div class="card-primary table-container table">
           <div class="date">
             <p class="day-month">{dispersion.day}<span>{dispersion.month}</span></p>
             <span class="vertical-line-divider" />

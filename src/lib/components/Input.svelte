@@ -568,11 +568,11 @@
     display: flex;
     height: 100%;
     background: #e6e9ef;
-    border: 1px solid #fd5353;
+    border: 1px solid $error-light;
     box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 0.625rem;
     &:hover {
-      background: #fd5353;
+      background: $error-light;
     }
   }
 
@@ -586,7 +586,7 @@
     text-align: center;
     justify-content: center;
     letter-spacing: -0.4px;
-    color: #fd5353;
+    color: $error-light;
     &:hover {
       color: #e6e9ef;
     }
@@ -594,5 +594,86 @@
 
   .border-btn-error .input {
     display: none;
+  }
+
+  /* Dark Mode */
+  :global(body.dark-mode) {
+    .txt-field .input {
+      background: $background-dark-accent-primary;
+      box-shadow: inset 5px 5px 10px #343434, inset -5px -5px 10px #3c3c3c;
+      color: $font-dark-primary;
+      // border: 2px solid $background-dark-accent-primary;
+      .input-field {
+        color: $font-dark-primary;
+      }
+    }
+    .normal .input {
+      background: $background-dark-accent-primary;
+      box-shadow: inset 5px 5px 10px #343434, inset -5px -5px 10px #3c3c3c;
+      color: $font-dark-primary;
+      // border: 2px solid $background-dark-accent-primary;
+      .input-field {
+        color: $font-dark-primary;
+      }
+    }
+
+    .txt-field,
+    .txt-field-slim {
+      input::placeholder {
+        color: rgb(255 255 255 / 0.1);
+      }
+    }
+
+    .valid .input {
+      outline-color: #00c48c;
+      border-color: #00c48c;
+    }
+
+    .invalid .input {
+      outline-color: #ff0000;
+      border-color: #ff0000;
+    }
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+      -webkit-text-fill-color: $background-light;
+      -webkit-text-stroke-width: thin;
+      box-shadow: 0 0 0 1000px transparent inset !important;
+      -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+      background-color: transparent !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+
+    div.border-btn-error {
+      background: $background-dark;
+      box-shadow: $dark-box-shadow-btn;
+      &:hover {
+        background: $error-light;
+      }
+    }
+    div.btn,
+    div.btn-error,
+    div.btn-success,
+    div.btn-plain {
+      box-shadow: $dark-box-shadow-btn;
+      &.fill-blue {
+        label {
+          color: $font-dark-primary;
+        }
+      }
+    }
+
+    div.btn-plain {
+      background: linear-gradient(91.36deg, $background-dark-accent-primary 0%, $background-dark 100%);
+    }
+    div.btn-disabled {
+      background: linear-gradient(91.36deg, $background-dark-accent-primary 0%, $background-dark 100%);
+      box-shadow: $dark-box-shadow-btn;
+    }
+    .fill-blue {
+      label {
+        color: $font-dark-primary;
+      }
+    }
   }
 </style>

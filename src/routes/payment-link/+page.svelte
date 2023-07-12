@@ -135,7 +135,7 @@
       <p>Genera un recibo y acepta pagos a distancia y sin tarjeta presente</p>
     </div>
     <div class="form-container">
-      <div class="card-container">
+      <div class="card-primary">
         <div class="description">
           <p>Ingresa los datos y genera un enlace</p>
         </div>
@@ -282,7 +282,7 @@
       }
     }
     .form-container {
-      .card-container {
+      .card-primary {
         .description {
           display: grid;
           justify-items: center;
@@ -320,5 +320,47 @@
     width: 100%;
     margin-bottom: 1.125rem;
     margin-top: 1.125rem;
+  }
+
+  /* Dark Mode */
+  :global(body.dark-mode) {
+    .form-container {
+      .card-primary {
+        .description {
+          p {
+            color: $font-dark-primary;
+          }
+        }
+      }
+    }
+
+    .container {
+      .description {
+        color: $font-dark-primary;
+      }
+    }
+
+    .modal-content {
+      .column-element {
+        span {
+          color: $font-dark-primary;
+          .copy-link__icon {
+            color: $font-dark-primary;
+            &:hover {
+              color: $primary-light;
+            }
+          }
+        }
+        p,
+        textarea {
+          color: $font-dark-primary;
+          background: $background-dark-secondary;
+          &::selection {
+            color: $primary-light;
+            background: transparent;
+          }
+        }
+      }
+    }
   }
 </style>

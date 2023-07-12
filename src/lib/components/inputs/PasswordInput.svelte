@@ -209,4 +209,65 @@
   .label-blue label {
     color: $primary-dark;
   }
+  /* Dark Mode */
+  :global(body.dark-mode) {
+    .txt-field .input {
+      background: $background-dark-accent-primary;
+      box-shadow: inset 5px 5px 10px #343434, inset -5px -5px 10px #3c3c3c;
+      color: $background-light;
+      border: 2px solid $background-dark-accent-primary;
+      .input-field {
+        color: $background-light;
+      }
+    }
+    .normal .input {
+      background: $background-dark-accent-primary;
+      box-shadow: inset 5px 5px 10px #343434, inset -5px -5px 10px #3c3c3c;
+      color: $background-light;
+      border: 2px solid $background-dark-accent-primary;
+      .input-field {
+        color: $background-light;
+      }
+    }
+
+    .txt-field input::placeholder {
+      color: rgb(255 255 255 / 0.1);
+    }
+
+    .valid .input {
+      outline-color: #00c48c;
+      border-color: #00c48c;
+    }
+
+    .invalid .input {
+      outline-color: #ff0000;
+      border-color: #ff0000;
+    }
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+      -webkit-text-fill-color: $background-light;
+      -webkit-text-stroke-width: thin;
+      box-shadow: 0 0 0 1000px transparent inset !important;
+      -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+      background-color: transparent !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+    div.btn {
+      box-shadow: 20px 20px 40px #202020, -20px -20px 60px #303030;
+    }
+    div.btn-plain {
+      box-shadow: 20px 20px 40px #202020, -20px -20px 60px #303030;
+    }
+    div.btn-disabled {
+      background: linear-gradient(91.36deg, $background-dark-accent-primary 0%, $background-dark 100%);
+      box-shadow: 20px 20px 40px #202020, -20px -20px 60px #303030;
+    }
+
+    .fill-blue {
+      label {
+        color: $font-dark-primary;
+      }
+    }
+  }
 </style>

@@ -5,12 +5,7 @@ import { browser } from "$app/environment";
 export const sessionUser = browser ? writable(JSON.parse(localStorage.getItem("sessionUser")) || {}) : writable({});
 export const loggedInUser = browser ? writable(JSON.parse(localStorage.getItem("userData")) || {}) : writable({});
 export const isLoggedIn = browser ? writable(JSON.parse(localStorage.getItem("isLoggedIn")) || false) : writable(false);
-export const bankAccountData = browser
-  ? writable(JSON.parse(localStorage.getItem("bankAccountData")) || {})
-  : writable({});
-export const bankDataDelivered = browser
-  ? writable(JSON.parse(localStorage.getItem("bankDataDelivered")) || false)
-  : writable(false);
+export const darkMode = browser ? writable(JSON.parse(localStorage.getItem("darkMode")) || false) : writable(false);
 export const linkSelected = browser ? writable(localStorage.getItem("selectedTab") || "Inicio") : writable("Inicio");
 export const sidebar = browser ? writable(JSON.parse(localStorage.getItem("sidebarState")) || true) : writable(true);
 
@@ -35,8 +30,7 @@ if (browser) {
   sessionUser.subscribe((val) => localStorage.setItem("sessionUser", JSON.stringify(val)));
   loggedInUser.subscribe((val) => localStorage.setItem("userData", JSON.stringify(val)));
   isLoggedIn.subscribe((val) => localStorage.setItem("isLoggedIn", val));
-  bankAccountData.subscribe((val) => localStorage.setItem("bankAccountData", JSON.stringify(val)));
-  bankDataDelivered.subscribe((val) => localStorage.setItem("bankDataDelivered", val));
+  darkMode.subscribe((val) => localStorage.setItem("darkMode", val));
   linkSelected.subscribe((val) => localStorage.setItem("selectedTab", val));
   sidebar.subscribe((val) => localStorage.setItem("sidebarState", val));
 }

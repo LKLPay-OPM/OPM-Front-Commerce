@@ -7,9 +7,11 @@
   import Input from "$lib/components/Input.svelte";
   import PasswordInput from "$lib/components/inputs/PasswordInput.svelte";
   import Checkbox from "$lib/components/Checkbox.svelte";
-  import Logo from "$lib/assets/Logo.png";
+  import Icons from "$lib/components/Icons.svelte";
   import SuccessLogo from "$lib/components/Success.svelte";
   import ErrorLogo from "$lib/components/Error.svelte";
+  /* assets */
+  import Logo from "$lib/assets/Logo.png";
   /* constants */
   import { emailPattern, passwordPattern } from "$lib/constants/pattern";
   /* controllers */
@@ -161,20 +163,21 @@
       </div>
       <div class="form">
         <div class="title">Bienvenido a LKL Pay</div>
-        <div class="svg">
-          <SuccessLogo />
+        <div class="svg success">
+          <Icons name="checkbox-circle-line" width="150" height="150" />
+          <!-- <SuccessLogo /> -->
         </div>
         <div class="subtitle">Ingresa a tu correo para verificar tu cuenta</div>
-        <div class="btn-layout">
-          <Input
-            label="Ir a mi Escritorio"
-            id="goToDashboardBtn"
-            type="button"
-            className="btn-success"
-            icon=""
-            on:click={redirectHome}
-          />
-        </div>
+      </div>
+      <div class="btn-layout">
+        <Input
+          label="Ir a mi Escritorio"
+          id="goToDashboardBtn"
+          type="button"
+          className="btn-success"
+          icon=""
+          on:click={redirectHome}
+        />
       </div>
     </div>
   </div>
@@ -186,21 +189,22 @@
       </div>
       <div class="form">
         <div class="title">Ups, Algo salió mal</div>
-        <div class="svg">
-          <ErrorLogo />
+        <div class="svg error">
+          <Icons name="close-circle-line" width="150" height="150" />
+          <!-- <ErrorLogo /> -->
         </div>
         <div class="subtitle">{customMessage}</div>
         <div class="subtitle">Vamos a intentar crear tu cuenta de nuevo</div>
-        <div class="btn-layout">
-          <Input
-            label="Reiniciar Registro"
-            id="returnToRegisterBtn"
-            type="button"
-            className="btn-error"
-            icon=""
-            on:click={() => (menu = "register")}
-          />
-        </div>
+      </div>
+      <div class="btn-layout">
+        <Input
+          label="Reiniciar Registro"
+          id="returnToRegisterBtn"
+          type="button"
+          className="btn-error"
+          icon=""
+          on:click={() => (menu = "register")}
+        />
       </div>
     </div>
   </div>
@@ -232,6 +236,9 @@
     box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     transform: matrix(1, 0, 0, 1, 0, 0);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
   }
   .error-content {
     position: absolute;
@@ -241,6 +248,9 @@
     box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     transform: matrix(1, 0, 0, 1, 0, 0);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
   }
 
   .logo {
@@ -256,7 +266,6 @@
 
   .form {
     width: 100%;
-    height: 100%;
     padding-top: 1.5rem;
     padding-bottom: 2rem;
     padding-left: 2.5rem;
@@ -266,6 +275,12 @@
   .svg {
     display: flex;
     justify-content: center;
+    &.success {
+      color: $success-light;
+    }
+    &.error {
+      color: $error-light;
+    }
   }
 
   .title {
@@ -366,6 +381,17 @@
     width: 100%;
     margin-bottom: 1.125rem;
     margin-top: 1.125rem;
+    padding: 0 2rem;
+  }
+
+  /* Dark Mode */
+  :global(body.dark-mode) {
+    .content,
+    .error-content,
+    .success-content {
+      background: $background-dark;
+      box-shadow: 20px 20px 40px #202020, -20px -20px 60px #303030;
+    }
   }
 
   /* MEDIA */

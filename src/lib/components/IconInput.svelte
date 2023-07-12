@@ -161,4 +161,20 @@
     font-size: 0.875rem;
     color: $primary-dark;
   }
+
+  :global(body.dark-mode) {
+    .txt-field .input {
+      background: $background-dark-accent-primary;
+      box-shadow: inset 5px 5px 10px #343434, inset -5px -5px 10px #3c3c3c;
+      color: $font-dark-primary;
+      .input-field {
+        color: $font-dark-primary;
+      }
+    }
+    .fill-blue {
+      label {
+        color: $font-dark-primary;
+      }
+    }
+  }
 </style>

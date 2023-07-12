@@ -1,7 +1,9 @@
 <script>
   /* components */
   import Input from "$lib/components/Input.svelte";
+  import InfoCard from "$lib/components/InfoCard.svelte";
   import Modal from "$lib/components/Modal.svelte";
+  import DateTitle from "$lib/components/DateTitle.svelte";
   import DatePicker from "$lib/components/DatePicker.svelte";
   import Select from "$lib/components/Select.svelte";
   import TextArea from "$lib/components/TextArea.svelte";
@@ -456,11 +458,7 @@
       </div>
     </div>
     <div class="top__middle">
-      <div class="date">
-        <p class="number">
-          {date.getDate()} de {getMonthName(date.getMonth())} del {date.getFullYear()}
-        </p>
-      </div>
+      <DateTitle />
       <ButtonGroup active={filter} options={filterByDateOptions} on:click={handleFilterClick} />
     </div>
     <div class="top__right">
@@ -521,41 +519,25 @@
   </div>
   <div class="middle">
     <div class="card-group">
-      <div class="card">
-        <div><p>Monto Total</p></div>
-        <div>
-          <span>{currencyFormatLocal(resume?.Amount ?? 0)} </span>
-        </div>
+      <div class="element">
+        <InfoCard className={""} title="Monto Total" numData={currencyFormatLocal(resume?.Amount ?? 0)} />
       </div>
-      <div class="card">
-        <div><p>Comisión</p></div>
-        <div>
-          <span>{currencyFormatLocal(resume?.Comission ?? 0)} </span>
-        </div>
+      <div class="element">
+        <InfoCard className={""} title="Comisión" numData={currencyFormatLocal(resume?.Comission ?? 0)} />
       </div>
       {#if (typeof resume?.Tips != "undefined" && resume?.Tips > 0) || typeof resume?.Tips != "undefined"}
-        <div class="card">
-          <div><p>Propinas</p></div>
-          <div>
-            <span>
-              {currencyFormatLocal(resume?.Tips ?? 0)}
-            </span>
-          </div>
+        <div class="element">
+          <InfoCard className={""} title="Propinas" numData={currencyFormatLocal(resume?.Tips ?? 0)} />
         </div>
       {/if}
-      <div class="card">
-        <div><p>Saldo a Depositar</p></div>
-        <div>
-          <span>
-            {currencyFormatLocal(resume?.Deposit ?? 0)}
-          </span>
-        </div>
+      <div class="element">
+        <InfoCard className={""} title="Saldo a Depositar" numData={currencyFormatLocal(resume?.Deposit ?? 0)} />
       </div>
     </div>
   </div>
   <div class="transactions-view">
     {#if notFound}
-      <div class="message card-container">
+      <div class="message card-primary">
         <div class="msg">
           <p>No has realizado ventas el día de hoy</p>
         </div>

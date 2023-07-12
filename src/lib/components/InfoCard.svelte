@@ -5,7 +5,7 @@
   export let className = "";
 </script>
 
-<div on:click on:keypress class="card {className}">
+<div on:click on:keypress class="card card-primary{className}">
   <div>
     <p>{title}</p>
   </div>
@@ -34,10 +34,6 @@
     gap: 16px;
     width: 100%;
     height: 100%;
-    /* Nue Fill */
-    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
-    /* out */
-    box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     /* Inside auto layout */
     flex: none;
@@ -56,13 +52,19 @@
   }
 
   .card span {
-    font-family: "Roboto";
-    font-style: normal;
     font-weight: 700;
-    font-size: 24px;
+    font-size: 32px;
     line-height: 20px;
     text-align: center;
     /* Text */
     color: $primary-dark;
+  }
+
+  :global(body.dark-mode) {
+    .card {
+      span {
+        color: $font-dark-primary;
+      }
+    }
   }
 </style>

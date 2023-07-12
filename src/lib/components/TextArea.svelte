@@ -76,6 +76,22 @@
     font-size: 0.875rem;
   }
 
+  :global(body.dark-mode) {
+    .text-area {
+      background: $background-dark-accent-primary;
+      color: $font-dark-primary;
+      box-shadow: inset -3px -3px 4px $background-dark, inset 3px 3px 4px $background-dark-secondary;
+    }
+
+    .fill-blue .label-text {
+      color: $font-dark-primary;
+    }
+
+    textarea::placeholder {
+      font-weight: 500;
+      color: rgb(255 255 255 / 0.1);
+    }
+  }
   /* textarea.text-area {
     width: 50%;
   } */

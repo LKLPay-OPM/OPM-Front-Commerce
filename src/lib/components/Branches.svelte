@@ -206,7 +206,7 @@
         </div>
       </div>
     </div>
-    <div class="card-container padding-2">
+    <div class="card-primary padding-2">
       {#if branches.length <= 0}
         <div class="message">
           <div class="msg">
@@ -331,7 +331,7 @@
     </div>
     <div class="transaction-tables">
       <div id="pdfTable" class="table-container">
-        <div class="card-container">
+        <div class="card-primary">
           <table class="table-content">
             <thead>
               <tr>
@@ -641,7 +641,7 @@
   td:first-child {
     text-align: left;
   }
-  .card-container {
+  .card-primary {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -669,6 +669,21 @@
       text-align: center;
       /* Text */
       color: $grey;
+    }
+  }
+
+  /* Dark Mode */
+  :global(body.dark-mode) {
+    .element {
+      .title-blue,
+      .description {
+        color: $font-dark-primary;
+      }
+    }
+    .message {
+      .msg {
+        color: $font-dark-primary;
+      }
     }
   }
 

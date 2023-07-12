@@ -11,7 +11,7 @@
   </p>
 </div>
 
-<style>
+<style lang="scss">
   .title p {
     font-style: normal;
     font-weight: 700;
@@ -20,5 +20,13 @@
     text-align: center;
     /* text-placeholder */
     color: #113a62;
+  }
+
+  :global(body.dark-mode) {
+    .title {
+      p {
+        color: $font-dark-primary;
+      }
+    }
   }
 </style>
