@@ -10,6 +10,7 @@
   import noUser from "$lib/assets/no_user.png";
   /* components */
   import Icons from "$lib/components/Icons.svelte";
+  import ThemeToggle from "$lib/components/ThemeToggle.svelte";
 
   let options = [];
   let innerWidth;
@@ -31,10 +32,16 @@
 
 <svelte:window bind:innerWidth bind:innerHeight />
 <div class="navbar no-print">
-  <div class="logo-details">
-    <i on:click={() => ($sidebar = !$sidebar)} on:keydown={() => ($sidebar = !$sidebar)}>
-      <Icons name="menu-lines" width="24" height="24" />
-    </i>
+  <i on:click={() => ($sidebar = !$sidebar)} on:keydown={() => ($sidebar = !$sidebar)}>
+    <Icons name="menu-lines" width="24" height="24" />
+  </i>
+  <div class="logo">
+    <a href="/">
+      <img src={logo} alt="Company Logo" />
+    </a>
+  </div>
+  <div class="theme-toggle">
+    <ThemeToggle />
   </div>
 </div>
 <div class="sidebar no-print {$sidebar ? '' : 'close'}">
@@ -43,13 +50,15 @@
       <i on:click={() => ($sidebar = !$sidebar)} on:keydown={() => ($sidebar = !$sidebar)}>
         <Icons name="menu-lines" width="24" height="24" />
       </i>
-      <a href="/">
-        <div class="text-logo">
-          <p>LKL Pay</p>
-          <small>Financial Technology</small>
-        </div>
-        <img src={logo} alt="Company Logo" />
-      </a>
+      {#if innerWidth >= 1000}
+        <a href="/">
+          <div class="text-logo">
+            <p>LKL Pay</p>
+            <small>Financial Technology</small>
+          </div>
+          <img src={logo} alt="Company Logo" />
+        </a>
+      {/if}
     </div>
     <a
       on:click={() => {
@@ -95,6 +104,9 @@
   </div>
   <div class="sidebar-bottom">
     <ul class="nav-links">
+      <div class="theme-toggle">
+        <ThemeToggle />
+      </div>
       <li
         on:click={() => {
           $linkSelected = "Ayuda";

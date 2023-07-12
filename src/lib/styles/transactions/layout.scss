@@ -69,10 +69,6 @@
       width: auto;
       min-width: 180px;
       height: 88px;
-      /* Nue Fill */
-      background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
-      /* out */
-      box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
       border-radius: 10px;
       /* Inside auto layout */
       flex: none;
@@ -225,6 +221,21 @@
     }
   }
 
+  :global(body.dark-mode) {
+    .modal-range {
+      p {
+        color: $font-dark-primary;
+      }
+    }
+    
+    .message {
+      .msg {
+        p {
+          color: $font-dark-primary;
+        }
+      }
+    }
+  }
 
 /* MEDIA QUERIES */
 /* Small Screen */

@@ -1,11 +1,15 @@
 <script>
+  /* svelte */
   import { loggedInUser } from "$lib/stores";
+  import { onMount } from "svelte";
+  /* component */
   import RedirectHome from "$lib/components/RedirectHome.svelte";
   import Input from "$lib/components/Input.svelte";
   import Select from "$lib/components/Select.svelte";
-  import { onMount } from "svelte";
   import Icons from "$lib/components/Icons.svelte";
   import Branches from "$lib/components/Branches.svelte";
+  import DateTitle from "$lib/components/DateTitle.svelte";
+  /* assets */
   import noUser from "$lib/assets/no_user.png";
 
   let menuAddBranch = false;
@@ -106,10 +110,8 @@
 </script>
 
 <div class="container">
-  <div class="date">
-    {date.getDate()} de {getMonth(date.getMonth())} del {date.getFullYear()}
-  </div>
-  <div class="card-container padding-2">
+  <DateTitle />
+  <div class="card-primary padding-2">
     <div class="content">
       {#if !branchView}
         <div class="right">

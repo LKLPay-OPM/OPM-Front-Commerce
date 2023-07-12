@@ -120,6 +120,21 @@
     }
   }
 
+  /* Dark Mode */
+  :global(body.dark-mode){
+    .table-content {
+      thead {
+        color: $grey;
+      }
+      td {
+        color: $font-dark-primary;
+      }
+    }
+    .icon {
+      color: $font-dark-primary;
+    }
+  }
+
   @media (max-width: 540px) {
     .table-container {
       display: block;

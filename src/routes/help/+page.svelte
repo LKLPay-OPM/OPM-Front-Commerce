@@ -11,7 +11,7 @@
     <details id="firstSteps">
       <summary class="faq__label-title">Primeros Pasos</summary>
       {#each firstSteps as faq}
-        <details class="faq__panel card-container">
+        <details class="faq__panel card-primary">
           <summary class="faq__label">{faq.question}</summary>
           <div class="faq__panel-body">
             <p class="faq__panel-answer">{faq.answer}</p>
@@ -22,7 +22,7 @@
     <details id="support">
       <summary class="faq__label-title">Soporte</summary>
       {#each support as faq}
-        <details class="faq__panel card-container">
+        <details class="faq__panel card-primary">
           <summary class="faq__label">{faq.question}</summary>
           <div class="faq__panel-body">
             <p class="faq__panel-answer">{faq.answer}</p>
@@ -33,7 +33,7 @@
     <details id="transactions">
       <summary class="faq__label-title">Transacciones</summary>
       {#each transactions as faq}
-        <details class="faq__panel card-container">
+        <details class="faq__panel card-primary">
           <summary class="faq__label">{faq.question}</summary>
           <div class="faq__panel-body">
             <p class="faq__panel-answer">{faq.answer}</p>
@@ -98,6 +98,18 @@
     color: $primary-dark;
     padding: 0.5rem 0;
     white-space: pre-line;
+  }
+
+  /* Dark Mode */
+  :global(body.dark-mode) {
+    .faq__header-title,
+    .faq__label-title,
+    .faq__panel-answer {
+      color: $font-dark-primary;
+    }
+    .faq__label {
+      color: $grey;
+    }
   }
 
   @media (max-width: 425px) {

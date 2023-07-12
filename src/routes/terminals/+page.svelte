@@ -1,4 +1,7 @@
 <script>
+  /* components */
+  import DateTitle from "$lib/components/DateTitle.svelte";
+  /* utils */
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   let terminals = [
     {
@@ -46,13 +49,11 @@
 </script>
 
 <div class="container">
-  <div class="date">
-    {date.getDate()} de {getMonth(date.getMonth())} del {date.getFullYear()}
-  </div>
+  <DateTitle />
   <div class="content">
     <div class="terminal-tables">
       <div class="table-container">
-        <div class="card-container">
+        <div class="card-primary">
           <table class="table-content">
             <thead>
               <tr>
@@ -155,6 +156,16 @@
   }
   td:first-child {
     text-align: left;
+  }
+
+  /* Dark Mode */
+  .table-content {
+    thead {
+      color: $grey;
+    }
+    td {
+      color: $font-dark-primary;
+    }
   }
 
   @media (max-width: 425px) {

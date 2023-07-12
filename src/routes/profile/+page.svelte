@@ -1,6 +1,8 @@
 <script>
   import { isLoggedIn, loggedInUser, redirectBankProfile } from "$lib/stores";
   import { onMount, afterUpdate } from "svelte";
+  /* components */
+  import DateTitle from "$lib/components/DateTitle.svelte";
   import Input from "$lib/components/Input.svelte";
   import FileInput from "$lib/components/inputs/FileInput.svelte";
   import TextNumberInput from "$lib/components/inputs/TextNumberInput.svelte";
@@ -282,10 +284,8 @@
 </Modal>
 
 <div class="container">
-  <div class="date">
-    {date.getDate()} de {getMonth(date.getMonth())} del {date.getFullYear()}
-  </div>
-  <div class="card-container padding-2">
+  <DateTitle/>
+  <div class="card-primary padding-2">
     <div class="content">
       {#if !branchView}
         <div class="left">
@@ -621,20 +621,6 @@
     margin: 0rem 0rem 0.5rem 0rem;
   }
 
-  .divider-hor {
-    background: linear-gradient(138.32deg, rgba(0, 0, 0, 0.5) 8.26%, rgba(255, 255, 255, 0.5) 91.02%), #eaecf0;
-    background-blend-mode: soft-light, normal;
-    /* n-stroke */
-
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    /* n-icon-1-1-2-in */
-
-    box-shadow: inset -1px -1px 2px #fafbff, inset 1px 1px 2px #a6abbd;
-    border-radius: 5px;
-    height: 0.5rem; /* 8px */
-    width: -webkit-fill-available;
-  }
-
   .text-center {
     display: flex;
     justify-content: center;
@@ -659,6 +645,18 @@
     flex-direction: row;
     gap: 1rem;
   }
+
+  /* Dark Mode */
+  :global(body.dark-mode) {
+    .avatar {
+      background-color: $dark;
+    }
+    .title-blue,
+    .description {
+      color: $font-dark-primary;
+    }
+  }
+
   @media (max-width: 425px) {
     .content {
       flex-direction: column;

@@ -642,6 +642,54 @@
   }
 }
 
+/* Dark Mode */
+:global(body.dark-mode) {
+  .details__top {
+    b {
+      color: $font-dark-primary;
+    }
+  }
+  .details-right,
+  .section {
+    .title {
+      color: $font-dark-primary;
+    }
+  }
+  .details-card {
+    box-shadow: $dark-box-shadow-card;
+  }
+  .clarifications {
+    .title {
+      color: $font-dark-primary;
+    }
+    .description {
+      color: $font-dark-primary;
+    }
+  }
+  .modal-content {
+    .column-element {
+      span {
+        color: $font-dark-primary;
+        .copy-link__icon {
+          color: $font-dark-primary;
+          &:hover {
+            color: $primary-light;
+          }
+        }
+      }
+      p,
+      textarea {
+        color: $font-dark-primary;
+        background: $background-dark-secondary;
+        &::selection {
+          color: $primary-light;
+          background: transparent;
+        }
+      }
+    }
+  }
+}
+
 /* MEDIA */
 /* Small & Medium Screen */
 @media (max-width: $md) {
@@ -809,6 +857,7 @@
     min-height: 10rem;
     margin: 0 1rem;
   }
+
   /* .top__left {
     min-width: 15rem;
   }

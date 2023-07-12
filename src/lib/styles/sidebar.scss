@@ -2,33 +2,42 @@
   overflow: hidden;
   background-color: $background-light-secondary;
   position: fixed;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   /* Set the navbar to fixed position */
   top: 0;
   /* Position the navbar at the top of the page */
   width: 100%;
   /* Full width */
   height: 50px;
-}
-
-.navbar .logo-details * a,
-.navbar .logo-details {
-  display: flex;
-  /* padding: 12px 0 12px 0; */
-  overflow: hidden;
-  align-items: center;
-  transition: all 0.4s ease;
-}
-
-.navbar .logo-details i {
-  height: 50px;
-  min-width: 4.875rem;
-  /* 78px */
-  text-align: center;
-  line-height: 60px;
-  color: $grey;
-  font-size: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  i {
+    height: 50px;
+    min-width: 4.875rem;
+    /* 78px */
+    text-align: center;
+    line-height: 60px;
+    color: $grey;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  .logo {
+    justify-self: end;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin: 0 1rem;
+    img {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 .5rem;
+  }
 }
 
 /* Sidebar */
@@ -490,6 +499,59 @@ color: $primary-accent-dark;
   color: $red;
 }
 
+/* Dark Mode */
+:global(body.dark-mode) {
+  .navbar {
+    background-color: $dark;
+    background: $dark;
+  }
+  .sidebar, 
+  .sidebar.close{
+    background-color: $dark;
+    background: $dark;
+    .sidebar-start,
+    .sidebar-bottom {
+      .nav-links{
+        background: $dark;
+      }
+      background: $dark;
+    }
+  }
+
+  .profile-details {
+    background-color: $background-dark;
+    box-shadow: $dark-box-shadow;
+    img {
+      background: $dark;
+    }
+  }
+
+  .nav-links {
+    li {
+      &:hover {
+        a {
+          .link_name,
+          .active-link_name {
+            color: $font-dark-primary;
+          }
+        }
+        i {
+          color: $font-dark-primary;
+          &.active-link_name {
+            color: $font-dark-primary;
+          }
+        }
+        background: $background-dark;
+      }
+      a {
+        .active-link_name {
+          color: $font-dark-primary;
+        }
+      }
+    } 
+  }
+}
+
 @media screen {
   .sidebar {
     width: 15rem;
@@ -516,6 +578,11 @@ color: $primary-accent-dark;
 }
 
 @media (max-width: 768px) {
+  .sidebar-bottom {
+    .theme-toggle {
+      display: none;
+    }
+  }
   .sidebar {
     width: 15rem;
     /* 240px */

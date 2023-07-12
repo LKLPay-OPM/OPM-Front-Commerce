@@ -92,7 +92,8 @@
   font-size: 0.8125rem;
   line-height: 1.25rem;
   text-decoration: none;
-  color: $primary-light
+  color: $primary-light;
+  position: relative;
 }
 
 .register-link {
@@ -136,6 +137,21 @@ input:-internal-autofill-selected {
     line-height: 1.25rem;
     text-decoration: none;
     color: $primary-light;
+  }
+}
+
+/* Dark Mode */
+:global(body.dark-mode) {
+  .content {
+    background: $background-dark;
+    box-shadow: $dark-box-shadow-card;
+  }
+
+  .forgot-pass-link,
+  .register-link {
+    a {
+      color: $font-dark-primary;
+    }
   }
 }
 

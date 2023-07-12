@@ -102,7 +102,7 @@
     z-index: 10;
     /* max-width: 70vw; */
     border-radius: 0.3rem;
-    background-color: white;
+    background: white;
     overflow: hidden;
     padding: 1rem;
   }
@@ -127,5 +127,21 @@
     display: flex;
     justify-content: center;
     flex-direction: row;
+  }
+
+  :global(body.dark-mode) {
+    dialog {
+      background: $background-dark-secondary;
+      box-shadow: none;
+    }
+
+    .content-wrapper {
+      background: $background-dark-secondary;
+      // box-shadow: $dark-box-shadow-card;
+    }
+
+    .header {
+      color: $font-dark-primary;
+    }
   }
 </style>

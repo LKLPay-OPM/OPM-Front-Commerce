@@ -34,16 +34,28 @@ $grey: #8B9EB0;
 $orange: #fd9053;
 $red: #c40000;
 $green: #00c48c;
+$error: #ff0000;
+$error-light: #fd5353;
+$success-light: #00c48c;
 /* theme light*/
 $background-light: #E9EDF0;
 $background-light-secondary: #F3F3F3;
 $background-light-accent-primary: #EFEEF5;
 $background-light-accent-secondary: #E6E9EF;
 /* theme dark*/
-// $background-dark: #e9edf0;
-// $background-dark-secondary: #f3f3f3;
-// $background-dark-accent-primary: #efeef5;
-// $background-dark-accent-secondary: #e6e9ef;
+$dark: #121212;
+$background-dark: #313131;
+$background-dark-secondary: #383838;
+$background-dark-accent-primary: #414141;
+$background-dark-accent-secondary: #525252;
+/* Fonts */
+$font-light-primary: #113a62;
+$font-dark-primary: #B3B3B3;
+
+/* Shadows */
+$dark-box-shadow-card: 10px 10px 14px #2a2a2a, -10px -10px 14px #383838;
+$dark-box-shadow-btn: 10px 10px 14px #2a2a2a, -10px -10px 14px #383838;
+$dark-box-shadow: 5px 5px 8px #101010, -5px -5px 6px #202020;
 
 /* MEDIA */
 $xs: 425px;

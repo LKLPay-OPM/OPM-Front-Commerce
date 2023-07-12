@@ -33,8 +33,7 @@
     align-items: center;
     padding: 6px;
     background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
-      4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     flex: none;
     flex-grow: 0;
@@ -80,16 +79,10 @@
 
   .button-active {
     height: 22px;
-    background: linear-gradient(
-        317.7deg,
-        rgba(0, 0, 0, 0.2) 0%,
-        rgba(255, 255, 255, 0.2) 105.18%
-      ),
-      $primary-light;
+    background: linear-gradient(317.7deg, rgba(0, 0, 0, 0.2) 0%, rgba(255, 255, 255, 0.2) 105.18%), $primary-light;
     background-blend-mode: soft-light, normal;
     /* inner blue */
-    box-shadow: inset -5px -5px 8px rgba(56, 151, 255, 0.75),
-      inset 5px 5px 7px rgba(29, 79, 133, 0.5);
+    box-shadow: inset -5px -5px 8px rgba(56, 151, 255, 0.75), inset 5px 5px 7px rgba(29, 79, 133, 0.5);
     font-family: "Raleway";
     font-style: normal;
     font-weight: 700;
@@ -108,5 +101,16 @@
 
   .align-center {
     text-align: center;
+  }
+
+  :global(body.dark-mode) {
+    .button-group {
+      background: $background-dark-secondary;
+      box-shadow: $dark-box-shadow-card;
+      border: 1px solid $dark;
+      .button {
+        background: $background-dark-accent-secondary;
+      }
+    }
   }
 </style>

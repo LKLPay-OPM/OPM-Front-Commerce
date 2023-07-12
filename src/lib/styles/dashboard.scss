@@ -57,10 +57,6 @@
   margin: 0rem 4rem 2rem 4rem; /* 0px 64px */
   /* min-width: calc(80% - 20rem); */
   /* min-height: 25rem; */ /* 400px */
-  /* Nue Fill */
-  background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
-  /* out */
-  box-shadow: 4px 4px 20px rgba(111, 140, 176, 0.41);
   border-radius: 10px;
   /* Inside auto layout */
   flex: none;
@@ -219,6 +215,48 @@
       visibility: visible;
       opacity: 1;
     }
+  }
+}
+
+/* Dark Mode */
+:global(body.dark-mode){
+  .title,
+  .subtitle {
+    p {
+      color: $font-dark-primary;
+    }
+  }
+
+  .top {
+    .top__left {
+      p {
+        a {
+          color: $font-dark-primary;
+        }
+      }
+    }
+  }
+
+  .message {
+    .msg {
+      p {
+        color: $font-dark-primary;
+      }
+    }
+  }
+
+  .table-content {
+
+    thead {
+      color: $grey;
+    }
+    td {
+      color: $font-dark-primary;
+    }
+  }
+  
+  .icon {
+    color: $font-dark-primary;
   }
 }
 

@@ -578,4 +578,12 @@
   .label-blue label {
     color: $primary-dark;
   }
+
+  :global(body.dark-mode) {
+    .fill-blue {
+      label {
+        color: $font-dark-primary;
+      }
+    }
+  }
 </style>

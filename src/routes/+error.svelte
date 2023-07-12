@@ -2,7 +2,8 @@
   /* app */
   import { page } from "$app/stores";
   /* components */
-  import ErrorLogo from "$lib/components/Error.svelte";
+  // import ErrorLogo from "$lib/components/Error.svelte";
+  import Icons from "$lib/components/Icons.svelte";
 
   $: {
     console.error($page.status + ": " + $page.error.message);
@@ -12,7 +13,8 @@
 <div class="container">
   <div class="title">Ups, Algo salió mal</div>
   <div class="svg">
-    <ErrorLogo />
+    <Icons name="close-circle-line" width="150" height="150" />
+    <!-- <ErrorLogo /> -->
   </div>
   <div class="title">{$page.status}</div>
   <div class="subtitle">{$page.error.message}</div>
@@ -26,11 +28,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 2rem;
   }
 
   .svg {
     display: flex;
     justify-content: center;
+    color: $error-light;
   }
 
   .title {

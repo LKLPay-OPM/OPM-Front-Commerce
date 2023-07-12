@@ -76,4 +76,11 @@
     font-size: 0.875rem;
     color: $primary-dark;
   }
+
+  :global(body.dark-mode) {
+    input[type="date"] {
+      background: $background-dark-accent-secondary;
+      box-shadow: inset -1px -1px 2px $background-dark-accent-primary, inset 1px 1px 2px $background-dark;
+    }
+  }
 </style>

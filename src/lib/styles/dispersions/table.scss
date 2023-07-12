@@ -138,6 +138,37 @@ td:first-child {
   }
 }
 
+/* Dark Mode */
+:global(body.dark-mode) {
+  .date {
+    p {
+      color: $font-dark-primary;
+    }
+    .vertical-line-divider {
+      background-color: rgb(0 0 0 / 20%);
+    }
+  
+    &::before {
+      background: linear-gradient($primary-light, $primary-accent-dark, $background-dark-secondary);
+    }
+    &::after {
+      background-color: $background-dark-secondary;
+    }
+  }
+
+  .table-content {
+    thead {
+      color: $font-dark-primary;
+    }
+
+    td {
+      color: $grey;
+    }
+  }
+  
+}
+
+/* MEDIA QUERIES */
 @media (max-width: $md) {
   .date {
     grid-auto-flow: column;

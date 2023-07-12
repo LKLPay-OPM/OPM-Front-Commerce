@@ -116,4 +116,13 @@
       // transform: scale(1) rotate(360deg);
     }
   }
+
+  :global(body.dark-mode) {
+    .container {
+      background: $background-dark;
+      .text {
+        color: $background-light;
+      }
+    }
+  }
 </style>

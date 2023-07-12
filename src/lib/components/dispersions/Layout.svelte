@@ -3,6 +3,8 @@
   import { loggedInUser, redirectUrgentDispersions } from "$lib/stores";
   /* components */
   import Input from "$lib/components/Input.svelte";
+  import DateTitle from "$lib/components/DateTitle.svelte";
+  import InfoCard from "$lib/components/InfoCard.svelte";
   import IconInput from "$lib/components/IconInput.svelte";
   import Modal from "$lib/components/Modal.svelte";
   import DatePicker from "$lib/components/DatePicker.svelte";
@@ -660,11 +662,7 @@
         </div>
       </div>
       <div class="top__middle">
-        <div class="date">
-          <p>
-            {date.getDate()} de {getMonthName(date.getMonth())} del {date.getFullYear()}
-          </p>
-        </div>
+        <DateTitle />
         <ButtonGroup {active} options={buttonGroupOptions} on:click={handleFilterClick} />
         <!-- <ButtonGroup bind:active options={buttonGroupOptions} /> -->
       </div>
@@ -734,11 +732,8 @@
             icon=""
           />
         </div>
-        <div class="card">
-          <div><p>Saldo a Depositar</p></div>
-          <div>
-            <span>{currencyFormatLocal(resume.depositBalance ?? 0)}</span>
-          </div>
+        <div class="element">
+          <InfoCard className={""} title="Saldo a Depositar" numData={currencyFormatLocal(resume?.depositBalance ?? 0)} />
         </div>
         <div class="button">
           <Input

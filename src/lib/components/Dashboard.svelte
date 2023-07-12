@@ -52,7 +52,7 @@
         <InfoCard className={""} title="Saldo a Depositar" numData={currencyFormatLocal(resume?.Deposit ?? 0)} />
       </div>
     </div>
-    <div class="transactions" style={transactions?.length <= 0 ? "min-height: 25rem;" : ""}>
+    <div class="transactions card-primary" style={transactions?.length <= 0 ? "min-height: 25rem;" : ""}>
       <div class="top">
         <div class="top__left">
           <p><a href="/transactions">Últimas Transacciones</a></p>

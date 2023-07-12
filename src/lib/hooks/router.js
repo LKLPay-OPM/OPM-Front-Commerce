@@ -36,6 +36,7 @@ const userRoutes = (role, route) => {
       "/urgent": false,
       "/credits": false,
       "/payment-link": true,
+      "/help": true,
     },
     2: {
       "/login": true,

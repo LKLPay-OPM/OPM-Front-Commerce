@@ -34,7 +34,7 @@
     {#if $isLoggedIn}
       <Sidebar />
     {/if}
-    <section class={$isLoggedIn ? " main-section" : "no-user"}>
+    <section class={$isLoggedIn ? "main-section" : "no-user"}>
       <div class="main-content">
         <slot />
       </div>
