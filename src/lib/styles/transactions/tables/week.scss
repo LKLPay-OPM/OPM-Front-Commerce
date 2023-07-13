@@ -28,8 +28,6 @@
     min-width: 40rem;
     
     thead {
-      font-family: "Raleway";
-      font-style: normal;
       font-weight: 500;
       font-size: 1rem;
       line-height: 18px;
@@ -40,8 +38,6 @@
     }
 
     td {
-      font-family: "Roboto";
-      font-style: normal;
       font-weight: 500;
       font-size: 13px;
       line-height: 18px;
@@ -130,8 +126,20 @@
         color: $font-dark-primary;
       }
     }
+    .row {
+  
+      > .title {
+        color: $grey;
+      }
+    }
     .icon {
       color: $font-dark-primary;
+    }
+    tbody.inside {
+      background: $background-dark-accent-primary;
+      /* inner-flat */
+      box-shadow: inset -3px -3px 4px $background-dark-accent-secondary, inset 3px 3px 3px $background-dark;
+      border-radius: 0px 0px 10px 10px;
     }
   }
 

@@ -76,7 +76,7 @@
       <table class="table-content">
         <thead>
           <tr>
-            <!-- <th>Fecha</th> -->
+            <th>Hora</th>
             <th class="sm">N° Ticket</th>
             <th>Monto</th>
             <th class="">Comisión</th>
@@ -88,11 +88,7 @@
         <tbody>
           {#each transactions as transaction}
             <tr class="clickable number" on:click={() => goto(`/transactions/detail?ticket=${transaction?._id}`)}>
-              <!-- <td
-                >{dateToLocalString(transaction["Transaction Date"]) +
-                  " - " +
-                  timeToLocalString(transaction["Transaction Time"])}
-              </td> -->
+              <td class="sm">{timeToLocalString(transaction["Transaction Time"])}</td>
               <td class="sm">{transaction?.id}</td>
               <td>{currencyFormatLocal(transaction.Amount)}</td>
               <td class="">{currencyFormatLocal(transaction.comission)}</td>
