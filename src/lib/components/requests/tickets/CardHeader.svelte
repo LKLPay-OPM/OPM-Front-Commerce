@@ -46,4 +46,14 @@
     padding-top: 3px;
     padding-bottom: 12px;
   }
+
+  /* Dark Mode */
+  :global(body.dark-mode) {
+    .card-header {
+      color: $grey;
+    }
+    .card-subtitle {
+      color: $font-dark-primary;
+    }
+  }
 </style>

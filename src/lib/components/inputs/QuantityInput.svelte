@@ -93,6 +93,7 @@
   .container__quantity-input {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     label {
       font-weight: 500;
@@ -116,6 +117,29 @@
   .label__none {
     .label {
       display: none;
+    }
+  }
+
+  /* Dark Mode */
+  :global(body.dark-mode) {
+    .quantity-input__container {
+      button,
+      input {
+        border-color: rgb(0 0 0 / 4%);
+        background-color: $background-dark-accent-primary;
+        color: $font-dark-primary;
+      }
+
+      button {
+        color: $font-dark-primary;
+        &:hover {
+          background-color: lighten($background-dark, $amount: 10);
+        }
+      }
+    }
+
+    label {
+      color: $font-dark-primary;
     }
   }
 </style>

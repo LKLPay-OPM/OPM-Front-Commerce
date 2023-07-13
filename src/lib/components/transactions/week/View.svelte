@@ -35,7 +35,7 @@
 <svelte:window bind:innerWidth bind:innerHeight />
 <div class="transaction-tables">
   <div id="pdfTable" class="table-container">
-    <div class="card-container">
+    <div class="card-primary">
       <table class="table-content">
         <thead>
           <tr>
