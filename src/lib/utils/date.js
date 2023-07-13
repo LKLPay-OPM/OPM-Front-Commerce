@@ -32,7 +32,7 @@ export const dateToLocalStringShort = (string) => {
 };
 export const timeToLocalString = (string) => {
   var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
-  let str = string.replace(pattern, `a las $1:$2`);
+  let str = string.replace(pattern, `$1:$2`);
   return str;
 };
 
