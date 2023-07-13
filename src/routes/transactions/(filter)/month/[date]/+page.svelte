@@ -79,7 +79,7 @@
 </script>
 
 <div id={`pdfTable-${yearMonth}`} class="table-container">
-  <div class="card-container">
+  <div class="card-primary">
     <div class="row">
       <div class="title">
         <i

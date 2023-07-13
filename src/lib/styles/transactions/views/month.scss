@@ -84,6 +84,26 @@
     color: $primary-light;
   }
 
+  /* Dark Mode */
+  :global(body.dark-mode){
+    .table-content {
+      thead {
+        th {
+          &.title {
+            color: $grey;
+          }
+        }
+      }
+      tbody {
+        td {
+          &.element {
+            color: $font-dark-primary;
+          }
+        }
+      }
+    }
+  }
+
   /* Medium Screen */
   @media (max-width: $md) {
     .top__left * .element {

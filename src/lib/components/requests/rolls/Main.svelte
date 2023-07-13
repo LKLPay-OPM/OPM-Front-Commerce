@@ -48,6 +48,12 @@
     cursor: pointer;
   }
 
+  /* Dark Mode */
+  :global(body.dark-mode) {
+    .option-col {
+      color: $font-dark-primary;
+    }
+  }
   @media (max-width: 425px) {
   }
   @media (min-width: 426px) and (max-width: 540px) {

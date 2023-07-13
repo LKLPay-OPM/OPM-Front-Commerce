@@ -32,7 +32,7 @@
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
-<div class="card-container container">
+<div class="card-primary container">
   <div class="col">
     <div class="element">
       <div class={`option-row option-selected`}>

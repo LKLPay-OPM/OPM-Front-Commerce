@@ -200,7 +200,7 @@
 </script>
 
 <div class="container">
-  <div class="card-container padding-2">
+  <div class="card-primary padding-2">
     <div class="content">
       <!-- Left Section -->
       <!-- <div class="left" /> -->
@@ -354,7 +354,7 @@
         </div>
       </div>
       <!-- Right Section -->
-      {#if $loggedInUser.accountType > 1}
+      {#if $loggedInUser.accountType > 0}
         <div class="right">
           <div class="title">Datos Fiscales</div>
           <div class="element">

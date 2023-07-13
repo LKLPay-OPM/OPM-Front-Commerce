@@ -32,4 +32,12 @@
       background-color: lighten($grey, $amount: 28);
     }
   }
+
+  /* Dark Mode */
+  :global(body.dark-mode) {
+    button {
+      background-color: lighten($background-dark, $amount: 30);
+      color: $font-dark-primary;
+    }
+  }
 </style>

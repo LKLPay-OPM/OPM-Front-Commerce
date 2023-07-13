@@ -58,9 +58,12 @@
     display: none;
   }
 
-  .close:hover {
-    color: $red;
-    transition: all 0.4s ease;
+  .close {
+    color: $primary-dark;
+    &:hover {
+      color: $red;
+      transition: all 0.4s ease;
+    }
   }
   .modal-medium {
     width: 30rem;
@@ -135,6 +138,12 @@
       box-shadow: none;
     }
 
+    .close {
+      color: $font-dark-primary;
+      &:hover {
+        color: $red;
+      }
+    }
     .content-wrapper {
       background: $background-dark-secondary;
       // box-shadow: $dark-box-shadow-card;
@@ -142,6 +151,10 @@
 
     .header {
       color: $font-dark-primary;
+    }
+
+    dialog::backdrop {
+      background-color: rgba(0, 0, 0, 0.8);
     }
   }
 </style>

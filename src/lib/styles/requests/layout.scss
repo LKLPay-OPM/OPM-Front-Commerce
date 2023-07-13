@@ -26,20 +26,8 @@
   margin: 0rem 0rem 0rem 0rem;
 }
 
-.divider-hor {
-  width: auto;
-  height: 0.5rem;
-  background: linear-gradient(
-      138.32deg,
-      rgba(0, 0, 0, 0.5) 8.26%,
-      rgba(255, 255, 255, 0.5) 91.02%
-    ),
-    #eaecf0;
-  background-blend-mode: soft-light, normal;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: inset -1px -1px 2px #fafbff, inset 1px 1px 2px #a6abbd;
-  border-radius: 5px;
-}
+/* Dark Mode */
+
 
 /* MEDIA QUERIES */
 @media (max-width: $md) {

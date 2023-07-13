@@ -194,8 +194,16 @@
   cursor: pointer;
 }
 
+/* Dark Mode */
+:global(body.dark-mode){
+  .element {
+    > .option-col {
+      color: $font-dark-primary; 
+    }
+  }
+}
 
-@media (max-width: 425px) {
+@media (max-width: 1500px) {
   .ticket {
     min-width: auto;
     max-width: auto;
@@ -206,14 +214,14 @@
   }
 }
 @media (min-width: 426px) and (max-width: 540px) {
-  .ticket {
+  /* .ticket {
     min-width: auto;
     max-width: auto;
   }
 
   .ticket.col {
     padding: 0;
-  }
+  } */
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {}

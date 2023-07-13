@@ -11,32 +11,8 @@
   import TicketsMenu from "$lib/components/requests/tickets/Menu.svelte";
   import TicketsMain from "$lib/components/requests/tickets/Main.svelte";
 
-  // export let data;
-  /* let user = data?.user;
-  let tickets = data?.tickets;
-  let optionSelected = 0; */
-
-  $: {
-    // console.log(data);
-  }
-
-  // let userDetails = $loggedInUser;
-
   let innerWidth = 0,
     innerHeight = 0;
-  /* const menuComponents = (menu) => {
-    const components = {
-      0: { component: TicketsMenu },
-      1: { component: RollsMenu },
-      2: { component: TerminalsMenu },
-      4: { component: EditProfile },
-    };
-    return components[menu].component;
-  };
-
-  const menuReturn = () => {
-    optionSelected = 0;
-  }; */
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
@@ -47,7 +23,7 @@
         <div class="date">
           <DateTitle />
         </div>
-        <div class="card-container container">
+        <div class="card-primary container">
           <div class={innerWidth <= 540 ? "col" : "col"}>
             <RollsMain />
             <div class={innerWidth <= 540 ? "divider-hor" : "divider-hor"} />
@@ -107,7 +83,7 @@
     margin: auto;
   }
 
-  @media (max-width: 540px) {
+  @media (max-width: 1250px) {
     .row {
       position: inherit;
       flex-direction: column;

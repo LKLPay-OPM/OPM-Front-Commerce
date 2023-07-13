@@ -850,6 +850,13 @@
     .modal-range p {
       color: $primary-light;
     }
+
+    tbody.inside {
+      background: $background-dark-accent-primary;
+      /* inner-flat */
+      box-shadow: inset -3px -3px 4px $background-dark-accent-secondary, inset 3px 3px 3px $background-dark;
+      border-radius: 0px 0px 10px 10px;
+    }
   }
 
   @media (max-width: 540px) {

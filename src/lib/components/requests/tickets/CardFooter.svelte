@@ -17,4 +17,11 @@
     text-transform: capitalize;
     font-size: 12px;
   }
+
+  /* Dark Mode */
+  :global() {
+    p {
+      color: rgb($font-dark-primary, 0.5);
+    }
+  }
 </style>

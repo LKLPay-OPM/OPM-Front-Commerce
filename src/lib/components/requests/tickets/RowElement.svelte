@@ -29,4 +29,11 @@
       line-height: 1.15;
     }
   }
+
+  /* Dark Mode */
+  :global(body.dark-mode) {
+    .element {
+      color: $font-dark-primary;
+    }
+  }
 </style>

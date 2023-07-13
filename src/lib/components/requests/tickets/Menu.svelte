@@ -38,7 +38,7 @@
     </div>
   {:else}
     {#each tickets as ticket}
-      <div class="ticket card-container">
+      <div class="ticket card-primary">
         <div class="row">
           <CardHeader id={ticket._id} type={ticketTypeHandler(ticket.type)} status={ticket.status} />
         </div>
@@ -64,13 +64,14 @@
 <style lang="scss">
   @import "src/lib/styles/requests/tickets/main.scss";
 
-  .card-container {
+  .card-primary {
     padding: 0;
     border-radius: 20px;
     padding: 12px 24px;
   }
 
   .ticket {
+    min-width: 50vw;
     &:not(:last-child) {
       margin-bottom: 16px;
     }
@@ -99,5 +100,14 @@
     text-align: center;
     /* Text */
     color: #8c9fb1;
+  }
+
+  /* Dark Mode */
+  :global(body.dark-mode) {
+    .message {
+      .msg {
+        color: $font-dark-primary;
+      }
+    }
   }
 </style>
