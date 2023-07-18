@@ -31,9 +31,9 @@
             </thead>
             <tbody>
               <tr class="clickable-table-row" on:click={() => goto(`/dispersions/detail?ticket=${dispersion?._id}`)}>
-                <td class="responsive hide">123</td>
-                <td>$1000</td>
-                <td>Inmediata</td>
+                <td class="responsive hide">124</td>
+                <td>$0</td>
+                <td>Tradicional</td>
                 <td class="responsive hide" />
                 <td class="responsive hide"> - </td>
                 <td class="responsive hide" />
@@ -41,9 +41,9 @@
                 <td class="responsive hide" />
               </tr>
               <tr class="clickable-table-row" on:click={() => goto(`/dispersions/detail?ticket=${dispersion?._id}`)}>
-                <td class="responsive hide">124</td>
-                <td>$0</td>
-                <td>Tradicional</td>
+                <td class="responsive hide">123</td>
+                <td>$1000</td>
+                <td>Inmediata</td>
                 <td class="responsive hide" />
                 <td class="responsive hide"> - </td>
                 <td class="responsive hide" />

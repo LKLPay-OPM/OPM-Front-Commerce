@@ -81,6 +81,7 @@
     // width: 100%;
     justify-content: center;
     margin: auto;
+    padding-bottom: 2rem;
   }
 
   @media (max-width: 1250px) {

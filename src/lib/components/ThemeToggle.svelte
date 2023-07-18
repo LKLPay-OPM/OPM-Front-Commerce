@@ -3,25 +3,30 @@
   import { darkMode } from "$lib/stores";
   /* component */
   import Icons from "$lib/components/Icons.svelte";
+  import { onMount } from "svelte";
   function toggle() {
-    window.document.body.classList.toggle("dark-mode");
+    // window.document.body.classList.toggle("dark-mode");
     $darkMode = !$darkMode;
   }
 
   let icon = "";
   $: {
-    if ($darkMode === true) {
+    if ($darkMode) {
+      // window.document.body.classList.add("dark-mode");
       icon = "moon";
     } else {
+      // window.document.body.classList.remove("dark-mode");
       icon = "sun";
     }
   }
+
+  onMount(() => {});
 </script>
 
 <div class="appearance">
   <span class="caption">Theme</span>
   <button on:click={toggle} type="button" aria-pressed="true" aria-label="Dark mode" class="">
-    <span class={`check ${$darkMode === true ? "checked" : ""}`}>
+    <span class={`check ${$darkMode ? "checked" : ""}`}>
       <span class="icon">
         {#key icon}
           <Icons name={icon} width="16" height="16" />
@@ -46,7 +51,7 @@
 
   button {
     cursor: pointer;
-    border: 1px solid $font-light-primary;
+    border: 1px solid $grey;
     background-color: $background-light-secondary;
     border-radius: 11px;
     flex-shrink: 0;
@@ -58,7 +63,7 @@
   }
 
   .check {
-    background-color: $background-light-secondary;
+    background-color: lighten($color: $grey, $amount: 20);
     pointer-events: none;
     border-radius: 50%;
     width: 18px;
@@ -74,7 +79,7 @@
   }
 
   .icon {
-    color: $font-light-primary;
+    color: $grey;
     border-radius: 50%;
     width: 18px;
     height: 18px;
@@ -85,16 +90,16 @@
 
   :global(body.dark-mode) {
     button {
-      border: 1px solid $font-dark-primary;
+      border: 1px solid $grey;
       background: $background-dark-secondary;
     }
 
     .check {
-      background: $background-dark-secondary;
+      background: lighten($color: $background-dark-accent-primary, $amount: 10);
     }
 
     .icon {
-      color: $font-dark-primary;
+      color: $grey;
     }
   }
 </style>

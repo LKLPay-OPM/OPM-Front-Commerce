@@ -7,7 +7,7 @@
   import CardFooter from "$lib/components/requests/tickets/CardFooter.svelte";
   import WriteComment from "$lib/components/requests/tickets/WriteComment.svelte";
   /* handlers */
-  import { ticketTypeHandler } from "$lib/handlers/ticket-type.handler";
+  import { ticketTypeHandler, ticketPathHandler } from "$lib/handlers/ticket-type.handler";
   /* utils */
   import { cutString } from "$lib/utils/string";
 
@@ -47,9 +47,9 @@
         </div>
         <div class="row">
           <WriteComment
-            placeholder="Abrir más detalles"
+            placeholder="Ver más detalles"
             on:click={() => {
-              goto(`/requests/tickets/${ticket._id}`);
+              goto(`/requests/${ticketPathHandler(ticket.type)}/${ticket._id}`);
             }}
           />
         </div>

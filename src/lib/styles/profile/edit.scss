@@ -172,6 +172,9 @@
 
 /* Dark Mode */
 :global(body.dark-mode){
+  .avatar {
+    background-color: $background-dark;
+  }
   .middle,
   .right {
     background: $background-dark-accent-primary;

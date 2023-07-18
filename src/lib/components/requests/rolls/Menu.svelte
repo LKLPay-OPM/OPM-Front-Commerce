@@ -3,18 +3,32 @@
   import Icons from "$lib/components/Icons.svelte";
   import Input from "$lib/components/Input.svelte";
   import QuantityInput from "$lib/components/inputs/QuantityInput.svelte";
+  /* repos */
+  import { ticketsClient } from "$lib/repos/axios";
   /* utils */
-  import { successCustomMsgToast } from "$lib/utils/toast.js";
+  import { errorCustomMsgToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  /* controllers */
+  import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
-  export let optionSelected = 0;
   let rollsQty = 0;
 
   let innerWidth = 0,
     innerHeight = 0;
 
-  const requestRolls = () => {
-    (optionSelected = 0), (rollsQty = 0);
-    successCustomMsgToast("Tu petición de rollos ha sido realizada");
+  const requestRolls = async () => {
+    try {
+      const response = await ticketsClient.post(`/ticket/roll`, { quantity: rollsQty });
+      console.log(response?.data?.response);
+      rollsQty = 0;
+      successCustomMsgToast("Tu petición de rollos ha sido realizada");
+    } catch (e) {
+      errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
+      console.error(e);
+      const handler = await appErrorResponseHandler(e);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
+    }
   };
 </script>
 
