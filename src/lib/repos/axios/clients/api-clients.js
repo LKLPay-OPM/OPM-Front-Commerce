@@ -2,7 +2,7 @@
 import {
   PUBLIC_DEVICES_ENDPOINT,
   PUBLIC_PROFILES_ENDPOINT,
-  PUBLIC_ECOMMERCE_ENDPOINT,
+  //PUBLIC_ECOMMERCE_ENDPOINT,
   PUBLIC_DEPOSITS_AND_FEES_ENDPOINT,
   PUBLIC_FRAUD_PREVENTION_MANAGEMENT_ENDPOINT,
   PUBLIC_TICKETS_ENDPOINT,
@@ -14,10 +14,10 @@ import { axiosDefaultsClientFormData, axiosDefaultsClientJson } from "$lib/const
 
 axios.defaults.withCredentials = true;
 
-export const axiosECommerceClient = axios.create({
+/*export const axiosECommerceClient = axios.create({
   ...axiosDefaultsClientFormData,
   baseURL: PUBLIC_ECOMMERCE_ENDPOINT,
-});
+});*/
 export const axiosFraudPreventionManagement = axios.create({
   ...axiosDefaultsClientFormData,
   baseURL: PUBLIC_FRAUD_PREVENTION_MANAGEMENT_ENDPOINT,
