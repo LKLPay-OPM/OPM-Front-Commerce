@@ -38,8 +38,6 @@ export const timeToLocalString = (string) => {
 
 function getTimeEllapsed(time) {
   const formatter = new Intl.RelativeTimeFormat("es-MX");
-
-  console.log(time);
   if (time < 60) {
     return "Hace un momento";
   }

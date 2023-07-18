@@ -1,12 +1,18 @@
 <script>
+  /* svelte */
+  import { error } from "@sveltejs/kit";
   /* stores */
   import { loggedInUser } from "$lib/stores";
   /* components */
   import Icons from "$lib/components/Icons.svelte";
   import Input from "$lib/components/Input.svelte";
   import QuantityInput from "$lib/components/inputs/QuantityInput.svelte";
+  /* repos */
+  import { ticketsClient } from "$lib/repos/axios";
   /* utils */
-  import { tryAgainErrorToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  import { errorCustomMsgToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  /* controllers */
+  import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
   export let optionSelected = 0;
   let terminals = {
@@ -19,16 +25,24 @@
 
   let innerWidth = 0,
     innerHeight = 0;
+  4;
 
-  const requestTerminals = () => {
+  const requestTerminals = async () => {
     optionSelected = 0;
-    terminals = { pocket: 0, smart: 0, master: 0 };
-    successCustomMsgToast("Tu petición de terminales ha sido realizada");
+    try {
+      const response = await ticketsClient.post(`/ticket/terminal`, terminals);
+      console.log(response?.data?.response);
+      terminals = { pocket: 0, smart: 0, master: 0 };
+      successCustomMsgToast("Tu petición de terminales ha sido realizada");
+    } catch (e) {
+      errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
+      console.error(e);
+      const handler = await appErrorResponseHandler(e);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
+    }
   };
-
-  $: {
-    // console.log($loggedInUser.state)
-  }
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />

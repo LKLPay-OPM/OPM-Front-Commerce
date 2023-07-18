@@ -70,21 +70,16 @@
     <div class="row">
       <CardHeader id={ticket._id} type={ticketTypeHandler(ticket.type)} status={ticket.status} />
     </div>
-    <div class="row">
-      {#if typeof ticket?.request?.transaction !== "undefined"}
-        <div class="row margin-btm-1">
-          <div class="col">
-            <div class="element">
-              <p>Transacción <span>{ticket?.request?.transaction}</span></p>
-            </div>
-          </div>
+    <!-- <div class="row">
+      <RowElement description={ticket.description} />
+    </div> -->
+    <div class="row margin-btm-1">
+      <div class="col">
+        <div class="element">
+          <p>Cantidad de Rollos solicitada <span>{ticket.request.quantity}</span></p>
         </div>
-      {/if}
+      </div>
     </div>
-    <div class="row">
-      <RowElement description={ticket.request.description} />
-    </div>
-    <!-- <div class="divider-hor" /> -->
     <div class="row">
       {#each comments as comment}
         <Comment

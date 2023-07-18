@@ -26,6 +26,8 @@ const userRoutes = (role, route) => {
       "/transactions": true,
       "/requests/(type)/tickets": true,
       "/requests/(type)/tickets/[id]": true,
+      "/requests/(type)/rolls/[id]": true,
+      "/requests/(type)/terminals/[id]": true,
       "/requests/(type)/rolls": true,
       "/requests/(type)/update-profile": true,
       "/requests/(type)/terminals": true,

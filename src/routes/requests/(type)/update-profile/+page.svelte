@@ -6,7 +6,7 @@
   let user = data?.profile;
 
   $: {
-    // console.log(data);
+    console.log(data);
   }
 </script>
 

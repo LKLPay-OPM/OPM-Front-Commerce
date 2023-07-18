@@ -85,4 +85,13 @@
   .comment-body {
     margin-top: 8px;
   }
+
+  /* Dark Mode */
+  :global(body.dark-mode) {
+    .comment-time__header,
+    .comment-user,
+    .comment-body {
+      color: $font-dark-primary;
+    }
+  }
 </style>

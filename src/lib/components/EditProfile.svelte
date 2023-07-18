@@ -20,7 +20,6 @@
   let statesArray = [];
   let townsArray = [];
   let states, towns;
-  export let optionSelected;
   export let user;
 
   let stateIndex = 0;
@@ -45,14 +44,10 @@
   let ineFront = "";
   let ineBack = "";
   let bankStatement = "";
-  let avatarImg = "";
   let complianceOpinion = "";
   let csf = "";
   let addressProof = "";
   let avatarInput = "";
-  const dbCollection = "users-client";
-  const uid = $loggedInUser.uid;
-  let ratesBusinessType;
 
   $: {
     statesArray = [];
@@ -75,114 +70,27 @@
     }
   }
 
-  const fetchDBRates = () => {
-    /* try {
-      const fetch = fetchRates();
-      fetch
-        .then((value) => {
-          ratesBusinessType = value.ratesBusinessType[$loggedInUser.businessLine];
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } catch (error) {
-      throw new Error(error);
-    } */
-  };
-
-  const getBusinessLineName = (businessLine) => {
-    const businessLineArray = {
-      0: { name: "Agregadoras" },
-      1: { name: "Agencias de Viajes" },
-      2: { name: "Aseguradoras" },
-      3: { name: "Beneficencia" },
-      4: { name: "Colegios y Universidades" },
-      5: { name: "Comida Rápida" },
-      6: { name: "Educación Básica" },
-      7: { name: "Entretenimiento" },
-      8: { name: "Estacionamientos" },
-      9: { name: "Farmacias" },
-      10: { name: "Gasolineras" },
-      11: { name: "Hospitales" },
-      12: { name: "Hoteles" },
-      13: { name: "Doctores y Dentistas" },
-      15: { name: "Miscelánea" },
-      16: { name: "Otros" },
-      17: { name: "Peaje" },
-      18: { name: "Refacciones y Ferreterías" },
-      19: { name: "Renta de Autos" },
-      20: { name: "Restaurantes" },
-      21: { name: "Salones de Belleza" },
-      22: { name: "Supermercados" },
-      23: { name: "Telecomunicaciones" },
-      24: { name: "Transporte Aéreo" },
-      25: { name: "Transaporte Terrestre de Pasajeros" },
-    };
-    return businessLineArray[businessLine].name;
-  };
-
-  let emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  let passPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-
-  let currPassword = "",
-    newPass = "",
-    newEmail = "",
-    repeatPassword = "";
   let avatar = "";
 
-  const handleChangeEmail = (currentPassword, newEmail) => {
-    // console.log(currentPassword, newEmail)
-    /* changeEmail(currentPassword, newEmail);
-    currPassword = "";
-    newEmail = ""; */
-  };
-
-  const handleChangePassword = (currentPassword, newPassword) => {
-    // console.log(currentPassword, newPassword)
-    /* changePassword(currentPassword, newPassword);
-    currPassword = "";
-    newPass = "";
-    repeatPassword = ""; */
-  };
-
   const handleUpdateBusinessInfo = async () => {
-    optionSelected = 0;
-    successCustomMsgToast("Tu petición para cambio de datos ha sido realizada");
-    // console.log(userData);
-    // await updateUserInfo(userData)
-    /* .then(() => {
-      updateBusinessInfo = !updateBusinessInfo;
-    })
-    .catch((error) => {
-      throw new Error(error)
-    }) */
+    try {
+      const response = await ticketsClient.post(`/ticket/data`, user);
+      console.log(response?.data?.response);
+      rollsQty = 0;
+      successCustomMsgToast("Tu petición para cambio de datos ha sido realizada");
+    } catch (e) {
+      errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
+      console.error(e);
+      const handler = await appErrorResponseHandler(e);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
+    }
   };
 
-  const getMonth = (month) => {
-    const monthsArray = {
-      0: { value: "Enero" },
-      1: { value: "Febrero" },
-      2: { value: "Marzo" },
-      3: { value: "Abril" },
-      4: { value: "Mayo" },
-      5: { value: "Junio" },
-      6: { value: "Julio" },
-      7: { value: "Agosto" },
-      8: { value: "Septiembre" },
-      9: { value: "Octubre" },
-      10: { value: "Noviembre" },
-      11: { value: "Diciembre" },
-    };
-
-    return monthsArray[month].value;
+  const cancelEdit = () => {
+    history.back();
   };
-
-  onMount(async () => {
-    /* financialData.state = userDetails.state;
-    financialData.town = userDetails.town; */
-  });
-
-  afterUpdate(() => {});
 
   const imgUpdate = () => {
     const file = avatarInput.files[0];
@@ -242,13 +150,7 @@
           </div>
         </div>
         <div class="buttons">
-          <Input
-            on:click={() => dispatch("cancel")}
-            label="Cancelar"
-            id="cancel"
-            className="btn-plain blue"
-            type="button"
-          />
+          <Input on:click={() => cancelEdit()} label="Cancelar" id="cancel" className="btn-plain blue" type="button" />
           <Input
             on:click={handleUpdateBusinessInfo}
             label="Guardar"

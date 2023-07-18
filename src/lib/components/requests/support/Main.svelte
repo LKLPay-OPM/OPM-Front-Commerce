@@ -4,8 +4,12 @@
   import Modal from "$lib/components/Modal.svelte";
   import TextArea from "$lib/components/TextArea.svelte";
   import Input from "$lib/components/Input.svelte";
+  /* repos */
+  import { ticketsClient } from "$lib/repos/axios";
   /* utils */
-  import { tryAgainErrorToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  import { errorCustomMsgToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  /* controllers */
+  import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
   export let optionSelected;
   let modalSupport;
@@ -14,9 +18,20 @@
     description: "",
   };
 
-  const handleSupportRequest = () => {
-    supportDetails.description = "";
-    successCustomMsgToast("Tu petición de soporte técnico ha sido realizada");
+  const handleSupportRequest = async () => {
+    try {
+      const response = await ticketsClient.post(`/ticket/support`, supportDetails);
+      console.log(response?.data?.response);
+      supportDetails.description = "";
+      successCustomMsgToast("Tu petición de soporte técnico ha sido realizada");
+    } catch (e) {
+      errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
+      console.error(e);
+      const handler = await appErrorResponseHandler(e);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
+    }
   };
 
   const showModal = (option) => {

@@ -67,6 +67,7 @@
     font-weight: 700;
     line-height: 1.25rem;
     color: $primary-dark;
+    resize: none;
     /* outline-color: $primary-dark; */
     /* border-color: #00C48C; */
   }
