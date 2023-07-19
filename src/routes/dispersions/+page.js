@@ -13,7 +13,7 @@ export async function load({ url }) {
 
   try {
     interceptor(axiosDepositsAndFees);
-    const response = await axiosDepositsAndFees.get(`/dispersions`);
+    const response = await axiosDepositsAndFees.get(`/dispersion`);
     return { dispersions: response.data?.response?.dispersions, resume: response.data?.response?.resume };
   } catch (err) {
     // console.error(err);

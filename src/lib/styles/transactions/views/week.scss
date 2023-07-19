@@ -102,7 +102,7 @@
     }
   }
 
-  @media (max-width: 540px) {
+  @media (max-width: $md) {
     .top__left * .element {
       width: 15rem;
     }
@@ -112,13 +112,13 @@
       width: 100%;
     }
 
-    .card-container {
-      padding: 2rem 2rem;
+    .card-primary {
+      padding: 2rem 1rem;
     }
     
-    .transaction-tables {
+    /* .transaction-tables {
       margin: auto;
-    }
+    } */
 
     .table-content {
       min-width: auto;
