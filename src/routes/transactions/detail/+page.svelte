@@ -19,7 +19,12 @@
   import { onMount } from "svelte";
   import { error } from "@sveltejs/kit";
   /* client */
-  import { axiosDevicesClient, ticketsClient, axiosFraudPreventionManagementJSON } from "$lib/repos/axios";
+  import {
+    axiosDevicesClient,
+    ticketsClient,
+    axiosFraudPreventionManagementJSON,
+    profilesClient,
+  } from "$lib/repos/axios";
   /* controllers */
   import { appErrorResponseHandler } from "$lib/handlers/error.handler";
   import { transactionStatus, transactionCancelValidation } from "$lib/handlers/transaction-status.handler";
@@ -31,6 +36,7 @@
   let modalCancel;
   let link;
   let loading = false;
+  let transparent = false;
   let clarification = {
     transaction: transaction._id,
     description: "",
@@ -97,7 +103,16 @@
 
   const sendTransactionByEmail = async () => {
     try {
-      const response = await axiosDevicesClient.post(`/transaction/detail/${transaction._id}/email`);
+      const user = await profilesClient.get(`/user/profile`);
+      const body = {
+        address: user.address ?? undefined,
+        scheme: getCardBrand(transaction["Application PAN"]),
+        commerceName: user.businessName ?? undefined,
+        authorization: transaction.authorization,
+      };
+      const response = await axiosDevicesClient.post(`/transaction/detail/${transaction._id}/email`, {
+        body,
+      });
       successCustomMsgToast(`Correo enviado con éxito a tu dirección asociada a Lkl Pay`);
       return { ...response.data?.response };
     } catch (err) {
@@ -125,12 +140,17 @@
       modalCancel.show();
     } catch (err) {
       console.log(err);
-    }finally{
+    } finally {
       loading = false;
     }
   };
 
-  onMount(async () => {});
+  const removeBackdrop = async () => {
+    transparent = true;
+    setTimeout(() => {
+      transparent = false;
+    }, 3000);
+  };
 </script>
 
 <Modal className={`modal-medium`} bind:this={modalClarification}>
@@ -168,8 +188,8 @@
     />
   </div>
 </Modal>
-
-<Modal className={`modal-small`} bind:this={modalCancel}>
+<!-- Modal Cancel -->
+<Modal id="modalCancelLinkData" bind:transparent className={`modal-small`} bind:this={modalCancel}>
   <div slot="header">
     <div class="svg">
       <p>Datos de Cancelación</p>
@@ -186,7 +206,7 @@
             <label for="copy">
               <Icons name="file-copy" width="16" height="16" />
             </label>
-            <input type="button" id="copy" name="copy" on:click={copyLinkToClipboard(link)} />
+            <input type="button" id="copy" name="copy" on:click={copyLinkToClipboard(link, "modalCancelLinkData")} />
           </div>
         </span>
         <textarea readonly bind:this={link} id="link" name="link">{cancelData.url}</textarea>
@@ -217,7 +237,7 @@
   </div>
 </Modal>
 {#if loading}
-  <Loader/>
+  <Loader />
 {:else}
   <div class="return no-print">
     <Input
@@ -308,7 +328,11 @@
               </div>
               <div class="item__content">
                 <p>
-                  <Icons name={`${getCardBrand(transaction["Application PAN"]).toLowerCase()}`} width="24" height="24" />
+                  <Icons
+                    name={`${getCardBrand(transaction["Application PAN"]).toLowerCase()}`}
+                    width="24"
+                    height="24"
+                  />
                 </p>
               </div>
             </div>
@@ -375,7 +399,13 @@
         <div class="title">Reportes</div>
         <div class="export-buttons">
           <Input label="" id="csv-export" type="button" className="btn-plain fill-blue btn-square " icon="csv-fill" />
-          <Input label="" id="excel-export" type="button" className="btn-plain fill-green btn-square " icon="xls-fill" />
+          <Input
+            label=""
+            id="excel-export"
+            type="button"
+            className="btn-plain fill-green btn-square "
+            icon="xls-fill"
+          />
           <Input label="" id="pdf-export" type="" className="btn-plain fill-red btn-square " icon="pdf-fill" />
         </div>
       </div>

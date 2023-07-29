@@ -1,8 +1,9 @@
 <script>
   /* svelte */
+  import { error } from "@sveltejs/kit";
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
-  import { isLoggedIn, linkSelected } from "$lib/stores";
+  import { isLoggedIn, linkSelected, toastId } from "$lib/stores";
   /* components */
   import Loader from "$lib/components/Loader.svelte";
   import Dashboard from "$lib/components/Dashboard.svelte";
@@ -12,6 +13,11 @@
   import FileInput from "$lib/components/inputs/FileInput.svelte";
   /* utils */
   import { checkFileSize } from "$lib/utils/validations.js";
+  import { tryAgainErrorToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  /* clients */
+  import { profilesFormDataClient } from "$lib/repos/axios";
+  /* handlers */
+  import { appErrorResponseHandler } from "$lib/handlers/error.handler.js";
 
   export let data;
 
@@ -31,7 +37,24 @@
     bankStatement: "",
   };
 
-  const handleUpdate = () => {};
+  const handleUpdate = async () => {
+    let formData = new FormData();
+    Object.keys({ ...userData }).forEach((key) => {
+      formData.append(key, userData[key]);
+    });
+    try {
+      $toastId = "";
+      console.log(userData);
+      const response = await profilesFormDataClient.patch(`/onboarding/aggregator`, formData);
+      successCustomMsgToast("Tus datos se procesaron con éxito");
+    } catch (e) {
+      successCustomMsgToast("Ocurrió un error al procesar tus datos, intenta de nuevo más tarde");
+      const handler = await appErrorResponseHandler(e);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
+    }
+  };
 
   const openModal = (option) => {
     option.show();
@@ -46,6 +69,7 @@
       await goto("/login");
     } else {
       if (!modalValidation) {
+        $toastId = "modalUserData";
         modalUserData.show();
       }
     }
@@ -55,7 +79,7 @@
 </script>
 
 <!-- MODAL UPDATE USER DATA -->
-<Modal className={`modal-medium`} bind:this={modalUserData}>
+<Modal id="modalUserData" className={`modal-medium`} bind:this={modalUserData}>
   <div slot="header">
     <p>No olvides completar tus datos</p>
   </div>
@@ -149,8 +173,10 @@
           userData.firstLastName != "" &&
           userData.ineFront != "" &&
           userData.ineBack != "" &&
+          userData.bankStatement != "" &&
           checkFileSize(userData.ineFront) &&
-          checkFileSize(userData.ineBack)
+          checkFileSize(userData.ineBack) &&
+          checkFileSize(userData.bankStatement)
             ? "btn"
             : "btn-plain disabled"
         }`}

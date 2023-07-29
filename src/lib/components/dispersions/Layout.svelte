@@ -1,6 +1,7 @@
 <script>
+  import { error } from "@sveltejs/kit";
   /* stores */
-  import { loggedInUser, redirectUrgentDispersions } from "$lib/stores";
+  import { loggedInUser, redirectUrgentDispersions, toastId } from "$lib/stores";
   /* components */
   import Input from "$lib/components/Input.svelte";
   import DateTitle from "$lib/components/DateTitle.svelte";
@@ -18,14 +19,20 @@
   /* utils */
   import { getMonthName, timeToLocalString, dateToLocalString } from "$lib/utils/date.js";
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
+  import { errorCustomMsgToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  /* client */
+  import { axiosDepositsAndFees } from "$lib/repos/axios";
+  /* handlers */
+  import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
   export let user;
   export let data;
   // const uid = user.uid;
   let dispersions = data?.dispersions /* ?.dispersions */ ?? [];
+  // $:{console.log(dispersions)}
   let resume = data?.resume /* ?.dispersions */ ?? [];
+  let search = [];
   let selectedDispersion = {};
-  let dispersionToArray = [];
   let dispersionDetailView = false;
   let notFound = false;
   let notFoundMessage = "No se encontraron registros";
@@ -94,220 +101,32 @@
     loading = false;
   };
 
-  const fetchByDayButton = async () => {
-    // active = "day";
-    dispersionDetailView = false;
-    // selectedDispersion = {};
-    loading = true;
-    // dispersions = [...$loggedInUser.dispersions];
-    dispersions = [];
-    if (dispersions.length <= 0) {
-      dispersions.push(
-        {
-          date: "230222",
-          time: "183033",
-          type: "Inmediata",
-          id: "123",
-          total: 1000,
-          commission: 35,
-          dispersion: 965,
-          afterDispersion: 0,
-          reference: 6326701,
-          tracking: "IACH2GJ05YW9MV",
-          clabe: "646180173742378227",
-          transactions: 37,
-        },
-        {
-          date: "230223",
-          time: "093021",
-          type: "Tradicional",
-          id: "124",
-          total: 1000,
-          commission: 35,
-          dispersion: 965,
-          afterDispersion: 0,
-          reference: 6326701,
-          tracking: "IACH2GJ05YW9MV",
-          clabe: "646180173742378227",
-          transactions: 37,
-        },
-        {
-          date: "230223",
-          time: "130638",
-          type: "Urgente",
-          id: "125",
-          total: 1000,
-          commission: 35,
-          dispersion: 965,
-          afterDispersion: 0,
-          reference: 6326701,
-          tracking: "IACH2GJ05YW9MV",
-          clabe: "646180173742378227",
-          transactions: 37,
-        },
-        {
-          date: "230223",
-          time: "183033",
-          type: "Inmediata",
-          id: "126",
-          total: 1000,
-          commission: 35,
-          dispersion: 965,
-          afterDispersion: 0,
-          reference: 6326701,
-          tracking: "IACH2GJ05YW9MV",
-          clabe: "646180173742378227",
-          transactions: 37,
-        },
-        {
-          date: "230224",
-          time: "093021",
-          type: "Tradicional",
-          id: "127",
-          total: 1000,
-          commission: 35,
-          dispersion: 965,
-          afterDispersion: 0,
-          reference: 6326701,
-          tracking: "IACH2GJ05YW9MV",
-          clabe: "646180173742378227",
-          transactions: 37,
-        }
-      );
-      // console.log($loggedInUser.dispersions)
-      // console.log(dispersions)
-    }
-    dispersionFound();
-  };
-
   const fetchByDateRange = async () => {
-    active = "range";
-    dispersionDetailView = false;
-    // selectedDispersion = {};
-    loading = true;
-    // dispersions = [...$loggedInUser.dispersions];
-    if (dispersions.length <= 0) {
-      dispersions.push(
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        },
-        {
-          date: Date.now(),
-          id: "123",
-          total: 1000,
-          commission: 30,
-          dispersion: 970,
-          afterDispersion: 0,
-        }
-      );
+    try {
+      const response = await axiosDepositsAndFees.post(`/dispersion/date`, { start: dateRangeStart, end: dateRangeEnd });
+      dispersions = response.data.response.dispersions;
+    } catch (e) {
+      errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
+      const handler = await appErrorResponseHandler(e);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
     }
     dispersionFound();
-    // console.log(dispersions)
   };
 
   const fetchByTicketId = async () => {
-    active = "ticket";
-    dispersionDetailView = false;
-    // selectedDispersion = {};
-    loading = true;
-    // dispersions = [...$loggedInUser.dispersions];
-    if (dispersions.length <= 0) {
-      dispersions.push({
-        date: Date.now(),
-        id: "123",
-        total: 1000,
-        commission: 30,
-        dispersion: 970,
-        afterDispersion: 0,
-      });
+    try {
+      const response = await axiosDepositsAndFees.post(`/dispersion`, { id: ticketId });
+      dispersions = response.data.response.dispersions;
+    } catch (e) {
+      errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
+      const handler = await appErrorResponseHandler(e);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
     }
     dispersionFound();
-    // console.log(dispersions)
   };
 
   const sortObject = (data) => {
@@ -339,7 +158,18 @@
   const handleClarification = () => {
     console.log(clarification);
   };
-  const handleImmediateDeposit = () => {
+  const handleImmediateDeposit = async() => {
+    try {
+      $toastId = "";
+      const response = await axiosDepositsAndFees.post(`/urgent`, {amount: Number(immediateDeposit.immediateDepositQty)});
+      successCustomMsgToast("Tus solicitud se procesó con éxito");
+    } catch (e) {
+      successCustomMsgToast("Ocurrió un error al procesar tu solicitud, vuelve a intentarlo");
+      const handler = await appErrorResponseHandler(e);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
+    }
     immediateDeposit.toDeposit = getPercentage(
       immediateDeposit.immediateDepositQty,
       immediateDeposit.immediateDepositCommission
@@ -351,7 +181,7 @@
     };
   };
 
-  const handleImmediateDepositPreference = () => {};
+  const handleImmediateDepositPreference = async() => {};
 
   const traditionalDepositPreference = () => {
     active = "1";
@@ -381,8 +211,7 @@
   };
 
   onMount(async () => {
-    // await fetchDBRates();
-    // await fetchByDayButton();
+    dispersionFound();
     if ($redirectUrgentDispersions === true) {
       $redirectUrgentDispersions = false;
       showModal(modalImmediateDeposit);
@@ -669,7 +498,7 @@
       <div class="top__right">
         <div class="dispersion-search-bar">
           <Input
-            placeholder="Buscar por ticket"
+            placeholder="Buscar por folio"
             id="ticket-id-search"
             bind:value={ticketId}
             className="txt-field normal"
@@ -733,7 +562,11 @@
           />
         </div>
         <div class="element">
-          <InfoCard className={""} title="Saldo a Depositar" numData={currencyFormatLocal(resume?.depositBalance ?? 0)} />
+          <InfoCard
+            className={""}
+            title="Saldo a Depositar"
+            numData={currencyFormatLocal(resume?.depositBalance ?? 0)}
+          />
         </div>
         <div class="button">
           <Input
@@ -750,13 +583,18 @@
   {/if}
   <div class="dispersions-view">
     {#if notFound}
-      <div class="not-found">
-        <b>
-          {notFoundMessage}
-        </b>
+      <div class="message">
+        <div class="msg">
+          <p>No se encontraron regitros</p>
+        </div>
+        <div class="description">
+          <p>Aquí podrás ver el resumen de tus depósitos</p>
+        </div>
       </div>
     {:else}
-      <Table bind:dispersions />
+      {#key search}
+        <Table {dispersions} />
+      {/key}
     {/if}
   </div>
 </div>

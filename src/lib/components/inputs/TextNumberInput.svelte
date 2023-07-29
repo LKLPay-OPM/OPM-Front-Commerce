@@ -29,20 +29,23 @@
       {/if}
     </span>
   </label>
-  <input
-    inputmode="numeric"
-    on:click
-    {maxlength}
-    {name}
-    {type}
-    {placeholder}
-    {id}
-    {value}
-    on:input={onInput}
-    {accept}
-    {multiple}
-    {disabled}
-  />
+  <div class="input">
+    <input
+      inputmode="numeric"
+      class="input-field"
+      on:click
+      {maxlength}
+      {name}
+      {type}
+      {placeholder}
+      {id}
+      {value}
+      on:input={onInput}
+      {accept}
+      {multiple}
+      {disabled}
+    />
+  </div>
 </div>
 
 <style lang="scss">
@@ -53,22 +56,27 @@
     line-height: 1.25rem;
     color: $grey;
   }
-  .txt-field input {
-    width: -webkit-fill-available;
+  .txt-field .input {
+    width: 100%;
     height: 3.125rem;
     background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
     box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     /* border: none; */
     border-radius: 4px;
-    padding-left: 1.25rem; /* 20px */
-    /* TEXT */
-    font-weight: 600;
-    font-size: 1rem; /* 13px */
-    line-height: 1.125rem; /* 18px */
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    color: $primary-dark;
+    input {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      padding-left: 0.5rem;
+      /* TEXT */
+      font-weight: 500;
+      font-size: 0.8125rem; /* 13px */
+      line-height: 1.125rem; /* 18px */
+      display: flex;
+      align-items: center;
+      justify-content: left;
+      color: $primary-dark;
+    }
   }
 
   .txt-field input::placeholder {
@@ -147,7 +155,7 @@
     line-height: 1.25rem;
     color: $grey;
   }
-  .txt-field-slim input {
+  .txt-field-slim .input {
     width: 100%;
     min-height: 2.125rem; /* 34px */
     height: 2.125rem; /* 34px */
@@ -155,15 +163,20 @@
     box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     /* border: none; */
     border-radius: 4px;
-    padding-left: 1.25rem;
-    /* TEXT */
-    font-weight: 500;
-    font-size: 0.8125rem; /* 13px */
-    line-height: 1.125rem; /* 18px */
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    color: $primary-dark;
+    input {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      padding-left: 0.5rem;
+      /* TEXT */
+      font-weight: 500;
+      font-size: 0.8125rem; /* 13px */
+      line-height: 1.125rem; /* 18px */
+      display: flex;
+      align-items: center;
+      justify-content: left;
+      color: $primary-dark;
+    }
   }
 
   .txt-field-slim input::placeholder {
@@ -579,7 +592,80 @@
     color: $primary-dark;
   }
 
+  /* Dark Mode */
   :global(body.dark-mode) {
+    .txt-field .input {
+      background: $background-dark-accent-primary;
+      box-shadow: inset 5px 5px 10px #343434, inset -5px -5px 10px #3c3c3c;
+      color: $font-dark-primary;
+      // border: 2px solid $background-dark-accent-primary;
+      .input-field {
+        color: $font-dark-primary;
+      }
+    }
+    .normal .input {
+      background: $background-dark-accent-primary;
+      box-shadow: inset 5px 5px 10px #343434, inset -5px -5px 10px #3c3c3c;
+      color: $font-dark-primary;
+      // border: 2px solid $background-dark-accent-primary;
+      .input-field {
+        color: $font-dark-primary;
+      }
+    }
+
+    .txt-field,
+    .txt-field-slim {
+      input::placeholder {
+        color: rgb(255 255 255 / 0.1);
+      }
+    }
+
+    .valid .input {
+      outline-color: #00c48c;
+      border-color: #00c48c;
+    }
+
+    .invalid .input {
+      outline-color: #ff0000;
+      border-color: #ff0000;
+    }
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+      -webkit-text-fill-color: $background-light;
+      -webkit-text-stroke-width: thin;
+      box-shadow: 0 0 0 1000px transparent inset !important;
+      -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+      background-color: transparent !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+
+    div.border-btn-error {
+      background: $background-dark;
+      box-shadow: $dark-box-shadow-btn;
+      &:hover {
+        background: $error-light;
+      }
+    }
+    div.btn,
+    div.btn-error,
+    div.btn-success,
+    div.btn-plain {
+      box-shadow: $dark-box-shadow-btn;
+      &.fill-blue {
+        label {
+          color: $font-dark-primary;
+        }
+      }
+    }
+
+    div.btn-plain {
+      background: linear-gradient(91.36deg, $background-dark-accent-primary 0%, $background-dark 100%);
+    }
+    div.btn-disabled {
+      background: linear-gradient(91.36deg, $background-dark-accent-primary 0%, $background-dark 100%);
+      box-shadow: $dark-box-shadow-btn;
+    }
     .fill-blue {
       label {
         color: $font-dark-primary;

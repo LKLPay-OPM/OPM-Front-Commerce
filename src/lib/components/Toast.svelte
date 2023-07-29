@@ -1,55 +1,64 @@
 <script>
-  import { booleanStore, toastId } from "$lib/stores";
+  import { booleanStore, toastMsg, toastShown, toastType, toast } from "$lib/stores";
   import Icons from "$lib/components/Icons.svelte";
+  /* utils */
+  import { errorCustomMsgToast, successCustomMsgToast, tryAgainErrorToast } from "$lib/utils/toast.js";
+  import { onMount } from "svelte";
 
   const store = booleanStore(false);
   const { isOpen, open, close } = store;
-  let dialog;
+  let dialog = "";
   let shown = false;
+  let isShown = $toastShown;
+  let type = $toastType;
+  let text = $toastMsg;
   export let className = "";
   export let transparent = false;
-  export let id = "";
 
   const backdropClick = (event) => {
     event.target === dialog && dialog.close(event);
   };
 
   export const show = () => {
-    $toastId = id;
     dialog.showModal();
     shown = true;
   };
   export const closeModal = () => {
-    $toastId = "";
     dialog.close();
     shown = false;
   };
+
+  const modal = () => {};
+
+  const getToastType = (type, text) => {
+    if (type === "error") {
+      if (text != "") {
+        errorCustomMsgToast(`${text}`);
+      }
+      tryAgainErrorToast();
+    } else {
+      successCustomMsgToast(`${text}`);
+    }
+  };
+  $: {
+    console.log(dialog);
+  }
+
+  $: {
+    if (isShown) {
+    }
+  }
 </script>
 
 <!-- <slot name="trigger" /> -->
 <div class="modal-container">
-  <dialog {id} class={`${className} ${transparent ? "transparent" : ""}`} bind:this={dialog} on:click={backdropClick}>
-    {#if shown}
-      <div class="content-wrapper">
-        <div class="close-modal">
-          <label class="clickable close" for="closeModalButton">
-            <i>
-              <Icons name="close" width="24" height="24" />
-            </i>
-          </label>
-          <input on:click={closeModal} id="closeModalButton" type="button" />
-        </div>
-        <div class="header">
-          <slot name="header" />
-        </div>
-        <div class="content">
-          <slot name="content" />
-        </div>
-        <div class="footer">
-          <slot name="footer" />
-        </div>
-      </div>
-    {/if}
+  <dialog {type} {text}>
+    <div>
+      <!-- {successCustomMsgToast(`${text}`)} -->
+      {#if isShown}
+        {getToastType(type, text)}
+      {/if}
+    </div>
   </dialog>
 </div>
 
@@ -76,25 +85,20 @@
     width: 20rem;
   }
   dialog::backdrop {
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-  dialog.transparent::backdrop {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: transparent;
   }
 
   * {
     box-sizing: border-box;
   }
   dialog {
-    margin: auto;
+    /* margin: auto;
     padding: 0;
     position: fixed;
     inset: 0;
-    background: $background-light-secondary;
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     border: none;
-    outline: none;
+    outline: none; */
   }
   div.modal-container {
     /* position: relative;

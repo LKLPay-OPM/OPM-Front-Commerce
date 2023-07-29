@@ -2,7 +2,7 @@
   import { isLoggedIn, loggedInUser } from "$lib/stores";
   import RedirectLogin from "$lib/components/RedirectLogin.svelte";
   import Loader from "$lib/components/Loader.svelte";
-  import Dispersions from "$lib/components/dispersions/Layout.svelte";
+  import Layout from "$lib/components/dispersions/Layout.svelte";
   import { onMount } from "svelte";
 
   const dbCollection = "users-client";
@@ -16,9 +16,9 @@
 
   export let data;
 
-  $: {
+  /* $: {
     console.log(data);
-  }
+  } */
 
   onMount(async () => {
     // await fetchByDayButton()
@@ -39,7 +39,7 @@
   {#if loading == true}
     <Loader />
   {:else}
-    <Dispersions bind:user={$loggedInUser} bind:data />
+    <Layout bind:user={$loggedInUser} {data} />
   {/if}
 {:else}
   <RedirectLogin />

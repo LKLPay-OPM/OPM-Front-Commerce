@@ -23,6 +23,7 @@
   let modalPaymentLinkData;
   let link;
   let loading = false;
+  let transparent = false;
 
   let input = {
     amount: 0,
@@ -79,7 +80,7 @@
   };
 </script>
 
-<Modal className={`modal-small`} bind:this={modalPaymentLinkData}>
+<Modal id="modalPaymentLinkData" className={`modal-small`} bind:this={modalPaymentLinkData}>
   <div slot="header">
     <div class="svg">
       <p>Recibo Generado</p>
@@ -96,7 +97,7 @@
             <label for="copy">
               <Icons name="file-copy" width="16" height="16" />
             </label>
-            <input type="button" id="copy" name="copy" on:click={copyLinkToClipboard(link)} />
+            <input type="button" id="copy" name="copy" on:click={copyLinkToClipboard(link, "modalPaymentLinkData")} />
           </div>
         </span>
         <textarea readonly bind:this={link} id="link" name="link">{linkData.url}</textarea>

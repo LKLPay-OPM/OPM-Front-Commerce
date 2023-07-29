@@ -7,6 +7,7 @@
   import { goto } from "$app/navigation";
   /* utils */
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
+  import { getIconStatusClass } from "$lib/utils/iconClass.js";
 
   let resume = data?.response?.resume;
   let yearMonth = data?.response?.yearMonth;
@@ -108,16 +109,16 @@
         <tr>
           <th class="responsive" />
           <th class="responsive" />
-          <th>
+          <th class="amount">
             {currencyFormatLocal(resume?.Amount)}
           </th>
-          <th>
+          <th class="amount">
             {currencyFormatLocal(resume?.Comission)}
           </th>
-          <th class="responsive">
+          <th class="responsive amount">
             {currencyFormatLocal(resume?.IVA)}
           </th>
-          <th>
+          <th class="amount">
             {currencyFormatLocal(resume?.Deposit)}
           </th>
           <th />
@@ -137,7 +138,7 @@
             <td class="responsive">{currencyFormatLocal(transaction?.IVA)}</td>
             <td>{currencyFormatLocal(transaction.deposit)}</td>
             <td class="responsive">
-              <i class="icon tooltip">
+              <i class={`icon ${getIconStatusClass(transaction.transactionStatus)} tooltip`}>
                 <Icons
                   name={transaction.type === "tpv"
                     ? "terminal"

@@ -252,19 +252,31 @@
   gap: 1rem;
   margin: 1rem 0rem;
 }
-.not-found {
+.message {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  min-height: inherit;
+  gap: 0.5rem;
 }
-.not-found b {
-  font-style: normal;
+
+.message .msg {
   font-weight: 700;
-  font-size: 1.25rem; /* 20px */
+  font-size: 1.25rem; /* 16px */
   line-height: 1.25rem; /* 20px */
   text-align: center;
   /* Text */
   color: $primary-dark;
 }
+.message .description {
+  font-weight: 500;
+  font-size: 1rem; /* 16px */
+  line-height: 1.25rem; /* 20px */
+  text-align: center;
+  /* Text */
+  color: $grey
+}
+
 .modal-buttons {
   width: 70%;
   height: 2.5rem; /* 40px */
@@ -272,6 +284,32 @@
   justify-content: center;
   flex-direction: row;
   gap: 1rem;
+}
+
+:global(body.dark-mode){
+  .message {
+    .msg {
+      color: $font-dark-primary;
+    }
+    .description {
+      color: $grey;
+    }
+  }
+
+  .immediate-deposit {
+    .error,
+    .blue-title,
+    .content {
+      p {
+        color: $font-dark-primary;
+      }
+    }
+  }
+
+  .clarifications {
+    color: $font-dark-primary;
+  }
+  
 }
 
 @media (max-width: $md) {

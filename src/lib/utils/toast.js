@@ -1,7 +1,7 @@
-import Toastify from 'toastify-js';
-import { danger, success } from '$lib/constants/colors'
+import Toastify from "toastify-js";
+import { danger, success } from "$lib/constants/colors";
 
-export const toast = (text, color) => {
+export const toast = (text, color, id) => {
   return Toastify({
     text,
     duration: 3000,
@@ -9,20 +9,21 @@ export const toast = (text, color) => {
     gravity: "top", // `top` or `bottom`
     position: "center", // `left`, `center` or `right`
     stopOnFocus: true, // Prevents dismissing of toast on hover
+    selector: id,
     style: {
       background: color,
-      color: 'white'
+      color: "white",
     },
-  })
-}
+  });
+};
 
-export const tryAgainErrorToast = () => {
-  toast("Ocurrió un error, intenta de nuevo", danger).showToast();
-}
+export const tryAgainErrorToast = (id = "") => {
+  toast("Ocurrió un error, intenta de nuevo", danger, id).showToast();
+};
 
-export const successCustomMsgToast = (msg) => {
-  toast(msg, success).showToast();
-}
-export const errorCustomMsgToast = (msg) => {
-  toast(msg, danger).showToast();
-}
+export const successCustomMsgToast = (msg, id = "") => {
+  toast(msg, success, id).showToast();
+};
+export const errorCustomMsgToast = (msg, id = "") => {
+  toast(msg, danger, id).showToast();
+};

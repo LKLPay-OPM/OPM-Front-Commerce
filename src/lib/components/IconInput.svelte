@@ -171,6 +171,13 @@
         color: $font-dark-primary;
       }
     }
+
+    .disabled-txt-field {
+      .input,
+      .input-field {
+        color: $font-dark-primary;
+      }
+    }
     .fill-blue {
       label {
         color: $font-dark-primary;
