@@ -4,16 +4,16 @@ import { error } from "@sveltejs/kit";
 import { axiosDepositsAndFees } from "$lib/repos/axios";
 /* controllers */
 import { appErrorResponseHandler } from "$lib/handlers/error.handler";
-/* interceptor */
-import { interceptor } from "$lib/utils/interceptors";
+
+export const ssr = false;
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ url }) {
   // const ticket = url.searchParams.get("ticket");
 
   try {
-    interceptor(axiosDepositsAndFees);
-    const response = await axiosDepositsAndFees.get(`/dispersions`);
+    const response = await axiosDepositsAndFees.get(`/dispersion`);
+    // console.log(response.data.response);
     return { dispersions: response.data?.response?.dispersions, resume: response.data?.response?.resume };
   } catch (err) {
     // console.error(err);

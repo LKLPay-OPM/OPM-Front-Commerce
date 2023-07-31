@@ -33,6 +33,7 @@ const userRoutes = (role, route) => {
       "/requests/(type)/terminals": true,
       "/requests": true,
       "/dispersions": true,
+      "/dispersions/detail": true,
       "/branch-office": true,
       "/terminals": true,
       "/urgent": false,

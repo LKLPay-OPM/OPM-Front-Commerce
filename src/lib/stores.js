@@ -14,6 +14,11 @@ export const onboardingSuccess = writable(false);
 export const redirectBankProfile = writable(false);
 export const redirectUrgentDispersions = writable(false);
 export const previousPage = writable("");
+export const toast = writable("");
+export const toastId = writable("");
+export const toastType = writable("");
+export const toastMsg = writable("");
+export const toastShown = writable(false);
 
 export function booleanStore(initial) {
   const isOpen = writable(initial);

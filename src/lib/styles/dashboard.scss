@@ -175,6 +175,9 @@
 
 .icon {
   color: $primary-dark;
+  &.success{color: $green}
+  &.error{color: $red}
+  &.warning{color: $orange}
   &.tooltip {
     position: relative;
     font-weight: 500;
@@ -257,6 +260,9 @@
   
   .icon {
     color: $font-dark-primary;
+    &.success{color: $green}
+    &.error{color: $red}
+    &.warning{color: $orange}
   }
 }
 

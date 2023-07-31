@@ -4,6 +4,7 @@
   import Pagination from "$lib/components/Pagination.svelte";
   /* utils */
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
+  import { getIconStatusClass } from "$lib/utils/iconClass";
 
   /* exports */
   export let data;
@@ -102,10 +103,10 @@
         <tr>
           <th class="responsive" />
           <th class="responsive" />
-          <th>{currencyFormatLocal(resume?.Amount)}</th>
-          <th>{currencyFormatLocal(resume?.Comission)}</th>
-          <th>{currencyFormatLocal(resume?.IVA)}</th>
-          <th>{currencyFormatLocal(resume?.Deposit)}</th>
+          <th class="amount">{currencyFormatLocal(resume?.Amount)}</th>
+          <th class="amount">{currencyFormatLocal(resume?.Comission)}</th>
+          <th class="amount">{currencyFormatLocal(resume?.IVA)}</th>
+          <th class="amount">{currencyFormatLocal(resume?.Deposit)}</th>
           <th class="responsive" />
         </tr>
       </thead>
@@ -123,7 +124,7 @@
             <td>{currencyFormatLocal(transaction?.IVA)}</td>
             <td>{currencyFormatLocal(transaction?.deposit)}</td>
             <td class="responsive">
-              <i class="icon tooltip">
+              <i class={`icon ${getIconStatusClass(transaction.transactionStatus)} tooltip`}>
                 <Icons
                   name={transaction.type === "tpv"
                     ? "terminal"

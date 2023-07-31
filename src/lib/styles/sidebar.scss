@@ -513,10 +513,20 @@ color: $primary-accent-dark;
     .sidebar-bottom {
       .nav-links{
         background: $dark;
+        li {
+          .sub-menu {
+            background: $dark;
+            a:hover {
+              background: $dark
+            }
+          }
+        }
       }
       background: $dark;
     }
   }
+
+  // .sidebar .nav-links li .sub-menu {}
 
   .profile-details {
     background-color: $background-dark;

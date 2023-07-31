@@ -9,6 +9,7 @@
   /* utils */
   import { getMonthName, timeToLocalString, dateToLocalString } from "$lib/utils/date";
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
+  import { getIconStatusClass } from "$lib/utils/iconClass";
 
   const dbCollection = "users-client";
   const uid = $loggedInUser.uid;
@@ -82,7 +83,7 @@
                   <td class="sm md">{currencyFormatLocal(transaction?.IVA)}</td>
                   <td class="">{currencyFormatLocal(transaction?.deposit)}</td>
                   <td class="">
-                    <i class="icon tooltip">
+                    <i class={`icon ${getIconStatusClass(transaction.transactionStatus)} tooltip`}>
                       <Icons
                         name={transaction.type === "tpv"
                           ? "terminal"

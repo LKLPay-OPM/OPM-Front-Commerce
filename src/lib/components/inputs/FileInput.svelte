@@ -1,4 +1,7 @@
 <script>
+  /* svelte */
+  import { toastId } from "$lib/stores";
+  /* utils */
   import { toast } from "$lib/utils/toast.js";
   /* consts */
   import { danger, success } from "$lib/constants/colors.js";
@@ -13,15 +16,16 @@
   export let color = "";
   export let file;
   const onInput = (e) => {
+    console.log($toastId)
     file = e.target.files[0];
     // console.log(file);
     value = e.target.value;
     // console.log(value, e.target.value);
     const isValid = checkFileSize(file);
     if (!isValid) {
-      toast("El documento excede los 5MB", danger).showToast();
+      toast("El documento excede los 5MB", danger, $toastId).showToast();
     } else {
-      toast("Carga de documento exitosa", success).showToast();
+      toast("Carga de documento exitosa", success, $toastId).showToast();
     }
     /* if (type != "number") {
       value = e.target.value;

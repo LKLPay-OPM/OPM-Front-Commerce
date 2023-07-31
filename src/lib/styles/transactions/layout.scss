@@ -262,7 +262,9 @@
         flex-direction: column;
         height: auto;
         width: 100%;
-
+        .element {
+          width: 100%;
+        }
         & > .card {
           margin: 0 1rem;
         }
@@ -273,7 +275,7 @@
       }
     }
 
-    .card-container {
+    .card-primary {
       padding: 2rem 2rem;
     }
 
@@ -310,7 +312,9 @@
         flex-direction: column;
         height: auto;
         width: 100%;
-
+        .element {
+          width: 100%;
+        }
         & > .card {
           margin: 0 1rem;
         }
@@ -346,6 +350,7 @@
 
     .middle {
       & > .card-group {
+        justify-content: center;
         height: auto;
         width: 100%;
         gap: 0.5rem;

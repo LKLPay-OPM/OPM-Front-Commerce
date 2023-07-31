@@ -9,6 +9,7 @@
     display: flex;
     justify-content: center;
     width: 100%;
+    margin: 0 0 1rem 0;
   }
 
   .table-content {
@@ -52,6 +53,9 @@
 
   .icon {
     color: $primary-dark;
+    &.success{color: $green}
+    &.error{color: $red}
+    &.warning{color: $orange}
     &.tooltip {
       position: relative;
       font-weight: 500;
@@ -107,6 +111,9 @@
     }
     .icon {
       color: $font-dark-primary;
+      &.success{color: $green}
+      &.error{color: $red}
+      &.warning{color: $orange}
     }
   }
 
@@ -119,7 +126,8 @@
     }
 
     .card-primary {
-      padding: 2rem 2rem;
+      padding: 2rem 1rem;
+      margin: 0 0 1rem 0;
     }
 
     .transaction-tables {
@@ -144,7 +152,8 @@
     }
 
     .card-primary {
-      padding: 2rem 2rem;
+      padding: 2rem 1rem;
+      margin: 0 0 1rem 0;
     }
 
     .transaction-tables {
@@ -161,5 +170,3 @@
       display: none;
     }
   }
-
-  @media (min-width: 768px) and (max-width: 1023px) {}

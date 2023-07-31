@@ -10,6 +10,7 @@
   import Icons from "$lib/components/Icons.svelte";
   import SuccessLogo from "$lib/components/Success.svelte";
   import ErrorLogo from "$lib/components/Error.svelte";
+  import Loader from "$lib/components/Loader.svelte";
   /* assets */
   import Logo from "$lib/assets/Logo.png";
   /* constants */
@@ -25,21 +26,31 @@
   };
   let menu = "register";
   let terms = false;
+  let loading = false;
   let confirmPass = "";
   let registerResponse = {};
 
   const handleRegister = async () => {
-    const { error: err, message: msg, session, user } = await AuthController.register(registerData);
-    registerResponse = { session, user };
-    menu = "success";
-    if (err) {
-      menu = "error";
-      const handler = await appErrorResponseHandler(msg);
-      const code = handler?.code ?? 500;
-      const message = handler?.message ?? "¡Algo salió mal!";
-      customMessage = message;
-      throw new error(code, message);
-    }
+    loading = true;
+    setTimeout(async () => {
+      try {
+        const { session, user, error, message } = await AuthController.register(registerData);
+        registerResponse = { session, user };
+        if (error) {
+          throw message;
+        }
+        menu = "success";
+      } catch (e) {
+        menu = "error";
+        const handler = await appErrorResponseHandler(e);
+        const code = handler?.code ?? 500;
+        const message = handler?.message ?? "¡Algo salió mal!";
+        customMessage = message;
+        throw new error(code, message);
+      } finally {
+        loading = false;
+      }
+    }, 3000);
   };
 
   const redirectHome = () => {
@@ -50,8 +61,10 @@
   };
 </script>
 
-{#if menu === "register"}
-  <div class="container">
+<div class="container">
+  {#if loading}
+    <Loader />
+  {:else if menu === "register"}
     <div class="content">
       <div class="logo">
         <img src={Logo} alt="Company Logo" />
@@ -154,9 +167,7 @@
         </div>
       </div>
     </div>
-  </div>
-{:else if menu === "success"}
-  <div class="container">
+  {:else if menu === "success"}
     <div class="success-content">
       <div class="logo">
         <img src={Logo} alt="Company Logo" />
@@ -180,9 +191,7 @@
         />
       </div>
     </div>
-  </div>
-{:else if menu === "error"}
-  <div class="container">
+  {:else if menu === "error"}
     <div class="error-content">
       <div class="logo">
         <img src={Logo} alt="Company Logo" />
@@ -207,8 +216,8 @@
         />
       </div>
     </div>
-  </div>
-{/if}
+  {/if}
+</div>
 
 <style lang="scss">
   .container {

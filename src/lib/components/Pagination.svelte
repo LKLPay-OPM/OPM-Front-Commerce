@@ -77,4 +77,10 @@
   .button label {
     cursor: pointer;
   }
+
+  :global(body.dark-mode) {
+    .pagination-text {
+      color: $font-dark-primary;
+    }
+  }
 </style>

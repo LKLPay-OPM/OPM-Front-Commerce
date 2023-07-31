@@ -68,7 +68,7 @@
               <td class="element responsive">
                 {currencyFormatLocal(day.deposit)}
               </td>
-              <i class="arrow arrow-blue">
+              <i class="responsive arrow arrow-blue">
                 <Icons name="arrow-fwd" width="24" height="24" />
               </i>
             </tr>

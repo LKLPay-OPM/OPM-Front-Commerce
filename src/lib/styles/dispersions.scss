@@ -9,9 +9,9 @@
   width: 100%;
 }
 
-.dispersions .return {
+.return {
   display: flex;
-  width: 10rem;
+  width: 10rem; /* 160px */
   height: 2.5rem; /* 40px */
   justify-content: left;
 }
@@ -375,17 +375,15 @@ td:first-child {
 
 .details__middle {
   width: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   gap: 2rem;
   justify-content: space-evenly;
-}
 
-.details__middle .details-left .title {
-  font-style: normal;
-  font-weight: 700;
-  font-size: 1rem;
-  line-height: 1.125rem;
-  color: $primary-dark;
+  .details-left {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .details__middle .details-left .item b {
@@ -411,11 +409,6 @@ td:first-child {
   gap: 2rem; /* 32px */
   width: 26.75rem; /* 428px */
   height: 13.125rem; /* 210px */
-  /* Fill Container */
-  background: $background-light-secondary;
-  /* container effect */
-  box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
-  border-radius: 10px;
 }
 
 .details__middle .details-center .details-card .details-card__top b {
@@ -502,7 +495,7 @@ td:first-child {
   width: 7.5rem; /* 120px */
 }
 
-.details__middle .details-right .title {
+.title {
   display: flex;
   justify-content: center;
   font-style: normal;
@@ -525,20 +518,32 @@ td:first-child {
   font-size: 0.875rem; /* 14px */
   line-height: 0.875rem; /* 14px */
   color: #8c9fb1;
-} /* 
-.details-footer {
-  margin: 1rem 0rem;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
 }
 
-.details-buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  width: 100%;
-} */
+/* Dark Mode */
+:global(body.dark-mode){
+  .details__middle {
+    .details-center {
+      .details-card { 
+        .details-card__top,
+        .details-card__middle,
+        .details-card__bottom {
+          b {
+            color: $font-dark-primary;
+          }
+          p {
+            color: $grey;
+          }
+        }
+      }
+    } 
+  }
+
+  .title,
+  .clarifications {
+    color: $font-dark-primary;
+  }
+}
 
 @media (max-width: 540px) {
   .top {

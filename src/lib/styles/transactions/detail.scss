@@ -691,6 +691,11 @@
 }
 
 /* MEDIA */
+@media print {
+  .card-primary {
+    box-shadow: none;
+  }
+}
 /* Small & Medium Screen */
 @media (max-width: $md) {
   .top {

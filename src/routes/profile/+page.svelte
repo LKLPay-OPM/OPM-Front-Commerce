@@ -1,5 +1,5 @@
 <script>
-  import { isLoggedIn, loggedInUser, redirectBankProfile } from "$lib/stores";
+  import { isLoggedIn, loggedInUser, redirectBankProfile, toastId } from "$lib/stores";
   import { onMount, afterUpdate } from "svelte";
   /* components */
   import DateTitle from "$lib/components/DateTitle.svelte";
@@ -23,6 +23,15 @@
   let bankStatement = "";
   let ineFront = "";
   let ineBack = "";
+  let userUpdate = {
+    name: "",
+    firstLastName: "",
+    secondLastName: "",
+    ineFront: "",
+    ineBack: "",
+    clabe: "",
+    bankStatement: "",
+  }
 
   const dbCollection = "users-client";
   const uid = $loggedInUser.uid;
@@ -162,7 +171,7 @@
 </script>
 
 <!-- MODAL UPDATE NAME -->
-<Modal className={`modal-medium`} bind:this={modalName}>
+<Modal id="modalName" className={`modal-medium`} bind:this={modalName}>
   <div slot="header">
     <p>Ingresa tu Nombre</p>
   </div>
@@ -173,7 +182,7 @@
           placeholder="Nombre"
           label="Nombre (s)"
           id="name"
-          bind:value={user.name}
+          bind:value={userUpdate.name}
           className="txt-field-slim normal blue"
           type="text"
         />
@@ -183,7 +192,7 @@
           placeholder="Primer Apellido"
           label="Primer Apellido"
           id="firstLastName"
-          bind:value={user.firstLastName}
+          bind:value={userUpdate.firstLastName}
           className="txt-field-slim normal blue"
           type="text"
         />
@@ -191,7 +200,7 @@
           placeholder="Segundo Apellido"
           label="Segundo Apellido"
           id="secondLastName"
-          bind:value={user.secondLastName}
+          bind:value={userUpdate.secondLastName}
           className="txt-field-slim normal blue"
           type="text"
         />
@@ -200,15 +209,15 @@
         <FileInput
           label="INE Frente"
           id="IneFront"
-          bind:file={ineFront}
-          className={`btn-plain ${ineFront === "" ? "" : checkFileSize(ineFront) ? "btn-success" : "border-btn-error"}`}
+          bind:file={userUpdate.ineFront}
+          className={`btn-plain ${userUpdate.ineFront === "" ? "" : checkFileSize(userUpdate.ineFront) ? "btn-success" : "border-btn-error"}`}
           accept="image/jpeg, image/png, application/pdf"
         />
         <FileInput
           label="INE Vuelta"
           id="IneBack"
-          bind:file={ineBack}
-          className={`btn-plain ${ineBack === "" ? "" : checkFileSize(ineBack) ? "btn-success" : "border-btn-error"}`}
+          bind:file={userUpdate.ineBack}
+          className={`btn-plain ${userUpdate.ineBack === "" ? "" : checkFileSize(userUpdate.ineBack) ? "btn-success" : "border-btn-error"}`}
           accept="image/jpeg, image/png, application/pdf"
         />
       </div>
@@ -223,12 +232,12 @@
       type="button"
       className={`
         ${
-          user.name != "" &&
-          user.firstLastName != "" &&
-          ineFront != "" &&
-          ineBack != "" &&
-          checkFileSize(ineFront) &&
-          checkFileSize(ineBack)
+          userUpdate.name != "" &&
+          userUpdate.firstLastName != "" &&
+          userUpdate.ineFront != "" &&
+          userUpdate.ineBack != "" &&
+          checkFileSize(userUpdate.ineFront) &&
+          checkFileSize(userUpdate.ineBack)
             ? "btn"
             : "btn-plain disabled"
         }`}
@@ -238,7 +247,7 @@
 </Modal>
 
 <!-- MODAL UPDATE CLABE -->
-<Modal className={`modal-medium`} bind:this={modalCLABE}>
+<Modal id="modalCLABE" className={`modal-medium`} bind:this={modalCLABE}>
   <div slot="header">
     <p>Ingresa tu CLABE</p>
   </div>
@@ -246,7 +255,7 @@
     <div class="element">
       <div class="row">
         <TextNumberInput
-          bind:value={user.clabe}
+          bind:value={userUpdate.clabe}
           placeholder="CLABE"
           label="CLABE"
           id="CLABE"
@@ -260,9 +269,9 @@
         <FileInput
           label="Estado de Cuenta"
           id="bankStatement"
-          bind:file={bankStatement}
+          bind:file={userUpdate.bankStatement}
           className={`btn-plain ${
-            bankStatement === "" ? "" : checkFileSize(bankStatement) ? "btn-success" : "border-btn-error"
+            userUpdate.bankStatement === "" ? "" : checkFileSize(userUpdate.bankStatement) ? "btn-success" : "border-btn-error"
           }`}
           accept="application/pdf"
         />
@@ -277,7 +286,7 @@
       id="buttonSaveModalCLABE"
       type="button"
       className={`
-        ${user.clabe != "" && bankStatement != "" && checkFileSize(bankStatement) ? "btn" : "btn-plain disabled"}`}
+        ${userUpdate.clabe != "" && userUpdate.bankStatement != "" && checkFileSize(userUpdate.bankStatement) ? "btn" : "btn-plain disabled"}`}
       icon=""
     />
   </div>
@@ -304,7 +313,7 @@
                 {:else}
                   <div class="trigger">
                     <label for="nameModalTrigger">Ingresa tu Nombre</label>
-                    <input id="nameModalTrigger" type="button" on:click={openModal(modalName)} />
+                    <input id="nameModalTrigger" type="button" on:click={openModal(modalName)} on:click={()=>$toastId="modalName"}/>
                   </div>
                 {/if}
               </div>
@@ -364,7 +373,7 @@
               {:else}
                 <div class="trigger">
                   <label class="title" for="clabeModalTrigger">Ingresa tu CLABE</label>
-                  <input id="clabeModalTrigger" type="button" on:click={openModal(modalCLABE)} />
+                  <input id="clabeModalTrigger" type="button" on:click={openModal(modalCLABE)} on:click={()=>$toastId="modalCLABE"}/>
                 </div>
               {/if}
             </div>

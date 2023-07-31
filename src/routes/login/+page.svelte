@@ -27,6 +27,7 @@
 
   /* handlers & functions */
   async function handleLogin() {
+    loading = true;
     const data = await AuthController.login(input);
     if (data?.error) error = data.error;
   }
@@ -37,10 +38,10 @@
   });
 </script>
 
-{#if loading}
-  <Loader />
-{:else}
-  <div class="container">
+<div class="container">
+  {#if loading}
+    <Loader />
+  {:else}
     <div class="content">
       <div class="logo">
         <img src={Logo} alt="Company Logo" />
@@ -71,9 +72,9 @@
               className={`txt-field ${!error ? "normal" : "invalid"}`}
               placeholder="contraseña"
             />
-            <div class="forgot-pass-link">
+            <!-- <div class="forgot-pass-link">
               <a href="/forgot-pass">Olvidé mi Contraseña</a>
-            </div>
+            </div> -->
             <div class="btn-layout">
               <Input
                 label="Iniciar Sesión"
@@ -90,8 +91,8 @@
         </div>
       </div>
     </div>
-  </div>
-{/if}
+  {/if}
+</div>
 
 <style lang="scss">
   @import "src/lib/styles/login.scss";
