@@ -2,7 +2,6 @@ import {
   axiosClient,
   profilesClient,
   axiosFormDataClient,
-  axiosECommerceClient,
   profilesFormDataClient,
   axiosDevicesClient,
   axiosDepositsAndFees,
@@ -21,7 +20,6 @@ axiosRequestInterceptor(axiosFormDataClient);
 axiosRequestInterceptor(profilesFormDataClient);
 axiosRequestInterceptor(profilesClient);
 axiosRequestInterceptor(axiosDevicesClient);
-axiosRequestInterceptor(axiosECommerceClient);
 axiosRequestInterceptor(axiosDepositsAndFees);
 axiosRequestInterceptor(axiosFraudPreventionManagement);
 axiosRequestInterceptor(axiosFraudPreventionManagementJSON);
@@ -32,7 +30,6 @@ axiosResponseInterceptor(axiosFormDataClient);
 axiosResponseInterceptor(profilesFormDataClient);
 axiosResponseInterceptor(profilesClient);
 axiosResponseInterceptor(axiosDevicesClient);
-axiosResponseInterceptor(axiosECommerceClient);
 axiosResponseInterceptor(axiosDepositsAndFees);
 axiosResponseInterceptor(axiosFraudPreventionManagement);
 axiosResponseInterceptor(axiosFraudPreventionManagementJSON);
@@ -45,7 +42,6 @@ export {
   profilesFormDataClient,
   profilesClient,
   axiosDevicesClient,
-  axiosECommerceClient,
   refreshTokenClient,
   axiosDepositsAndFees,
   axiosFraudPreventionManagement,
