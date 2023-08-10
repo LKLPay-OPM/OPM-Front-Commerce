@@ -11,12 +11,14 @@ export async function load({ url, params }) {
   const filter = "month";
   const start = Number(url.searchParams.get("start") ?? 0);
   const end = Number(url.searchParams.get("end") ?? 10);
+  const brand = url.searchParams.get("brand") ?? "";
 
   try {
     const response = await axiosDevicesClient.get(`/transaction/month/${date}`, {
-      params: { filter, start, end },
+      params: { filter, start, end, brand },
     });
-    if (validQueryFilters.includes(filter)) return { date, filter, start, end, response: response.data?.response };
+    if (validQueryFilters.includes(filter))
+      return { brand, date, filter, start, end, response: response.data?.response };
   } catch (err) {
     console.error(err);
     throw new error(500, "Something went wrong!");

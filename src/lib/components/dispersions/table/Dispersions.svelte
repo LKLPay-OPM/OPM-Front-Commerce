@@ -36,7 +36,7 @@
                   <td class="responsive hide">{type.id}</td>
                   <td>{currencyFormatLocal(type.balance)}</td>
                   <td style="text-transform:capitalize;">{type.type}</td>
-                  <td class="responsive hide">{currencyFormatLocal(type.commission)}</td>
+                  <td class="responsive hide">{currencyFormatLocal(type.comission)}</td>
                   <td class="responsive hide">{currencyFormatLocal(type.iva)}</td>
                   <td class="responsive hide">{currencyFormatLocal(type.interest)}</td>
                   <td class="responsive hide">{currencyFormatLocal(type.deposit)}</td>

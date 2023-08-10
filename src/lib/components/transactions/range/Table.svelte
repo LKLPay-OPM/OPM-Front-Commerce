@@ -14,12 +14,18 @@
   let count = data?.response?.count ?? 0;
   let paginationStart = data?.start ?? 0;
   let paginationEnd = data?.end ?? 10;
-  let active = data?.filter ?? "day";
+  let startDate = data?.startDate ?? "";
+  let endDate = data?.endDate ?? "";
+  let active = data?.filter ?? "range";
 
   function handleFilterClick({ detail }) {
     // const value = detail?.value;
     // active = value;
-    goto(`?filter=${active ?? "day"}&start=${paginationStart}&end=${paginationEnd}`);
+    goto(
+      `?filter=${
+        active ?? "range"
+      }&startDate=${startDate}&endDate=${endDate}&start=${paginationStart}&end=${paginationEnd}`
+    );
   }
 </script>
 

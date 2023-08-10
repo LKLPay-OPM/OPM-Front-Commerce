@@ -49,3 +49,7 @@ export const ticketsClient = axios.create({
   ...axiosDefaultsClientJson,
   baseURL: PUBLIC_TICKETS_ENDPOINT,
 });
+export const ticketsClientFormData = axios.create({
+  ...axiosDefaultsClientFormData,
+  baseURL: PUBLIC_TICKETS_ENDPOINT,
+});

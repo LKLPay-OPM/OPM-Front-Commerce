@@ -1,6 +1,7 @@
 <script>
   /* components */
   import Icons from "$lib/components/Icons.svelte";
+  import Pagination from "$lib/components/Pagination.svelte";
   /* exports */
   export let data;
   /* imports */
@@ -12,6 +13,9 @@
   let resume = data?.response?.resume;
   let yearMonth = data?.response?.yearMonth;
   let transactions = data?.response?.transactions ?? [];
+  let count = data?.response?.count ?? 0;
+  let paginationStart = data?.start ?? 0;
+  let paginationEnd = data?.end ?? 10;
 
   $: {
     console.log(data.response);
@@ -20,7 +24,7 @@
   function handleFilterClick({ detail }) {
     // const value = detail?.value;
     // active = value;
-    goto(`?filter=${active ?? "day"}&start=${paginationStart}&end=${paginationEnd}`);
+    goto(`?start=${paginationStart}&end=${paginationEnd}`);
   }
 
   const getMonthName = (month) => {
@@ -132,7 +136,7 @@
                 " - " +
                 getTransactionTime(transaction["Transaction Time"])}</td
             >
-            <td class="responsive">{transaction.id}</td>
+            <td class="responsive">{transaction?.["ID Transaction"]}</td>
             <td>{currencyFormatLocal(transaction.Amount)}</td>
             <td>{currencyFormatLocal(transaction.comission)}</td>
             <td class="responsive">{currencyFormatLocal(transaction?.IVA)}</td>
@@ -161,14 +165,9 @@
         {/each}
       </tbody>
     </table>
-    <!-- {#if count > 10}
-      <Pagination
-        bind:paginationStart
-        bind:paginationEnd
-        bind:count
-        on:pagination={handleFilterClick}
-      />
-    {/if} -->
+    {#if count > 10}
+      <Pagination bind:paginationStart bind:paginationEnd bind:count on:pagination={handleFilterClick} />
+    {/if}
   </div>
 </div>
 

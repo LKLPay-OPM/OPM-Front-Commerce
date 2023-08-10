@@ -118,7 +118,7 @@
                 " - " +
                 getTransactionTime(transaction["Transaction Time"])}</td
             >
-            <td class="responsive">{transaction.id}</td>
+            <td class="responsive">{transaction?.["ID Transaction"]}</td>
             <td>{currencyFormatLocal(transaction?.Amount)}</td>
             <td>{currencyFormatLocal(transaction?.comission)}</td>
             <td>{currencyFormatLocal(transaction?.IVA)}</td>

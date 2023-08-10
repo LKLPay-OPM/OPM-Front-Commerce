@@ -22,6 +22,8 @@ const userRoutes = (role, route) => {
       "/transactions/(filter)/week/[date]": true,
       "/transactions/(filter)/month": true,
       "/transactions/(filter)/month/[date]": true,
+      "/transactions/(filter)/range": true,
+      "/transactions/(filter)/id": true,
       "/transactions/detail": true,
       "/transactions": true,
       "/requests/(type)/tickets": true,

@@ -1,11 +1,15 @@
 <script>
+  /* svelte */
+  import { error } from "@sveltejs/kit";
   import { isLoggedIn, loggedInUser, redirectBankProfile } from "$lib/stores";
   import { onMount, afterUpdate } from "svelte";
+  /* components */
   import Input from "$lib/components/Input.svelte";
   import FileInput from "$lib/components/inputs/FileInput.svelte";
   import TextArea from "$lib/components/TextArea.svelte";
   import Select from "$lib/components/Select.svelte";
   import Icons from "$lib/components/Icons.svelte";
+  /*  */
   import noUser from "$lib/assets/no_user.png";
   import townsData from "$lib/assets/municipios.json";
   /* svelte */
@@ -13,7 +17,11 @@
   /* validations */
   import { checkFileSize } from "$lib/utils/validations.js";
   /* utils */
-  import { tryAgainErrorToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  import { tryAgainErrorToast, successCustomMsgToast, errorCustomMsgToast } from "$lib/utils/toast.js";
+  /* repos */
+  import { ticketsClientFormData } from "$lib/repos/axios";
+  /* controllers */
+  import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
   const dispatch = createEventDispatcher();
   let statesData = Object.keys(townsData);
@@ -25,22 +33,7 @@
   let stateIndex = 0;
   let townIndex = 0;
   export let userDetails;
-  let financialData = {
-    /* rfc: "",
-    businessName: userDetails.businessName,
-    csf: "",
-    complianceOpinion: "",
-    address: userDetails.businessAddress,
-    exteriorNumber: userDetails.outsideNumber,
-    interiorNumber: userDetails.insideNumber,
-    zipCode: userDetails.zipCode,
-    state: userDetails.state,
-    town: userDetails.town,
-    suburb: userDetails.suburb,
-    addressReference: "",
-    betweenAddress: "",
-    addressProof: "", */
-  };
+  let financialData = {};
   let ineFront = "";
   let ineBack = "";
   let bankStatement = "";
@@ -74,9 +67,8 @@
 
   const handleUpdateBusinessInfo = async () => {
     try {
-      const response = await ticketsClient.post(`/ticket/data`, user);
+      const response = await ticketsClientFormData.post(`/ticket/data`, user);
       console.log(response?.data?.response);
-      rollsQty = 0;
       successCustomMsgToast("Tu petición para cambio de datos ha sido realizada");
     } catch (e) {
       errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
@@ -256,7 +248,7 @@
         </div>
       </div>
       <!-- Right Section -->
-      {#if $loggedInUser.accountType > 0}
+      {#if $loggedInUser.accountType > 1}
         <div class="right">
           <div class="title">Datos Fiscales</div>
           <div class="element">

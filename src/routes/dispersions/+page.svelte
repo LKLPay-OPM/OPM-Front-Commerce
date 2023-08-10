@@ -16,14 +16,9 @@
 
   export let data;
 
-  /* $: {
+  $: {
     console.log(data);
-  } */
-
-  onMount(async () => {
-    // await fetchByDayButton()
-    // dispersions = [...$loggedInUser.dispersions];
-  });
+  }
 
   const dispersionFound = () => {
     if (dispersions.length <= 0) {
