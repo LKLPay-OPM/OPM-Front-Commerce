@@ -412,6 +412,15 @@ color: $primary-accent-dark;
   text-decoration: none;
   margin: 0.625rem 0.625rem;
   /* 10rem */
+  .name-job {
+    width: 130px;
+    .profile_name, .job {
+      width: 100%;
+      overflow: hidden;
+      white-space:nowrap;
+      text-overflow: ellipsis;
+    }
+  }
 }
 
 .sidebar.close .profile-details {
@@ -559,6 +568,13 @@ color: $primary-accent-dark;
         }
       }
     } 
+  }
+
+  .text-logo {
+    > p,
+    > small {
+      color: $primary-accent-light;
+    }
   }
 }
 

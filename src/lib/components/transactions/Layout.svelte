@@ -374,10 +374,10 @@
     {#if notFound}
       <div class="message card-primary">
         <div class="msg">
-          <p>No has realizado ventas el día de hoy</p>
+          <p>No se encontraron registros</p>
         </div>
         <div class="description">
-          <p>Aquí podrás ver el resumen de tus últimas ventas realizadas</p>
+          <p>Aquí podrás ver el resumen de tus ventas realizadas</p>
         </div>
       </div>
     {:else}
