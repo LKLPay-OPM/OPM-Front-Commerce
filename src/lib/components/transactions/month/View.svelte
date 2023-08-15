@@ -13,6 +13,10 @@
   let paginationStart = data?.start ?? 0;
   let paginationEnd = data?.end ?? 10;
   let active = data?.filter ?? "month";
+  let cardBrand = data?.brand ?? "";
+  let startDate = data.startDate ?? "";
+  let endDate = data.endDate ?? "";
+  let idTicket = data.ticket ?? "";
 
   const getMonthName = (month) => {
     const monthsArray = {
@@ -53,7 +57,11 @@
   };
 
   const goToTransaction = (date) => {
-    goto(`/transactions/month/${date}`);
+    const path = `
+      /transactions/month/${date}?filter=${active}${startDate != "" ? `&startDate=${startDate}` : ""}${
+      endDate != "" ? `&endDate=${endDate}` : ""
+    }${idTicket != "" ? `&search=${idTicket}` : ""}&start=${paginationStart}&end=${paginationEnd}&brand=${cardBrand}`;
+    goto(path);
   };
 </script>
 

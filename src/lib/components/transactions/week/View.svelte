@@ -13,7 +13,11 @@
   let count = data?.response?.count ?? 0;
   let paginationStart = data?.start ?? 0;
   let paginationEnd = data?.end ?? 10;
-  let active = data?.filter ?? "day";
+  let active = data?.filter ?? "week";
+  let cardBrand = data?.brand ?? "";
+  let startDate = data.startDate ?? "";
+  let endDate = data.endDate ?? "";
+  let idTicket = data.ticket ?? "";
   let innerWidth = 0,
     innerHeight = 0;
 
@@ -24,11 +28,15 @@
   function handleFilterClick({ detail }) {
     // const value = detail?.value;
     // active = value;
-    goto(`?filter=${active ?? "day"}&start=${paginationStart}&end=${paginationEnd}`);
+    goto(`?filter=${active}&start=${paginationStart}&end=${paginationEnd}`);
   }
 
   const goToTransaction = (date) => {
-    goto(`/transactions/week/${date}`);
+    const path = `
+      /transactions/week/${date}?filter=${active}${startDate != "" ? `&startDate=${startDate}` : ""}${
+      endDate != "" ? `&endDate=${endDate}` : ""
+    }${idTicket != "" ? `&search=${idTicket}` : ""}&start=${paginationStart}&end=${paginationEnd}&brand=${cardBrand}`;
+    goto(path);
   };
 </script>
 

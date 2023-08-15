@@ -23,12 +23,13 @@ export async function load({ url }) {
   const startDate = url.searchParams.get("startDate") ?? "";
   const endDate = url.searchParams.get("endDate") ?? "";
   const ticketId = url.searchParams.get("search") ?? "";
+  const brand = url.searchParams.get("brand") ?? "";
 
   try {
     const response = await axiosDevicesClient.get(`/transaction`, {
-      params: { ticketId, filter, selectedDate: selectedDate[0] ?? "", start, end, startDate, endDate },
+      params: { ticketId, filter, selectedDate: selectedDate[0] ?? "", start, end, startDate, endDate, brand },
     });
-    return { ticketId, filter, start, end, startDate, endDate, response: response.data?.response };
+    return { brand, ticketId, filter, start, end, startDate, endDate, response: response.data?.response };
   } catch (e) {
     const handler = await appErrorResponseHandler(e);
     const code = handler?.code ?? 500;

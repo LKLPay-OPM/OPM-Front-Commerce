@@ -29,7 +29,9 @@ export async function load({ url }) {
       end,
       brand,
     });
-    console.log(response);
+    /* const response = await axiosDevicesClient.get(`/transaction/dateRanges`, {
+      params: { startDate: startDate, endDate: endDate, start, end, brand },
+    }); */
     return { brand, filter, startDate, endDate, start, end, response: response.data?.response };
   } catch (e) {
     const handler = await appErrorResponseHandler(e);

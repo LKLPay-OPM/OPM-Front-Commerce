@@ -213,7 +213,7 @@
 
   let buttonGroupOptions = [
     { value: "1", name: "Tradicional", click: traditionalDepositPreference },
-    { value: "2", name: "Inmediato", click: immediateDepositPreference },
+    { value: "2", name: "Mismo Día", click: immediateDepositPreference },
   ];
 
   const getClabe = (string) => {
@@ -248,7 +248,7 @@
 <!-- MODAL DEPOSIT PREFERENCE-->
 <Modal className={`modal-medium`} bind:this={modalImmediateDepositPreference}>
   <div slot="header">
-    <p>Contratar Depósito Inmediato</p>
+    <p>Contratar Depósito Mismo Día</p>
   </div>
   <div slot="content">
     <div class="immediate-deposit">

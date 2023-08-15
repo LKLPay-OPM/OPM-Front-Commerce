@@ -38,7 +38,7 @@
   let paginationEnd = data.end ?? 10;
   let startDate = data.startDate ?? "";
   let endDate = data.endDate ?? "";
-  let idTicket = data.ticket ?? "";
+  let idTicket = data.ticketId ?? "";
   let count = data.response?.count ?? 0;
 
   const filter = data.filter;
@@ -80,6 +80,7 @@
     monthView = false;
 
   $: {
+    console.log("Layout", data)
     transactionFound();
     /* if (active === "day") {
       transactionFound();
