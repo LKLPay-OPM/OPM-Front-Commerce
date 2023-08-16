@@ -3,8 +3,11 @@
   import DateTitle from "$lib/components/DateTitle.svelte";
   /* utils */
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
+  /* navigation */
+  import { goto } from "$app/navigation";
   let terminals = [
     {
+      id: "0001",
       name: "Matriz 1",
       serial: "F20-003925",
       branch: "Matriz",
@@ -12,6 +15,7 @@
       transactions: "000000200000",
     },
     {
+      id: "0002",
       name: "Matriz 2",
       serial: "i9100-012680",
       branch: "Matriz",
@@ -19,6 +23,7 @@
       transactions: "000000100000",
     },
     {
+      id: "0003",
       name: "Sucursal 1",
       serial: "i2000-019007",
       branch: "Sucursal",
@@ -46,6 +51,9 @@
     };
     return monthsArray[month].value;
   };
+  const terminalDetails = (id) => {
+    goto(`/terminals/${id}`);
+  };
 </script>
 
 <div class="container">
@@ -66,7 +74,7 @@
             </thead>
             <tbody>
               {#each terminals as terminal}
-                <tr class="">
+                <tr class="" on:click={() => terminalDetails(terminal.id)}>
                   <td>{terminal.name}</td>
                   <td class="r425 r540">{terminal.serial}</td>
                   <td>{terminal.branch}</td>
@@ -125,6 +133,11 @@
     margin: 2rem;
     border-spacing: 1rem;
     min-width: 40rem;
+    tbody {
+      tr {
+        cursor: pointer;
+      }
+    }
   }
 
   .table-content thead {

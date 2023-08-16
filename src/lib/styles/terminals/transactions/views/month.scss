@@ -1,0 +1,137 @@
+  .transaction-tables {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .table-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0 0 1rem 0;
+  }
+
+  .table-content {
+    border-collapse: collapse;
+    margin: 2rem;
+    border-spacing: 1rem;
+    min-width: 40rem;
+    
+    thead {
+      font-weight: 500;
+      font-size: 1rem;
+      line-height: 18px;
+      text-align: center;
+      /* text-placeholder */
+      color: $primary-dark;
+      height: 2.375rem;
+    }
+    
+    td {
+      font-weight: 500;
+      font-size: 13px;
+      line-height: 18px;
+      color: #000000;
+      text-align: center;
+      border-bottom: 1px solid #8c9fb1;
+      padding: .5rem;
+      min-width: 5rem;
+    }
+  }
+
+  th.title {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 18px;
+    color: #fd9053;
+  }
+
+  td.element {
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 18px;
+    color: $primary-dark;
+    padding: 0rem;
+  }
+  
+  th:first-child {
+    text-align: left;
+  }
+  
+  td:first-child {
+    text-align: left;
+  }
+
+  .clickable {
+    cursor: pointer;
+  }
+
+  .week-table__title * .element {
+    /* TEXT */
+    font-weight: 500;
+    font-size: 1.25rem;
+    color: $primary-dark;
+  }
+
+  .week-table__subtitle * .element {
+    /* TEXT */
+    font-weight: 500;
+    font-size: 1.25rem;
+    color: $primary-dark;
+  }
+
+  .arrow-blue {
+    color: $primary-light;
+  }
+
+  /* Dark Mode */
+  :global(body.dark-mode){
+    .table-content {
+      thead {
+        th {
+          &.title {
+            color: $grey;
+          }
+        }
+      }
+      tbody {
+        td {
+          &.element {
+            color: $font-dark-primary;
+          }
+        }
+      }
+    }
+  }
+
+  /* Medium Screen */
+  @media (max-width: $md) {
+    .top__left * .element {
+      width: 15rem;
+    }
+
+    .table-container {
+      display: block;
+      width: 100%;
+    }
+
+    .card-primary {
+      padding: 2rem 1rem;
+    }
+    
+    /* .transaction-tables {
+      margin: auto;
+    } */
+
+    .table-content {
+      min-width: auto;
+      width: -webkit-fill-available;
+      margin: 0;
+    }
+    .responsive {
+      display: none;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {}

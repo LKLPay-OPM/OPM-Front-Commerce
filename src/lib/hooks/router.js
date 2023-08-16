@@ -36,8 +36,16 @@ const userRoutes = (role, route) => {
       "/requests": true,
       "/dispersions": true,
       "/dispersions/detail": true,
-      "/branch-office": true,
-      "/terminals": true,
+      // TODO: Sprint 2 Sucursales
+      "/branch-office": false,
+      // TODO: Sprint 2 Terminales
+      "/terminals": false,
+      "/terminals/[id]": false,
+      "/terminals/[id]/(filter)/day": false,
+      "/terminals/[id]/(filter)/week": false,
+      "/terminals/[id]/(filter)/week/[date]": false,
+      "/terminals/[id]/(filter)/month": false,
+      "/terminals/[id]/(filter)/month/[date]": false,
       "/urgent": false,
       "/credits": false,
       "/payment-link": true,
@@ -84,13 +92,9 @@ const sidebarOptions = (accountType) => {
       { name: "Mis Ventas", path: "/transactions", icon: "terminal" },
       { name: "Depósitos", path: "/dispersions", icon: "deposits" },
       { name: "Solicitudes", path: "/requests", icon: "adviser" },
-      { name: "Sucursales", path: "/branch-office", icon: "franchise" },
-      { name: "Terminales", path: "/terminals", icon: "terminal" },
+      // { name: "Sucursales", path: "/branch-office", icon: "franchise" }, // TODO: Sprint 2 Sucursales
+      // { name: "Terminales", path: "/terminals", icon: "terminal" }, // TODO: Sprint 2 Terminales
       { name: "Link de Pago", path: "/payment-link", icon: "qr-code" },
-      // {name: 'Depósito Urgente', path: '/urgent-dispersion', icon: 'terminal'},
-      // {name: 'Cuenta Bancaria', path: '/bank-account', icon: 'bank-line'},
-      // {name: 'Créditos', path: '/credits', icon: 'bank-line'},
-      // {name: 'Nueva Venta', path: '/new-sale', icon: 'bank-card-line'},
     ],
     3: [
       /// ACCOUNT TYPE BUSINESS

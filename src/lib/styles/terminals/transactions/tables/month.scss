@@ -1,0 +1,178 @@
+.row {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: space-between;
+  gap: 1rem;
+
+  & > .title {
+    padding: 1rem 0 0 0.5rem;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 18px;
+    color: #fd9053;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.table-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0 0 1rem 0;
+}
+
+.table-content {
+  border-collapse: collapse;
+  margin: 2rem;
+  border-spacing: 1rem;
+  min-width: 40rem;
+  
+  thead {
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 18px;
+    text-align: center;
+    /* text-placeholder */
+    color: $primary-dark;
+    height: 2.375rem;
+    .amount {
+      font-size: .75rem;
+    }
+  }
+
+  td {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 18px;
+    color: #000000;
+    text-align: center;
+    border-bottom: 1px solid #8c9fb1;
+    padding: .5rem;
+    min-width: 5rem;
+  }
+}
+
+th:first-child {
+  text-align: left;
+}
+td:first-child {
+  text-align: left;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+tbody.inside {
+  background: $background-light;
+  /* inner-flat */
+  box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
+  border-radius: 0px 0px 10px 10px;
+}
+
+.arrow-blue {
+  color: $primary-light;
+}
+
+.icon {
+  color: $primary-dark;
+  &.success{color: $green}
+  &.error{color: $red}
+  &.warning{color: $orange}
+  &.tooltip {
+    position: relative;
+    font-weight: 500;
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    .tooltiptext {
+      visibility: hidden;
+      width: fit-content;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 280%;
+      margin-left: -100px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .tooltiptext::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #555 transparent transparent transparent;
+    }
+    &:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}
+
+  /* Dark Mode */
+  :global(body.dark-mode){
+    .table-content {
+      thead {
+        color: $grey;
+      }
+      td {
+        color: $font-dark-primary;
+      }
+    }
+    .row {
+  
+      > .title {
+        color: $grey;
+      }
+    }
+    .icon {
+      color: $font-dark-primary;
+      &.success{color: $green}
+      &.error{color: $red}
+      &.warning{color: $orange}
+    }
+    tbody.inside {
+      background: $background-dark-accent-primary;
+      /* inner-flat */
+      box-shadow: inset -3px -3px 4px $background-dark-accent-secondary, inset 3px 3px 3px $background-dark;
+      border-radius: 0px 0px 10px 10px;
+    }
+  }
+
+@media (max-width: $md) {
+  .table-container {
+    display: block;
+    width: 100%;
+  }
+
+  .card-primary {
+    padding: 2rem 1rem;
+    margin: 0 0 1rem 0;
+  }
+
+  .table-content {
+    min-width: auto;
+    width: -webkit-fill-available;
+    margin: 0;
+  }
+
+  .responsive {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {}
