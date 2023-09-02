@@ -6,13 +6,15 @@
   import Sidebar from "$lib/components/Sidebar.svelte";
   import Loader from "$lib/components/Loader.svelte";
   /* stores */
-  import { isLoggedIn, loggedInUser, darkMode } from "$lib/stores";
+  import { isLoggedIn, loggedInUser, darkMode, linkSelected } from "$lib/stores";
   /* sveltekit */
   import { page, navigating } from "$app/stores";
   import { browser } from "$app/environment";
   /* utils */
   import { checkRouter } from "$lib/utils/verifyRoute";
   import { getToastType } from "$lib/utils/getToastType";
+  /* consts */
+  import { routes } from "$lib/constants/routes";
 
   let innerWidth = 0;
   let innerHeight = 0;
@@ -20,6 +22,8 @@
 
   $: {
     if ($isLoggedIn) {
+      const regexp = new RegExp("(profile|transactions|dispersions|requests|payment-link|help)");
+      $linkSelected = routes($page.route.id.match(regexp)?.[0] ?? "");
       checkRouter($loggedInUser, $page);
     }
     if (browser) {

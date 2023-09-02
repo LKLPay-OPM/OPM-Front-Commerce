@@ -55,8 +55,12 @@
       {#if innerWidth >= 1000}
         <a href="/">
           <div class="text-logo">
-            <p>LKL Pay</p>
-            <small>Financial Technology</small>
+            <div class="title">
+              <p>LKL Pay</p>
+            </div>
+            <div class="subtitle">
+              <small>Financial Technology</small>
+            </div>
           </div>
           <img src={logo} alt="Company Logo" />
         </a>

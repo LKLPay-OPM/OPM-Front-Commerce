@@ -9,7 +9,6 @@ import { browser } from "$app/environment";
 export async function checkRouter(user, page) {
   const response = await router(user.accountType, page.route.id);
   if (!response && browser) {
-    linkSelected.set("Inicio");
     await goto("/");
   }
 }

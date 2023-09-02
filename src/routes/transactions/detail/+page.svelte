@@ -375,7 +375,7 @@
               </div>
               <div class="item__content">
                 <p>
-                  {currencyFormatLocal(transaction.IVA)}
+                  {currencyFormatLocal(transaction.iva)}
                 </p>
                 <p>{`(16%)`}</p>
               </div>
@@ -387,7 +387,7 @@
               </div>
               <div class="item__content last">
                 <p>
-                  {currencyFormatLocal(transaction.deposit)}
+                  {currencyFormatLocal(transaction.toDeposit)}
                 </p>
               </div>
               <span />

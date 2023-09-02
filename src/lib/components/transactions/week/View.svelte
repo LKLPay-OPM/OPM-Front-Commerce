@@ -74,7 +74,7 @@
                 {currencyFormatLocal(day.iva)}
               </td>
               <td class="element responsive">
-                {currencyFormatLocal(day.deposit)}
+                {currencyFormatLocal(day.toDeposit)}
               </td>
               <i class="responsive arrow arrow-blue">
                 <Icons name="arrow-fwd" width="24" height="24" />

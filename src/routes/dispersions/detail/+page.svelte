@@ -132,7 +132,7 @@
         <div class="title">Datos</div>
         <div class="item">
           <b>Tipo de Depósito</b>
-          <p>{dispersion.type ?? "N/A"}</p>
+          <p style="text-transform:capitalize;">{dispersion.type ?? "N/A"}</p>
         </div>
         <div class="item">
           <b>Referencia</b>

@@ -8,13 +8,15 @@ import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 export const ssr = false;
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ url }) {
-  const ticket = url.searchParams.get("ticket");
+export async function load({ url, params }) {
+  const uuid = params.uuid;
 
   try {
-    const response = await axiosDevicesClient.get(`/transaction/detail/${ticket}`);
-    console.log(response.data);
-    return { ticket, response: response.data?.response };
+    if (uuid != 1) {
+      throw new Error();
+    }
+    /* const response = await axiosDevicesClient.get(`/transaction/detail/${ticket}`);
+    return { ticket, response: response.data?.response }; */
   } catch (err) {
     const handler = await appErrorResponseHandler(err);
     const code = handler?.code ?? 500;

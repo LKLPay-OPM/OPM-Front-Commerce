@@ -75,7 +75,7 @@
   };
 
   let immediateDeposit = {
-    availableBalance: resume.depositBalance ?? 0,
+    availableBalance: resume.toDepositBalance ?? 0,
     immediateDepositComission: 0,
     immediateDepositQty: 0,
     toDeposit: 0,
@@ -195,7 +195,7 @@
       immediateDeposit.immediateDepositComission
     );
     immediateDeposit = {
-      availableBalance: resume.depositBalance,
+      availableBalance: resume.toDepositBalance,
       immediateDepositQty: 0,
       toDeposit: 0,
     };
@@ -581,7 +581,7 @@
           <InfoCard
             className={""}
             title="Saldo a Depositar"
-            numData={currencyFormatLocal(resume?.depositBalance ?? 0)}
+            numData={currencyFormatLocal(resume?.toDepositBalance ?? 0)}
           />
         </div>
         <div class="button">

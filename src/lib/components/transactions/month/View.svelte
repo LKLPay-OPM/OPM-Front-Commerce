@@ -95,7 +95,7 @@
                 {currencyFormatLocal(month?.Comission)}
               </td>
               <td class="element responsive">
-                {currencyFormatLocal(month?.IVA)}
+                {currencyFormatLocal(month?.iva)}
               </td>
               <td class="element responsive">
                 {currencyFormatLocal(month?.Deposit)}

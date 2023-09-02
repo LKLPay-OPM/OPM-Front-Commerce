@@ -43,6 +43,7 @@ body {
 .layout {
   display: flex;
   flex-direction: row;
+  height: 100vh;
   /* position: relative; */
 }
 
@@ -163,6 +164,7 @@ body {
   justify-content: center;
   width: 100%;
   color: $primary-dark;
+  padding: 0.5rem;
 }
 
 /* Styles for Login, Register and Forgot Pass forms */

@@ -296,7 +296,7 @@ export const generateCSV = (arrayData, clientData) => {
   const exportCSVFile = (headers, items, fileName) => {
     items.unshift(headers);
     const data = items.map((item) => {
-      return [item.date, item.id, item.total, item.comission, item.deposit, item.card];
+      return [item.date, item.id, item.total, item.comission, item.toDeposit, item.card];
     });
     const workBook = XLSX.utils.book_new(); //create new workbook
     const workSheetData = [...data];
@@ -314,7 +314,7 @@ export const generateXLSX = (arrayData) => {
   const exportXLSXFile = (headers, items, fileName) => {
     items.unshift(headers);
     const data = items.map((item) => {
-      return [item.date, item.id, item.total, item.comission, item.deposit, item.card];
+      return [item.date, item.id, item.total, item.comission, item.toDeposit, item.card];
     });
     const workBook = XLSX.utils.book_new(); //create new workbook
     const workSheetData = [...data];

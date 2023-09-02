@@ -80,8 +80,8 @@
                   <td class="sm">{transaction.id}</td>
                   <td>{currencyFormatLocal(transaction?.Amount)}</td>
                   <td class="">{currencyFormatLocal(transaction?.comission)}</td>
-                  <td class="sm md">{currencyFormatLocal(transaction?.IVA)}</td>
-                  <td class="">{currencyFormatLocal(transaction?.deposit)}</td>
+                  <td class="sm md">{currencyFormatLocal(transaction?.iva)}</td>
+                  <td class="">{currencyFormatLocal(transaction?.toDeposit)}</td>
                   <td class="">
                     <i class={`icon ${getIconStatusClass(transaction.transactionStatus)} tooltip`}>
                       <Icons

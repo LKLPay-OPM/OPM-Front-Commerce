@@ -11,8 +11,10 @@ const userRoutes = (role, route) => {
       "/dispersions": true,
       "/branch-office": false,
       "/terminals": false,
+      "/yeti": true,
     },
     1: {
+      "/yeti": true,
       "/login": true,
       "/": true,
       "/profile": true,
@@ -101,14 +103,10 @@ const sidebarOptions = (accountType) => {
       { name: "Inicio", path: "/", icon: "home" },
       { name: "Mis Ventas", path: "/transactions", icon: "transactions" },
       { name: "Depósitos", path: "/dispersions", icon: "deposits" },
-      { name: "Sucursales", path: "/branch-office", icon: "franchise" },
-      { name: "Terminales", path: "/terminals", icon: "terminal" },
-      { name: "Depósito Urgente", path: "/urgent", icon: "deposits" },
+      { name: "Solicitudes", path: "/requests", icon: "adviser" },
+      // { name: "Sucursales", path: "/branch-office", icon: "franchise" }, // TODO: Sprint 2 Sucursales
+      // { name: "Terminales", path: "/terminals", icon: "terminal" }, // TODO: Sprint 2 Terminales
       { name: "Link de Pago", path: "/payment-link", icon: "qr-code" },
-      // {name: 'Depósito Urgente', path: '/urgent-dispersion', icon: 'terminal'},
-      // {name: 'Cuenta Bancaria', path: '/bank-account', icon: 'bank-line'},
-      // {name: 'Créditos', path: '/credits', icon: 'bank-line'},
-      // {name: 'Nueva Venta', path: '/new-sale', icon: 'bank-card-line'},
     ],
   };
   // console.log(optionsList[accountType])

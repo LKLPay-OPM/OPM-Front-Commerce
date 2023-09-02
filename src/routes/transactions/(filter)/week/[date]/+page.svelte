@@ -105,7 +105,7 @@
           <th class="responsive" />
           <th class="amount">{currencyFormatLocal(resume?.Amount)}</th>
           <th class="amount">{currencyFormatLocal(resume?.Comission)}</th>
-          <th class="amount">{currencyFormatLocal(resume?.IVA)}</th>
+          <th class="amount">{currencyFormatLocal(resume?.iva)}</th>
           <th class="amount">{currencyFormatLocal(resume?.Deposit)}</th>
           <th class="responsive" />
         </tr>
@@ -121,8 +121,8 @@
             <td class="responsive">{transaction?.["ID Transaction"]}</td>
             <td>{currencyFormatLocal(transaction?.Amount)}</td>
             <td>{currencyFormatLocal(transaction?.comission)}</td>
-            <td>{currencyFormatLocal(transaction?.IVA)}</td>
-            <td>{currencyFormatLocal(transaction?.deposit)}</td>
+            <td>{currencyFormatLocal(transaction?.iva)}</td>
+            <td>{currencyFormatLocal(transaction?.toDeposit)}</td>
             <td class="responsive">
               <i class={`icon ${getIconStatusClass(transaction.transactionStatus)} tooltip`}>
                 <Icons

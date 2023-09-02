@@ -80,7 +80,7 @@
     monthView = false;
 
   $: {
-    console.log("Layout", data)
+    console.log("Layout", data);
     transactionFound();
     /* if (active === "day") {
       transactionFound();
@@ -123,24 +123,43 @@
     paginationStart = 0;
     paginationEnd = 10;
     const path = `
-      /transactions/${active}?filter=${active}${startDate != "" ? `&startDate=${startDate}` : ""}${endDate != "" ? `&endDate=${endDate}` : ""}${idTicket != "" ? `&search=${idTicket}` : ""}&start=${paginationStart}&end=${paginationEnd}&brand=${cardBrand}`;
+      /transactions/${active}?filter=${active}${startDate != "" ? `&startDate=${startDate}` : ""}${
+      endDate != "" ? `&endDate=${endDate}` : ""
+    }${idTicket != "" ? `&search=${idTicket}` : ""}&start=${paginationStart}&end=${paginationEnd}&brand=${cardBrand}`;
     await goto(path);
   };
 
   const fetchByDateRange = async () => {
     paginationStart = 0;
     paginationEnd = 10;
-    const start = getStringDate(new Date(parseSlashDate(dateRangeStart)));
-    const end = getStringDate(new Date(parseSlashDate(dateRangeEnd)));
-    await goto(
+    if(dateRangeStart != "" && dateRangeEnd != ""){
+      active = "range";
+    }
+    /* const start = getStringDate(new Date(parseSlashDate(dateRangeStart))) ?? "";
+    const end = getStringDate(new Date(parseSlashDate(dateRangeEnd))) ?? ""; */
+
+    const path = `
+      /transactions/${active}?filter=${active}${dateRangeStart != "" ? `&startDate=${getStringDate(new Date(parseSlashDate(dateRangeStart)))}` : ""}${
+      dateRangeEnd != "" ? `&endDate=${getStringDate(new Date(parseSlashDate(dateRangeEnd)))}` : ""
+    }${idTicket != "" ? `&search=${idTicket}` : ""}&start=${paginationStart}&end=${paginationEnd}${
+      cardBrand != "" ? `&brand=${cardBrand}` : ""
+    }`;
+    await goto(path);
+    /* await goto(
       `/transactions/range?filter=range&startDate=${start}&endDate=${end}&start=${paginationStart}&end=${paginationEnd}`
-    );
+    ); */
   };
 
   const fetchByTicketId = async () => {
     paginationStart = 0;
     paginationEnd = 10;
     await goto(`/transactions/id?filter=id&search=${ticketId}&start=${paginationStart}&end=${paginationEnd}`);
+  };
+
+  const cleanFilters = () => {
+    dateRangeStart = "";
+    dateRangeEnd = "";
+    cardBrand = "";
   };
 
   const exportDataToPDF = async (transactions) => {};
@@ -190,14 +209,6 @@
   <div class="modal-buttons" slot="footer">
     <Input
       on:click={closeModal(modalClarification)}
-      label="Cerrar"
-      id="buttonCloseModalClarification"
-      type="button"
-      className="btn-plain"
-      icon=""
-    />
-    <Input
-      on:click={closeModal(modalClarification)}
       on:click={() => handleClarification()}
       label="Enviar Aclaración"
       id="buttonSaveModalClarification"
@@ -223,25 +234,45 @@
       </div>
       <p>Marca</p>
       <div class="input-cards">
-        <i on:click={() => fetchByCardBrand("mastercard")} on:keypress={(e) => (e.key === "Enter" ? () => fetchByCardBrand("mastercard") : "")}>
-          <Icons name="mastercard" width="50" height="30" />
-        </i>
-        <i on:click={() => fetchByCardBrand("visa")} on:keypress={(e) => (e.key === "Enter" ? () => fetchByCardBrand("visa") : "")}>
-          <Icons name="visa" width="50" height="30" />
-        </i>
-        <i on:click={() => fetchByCardBrand("amex")} on:keypress={(e) => (e.key === "Enter" ? () => fetchByCardBrand("amex") : "")}>
-          <Icons name="amex" width="25" height="25" />
-        </i>
-        <i on:click={() => fetchByCardBrand("other")} on:keypress={(e) => (e.key === "Enter" ? () => fetchByCardBrand("other") : "")}>
-          <Icons name="bank-card-line" width="25" height="25" />
-        </i>
+        <div class={`icon__container ${cardBrand === "mastercard" ? "selected" : ""}`}>
+          <i
+            on:click={() => (cardBrand = "mastercard")}
+            on:keypress={(e) => (e.key === "Enter" ? () => (cardBrand = "mastercard") : "")}
+          >
+            <Icons name="mastercard" width="50" height="30" />
+          </i>
+        </div>
+        <div class={`icon__container ${cardBrand === "visa" ? "selected" : ""}`}>
+          <i
+            on:click={() => (cardBrand = "visa")}
+            on:keypress={(e) => (e.key === "Enter" ? () => (cardBrand = "visa") : "")}
+          >
+            <Icons name="visa" width="50" height="30" />
+          </i>
+        </div>
+        <div class={`icon__container ${cardBrand === "amex" ? "selected" : ""}`}>
+          <i
+            on:click={() => (cardBrand = "amex")}
+            on:keypress={(e) => (e.key === "Enter" ? () => (cardBrand = "amex") : "")}
+          >
+            <Icons name="amex" width="25" height="25" />
+          </i>
+        </div>
+        <div class={`icon__container ${cardBrand === "other" ? "selected" : ""}`}>
+          <i
+            on:click={() => (cardBrand = "other")}
+            on:keypress={(e) => (e.key === "Enter" ? () => (cardBrand = "other") : "")}
+          >
+            <Icons name="bank-card-line" width="25" height="25" />
+          </i>
+        </div>
       </div>
     </div>
   </div>
   <div class="modal-buttons" slot="footer">
     <Input
-      on:click={closeModal(modalDateFilter)}
-      label="Cerrar"
+      on:click={cleanFilters}
+      label="Limpiar Filtros"
       id="buttonCloseModalDateRange"
       type="button"
       className="btn-plain"
@@ -254,7 +285,7 @@
       id="buttonSaveModalDateRange"
       type="button"
       className={`
-        ${dateRangeStart != "" && dateRangeEnd != "" ? "btn" : "btn-plain disabled"}`}
+        ${(dateRangeStart != "" && dateRangeEnd != "") || cardBrand != "" ? "btn" : "btn-plain disabled"}`}
       icon=""
     />
   </div>
@@ -264,7 +295,7 @@
   <div class="top">
     <div class="top__left">
       <div class="page-title">
-        <h1>Ventas</h1>
+        <h1>Mis Ventas</h1>
       </div>
       <div class="buttons">
         <div class="element">
@@ -389,4 +420,17 @@
 
 <style lang="scss">
   @import "src/lib/styles/transactions/layout.scss";
+
+  .icon__container {
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    border-radius: 4px;
+    &.selected {
+      background: rgb(0, 0, 0, 0.2);
+    }
+  }
 </style>

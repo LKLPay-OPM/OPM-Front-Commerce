@@ -78,7 +78,7 @@
   };
 
   const returnToMonthView = () => {
-    goto(`terminals/${idTerminal}/month`)
+    goto(`terminals/${idTerminal}/month`);
   };
 </script>
 
@@ -119,7 +119,7 @@
             {currencyFormatLocal(resume?.Comission)}
           </th>
           <th class="responsive amount">
-            {currencyFormatLocal(resume?.IVA)}
+            {currencyFormatLocal(resume?.iva)}
           </th>
           <th class="amount">
             {currencyFormatLocal(resume?.Deposit)}
@@ -138,8 +138,8 @@
             <td class="responsive">{transaction?.["ID Transaction"]}</td>
             <td>{currencyFormatLocal(transaction.Amount)}</td>
             <td>{currencyFormatLocal(transaction.comission)}</td>
-            <td class="responsive">{currencyFormatLocal(transaction?.IVA)}</td>
-            <td>{currencyFormatLocal(transaction.deposit)}</td>
+            <td class="responsive">{currencyFormatLocal(transaction?.iva)}</td>
+            <td>{currencyFormatLocal(transaction.toDeposit)}</td>
             <td class="responsive">
               <i class={`icon ${getIconStatusClass(transaction.transactionStatus)} tooltip`}>
                 <Icons
