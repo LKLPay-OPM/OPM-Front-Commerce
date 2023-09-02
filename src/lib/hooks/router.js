@@ -11,10 +11,8 @@ const userRoutes = (role, route) => {
       "/dispersions": true,
       "/branch-office": false,
       "/terminals": false,
-      "/yeti": true,
     },
     1: {
-      "/yeti": true,
       "/login": true,
       "/": true,
       "/profile": true,
