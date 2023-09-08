@@ -10,7 +10,7 @@
   import Loader from "$lib/components/Loader.svelte";
   /* controllers */
   import { AuthController } from "$lib/controllers/auth/auth.controller";
-  import { AmexController } from "$lib/controllers/amex/amex.controller";
+  // import { AmexController } from "$lib/controllers/amex/amex.controller";
   /* utils */
   import { validateEmail, validatePassword } from "$lib/utils/input";
   /* assets */
@@ -32,16 +32,17 @@
   async function handleLogin() {
     loading = true;
     const data = await AuthController.login(input);
+    loading = false;
     if (data?.error) error = data.error;
   }
 
-  async function amexNewCommerce() {
+  /* async function amexNewCommerce() {
     const data = await AmexController.newCommerce(amexData, amexAuthorization);
     console.log(data);
-  }
+  } */
 
   onMount(async () => {
-    amexNewCommerce();
+    // amexNewCommerce();
     if ($isLoggedIn) await goto("/");
     loading = false;
   });
