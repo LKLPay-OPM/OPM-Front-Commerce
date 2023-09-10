@@ -82,7 +82,7 @@
       {/if}
     </div>
     <div class="row">
-      <RowElement description={ticket.request.description} />
+      <RowElement description={ticket.request.description ?? ticket.description} />
     </div>
     <!-- <div class="divider-hor" /> -->
     <div class="row">

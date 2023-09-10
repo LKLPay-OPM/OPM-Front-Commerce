@@ -1,4 +1,7 @@
 <script>
+  /* svelte */
+  import { error } from "@sveltejs/kit";
+  import { page } from "$app/stores";
   /* components */
   import Input from "$lib/components/Input.svelte";
   import InfoCard from "$lib/components/InfoCard.svelte";
@@ -13,7 +16,6 @@
   import ViewWeek from "$lib/components/transactions/week/View.svelte";
   import ViewMonth from "$lib/components/transactions/month/View.svelte";
   /*  */
-  // import { linkSelected } from "$lib/";
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import { generatePDF, generateCSV, generateXLSX } from "$lib/hooks/exportDataToFile.js";
@@ -23,11 +25,20 @@
   import { filterByDateOptions } from "$lib/constants/filter";
   /* utils */
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
+  import { getStringDate, parseSlashDate } from "$lib/utils/date";
+  import { errorCustomMsgToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  /* handlers */
+  import { appErrorResponseHandler } from "$lib/handlers/error.handler";
+  /* axios */
+  import { axiosDevicesClient } from "$lib/repos/axios";
   /* variables */
   export let data;
   let active = data.filter;
-  let paginationStart = data.start;
-  let paginationEnd = data.end;
+  let paginationStart = data.start ?? 0;
+  let paginationEnd = data.end ?? 10;
+  let startDate = data.startDate ?? "";
+  let endDate = data.endDate ?? "";
+  let idTicket = data.ticketId ?? "";
   let count = data.response?.count ?? 0;
 
   const filter = data.filter;
@@ -69,14 +80,15 @@
     monthView = false;
 
   $: {
+    console.log("Layout", data);
     transactionFound();
     /* if (active === "day") {
       transactionFound();
     } else {
       notFound = false;
     } */
-    if (data.response.transactions) {
-      transactionsWeek = data.response.transactions;
+    if (transactions) {
+      transactionsWeek = transactions;
     }
   }
   let clarificationsList = [
@@ -92,7 +104,7 @@
   };
 
   const transactionFound = () => {
-    if (transactions?.length <= 0) {
+    if (count <= 0) {
       notFound = true;
     } else {
       notFound = false;
@@ -100,218 +112,64 @@
     loading = false;
   };
 
-  const fetchWeekDayTransactions = async (id) => {
-    try {
-      const response = await axiosDevicesClient.get(
-        `/transaction/${id}`
-        // { params: { filter, start, end } }
-      );
-      transactions = response.transactions;
-      // return {response: response.data?.response };
-    } catch (err) {
-      console.error(err);
-      throw new error(500, "Something went wrong!");
+  let das = {
+    url: $page.url.pathname,
+    active,
+    paginationStart,
+    paginationEnd,
+  };
+
+  const fetchByCardBrand = async (cardBrand) => {
+    paginationStart = 0;
+    paginationEnd = 10;
+    const path = `
+      /transactions/${active}?filter=${active}${startDate != "" ? `&startDate=${startDate}` : ""}${
+      endDate != "" ? `&endDate=${endDate}` : ""
+    }${idTicket != "" ? `&search=${idTicket}` : ""}&start=${paginationStart}&end=${paginationEnd}&brand=${cardBrand}`;
+    await goto(path);
+  };
+
+  const fetchByDateRange = async () => {
+    paginationStart = 0;
+    paginationEnd = 10;
+    if(dateRangeStart != "" && dateRangeEnd != ""){
+      active = "range";
     }
+    /* const start = getStringDate(new Date(parseSlashDate(dateRangeStart))) ?? "";
+    const end = getStringDate(new Date(parseSlashDate(dateRangeEnd))) ?? ""; */
+
+    const path = `
+      /transactions/${active}?filter=${active}${dateRangeStart != "" ? `&startDate=${getStringDate(new Date(parseSlashDate(dateRangeStart)))}` : ""}${
+      dateRangeEnd != "" ? `&endDate=${getStringDate(new Date(parseSlashDate(dateRangeEnd)))}` : ""
+    }${idTicket != "" ? `&search=${idTicket}` : ""}&start=${paginationStart}&end=${paginationEnd}${
+      cardBrand != "" ? `&brand=${cardBrand}` : ""
+    }`;
+    await goto(path);
+    /* await goto(
+      `/transactions/range?filter=range&startDate=${start}&endDate=${end}&start=${paginationStart}&end=${paginationEnd}`
+    ); */
   };
 
-  const fetchByDateRange = async () => {};
-
-  const fetchByTicketId = async () => {};
-
-  const sortObject = (data) => {
-    const transactionsNew = data.map((element) => {
-      //value = Math.round((e.target.value) * 100) / 100
-      return {
-        date: getTransactionDate(element["Transaction Date"]),
-        id: element["Transaction Time"],
-        total: parseInt(element.Amount) / 100,
-        commission: (element.Amount * 0.035) / 100,
-        deposit: (element.Amount * 0.965) / 100,
-        card: "MasterCard",
-      };
-    });
-    return transactionsNew;
+  const fetchByTicketId = async () => {
+    paginationStart = 0;
+    paginationEnd = 10;
+    await goto(`/transactions/id?filter=id&search=${ticketId}&start=${paginationStart}&end=${paginationEnd}`);
   };
 
-  const exportDataToPDF = async (transactions) => {
-    //alert("PDF")
-    // console.log(transactions)
-    generatePDF(transactions, user);
+  const cleanFilters = () => {
+    dateRangeStart = "";
+    dateRangeEnd = "";
+    cardBrand = "";
   };
 
-  const exportDataToExcel = async (transactions) => {
-    // alert("Excel")
-    const data = sortObject(transactions);
-    // console.log(data)
-    generateXLSX(data);
-  };
+  const exportDataToPDF = async (transactions) => {};
 
-  const exportDataToCSV = async (transactions) => {
-    // alert("CSV")
-    const data = sortObject(transactions);
-    // console.log(data)
-    generateCSV(data);
-  };
+  const exportDataToExcel = async (transactions) => {};
 
-  const getMonthName = (month) => {
-    const monthsArray = {
-      "01": { value: "Enero" },
-      "02": { value: "Febrero" },
-      "03": { value: "Marzo" },
-      "04": { value: "Abril" },
-      "05": { value: "Mayo" },
-      "06": { value: "Junio" },
-      "07": { value: "Julio" },
-      "08": { value: "Agosto" },
-      "09": { value: "Septiembre" },
-      "10": { value: "Octubre" },
-      "11": { value: "Noviembre" },
-      "12": { value: "Diciembre" },
-      0: { value: "Enero" },
-      1: { value: "Febrero" },
-      2: { value: "Marzo" },
-      3: { value: "Abril" },
-      4: { value: "Mayo" },
-      5: { value: "Junio" },
-      6: { value: "Julio" },
-      7: { value: "Agosto" },
-      8: { value: "Septiembre" },
-      9: { value: "Octubre" },
-      10: { value: "Noviembre" },
-      11: { value: "Diciembre" },
-    };
-    return monthsArray[month].value;
-  };
-  const getMonthPeriod = (string) => {
-    var pattern = /(\d{2})(\d{2})/; // String pattern replace for date
-    const extractMonth = string.replace(pattern, "$2");
-    const month = getMonthName(extractMonth);
-    let str = string.replace(pattern, `${month} 20$1`);
-    // let str = string.replace(pattern, `$3 de ${month} del 20$1`)
-    // console.log(str)
-    return str;
-  };
+  const exportDataToCSV = async (transactions) => {};
 
   const handleClarification = () => {
     console.log(clarification);
-  };
-
-  const getTransactionDate = (string) => {
-    var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
-    const extractMonth = string.replace(pattern, "$2");
-    const month = getMonthName(extractMonth);
-    let str = string.replace(pattern, `$3 de ${month}`);
-    // let str = string.replace(pattern, `$3 de ${month} del 20$1`)
-    // console.log(str)
-    return str;
-  };
-
-  const getTransactionTime = (string) => {
-    var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
-    let str = string.replace(pattern, `$1:$2:$3`);
-    // console.log(str)
-    return str;
-  };
-
-  const dateToLocalString = (string) => {
-    var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
-    const extractMonth = string.replace(pattern, "$2");
-    const month = getMonthName(extractMonth);
-    let str = string.replace(pattern, `$3 de ${month} del 20$1`);
-    return str;
-    // de {getMonthName(selectedTransaction.date?.toDate().getMonth())} del {selectedTransaction.date?.toDate().getFullYear()}
-  };
-  const timeToLocalString = (string) => {
-    var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
-    let str = string.replace(pattern, `a las $1:$2`);
-    return str;
-    // a las {selectedTransaction.date?.toDate().toLocaleTimeString()}
-  };
-
-  const handleTableState = (id) => {
-    // console.log(id)
-    document.getElementById(id).classList.toggle("hidden");
-  };
-  const handleToggleWeek = (id) => {
-    if (toggleWeek === id) {
-      toggleWeek = "";
-      toggleWeekDetails = "";
-    } else {
-      toggleWeek = id;
-    }
-  };
-  const handleToggleWeekDetails = (id) => {
-    console.log(id);
-    if (toggleWeekDetails === id) {
-      toggleWeekDetails = "";
-    } else {
-      toggleWeekDetails = id;
-    }
-  };
-
-  const getWeekDay = (string) => {
-    var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
-    const d = new Date(string.replace(pattern, "$2-$3-20$1"));
-    let index = d.getDay();
-    // console.log(index)
-    const days = {
-      0: { name: "Domingo" },
-      1: { name: "Lunes" },
-      2: { name: "Martes" },
-      3: { name: "Miércoles" },
-      4: { name: "Jueves" },
-      5: { name: "Viernes" },
-      6: { name: "Sábado" },
-    };
-    return days[index].name;
-  };
-
-  const getCardBrand = (cc) => {
-    console.log(cc.substring(0, 4));
-    let amex = new RegExp("^3[47][0-9]{13}$");
-    let visa = new RegExp("^4[0-9]{12}(?:[0-9]{3})?$");
-    let cup1 = new RegExp("^62[0-9]{14}[0-9]*$");
-    let cup2 = new RegExp("^81[0-9]{14}[0-9]*$");
-
-    let mastercard = new RegExp("^5[1-5][0-9]{2}$");
-    let mastercard2 = new RegExp("^2[2-7][0-9]{2}$");
-
-    let disco1 = new RegExp("^6011[0-9]{12}[0-9]*$");
-    let disco2 = new RegExp("^62[24568][0-9]{13}[0-9]*$");
-    let disco3 = new RegExp("^6[45][0-9]{14}[0-9]*$");
-
-    let diners = new RegExp("^3[0689][0-9]{12}[0-9]*$");
-    let jcb = new RegExp("^35[0-9]{14}[0-9]*$");
-
-    if (visa.test(cc)) {
-      cardIcon = "visa";
-      return "VISA";
-    }
-    if (amex.test(cc)) {
-      cardIcon = "amex";
-      return "AMEX";
-    }
-    if (mastercard.test(cc.substring(0, 4)) || mastercard2.test(cc.substring(0, 4))) {
-      cardIcon = "mastercard";
-      return "MASTERCARD";
-    }
-    if (disco1.test(cc) || disco2.test(cc) || disco3.test(cc)) {
-      cardIcon = "bank-card-line";
-      return "DISCOVER";
-    }
-    if (diners.test(cc)) {
-      cardIcon = "bank-card-line";
-      return "DINERS";
-    }
-    if (jcb.test(cc)) {
-      cardIcon = "bank-card-line";
-      return "JCB";
-    }
-    if (cup1.test(cc) || cup2.test(cc)) {
-      cardIcon = "bank-card-line";
-      return "CHINA_UNION_PAY";
-    }
-    return undefined;
   };
 
   const showModal = (option) => {
@@ -351,14 +209,6 @@
   <div class="modal-buttons" slot="footer">
     <Input
       on:click={closeModal(modalClarification)}
-      label="Cerrar"
-      id="buttonCloseModalClarification"
-      type="button"
-      className="btn-plain"
-      icon=""
-    />
-    <Input
-      on:click={closeModal(modalClarification)}
       on:click={() => handleClarification()}
       label="Enviar Aclaración"
       id="buttonSaveModalClarification"
@@ -384,28 +234,45 @@
       </div>
       <p>Marca</p>
       <div class="input-cards">
-        <i
-          on:click={() => (cardBrand = "MasterCard")}
-          on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "MasterCard") : "")}
-        >
-          <Icons name="mastercard" width="50" height="30" />
-        </i>
-        <i on:click={() => (cardBrand = "Visa")} on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "Visa") : "")}>
-          <Icons name="visa" width="50" height="30" />
-        </i>
-        <i on:click={() => (cardBrand = "AMEX")} on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "AMEX") : "")}>
-          <Icons name="amex" width="25" height="25" />
-        </i>
-        <i on:click={() => (cardBrand = "Other")} on:keypress={(e) => (e.key === "Enter" ? (cardBrand = "Other") : "")}>
-          <Icons name="bank-card-line" width="25" height="25" />
-        </i>
+        <div class={`icon__container ${cardBrand === "mastercard" ? "selected" : ""}`}>
+          <i
+            on:click={() => (cardBrand = "mastercard")}
+            on:keypress={(e) => (e.key === "Enter" ? () => (cardBrand = "mastercard") : "")}
+          >
+            <Icons name="mastercard" width="50" height="30" />
+          </i>
+        </div>
+        <div class={`icon__container ${cardBrand === "visa" ? "selected" : ""}`}>
+          <i
+            on:click={() => (cardBrand = "visa")}
+            on:keypress={(e) => (e.key === "Enter" ? () => (cardBrand = "visa") : "")}
+          >
+            <Icons name="visa" width="50" height="30" />
+          </i>
+        </div>
+        <div class={`icon__container ${cardBrand === "amex" ? "selected" : ""}`}>
+          <i
+            on:click={() => (cardBrand = "amex")}
+            on:keypress={(e) => (e.key === "Enter" ? () => (cardBrand = "amex") : "")}
+          >
+            <Icons name="amex" width="25" height="25" />
+          </i>
+        </div>
+        <div class={`icon__container ${cardBrand === "other" ? "selected" : ""}`}>
+          <i
+            on:click={() => (cardBrand = "other")}
+            on:keypress={(e) => (e.key === "Enter" ? () => (cardBrand = "other") : "")}
+          >
+            <Icons name="bank-card-line" width="25" height="25" />
+          </i>
+        </div>
       </div>
     </div>
   </div>
   <div class="modal-buttons" slot="footer">
     <Input
-      on:click={closeModal(modalDateFilter)}
-      label="Cerrar"
+      on:click={cleanFilters}
+      label="Limpiar Filtros"
       id="buttonCloseModalDateRange"
       type="button"
       className="btn-plain"
@@ -417,8 +284,8 @@
       label="Filtrar"
       id="buttonSaveModalDateRange"
       type="button"
-      className={`btn-plain
-        ${dateRangeStart != "" && dateRangeEnd != "" && cardBrand != "" ? "" : "disabled"}`}
+      className={`
+        ${(dateRangeStart != "" && dateRangeEnd != "") || cardBrand != "" ? "btn" : "btn-plain disabled"}`}
       icon=""
     />
   </div>
@@ -428,7 +295,7 @@
   <div class="top">
     <div class="top__left">
       <div class="page-title">
-        <h1>Ventas</h1>
+        <h1>Mis Ventas</h1>
       </div>
       <div class="buttons">
         <div class="element">
@@ -539,44 +406,31 @@
     {#if notFound}
       <div class="message card-primary">
         <div class="msg">
-          <p>No has realizado ventas el día de hoy</p>
+          <p>No se encontraron registros</p>
         </div>
         <div class="description">
-          <p>Aquí podrás ver el resumen de tus últimas ventas realizadas</p>
+          <p>Aquí podrás ver el resumen de tus ventas realizadas</p>
         </div>
       </div>
     {:else}
       <slot />
-      <!-- {#if filter === "day"}
-        <ViewDay
-          bind:transactions
-          bind:count
-          bind:paginationStart
-          bind:paginationEnd
-          bind:active
-        />
-      {:else if filter === "week"}
-        <ViewWeek
-          bind:transactionsWeek={transactions}
-          bind:count
-          bind:paginationStart
-          bind:paginationEnd
-          bind:active
-        />
-      {:else if filter === "month"}
-        <ViewMonth
-          bind:transactionsMonth
-          bind:transactions
-          bind:count
-          bind:paginationStart
-          bind:paginationEnd
-          bind:active
-        />
-      {/if} -->
     {/if}
   </div>
 </div>
 
 <style lang="scss">
   @import "src/lib/styles/transactions/layout.scss";
+
+  .icon__container {
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    border-radius: 4px;
+    &.selected {
+      background: rgb(0, 0, 0, 0.2);
+    }
+  }
 </style>

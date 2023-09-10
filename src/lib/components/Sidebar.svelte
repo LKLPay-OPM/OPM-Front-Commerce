@@ -11,6 +11,8 @@
   /* components */
   import Icons from "$lib/components/Icons.svelte";
   import ThemeToggle from "$lib/components/ThemeToggle.svelte";
+  /* utils */
+  import { cutEmail } from "$lib/utils/string";
 
   let options = [];
   let innerWidth;
@@ -53,8 +55,12 @@
       {#if innerWidth >= 1000}
         <a href="/">
           <div class="text-logo">
-            <p>LKL Pay</p>
-            <small>Financial Technology</small>
+            <div class="title">
+              <p>LKL Pay</p>
+            </div>
+            <div class="subtitle">
+              <small>Financial Technology</small>
+            </div>
           </div>
           <img src={logo} alt="Company Logo" />
         </a>
@@ -73,10 +79,10 @@
       </div>
       <div class="name-job">
         <div class="profile_name">
-          {$loggedInUser?.name ?? ""}
+          {$loggedInUser?.name ?? cutEmail($loggedInUser?.email.toUpperCase()) ?? ""}
         </div>
         <div class="job">
-          {$loggedInUser?.businessName ?? $loggedInUser?.email ?? ""}
+          {$loggedInUser?.businessName ?? cutEmail($loggedInUser?.email) ?? ""}
         </div>
       </div>
     </a>

@@ -8,6 +8,7 @@ import {
   axiosFraudPreventionManagement,
   axiosFraudPreventionManagementJSON,
   ticketsClient,
+  ticketsClientFormData,
 } from "$lib/repos/axios/clients/api-clients";
 import { refreshTokenClient } from "$lib/repos/axios/clients/refresh-client";
 /* interceptors */
@@ -24,6 +25,7 @@ axiosRequestInterceptor(axiosDepositsAndFees);
 axiosRequestInterceptor(axiosFraudPreventionManagement);
 axiosRequestInterceptor(axiosFraudPreventionManagementJSON);
 axiosRequestInterceptor(ticketsClient);
+axiosRequestInterceptor(ticketsClientFormData);
 
 axiosResponseInterceptor(axiosClient);
 axiosResponseInterceptor(axiosFormDataClient);
@@ -34,6 +36,7 @@ axiosResponseInterceptor(axiosDepositsAndFees);
 axiosResponseInterceptor(axiosFraudPreventionManagement);
 axiosResponseInterceptor(axiosFraudPreventionManagementJSON);
 axiosResponseInterceptor(ticketsClient);
+axiosResponseInterceptor(ticketsClientFormData);
 
 /* exports after assigning interceptors */
 export {
@@ -47,4 +50,5 @@ export {
   axiosFraudPreventionManagement,
   axiosFraudPreventionManagementJSON,
   ticketsClient,
+  ticketsClientFormData,
 };

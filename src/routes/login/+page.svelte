@@ -10,10 +10,13 @@
   import Loader from "$lib/components/Loader.svelte";
   /* controllers */
   import { AuthController } from "$lib/controllers/auth/auth.controller";
+  // import { AmexController } from "$lib/controllers/amex/amex.controller";
   /* utils */
   import { validateEmail, validatePassword } from "$lib/utils/input";
   /* assets */
   import Logo from "$lib/assets/Logo.png";
+  /* const */
+  import { amexData, amexAuthorization } from "$lib/constants/amex";
 
   /* consts */
   const input = {
@@ -29,10 +32,17 @@
   async function handleLogin() {
     loading = true;
     const data = await AuthController.login(input);
+    loading = false;
     if (data?.error) error = data.error;
   }
 
+  /* async function amexNewCommerce() {
+    const data = await AmexController.newCommerce(amexData, amexAuthorization);
+    console.log(data);
+  } */
+
   onMount(async () => {
+    // amexNewCommerce();
     if ($isLoggedIn) await goto("/");
     loading = false;
   });
@@ -72,9 +82,9 @@
               className={`txt-field ${!error ? "normal" : "invalid"}`}
               placeholder="contraseña"
             />
-            <!-- <div class="forgot-pass-link">
-              <a href="/forgot-pass">Olvidé mi Contraseña</a>
-            </div> -->
+            <div class="forgot-pass-link">
+              <a href="/update-pass">Olvidé mi Contraseña</a>
+            </div>
             <div class="btn-layout">
               <Input
                 label="Iniciar Sesión"

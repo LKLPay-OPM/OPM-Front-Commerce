@@ -14,7 +14,11 @@ export async function load({ url }) {
   try {
     const response = await axiosDepositsAndFees.get(`/dispersion`);
     // console.log(response.data.response);
-    return { dispersions: response.data?.response?.dispersions, resume: response.data?.response?.resume };
+    return {
+      dispersions: response.data?.response?.dispersions,
+      resume: response.data?.response?.resume,
+      rate: response.data?.response?.rate,
+    };
   } catch (err) {
     // console.error(err);
     const handler = await appErrorResponseHandler(err);

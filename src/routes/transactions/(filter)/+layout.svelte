@@ -10,10 +10,6 @@
 
   export let data;
   let loading = false;
-
-  beforeNavigate((navigation) => {
-    $previousPage = navigation.to.url.pathname;
-  });
 </script>
 
 {#if $isLoggedIn}

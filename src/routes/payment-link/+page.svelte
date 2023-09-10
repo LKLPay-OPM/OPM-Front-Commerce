@@ -248,6 +248,7 @@
         border: none;
         outline: none;
         overflow: hidden;
+        height: 3rem;
 
         &::selection {
           color: $primary-light;

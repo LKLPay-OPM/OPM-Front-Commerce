@@ -32,11 +32,14 @@
             </thead>
             <tbody>
               {#each dispersion?.dispersion as type}
-                <tr class="clickable-table-row" on:click={() => goto(`/dispersions/detail?id=${type?.id}`)}>
-                  <td class="responsive hide">{type.id}</td>
+                <tr
+                  class={type.id != null ? "clickable-table-row" : ""}
+                  on:click={type.id != null ? () => goto(`/dispersions/detail?id=${type?.id}`) : ""}
+                >
+                  <td class="responsive hide">{type.id ?? "N/A"}</td>
                   <td>{currencyFormatLocal(type.balance)}</td>
                   <td style="text-transform:capitalize;">{type.type}</td>
-                  <td class="responsive hide">{currencyFormatLocal(type.commission)}</td>
+                  <td class="responsive hide">{currencyFormatLocal(type.comission)}</td>
                   <td class="responsive hide">{currencyFormatLocal(type.iva)}</td>
                   <td class="responsive hide">{currencyFormatLocal(type.interest)}</td>
                   <td class="responsive hide">{currencyFormatLocal(type.deposit)}</td>

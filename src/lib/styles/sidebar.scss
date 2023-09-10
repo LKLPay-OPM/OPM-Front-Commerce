@@ -80,23 +80,32 @@
   // transition: all 0.3s ease;
 }
 
-.text-logo>p {
-  text-align: center;
-  margin-bottom: 2.5px;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 1.3rem;
-  line-height: 1.25rem;
-  color: $primary-light;
-  overflow: hidden;
+.text-logo {
+  .title {
+    width: 100px;
+    height: 20px;
+    > p {
+      text-align: center;
+      margin-bottom: 2.5px;
+      font-style: normal;
+      font-weight: 800;
+      font-size: 1.3rem;
+      line-height: 1.25rem;
+      color: $primary-light;
+      overflow: hidden;
+      letter-spacing: -1.2px;
+    }
+  }
+  .subtitle {
+    > small {
+      text-transform: uppercase;
+      font-size: 7px;
+      color: $secondary-light;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+  }
 }
 
-.text-logo>small {
-  text-transform: uppercase;
-  font-size: 7px;
-  color: $secondary-light;
-  font-weight: 800;
-  letter-spacing: 1.5px;
 }
 
 .sidebar .logo-details i {
@@ -412,6 +421,15 @@ color: $primary-accent-dark;
   text-decoration: none;
   margin: 0.625rem 0.625rem;
   /* 10rem */
+  .name-job {
+    width: 130px;
+    .profile_name, .job {
+      width: 100%;
+      overflow: hidden;
+      white-space:nowrap;
+      text-overflow: ellipsis;
+    }
+  }
 }
 
 .sidebar.close .profile-details {
@@ -559,6 +577,12 @@ color: $primary-accent-dark;
         }
       }
     } 
+  }
+
+  .text-logo {
+    p, small {
+      color: $primary-accent-light;
+    }
   }
 }
 

@@ -36,6 +36,30 @@ export const timeToLocalString = (string) => {
   return str;
 };
 
+export function parseSlashDate(str) {
+  return str.replace(/-/g, "/");
+}
+
+export function getYearLastTwoDigits(date) {
+  return date.getFullYear().toString().substring(2);
+}
+
+export function getMonthTwoDigits(date) {
+  const month = date.getMonth() + 1;
+  if (month <= 9) return `0${month}`;
+  return `${month}`;
+}
+
+export function getDayTwoDigits(date) {
+  const day = date.getDate();
+  if (day <= 9) return `0${day}`;
+  return `${day}`;
+}
+
+export function getStringDate(date) {
+  return `${getYearLastTwoDigits(date)}${getMonthTwoDigits(date)}${getDayTwoDigits(date)}`;
+}
+
 function getTimeEllapsed(time) {
   const formatter = new Intl.RelativeTimeFormat("es-MX");
   if (time < 60) {

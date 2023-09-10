@@ -31,6 +31,8 @@
   let dispersions = data?.dispersions /* ?.dispersions */ ?? [];
   // $:{console.log(dispersions)}
   let resume = data?.resume /* ?.dispersions */ ?? [];
+  let rate = data?.rate ?? {};
+  let iva = 16;
   let search = [];
   let selectedDispersion = {};
   let dispersionDetailView = false;
@@ -73,8 +75,8 @@
   };
 
   let immediateDeposit = {
-    availableBalance: resume.depositBalance ?? 0,
-    immediateDepositCommission: 0,
+    availableBalance: resume.toDepositBalance ?? 0,
+    immediateDepositComission: 0,
     immediateDepositQty: 0,
     toDeposit: 0,
   };
@@ -103,7 +105,10 @@
 
   const fetchByDateRange = async () => {
     try {
-      const response = await axiosDepositsAndFees.post(`/dispersion/date`, { start: dateRangeStart, end: dateRangeEnd });
+      const response = await axiosDepositsAndFees.post(`/dispersion/date`, {
+        start: dateRangeStart,
+        end: dateRangeEnd,
+      });
       dispersions = response.data.response.dispersions;
     } catch (e) {
       errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
@@ -155,16 +160,31 @@
     generateCSV(data);
   };
 
-  const handleClarification = () => {
+  const handleClarification = async () => {
     console.log(clarification);
-  };
-  const handleImmediateDeposit = async() => {
     try {
       $toastId = "";
-      const response = await axiosDepositsAndFees.post(`/urgent`, {amount: Number(immediateDeposit.immediateDepositQty)});
+      const response = await axiosDepositsAndFees.post(`/dispersion/urgent`, {
+        amount: Number(immediateDeposit.immediateDepositQty),
+      });
       successCustomMsgToast("Tus solicitud se procesó con éxito");
     } catch (e) {
-      successCustomMsgToast("Ocurrió un error al procesar tu solicitud, vuelve a intentarlo");
+      errorCustomMsgToast("Ocurrió un error al procesar tu solicitud, vuelve a intentarlo");
+      const handler = await appErrorResponseHandler(e);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
+    }
+  };
+  const handleImmediateDeposit = async () => {
+    try {
+      $toastId = "";
+      const response = await axiosDepositsAndFees.post(`/dispersion/urgent`, {
+        amount: Number(immediateDeposit.immediateDepositQty),
+      });
+      successCustomMsgToast("Tus solicitud se procesó con éxito");
+    } catch (e) {
+      errorCustomMsgToast("Ocurrió un error al procesar tu solicitud, vuelve a intentarlo");
       const handler = await appErrorResponseHandler(e);
       const code = handler?.code ?? 500;
       const message = handler?.message ?? "¡Algo salió mal!";
@@ -172,16 +192,16 @@
     }
     immediateDeposit.toDeposit = getPercentage(
       immediateDeposit.immediateDepositQty,
-      immediateDeposit.immediateDepositCommission
+      immediateDeposit.immediateDepositComission
     );
     immediateDeposit = {
-      availableBalance: resume.depositBalance,
+      availableBalance: resume.toDepositBalance,
       immediateDepositQty: 0,
       toDeposit: 0,
     };
   };
 
-  const handleImmediateDepositPreference = async() => {};
+  const handleImmediateDepositPreference = async () => {};
 
   const traditionalDepositPreference = () => {
     active = "1";
@@ -193,13 +213,19 @@
 
   let buttonGroupOptions = [
     { value: "1", name: "Tradicional", click: traditionalDepositPreference },
-    { value: "2", name: "Inmediato", click: immediateDepositPreference },
+    { value: "2", name: "Mismo Día", click: immediateDepositPreference },
   ];
 
   const getClabe = (string) => {
     var pattern = /(\d{3})(\d{11})(\d{4})/;
     return string.replace(pattern, `$1***********$3`);
     // return result;
+  };
+
+  const getUrgentComission = () => {
+    const urgent = immediateDeposit.immediateDepositQty * (rate.urgent / 100);
+    const calc = urgent + urgent * (iva / 100);
+    return calc;
   };
 
   const showModal = (option) => {
@@ -222,7 +248,7 @@
 <!-- MODAL DEPOSIT PREFERENCE-->
 <Modal className={`modal-medium`} bind:this={modalImmediateDepositPreference}>
   <div slot="header">
-    <p>Contratar Depósito Inmediato</p>
+    <p>Contratar Depósito Mismo Día</p>
   </div>
   <div slot="content">
     <div class="immediate-deposit">
@@ -234,7 +260,7 @@
           <p>Costo Extra por Depósito</p>
         </div>
         <div class="content">
-          <p>{immediateDeposit.immediateDepositCommission}%</p>
+          <p>{rate.immediate}%</p>
         </div>
       </div>
       <div class="terms">
@@ -283,7 +309,7 @@
       {#if immediateDeposit.availableBalance < 500}
         <div class="error">
           <p>
-            El monto mínimo para solicitar es de $500.00 mxn más el costo extra del {immediateDeposit.immediateDepositCommission}%
+            El monto mínimo para solicitar es de $500.00 mxn más el costo extra del {immediateDeposit.immediateDepositComission}%
           </p>
         </div>
       {:else}
@@ -310,10 +336,10 @@
         </div>
         <div class="column-element">
           <div class="blue-title">
-            <p>Comisión por disposición inmediata</p>
+            <p>Comisión por disposición urgente (+iva)</p>
           </div>
           <div class="content">
-            <p>{immediateDeposit.immediateDepositCommission} %</p>
+            <p>{rate.urgent} %</p>
           </div>
         </div>
         <div class="column-element">
@@ -322,7 +348,7 @@
           </div>
           <div class="content">
             <p>
-              ${(immediateDeposit.immediateDepositQty * 0.013).toFixed(2) ?? "$0"}
+              {currencyFormatLocal(immediateDeposit.immediateDepositQty - getUrgentComission()) ?? "$0"}
             </p>
           </div>
         </div>
@@ -350,38 +376,28 @@
         className="btn-plain btn-orange"
         icon=""
       />
-    {:else}
+    {:else if immediateDeposit.availableBalance > 500 && immediateDeposit.immediateDepositQty <= immediateDeposit.availableBalance && terms}
       <Input
         on:click={closeModal(modalImmediateDeposit)}
-        label="Cerrar"
-        id="buttonCloseModalImmediateDeposit"
+        on:click={() => handleImmediateDeposit()}
+        label="Solicitar Depósito"
+        id="buttonSaveModalImmediateDeposit"
         type="button"
-        className="btn-plain"
-        icon=""
-      />
-      {#if immediateDeposit.availableBalance > 500 && terms}
-        <Input
-          on:click={closeModal(modalImmediateDeposit)}
-          on:click={() => handleImmediateDeposit()}
-          label="Solicitar Depósito"
-          id="buttonSaveModalImmediateDeposit"
-          type="button"
-          className={`btn-plain
+        className={`
             ${
               immediateDeposit.immediateDepositQty > 0 && immediateDeposit.immediateDepositQty > 500 && terms === true
-                ? ""
-                : "disabled"
+                ? "btn"
+                : "btn-plain disabled"
             }`}
-          icon=""
-        />
-      {/if}
+        icon=""
+      />
     {/if}
   </div>
 </Modal>
 <!-- MODAL DISPERSION CLARIFICATION -->
 <Modal className={`modal-medium`} bind:this={modalClarification}>
   <div slot="header">
-    <p>Solicitar Aclaración</p>
+    <p>Solicitar Aclaración sobre saldo a Depositar</p>
   </div>
   <div slot="content">
     <div class="clarifications">
@@ -565,7 +581,7 @@
           <InfoCard
             className={""}
             title="Saldo a Depositar"
-            numData={currencyFormatLocal(resume?.depositBalance ?? 0)}
+            numData={currencyFormatLocal(resume?.toDepositBalance ?? 0)}
           />
         </div>
         <div class="button">

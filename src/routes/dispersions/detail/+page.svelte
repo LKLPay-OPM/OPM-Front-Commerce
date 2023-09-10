@@ -132,7 +132,7 @@
         <div class="title">Datos</div>
         <div class="item">
           <b>Tipo de Depósito</b>
-          <p>{dispersion.type ?? "N/A"}</p>
+          <p style="text-transform:capitalize;">{dispersion.type ?? "N/A"}</p>
         </div>
         <div class="item">
           <b>Referencia</b>
@@ -165,7 +165,7 @@
           <div class="item">
             <b>Ventas</b>
             <p>{dispersion?.transactions}</p>
-            <!-- <span>{`(${(dispersion.commission/dispersion.total)*100}%)`}</span> -->
+            <!-- <span>{`(${(dispersion.comission/dispersion.total)*100}%)`}</span> -->
           </div>
           <div class="item">
             <b>Total Ventas</b>
@@ -286,175 +286,175 @@
     }
   }
 
-/* MEDIA */
-/* Small & Medium Screen */
-@media (max-width: $md) {
-  .top {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  .top__left * .element {
-    width: 15rem;
-  }
+  /* MEDIA */
+  /* Small & Medium Screen */
+  @media (max-width: $md) {
+    .top {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .top__left * .element {
+      width: 15rem;
+    }
 
-  .middle * .card {
-    width: 100%;
-  }
+    .middle * .card {
+      width: 100%;
+    }
 
-  .table-container {
-    display: block;
-    width: 100%;
-    padding: 0 1rem;
-  }
+    .table-container {
+      display: block;
+      width: 100%;
+      padding: 0 1rem;
+    }
 
-  .card-container {
-    padding: 2rem 2rem;
-  }
-  
-  .transaction-tables {
-    margin: auto;
-  }
+    .card-container {
+      padding: 2rem 2rem;
+    }
 
-  .table-content {
-    min-width: auto;
-    width: -webkit-fill-available;
-    margin: 0;
-  }
+    .transaction-tables {
+      margin: auto;
+    }
 
-  .date-range-input {
-    display: block;
-  }
+    .table-content {
+      min-width: auto;
+      width: -webkit-fill-available;
+      margin: 0;
+    }
 
-  .return {
-    margin: 1rem 0rem 1rem 1rem;
-  }
+    .date-range-input {
+      display: block;
+    }
 
-  .details__middle .details-card {
-    min-width: auto;
-  }
+    .return {
+      margin: 1rem 0rem 1rem 1rem;
+    }
 
-  .details__middle {
-    grid-template-columns: unset;
-    .details-left {
-      text-align: center;
+    .details__middle .details-card {
+      min-width: auto;
+    }
+
+    .details__middle {
+      grid-template-columns: unset;
+      .details-left {
+        text-align: center;
+      }
+    }
+
+    .details__bottom {
+      .card-buttons {
+        height: auto !important;
+        display: grid !important;
+        grid-template:
+          "c d e" 1fr
+          "a a a" auto;
+        .reverse-button {
+          grid-column: 1 / 4;
+          grid-row: 2;
+          height: 2.5rem;
+          width: 100% !important;
+        }
+        .clarification-button {
+          height: 2.5rem;
+        }
+      }
+    }
+
+    .message {
+      min-height: 10rem;
+      margin: 0 1rem;
     }
   }
 
-  .details__bottom {
-    .card-buttons {
-      height: auto !important;
-      display: grid !important;
-      grid-template: 
-      "c d e" 1fr
-      "a a a" auto;
-      .reverse-button {
-        grid-column: 1 / 4;
+  /* Large Screen */
+  @media (min-width: $md) and (max-width: $lg) {
+    .top {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .top__left * .element {
+      width: 15rem;
+    }
+
+    .middle * .card {
+      width: 100%;
+    }
+
+    .table-container {
+      display: block;
+      width: 100%;
+    }
+
+    .card-container {
+      padding: 2rem 2rem;
+    }
+
+    .transactions-view {
+      margin: 0rem 0rem 4rem 0rem;
+    }
+
+    .transaction-tables {
+      margin: auto;
+    }
+
+    .table-content {
+      min-width: auto;
+      width: -webkit-fill-available;
+      margin: 0;
+    }
+
+    .date-range-input {
+      display: block;
+    }
+
+    .return {
+      margin: 0rem 0rem 1rem 0rem;
+    }
+
+    .details__middle .details-card {
+      min-width: auto;
+    }
+
+    .details__middle {
+      grid-template:
+        "a b" auto
+        "a b" auto
+        "c c" auto;
+      .details-left {
+        text-align: left;
+      }
+      .details-right {
+        grid-column: 1 / 3;
         grid-row: 2;
-        height: 2.5rem;
-        width: 100% !important; 
-      }
-      .clarification-button {
-        height: 2.5rem;
       }
     }
-  }
 
-  .message {
-    min-height: 10rem;
-    margin: 0 1rem;
-  }
-}
-
-/* Large Screen */
-@media (min-width: $md) and (max-width: $lg) {
-  .top {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  .top__left * .element {
-    width: 15rem;
-  }
-
-  .middle * .card {
-    width: 100%;
-  }
-
-  .table-container {
-    display: block;
-    width: 100%;
-  }
-
-  .card-container {
-    padding: 2rem 2rem;
-  }
-
-  .transactions-view {
-    margin: 0rem 0rem 4rem 0rem;
-  }
-  
-  .transaction-tables {
-    margin: auto;
-  }
-
-  .table-content {
-    min-width: auto;
-    width: -webkit-fill-available;
-    margin: 0;
-  }
-
-  .date-range-input {
-    display: block;
-  }
-
-  .return {
-    margin: 0rem 0rem 1rem 0rem;
-  }
-
-  .details__middle .details-card {
-    min-width: auto;
-  }
-
-  .details__middle {
-    grid-template: 
-    "a b" auto
-    "a b" auto
-    "c c" auto;
-    .details-left {
-      text-align: left;
-    }
-    .details-right {
-      grid-column: 1 / 3;
-      grid-row: 2;
-    }
-  }
-
-  .details__bottom {
-    .card-buttons {
-      height: auto !important;
-      display: grid !important;
-      grid-template: 
-      "c d e" 1fr
-      "a a a" auto;
-      .reverse-button {
-        grid-column: 1 / 4;
-        grid-row: 2;
-        height: 2.5rem;
-        width: 100% !important; 
-      }
-      .clarification-button {
-        height: 2.5rem;
+    .details__bottom {
+      .card-buttons {
+        height: auto !important;
+        display: grid !important;
+        grid-template:
+          "c d e" 1fr
+          "a a a" auto;
+        .reverse-button {
+          grid-column: 1 / 4;
+          grid-row: 2;
+          height: 2.5rem;
+          width: 100% !important;
+        }
+        .clarification-button {
+          height: 2.5rem;
+        }
       }
     }
-  }
 
-  .message {
-    min-height: 10rem;
-    margin: 0 1rem;
-  }
+    .message {
+      min-height: 10rem;
+      margin: 0 1rem;
+    }
 
-  /* .top__left {
+    /* .top__left {
     min-width: 15rem;
   }
   .middle * .card {
@@ -471,8 +471,8 @@
   .message {
     margin: 0;
   } */
-  /* .responsive {
+    /* .responsive {
     display: none;
   } */
-}
+  }
 </style>

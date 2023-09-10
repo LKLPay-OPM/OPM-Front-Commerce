@@ -4,8 +4,13 @@
  * @param {number} end
  */
 export function cutString(text, end) {
-  if(text.length <= end){
+  if (text.length <= end) {
     return text;
   }
-  return `${text.slice(0, end)}...`
+  return `${text.slice(0, end)}...`;
+}
+
+export function cutEmail(email) {
+  const regex = new RegExp(".*(?=[@])");
+  return email.match(regex);
 }

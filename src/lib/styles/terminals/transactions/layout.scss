@@ -1,0 +1,368 @@
+  .transactions {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+
+  .top {
+    width: 100%;
+    display: grid;
+    justify-content: center;
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      .element {
+        height: 2.5rem; /* 40px */
+      }
+    }
+  }
+
+  .top__middle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    .date {
+      p {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 1.25rem; /* 20px */
+        line-height: 1.25rem; /* 20px */
+        text-align: center;
+        /* Text */
+        color: $primary-dark;
+      }
+    }
+  }
+
+  .middle {
+    display: flex;
+    justify-content: center;
+    margin: 0rem 0rem 2rem 0rem;
+  }
+
+  .card-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: 24px;
+    /* width: 610px; */
+    height: 88px;
+    /* Inside auto layout */
+    flex: none;
+    flex-grow: 0;
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      gap: 16px;
+      width: auto;
+      min-width: 180px;
+      height: 88px;
+      border-radius: 10px;
+      /* Inside auto layout */
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+      p {
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 20px;
+        text-align: center;
+        /* text-placeholder */
+        color: #8c9fb1;
+      }
+    
+      span {
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 20px;
+        text-align: center;
+        /* Text */
+        color: $primary-dark;
+      }
+    }
+  }
+
+  .transactions-view {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .transaction-search-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .clarifications {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    /* TEXT */
+    text-align: center;
+    font-weight: 700;
+    line-height: 1.25rem; /* 20px */
+    color: $primary-dark;
+    .title {
+      font-size: 1rem; /* 16px */
+    }
+    .description {
+      font-size: 1.5rem; /* 16px */
+    }
+  }
+
+  .clarification-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* width: 50%; */
+  }
+
+  .modal-range {
+    p {
+      font-weight: 700;
+      font-size: 1.25rem; /* 20px */
+      line-height: 1.25rem; /* 20px */
+      /* Text */
+      color: $primary-dark;
+    }
+  } 
+
+  .date-range-input {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .input-cards {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .input-cards {
+    & > i {
+      cursor: pointer;
+    }
+  }
+  .export-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0rem;
+  }
+
+  .modal-buttons {
+    width: 70%;
+    height: 2.5rem; /* 40px */
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .week-table__title {
+    & * .element {
+      /* TEXT */
+      font-weight: 500;
+      font-size: 1.25rem;
+      color: $primary-dark;
+    }
+  }
+
+  .week-table__subtitle {
+    & * .element {
+      /* TEXT */
+      font-family: "Roboto";
+      font-weight: 500;
+      font-size: 1.25rem;
+      color: $primary-dark;
+    }
+  } 
+
+  .message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: inherit;
+    padding: 2rem;
+    gap: 0.5rem;
+    margin: 0 4rem 2rem 4rem;
+    min-height: 25rem;
+    .msg {
+      font-weight: 700;
+      font-size: 1.25rem; /* 16px */
+      line-height: 1.25rem; /* 20px */
+      text-align: center;
+      /* Text */
+      color: $primary-dark;
+    }
+    .description {
+      font-weight: 500;
+      font-size: 1rem; /* 16px */
+      line-height: 1.25rem; /* 20px */
+      text-align: center;
+      /* Text */
+      color: #8c9fb1;
+    }
+  }
+
+  :global(body.dark-mode) {
+    .modal-range {
+      p {
+        color: $font-dark-primary;
+      }
+    }
+    
+    .message {
+      .msg {
+        p {
+          color: $font-dark-primary;
+        }
+      }
+    }
+  }
+
+/* MEDIA QUERIES */
+/* Small Screen */
+  @media (max-width: $sm) {
+    .top {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .top__left {
+      .buttons {
+        justify-content: center;
+        align-items: center;
+        width: -webkit-fill-available;
+      }
+      & * .element {
+        width: 15rem;
+      }
+    }
+
+    .middle {
+      & > .card-group {
+        flex-direction: column;
+        height: auto;
+        width: 100%;
+        padding: 0 1rem;
+        .element {
+          width: 100%;
+        }
+        & > .card {
+          margin: 0 1rem;
+        }
+      }
+  
+      & * .card {
+        width: -webkit-fill-available;
+      }
+    }
+
+    .card-primary {
+      padding: 2rem 2rem;
+    }
+
+    .date-range-input {
+      display: block;
+    }
+
+    .message {
+      min-height: 10rem;
+      margin: 0 1rem;
+    }
+  }
+/* Small Screen */
+  @media (min-width: $sm) and (max-width: $md) {
+    .top {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .top__left {
+      .buttons {
+        justify-content: center;
+        align-items: center;
+        width: -webkit-fill-available;
+      }
+      & * .element {
+        width: 15rem;
+      }
+    }
+
+    .middle {
+      & > .card-group {
+        flex-direction: column;
+        height: auto;
+        width: 100%;
+        .element {
+          width: 100%;
+        }
+        & > .card {
+          margin: 0 1rem;
+        }
+      }
+  
+      & * .card {
+        width: -webkit-fill-available;
+      }
+    }
+
+    .card-container {
+      padding: 2rem 2rem;
+    }
+
+    .transactions {
+      margin: 1rem 0 0 0;
+    }
+
+    .date-range-input {
+      display: block;
+    }
+
+    .message {
+      min-height: 10rem;
+      margin: 0 1rem;
+    }
+  }
+/* Large Screen */
+  @media (min-width: $md) and (max-width: $lg) {
+    .top__left {
+      min-width: 15rem;
+    }
+
+    .middle {
+      & > .card-group {
+        justify-content: center;
+        height: auto;
+        width: 100%;
+        gap: 0.5rem;
+      }
+      & * .card {
+        width: auto;
+      }
+    }
+
+
+    .message {
+      margin: 0;
+    }
+  }
