@@ -16,7 +16,7 @@
   /* assets */
   import Logo from "$lib/assets/Logo.png";
   /* const */
-  import { amexData, amexAuthorization } from "$lib/constants/amex";
+  // import { amexData, amexAuthorization } from "$lib/constants/amex";
 
   /* consts */
   const input = {
