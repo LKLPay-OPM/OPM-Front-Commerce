@@ -581,7 +581,7 @@
           <InfoCard
             className={""}
             title="Saldo a Depositar"
-            numData={currencyFormatLocal(resume?.toDepositBalance ?? 0)}
+            numData={currencyFormatLocal(resume?.depositBalance ?? 0)}
           />
         </div>
         <div class="button">

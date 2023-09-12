@@ -1,4 +1,6 @@
 <script>
+  /* client */
+  import { profilesClient } from "$lib/repos/axios";
   /* svelte */
   import { error } from "@sveltejs/kit";
   import { goto } from "$app/navigation";
@@ -29,28 +31,28 @@
   let loading = false;
   let confirmPass = "";
   let registerResponse = {};
+  export let data;
+  let uuid = data.uuid;
 
-  const handleRegister = async () => {
-    /* loading = true;
-    setTimeout(async () => {
-      try {
-        const { session, user, error, message } = await AuthController.register(registerData);
-        registerResponse = { session, user };
-        if (error) {
-          throw message;
-        }
-        menu = "success";
-      } catch (e) {
-        menu = "error";
-        const handler = await appErrorResponseHandler(e);
-        const code = handler?.code ?? 500;
-        const message = handler?.message ?? "¡Algo salió mal!";
-        customMessage = message;
-        throw new error(code, message);
-      } finally {
-        loading = false;
-      }
-    }, 3000); */
+  const handleUpdatePass = async () => {
+    loading = true;
+    try {
+      const response = await profilesClient.post(`user/resetPasswordConfirmed`, {
+        uuid,
+        password: registerData.password,
+      });
+      menu = "success";
+    } catch (e) {
+      menu = "error";
+      const handler = await appErrorResponseHandler(e);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      customMessage = message;
+      throw new error(code, message);
+    } finally {
+      loading = false;
+    }
+    setTimeout(async () => {}, 3000);
   };
 </script>
 
@@ -66,7 +68,7 @@
         <div class="title">Modificar Contraseña</div>
         <div class="subtitle">Ingresa tu nueva contraseña</div>
         <div class="form-inputs">
-          <form on:submit|preventDefault={handleRegister}>
+          <form on:submit|preventDefault={handleUpdatePass}>
             <PasswordInput
               label="Nueva Contraseña"
               id="newPassword"
