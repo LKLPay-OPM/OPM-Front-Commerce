@@ -306,7 +306,7 @@
   </div>
   <div slot="content">
     <div class="immediate-deposit">
-      {#if immediateDeposit.availableBalance < 500}
+      {#if resume?.depositBalance < 500}
         <div class="error">
           <p>
             El monto mínimo para solicitar es de $500.00 mxn más el costo extra del {immediateDeposit.immediateDepositComission}%
@@ -318,7 +318,7 @@
             icon="dollar"
             label="Saldo Disponible"
             id="availableAmountTxtField"
-            value={immediateDeposit.availableBalance}
+            value={resume.depositBalance.toFixed(2)}
             disabled={true}
             className="disabled-txt-field"
             type="number"
@@ -367,7 +367,7 @@
     </div>
   </div>
   <div class="modal-buttons" slot="footer">
-    {#if immediateDeposit.availableBalance < 500}
+    {#if resume.depositBalance < 500}
       <Input
         on:click={closeModal(modalImmediateDeposit)}
         label="Entendido"
@@ -376,7 +376,7 @@
         className="btn-plain btn-orange"
         icon=""
       />
-    {:else if immediateDeposit.availableBalance > 500 && immediateDeposit.immediateDepositQty <= immediateDeposit.availableBalance && terms}
+    {:else if resume.depositBalance > 500 && immediateDeposit.immediateDepositQty <= resume.depositBalance && terms}
       <Input
         on:click={closeModal(modalImmediateDeposit)}
         on:click={() => handleImmediateDeposit()}
@@ -385,7 +385,7 @@
         type="button"
         className={`
             ${
-              immediateDeposit.immediateDepositQty > 0 && immediateDeposit.immediateDepositQty > 500 && terms === true
+              immediateDeposit.immediateDepositQty > 0 && immediateDeposit.immediateDepositQty >= 500 && terms === true
                 ? "btn"
                 : "btn-plain disabled"
             }`}
@@ -404,7 +404,7 @@
       <div class="title">Cantidad</div>
       <div class="description">
         <p>
-          {currencyFormatLocal(immediateDeposit.availableBalance)}
+          {currencyFormatLocal(resume.depositBalance)}
         </p>
       </div>
     </div>

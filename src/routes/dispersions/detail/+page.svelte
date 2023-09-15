@@ -65,6 +65,10 @@
     }
   };
 
+  const getPercentage = (total, commission) => {
+    return ((commission*100)/total).toFixed(2)
+  }
+
   onMount(async () => {
     console.log($previousPage);
   });
@@ -152,7 +156,7 @@
         <div class="details-card__middle">
           <div class="item">
             <b>Cuenta CLABE</b>
-            <!-- <p>{getClabe(dispersion?.clabe)}</p> -->
+            <p>{dispersion?.clabe}</p>
           </div>
           <div class="item">
             <b>Total Depositado</b>
@@ -162,11 +166,6 @@
           </div>
         </div>
         <div class="details-card__bottom">
-          <div class="item">
-            <b>Ventas</b>
-            <p>{dispersion?.transactions}</p>
-            <!-- <span>{`(${(dispersion.comission/dispersion.total)*100}%)`}</span> -->
-          </div>
           <div class="item">
             <b>Total Ventas</b>
             <p>
@@ -179,7 +178,11 @@
             <p>
               {currencyFormatLocal(dispersion?.comission)}
             </p>
-            <!-- <span>(4.06%)</span> -->
+            <span>{`(${getPercentage(dispersion.balance.toFixed(2), dispersion.comission.toFixed(2))}%)`}</span>
+          </div>
+          <div class="item">
+            <b>IVA</b>
+            <p>{currencyFormatLocal(dispersion?.iva)}</p>
           </div>
         </div>
       </div>
