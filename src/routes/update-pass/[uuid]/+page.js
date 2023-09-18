@@ -12,11 +12,12 @@ export async function load({ url, params }) {
   const uuid = params.uuid;
 
   try {
-    if (uuid != 1) {
+    /* if (uuid != 1) {
       throw new Error();
-    }
+    } */
     /* const response = await axiosDevicesClient.get(`/transaction/detail/${ticket}`);
     return { ticket, response: response.data?.response }; */
+    return { uuid };
   } catch (err) {
     const handler = await appErrorResponseHandler(err);
     const code = handler?.code ?? 500;
