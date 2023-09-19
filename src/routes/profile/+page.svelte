@@ -31,7 +31,7 @@
     ineBack: "",
     clabe: "",
     bankStatement: "",
-  }
+  };
 
   const dbCollection = "users-client";
   const uid = $loggedInUser.uid;
@@ -74,11 +74,6 @@
       ],
     }, */
   ];
-
-  $: {
-  }
-
-  const fetchDBRates = () => {};
 
   const getBusinessLineName = (businessLine) => {
     const businessLineArray = {
@@ -210,14 +205,18 @@
           label="INE Frente"
           id="IneFront"
           bind:file={userUpdate.ineFront}
-          className={`btn-plain ${userUpdate.ineFront === "" ? "" : checkFileSize(userUpdate.ineFront) ? "btn-success" : "border-btn-error"}`}
+          className={`btn-plain ${
+            userUpdate.ineFront === "" ? "" : checkFileSize(userUpdate.ineFront) ? "btn-success" : "border-btn-error"
+          }`}
           accept="image/jpeg, image/png, application/pdf"
         />
         <FileInput
           label="INE Vuelta"
           id="IneBack"
           bind:file={userUpdate.ineBack}
-          className={`btn-plain ${userUpdate.ineBack === "" ? "" : checkFileSize(userUpdate.ineBack) ? "btn-success" : "border-btn-error"}`}
+          className={`btn-plain ${
+            userUpdate.ineBack === "" ? "" : checkFileSize(userUpdate.ineBack) ? "btn-success" : "border-btn-error"
+          }`}
           accept="image/jpeg, image/png, application/pdf"
         />
       </div>
@@ -271,7 +270,11 @@
           id="bankStatement"
           bind:file={userUpdate.bankStatement}
           className={`btn-plain ${
-            userUpdate.bankStatement === "" ? "" : checkFileSize(userUpdate.bankStatement) ? "btn-success" : "border-btn-error"
+            userUpdate.bankStatement === ""
+              ? ""
+              : checkFileSize(userUpdate.bankStatement)
+              ? "btn-success"
+              : "border-btn-error"
           }`}
           accept="application/pdf"
         />
@@ -286,14 +289,18 @@
       id="buttonSaveModalCLABE"
       type="button"
       className={`
-        ${userUpdate.clabe != "" && userUpdate.bankStatement != "" && checkFileSize(userUpdate.bankStatement) ? "btn" : "btn-plain disabled"}`}
+        ${
+          userUpdate.clabe != "" && userUpdate.bankStatement != "" && checkFileSize(userUpdate.bankStatement)
+            ? "btn"
+            : "btn-plain disabled"
+        }`}
       icon=""
     />
   </div>
 </Modal>
 
 <div class="container">
-  <DateTitle/>
+  <DateTitle />
   <div class="card-primary padding-2">
     <div class="content">
       {#if !branchView}
@@ -308,41 +315,47 @@
             </div>
             <div class="element">
               <div class="title-blue">
-                {#if user.businessName || user.name}
-                  {user.businessName ?? user.name}
+                {#if user.financial.businessName || user.name}
+                  {user.financial.businessName ?? `${user.name} ${user.firstLastName}`}
                 {:else}
                   <div class="trigger">
                     <label for="nameModalTrigger">Ingresa tu Nombre</label>
-                    <input id="nameModalTrigger" type="button" on:click={openModal(modalName)} on:click={()=>$toastId="modalName"}/>
+                    <input
+                      id="nameModalTrigger"
+                      type="button"
+                      on:click={openModal(modalName)}
+                      on:click={() => ($toastId = "modalName")}
+                    />
                   </div>
                 {/if}
               </div>
               <div class="description text-center">
-                <!-- {getBusinessLineName(user.businessLine) ?? ""} -->
+                {#if $loggedInUser.accountType > 1}
+                  {user.businessLine ?? ""}
+                {:else}
+                  Agregador
+                {/if}
               </div>
             </div>
-            <div class="element rates">
+            <!-- <div class="element rates">
               <div class="title">Tasas</div>
               <div class="row">
                 <div class="element">
                   <div class="title-blue">Crédito</div>
                   <div class="description text-center">
-                    3.5%
-                    <!-- {ratesBusinessType?.credit}% -->
+                    {user.rates?.credit}%
                   </div>
                 </div>
                 <div class="element">
                   <div class="title-blue">Débito</div>
                   <div class="description text-center">
-                    3.5%
-                    <!-- {ratesBusinessType?.debit}% -->
+                    {user.rates?.debit}%
                   </div>
                 </div>
                 <div class="element">
                   <div class="title-blue">AMEX</div>
                   <div class="description text-center">
-                    3.5%
-                    <!-- {ratesBusinessType?.amex}% -->
+                    {user.rates?.amex}%
                   </div>
                 </div>
               </div>
@@ -350,12 +363,11 @@
                 <div class="element">
                   <div class="title-blue">Internacionales</div>
                   <div class="description text-center">
-                    3.5%
-                    <!-- {ratesBusinessType?.internationals}% -->
+                    {user.rates?.internationals}%
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="divider-hor" />
             <div class="element">
               <div class="title">Asesor</div>
@@ -373,7 +385,12 @@
               {:else}
                 <div class="trigger">
                   <label class="title" for="clabeModalTrigger">Ingresa tu CLABE</label>
-                  <input id="clabeModalTrigger" type="button" on:click={openModal(modalCLABE)} on:click={()=>$toastId="modalCLABE"}/>
+                  <input
+                    id="clabeModalTrigger"
+                    type="button"
+                    on:click={openModal(modalCLABE)}
+                    on:click={() => ($toastId = "modalCLABE")}
+                  />
                 </div>
               {/if}
             </div>
@@ -382,29 +399,29 @@
                 <div class="title">Persona Física</div>
                 <div class="description text-left">
                   <Icons name={"user-fill"} width="24" height="24" />
-                  Mario Enrique Saldaña
+                  {`${user.name} ${user.firstLastName} ${user.secondLastName}`}
                 </div>
                 <div class="description text-left">
                   <Icons name={"phone"} width="24" height="24" />
-                  3312412102
+                  {`${user.phone}`}
                 </div>
                 <div class="description text-left">
                   <Icons name={"mail"} width="24" height="24" />
-                  armando.velasco@lklpay.com.mx
+                  {`${user.email}`}
                 </div>
               </div>
               <div class="element">
                 <div class="title">Domicilio Fiscal</div>
                 <div class="description text-left">
-                  <!-- {$loggedInUser.businessAddress} -->
-                  <!-- {$loggedInUser.outsideNumber} -->
+                  {user.financial.address ?? "N/A"}
+                  #{user.financial.exteriorNumber ?? "N/A"}
                 </div>
                 <div class="description text-left">
-                  <!-- {$loggedInUser.suburb} -->
-                  <!-- {$loggedInUser.zipCode} -->
+                  {user.financial.suburb ?? "N/A"}
+                  C.P. {user.financial.zipCode ?? "N/A"}
                 </div>
                 <div class="description text-left">
-                  <!-- {$loggedInUser.town}, {$loggedInUser.state} -->
+                  {user.financial.town ?? "N/A"}, {user.financial.state ?? "N/A"}
                 </div>
               </div>
               <div class="divider-hor" />
@@ -412,29 +429,29 @@
                 <div class="title">Responsable General</div>
                 <div class="description text-left">
                   <Icons name={"user-fill"} width="24" height="24" />
-                  Mario Enrique Saldaña
+                  {`${user.commerceResponsible.name} ${user.commerceResponsible.firstLastName} ${user.commerceResponsible.secondLastName}`}
                 </div>
                 <div class="description text-left">
                   <Icons name={"phone"} width="24" height="24" />
-                  3312412102
+                  {`${user.commerceResponsible.phone}`}
                 </div>
                 <div class="description text-left">
                   <Icons name={"mail"} width="24" height="24" />
-                  armando.velasco@lklpay.com.mx
+                  {`${user.commerceResponsible.email}`}
                 </div>
               </div>
               <div class="element">
                 <div class="title">Domicilio Operativo</div>
                 <div class="description text-left">
-                  <!-- {$loggedInUser.businessAddress} -->
-                  <!-- {$loggedInUser.outsideNumber} -->
+                  {user.commercial.address ?? "N/A"}
+                  #{user.commercial.exteriorNumber ?? "N/A"}
                 </div>
                 <div class="description text-left">
-                  <!-- {$loggedInUser.suburb} -->
-                  <!-- {$loggedInUser.zipCode} -->
+                  {user.commercial.suburb ?? "N/A"}
+                  C.P. {user.commercial.zipCode ?? "N/A"}
                 </div>
                 <div class="description text-left">
-                  <!-- {$loggedInUser.town}, {$loggedInUser.state} -->
+                  {user.commercial.town ?? "N/A"}, {user.commercial.state ?? "N/A"}
                 </div>
               </div>
             {/if}

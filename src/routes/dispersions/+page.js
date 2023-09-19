@@ -1,7 +1,7 @@
 /* svelte */
 import { error } from "@sveltejs/kit";
 /* client */
-import { axiosDepositsAndFees } from "$lib/repos/axios";
+import { axiosDepositsAndFees, axiosDevicesClient } from "$lib/repos/axios";
 /* controllers */
 import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
@@ -12,11 +12,13 @@ export async function load({ url }) {
   // const ticket = url.searchParams.get("ticket");
 
   try {
+    const resume = await axiosDevicesClient.get(`/transaction/getPending/balance`);
+    console.log(resume.data.response);
     const response = await axiosDepositsAndFees.get(`/dispersion`);
-    // console.log(response.data.response);
+    console.log(response.data.response);
     return {
       dispersions: response.data?.response?.dispersions,
-      resume: response.data?.response?.resume,
+      resume: { depositBalance: resume.data?.response },
       rate: response.data?.response?.rate,
     };
   } catch (err) {

@@ -11,6 +11,7 @@ const config = {
       },
     },
   },
+
   server: {
     https: {
       key: fs.readFileSync(`${__dirname}/ssl/key.pem`),

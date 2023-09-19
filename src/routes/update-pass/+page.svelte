@@ -18,6 +18,8 @@
   /* controllers */
   import { appErrorResponseHandler } from "$lib/handlers/error.handler";
   import { AuthController } from "$lib/controllers/auth/auth.controller";
+  /* clients */
+  import { profilesClient } from "$lib/repos/axios";
 
   let customMessage = "";
   let registerData = {
@@ -30,34 +32,26 @@
   let confirmPass = "";
   let registerResponse = {};
 
-  const handleRegister = async () => {
-    /* loading = true;
-    setTimeout(async () => {
-      try {
-        const { session, user, error, message } = await AuthController.register(registerData);
-        registerResponse = { session, user };
-        if (error) {
-          throw message;
-        }
-        menu = "success";
-      } catch (e) {
-        menu = "error";
-        const handler = await appErrorResponseHandler(e);
-        const code = handler?.code ?? 500;
-        const message = handler?.message ?? "¡Algo salió mal!";
-        customMessage = message;
-        throw new error(code, message);
-      } finally {
-        loading = false;
-      }
-    }, 3000); */
+  const handleUpdatePass = async () => {
+    loading = true;
+    try {
+      const response = await profilesClient.post(`/user/resetPassword`, { email: registerData.email });
+      menu = "success";
+    } catch (e) {
+      console.log(e);
+      menu = "error";
+      const handler = await appErrorResponseHandler(e);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      customMessage = message;
+      throw new error(code, message);
+    } finally {
+      loading = false;
+    }
   };
 
   const redirectHome = () => {
-    isLoggedIn.set(true);
-    loggedInUser.set(registerResponse.user);
-    sessionUser.set(registerResponse.session);
-    goto("/");
+    goto("/login");
   };
 </script>
 
@@ -73,7 +67,7 @@
         <div class="title">Olvidé mi Contraseña</div>
         <div class="subtitle">Ingresa tu correo electrónico</div>
         <div class="form-inputs">
-          <form on:submit|preventDefault={handleRegister}>
+          <form on:submit|preventDefault={handleUpdatePass}>
             <Input
               label="Dirección de correo electrónico"
               id="register-email"
@@ -99,7 +93,7 @@
             </div>
           </form>
           <div class="login-link">
-            Ya tengo una cuenta.<a href="/"> Quiero Iniciar Sesión</a>
+            Ya tengo una cuenta.<a href="/login"> Quiero Iniciar Sesión</a>
           </div>
         </div>
       </div>
@@ -110,12 +104,12 @@
         <img src={Logo} alt="Company Logo" />
       </div>
       <div class="form">
-        <div class="title">Bienvenido a LKL Pay</div>
+        <div class="title">Se realizó la solicitud exitosamente</div>
         <div class="svg success">
           <Icons name="checkbox-circle-line" width="150" height="150" />
           <!-- <SuccessLogo /> -->
         </div>
-        <div class="subtitle">Ingresa a tu correo para verificar tu cuenta</div>
+        <div class="subtitle">Ingresa a tu correo para continuar el proceso</div>
       </div>
       <div class="btn-layout">
         <Input
@@ -140,11 +134,11 @@
           <!-- <ErrorLogo /> -->
         </div>
         <div class="subtitle">{customMessage}</div>
-        <div class="subtitle">Vamos a intentar crear tu cuenta de nuevo</div>
+        <div class="subtitle">Vamos a intentar realizar la petición de nuevo</div>
       </div>
       <div class="btn-layout">
         <Input
-          label="Reiniciar Registro"
+          label="Volver a Intentar"
           id="returnToRegisterBtn"
           type="button"
           className="btn-error"
