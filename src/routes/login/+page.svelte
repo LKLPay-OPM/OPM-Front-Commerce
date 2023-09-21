@@ -38,7 +38,6 @@
 
   /* async function amexNewCommerce() {
     const data = await AmexController.newCommerce(amexData, amexAuthorization);
-    console.log(data);
   } */
 
   onMount(async () => {
@@ -62,7 +61,9 @@
       </div>
       <div class="form">
         <div class="title">Inicio de Sesión</div>
-        <div class={`subtitle ${!error ? "hidden" : ""}`}>Verifica que tus datos sean correctos</div>
+        <div class={`subtitle ${!error ? "hidden" : ""}`}>
+          Verifica que tus datos sean correctos
+        </div>
         <div class="form-inputs">
           <form on:submit|preventDefault={handleLogin}>
             <Input
@@ -90,7 +91,10 @@
                 label="Iniciar Sesión"
                 id="loginButton"
                 type="submit"
-                className={validateEmail(input.email) && validatePassword(input.password) ? "btn" : "btn-disabled"}
+                className={validateEmail(input.email) &&
+                validatePassword(input.password)
+                  ? "btn"
+                  : "btn-disabled"}
                 icon=""
               />
             </div>

@@ -23,7 +23,6 @@ export async function load({ url }) {
     const response = await axiosDevicesClient.get(`/transaction/getTransactionById/${ticketId}`, {
       params: { start, end, brand },
     });
-    console.log("Response", response);
     return { brand, ticket: ticketId, filter, start, end, response: response.data?.response };
   } catch (e) {
     const handler = await appErrorResponseHandler(e);

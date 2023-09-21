@@ -13,16 +13,13 @@ export async function load({ url }) {
 
   try {
     const resume = await axiosDevicesClient.get(`/transaction/getPending/balance`);
-    console.log(resume.data.response);
     const response = await axiosDepositsAndFees.get(`/dispersion`);
-    console.log(response.data.response);
     return {
       dispersions: response.data?.response?.dispersions,
       resume: { depositBalance: resume.data?.response },
       rate: response.data?.response?.rate,
     };
   } catch (err) {
-    // console.error(err);
     const handler = await appErrorResponseHandler(err);
     const code = handler?.code ?? 500;
     const message = handler?.message ?? "¡Algo salió mal!";

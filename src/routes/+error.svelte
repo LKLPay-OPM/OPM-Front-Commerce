@@ -4,10 +4,6 @@
   /* components */
   // import ErrorLogo from "$lib/components/Error.svelte";
   import Icons from "$lib/components/Icons.svelte";
-
-  $: {
-    console.error($page.status + ": " + $page.error.message);
-  }
 </script>
 
 <div class="container">

@@ -7,7 +7,6 @@
   import DateTitle from "$lib/components/DateTitle.svelte";
 
   export let data;
-  $: console.log(data);
   let terminal = data?.terminal;
 </script>
 

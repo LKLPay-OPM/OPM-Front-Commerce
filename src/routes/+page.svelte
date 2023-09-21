@@ -13,7 +13,10 @@
   import FileInput from "$lib/components/inputs/FileInput.svelte";
   /* utils */
   import { checkFileSize } from "$lib/utils/validations.js";
-  import { tryAgainErrorToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  import {
+    tryAgainErrorToast,
+    successCustomMsgToast,
+  } from "$lib/utils/toast.js";
   /* clients */
   import { profilesFormDataClient } from "$lib/repos/axios";
   /* handlers */
@@ -44,11 +47,15 @@
     });
     try {
       $toastId = "";
-      console.log(userData);
-      const response = await profilesFormDataClient.patch(`/onboarding/aggregator`, formData);
+      const response = await profilesFormDataClient.patch(
+        `/onboarding/aggregator`,
+        formData
+      );
       successCustomMsgToast("Tus datos se procesaron con éxito");
     } catch (e) {
-      successCustomMsgToast("Ocurrió un error al procesar tus datos, intenta de nuevo más tarde");
+      successCustomMsgToast(
+        "Ocurrió un error al procesar tus datos, intenta de nuevo más tarde"
+      );
       const handler = await appErrorResponseHandler(e);
       const code = handler?.code ?? 500;
       const message = handler?.message ?? "¡Algo salió mal!";
@@ -119,7 +126,11 @@
           id="IneFront"
           bind:file={userData.ineFront}
           className={`btn-plain ${
-            userData.ineFront === "" ? "" : checkFileSize(userData.ineFront) ? "btn-success" : "border-btn-error"
+            userData.ineFront === ""
+              ? ""
+              : checkFileSize(userData.ineFront)
+              ? "btn-success"
+              : "border-btn-error"
           }`}
           accept="image/jpeg, image/png, application/pdf"
         />
@@ -128,7 +139,11 @@
           id="IneBack"
           bind:file={userData.ineBack}
           className={`btn-plain ${
-            userData.ineBack === "" ? "" : checkFileSize(userData.ineBack) ? "btn-success" : "border-btn-error"
+            userData.ineBack === ""
+              ? ""
+              : checkFileSize(userData.ineBack)
+              ? "btn-success"
+              : "border-btn-error"
           }`}
           accept="image/jpeg, image/png, application/pdf"
         />

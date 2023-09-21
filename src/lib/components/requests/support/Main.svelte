@@ -7,7 +7,10 @@
   /* repos */
   import { ticketsClient } from "$lib/repos/axios";
   /* utils */
-  import { errorCustomMsgToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  import {
+    errorCustomMsgToast,
+    successCustomMsgToast,
+  } from "$lib/utils/toast.js";
   /* controllers */
   import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
@@ -20,13 +23,14 @@
 
   const handleSupportRequest = async () => {
     try {
-      const response = await ticketsClient.post(`/ticket/support`, supportDetails);
-      console.log(response?.data?.response);
+      const response = await ticketsClient.post(
+        `/ticket/support`,
+        supportDetails
+      );
       supportDetails.description = "";
       successCustomMsgToast("Tu petición de soporte técnico ha sido realizada");
     } catch (e) {
       errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
-      console.error(e);
       const handler = await appErrorResponseHandler(e);
       const code = handler?.code ?? 500;
       const message = handler?.message ?? "¡Algo salió mal!";
@@ -51,7 +55,8 @@
   <div slot="content">
     <div class="support">
       <div class="title">
-        Describa su problema a continuación, o comuníquese al 800 12341 5672 para una atención personalizada
+        Describa su problema a continuación, o comuníquese al 800 12341 5672
+        para una atención personalizada
       </div>
       <div class="description">
         <p />
@@ -92,7 +97,9 @@
   <div
     on:click={showModal(modalSupport)}
     on:keypress={(e) => (e.key === "Enter" ? showModal(modalSupport) : "")}
-    class={`option-col ${optionSelected === 3 ? "option-selected" : "clickable"}`}
+    class={`option-col ${
+      optionSelected === 3 ? "option-selected" : "clickable"
+    }`}
   >
     <i>
       <Icons name="detailed-support" width="50" height="50" />

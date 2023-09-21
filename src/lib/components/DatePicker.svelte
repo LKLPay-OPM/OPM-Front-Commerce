@@ -12,7 +12,6 @@
 
   const onInput = (e) => {
     value = e.target.value;
-    // console.log(value)
   };
 </script>
 
@@ -25,7 +24,16 @@
         {/if} -->
     </span>
   </label>
-  <input on:click type="date" {placeholder} {id} {value} {name} on:input={onInput} {accept} />
+  <input
+    on:click
+    type="date"
+    {placeholder}
+    {id}
+    {value}
+    {name}
+    on:input={onInput}
+    {accept}
+  />
 </div>
 
 <style lang="scss">
@@ -65,7 +73,11 @@
     border: 0;
     border-radius: 3px;
     padding: 0 3px;
-    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
+    background: linear-gradient(
+      91.36deg,
+      $background-light-accent-primary 0%,
+      #e6e8ef 100%
+    );
     /* inner-flat */
     box-shadow: inset -3px -3px 4px #f9fcff, inset 3px 3px 3px #aeb8c0;
     border-radius: 4px;
@@ -80,7 +92,8 @@
   :global(body.dark-mode) {
     input[type="date"] {
       background: $background-dark-accent-secondary;
-      box-shadow: inset -1px -1px 2px $background-dark-accent-primary, inset 1px 1px 2px $background-dark;
+      box-shadow: inset -1px -1px 2px $background-dark-accent-primary,
+        inset 1px 1px 2px $background-dark;
     }
   }
 </style>

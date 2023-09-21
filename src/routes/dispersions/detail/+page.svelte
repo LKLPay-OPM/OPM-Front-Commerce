@@ -12,7 +12,10 @@
   import { dateToLocalString, timeToLocalString } from "$lib/utils/date.js";
   import { getCardBrand } from "$lib/utils/brands.js";
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
-  import { successCustomMsgToast, errorCustomMsgToast } from "$lib/utils/toast.js";
+  import {
+    successCustomMsgToast,
+    errorCustomMsgToast,
+  } from "$lib/utils/toast.js";
   /* stores */
   import { previousPage } from "$lib/stores";
   /* client */
@@ -31,13 +34,7 @@
     description: "",
   };
 
-  $: {
-    console.log(dispersion);
-    // console.log(previousPage);
-  }
   const returnToPreviousPage = () => {
-    // console.log($previousPage);
-    // goto($previousPage);
     history.back();
   };
 
@@ -47,14 +44,16 @@
   const closeModal = (option) => {
     option.closeModal();
   };
-  const handleClarification = () => {
-    console.log(clarification);
-  };
+  const handleClarification = () => {};
 
   const sendDispersionByEmail = async () => {
     try {
-      const response = await axiosDevicesClient.post(`/transaction/detail/${transaction._id}/email`);
-      successCustomMsgToast(`Correo enviado con éxito a tu dirección asociada a Lkl Pay`);
+      const response = await axiosDevicesClient.post(
+        `/transaction/detail/${transaction._id}/email`
+      );
+      successCustomMsgToast(
+        `Correo enviado con éxito a tu dirección asociada a Lkl Pay`
+      );
       return { ...response.data?.response };
     } catch (e) {
       errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
@@ -66,12 +65,10 @@
   };
 
   const getPercentage = (total, commission) => {
-    return ((commission*100)/total).toFixed(2)
-  }
+    return ((commission * 100) / total).toFixed(2);
+  };
 
-  onMount(async () => {
-    console.log($previousPage);
-  });
+  onMount(async () => {});
 </script>
 
 <!-- MODAL DISPERSION DETAIL CLARIFICATION -->
@@ -106,7 +103,9 @@
       label="Enviar Aclaración"
       id="buttonSaveModalDetailClarification"
       type="button"
-      className={`${detailClarification.description != "" ? "btn" : "btn-plain disabled"}`}
+      className={`${
+        detailClarification.description != "" ? "btn" : "btn-plain disabled"
+      }`}
       icon=""
     />
   </div>
@@ -178,7 +177,12 @@
             <p>
               {currencyFormatLocal(dispersion?.comission)}
             </p>
-            <span>{`(${getPercentage(dispersion.balance.toFixed(2), dispersion.comission.toFixed(2))}%)`}</span>
+            <span
+              >{`(${getPercentage(
+                dispersion.balance.toFixed(2),
+                dispersion.comission.toFixed(2)
+              )}%)`}</span
+            >
           </div>
           <div class="item">
             <b>IVA</b>
@@ -190,10 +194,33 @@
     <div class="details-right hide no-print">
       <div class="title">Reportes</div>
       <div class="export-buttons">
-        <Input label="" id="csv-export" type="button" className="btn-plain btn-square fill-blue" icon="csv-fill" />
-        <Input label="" id="excel-export" type="button" className="btn-plain btn-square fill-green" icon="xls-fill" />
-        <Input id="print" type="button" className="btn-plain btn-square fill-blue" icon="print" />
-        <Input label="" id="pdf-export" type="button" className="btn-plain btn-square fill-red" icon="pdf-fill" />
+        <Input
+          label=""
+          id="csv-export"
+          type="button"
+          className="btn-plain btn-square fill-blue"
+          icon="csv-fill"
+        />
+        <Input
+          label=""
+          id="excel-export"
+          type="button"
+          className="btn-plain btn-square fill-green"
+          icon="xls-fill"
+        />
+        <Input
+          id="print"
+          type="button"
+          className="btn-plain btn-square fill-blue"
+          icon="print"
+        />
+        <Input
+          label=""
+          id="pdf-export"
+          type="button"
+          className="btn-plain btn-square fill-red"
+          icon="pdf-fill"
+        />
         <!-- <Input on:click={
               () => {
                 dispersionToArray.push(dispersion)

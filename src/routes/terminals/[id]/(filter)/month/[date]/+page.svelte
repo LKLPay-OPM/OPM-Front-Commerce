@@ -18,8 +18,6 @@
   let paginationEnd = data?.end ?? 10;
   let idTerminal = data?.idTerminal;
 
-  $: console.log(data);
-
   function handleFilterClick({ detail }) {
     // const value = detail?.value;
     // active = value;
@@ -129,7 +127,11 @@
       </thead>
       <tbody class="inside">
         {#each transactions as transaction}
-          <tr class="clickable number" on:click={() => goto(`/transactions/detail?ticket=${transaction?._id}`)}>
+          <tr
+            class="clickable number"
+            on:click={() =>
+              goto(`/transactions/detail?ticket=${transaction?._id}`)}
+          >
             <td class="responsive"
               >{getTransactionDate(transaction["Transaction Date"]) +
                 " - " +
@@ -141,7 +143,11 @@
             <td class="responsive">{currencyFormatLocal(transaction?.iva)}</td>
             <td>{currencyFormatLocal(transaction.toDeposit)}</td>
             <td class="responsive">
-              <i class={`icon ${getIconStatusClass(transaction.transactionStatus)} tooltip`}>
+              <i
+                class={`icon ${getIconStatusClass(
+                  transaction.transactionStatus
+                )} tooltip`}
+              >
                 <Icons
                   name={transaction.type === "tpv"
                     ? "terminal"
@@ -165,7 +171,12 @@
       </tbody>
     </table>
     {#if count > 10}
-      <Pagination bind:paginationStart bind:paginationEnd bind:count on:pagination={handleFilterClick} />
+      <Pagination
+        bind:paginationStart
+        bind:paginationEnd
+        bind:count
+        on:pagination={handleFilterClick}
+      />
     {/if}
   </div>
 </div>

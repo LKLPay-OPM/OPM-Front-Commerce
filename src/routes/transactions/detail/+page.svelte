@@ -10,7 +10,10 @@
   /* utils */
   import { dateToLocalString, timeToLocalString } from "$lib/utils/date.js";
   import { getCardBrand } from "$lib/utils/brands.js";
-  import { successCustomMsgToast, errorCustomMsgToast } from "$lib/utils/toast.js";
+  import {
+    successCustomMsgToast,
+    errorCustomMsgToast,
+  } from "$lib/utils/toast.js";
   import { copyLinkToClipboard } from "$lib/utils/copyToClipboard.js";
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   /* stores */
@@ -27,7 +30,10 @@
   } from "$lib/repos/axios";
   /* controllers */
   import { appErrorResponseHandler } from "$lib/handlers/error.handler";
-  import { transactionStatus, transactionCancelValidation } from "$lib/handlers/transaction-status.handler";
+  import {
+    transactionStatus,
+    transactionCancelValidation,
+  } from "$lib/handlers/transaction-status.handler";
 
   export let data;
   let transaction = data?.response;
@@ -73,10 +79,6 @@
     commerceName: data?.response?.commerceName ?? "",
   };
 
-  $: {
-    console.log(data.response);
-  }
-
   const returnToPreviousPage = () => {
     history.back();
   };
@@ -89,7 +91,10 @@
   };
   const handleClarification = async () => {
     try {
-      const response = await ticketsClient.post(`/ticket/clarification/transaction`, clarification);
+      const response = await ticketsClient.post(
+        `/ticket/clarification/transaction`,
+        clarification
+      );
       successCustomMsgToast(`Tu ticket de aclaración se ha generado con éxito`);
       return { ...response.data?.response };
     } catch (err) {
@@ -110,10 +115,15 @@
         commerceName: user.businessName ?? undefined,
         authorization: transaction.authorization,
       };
-      const response = await axiosDevicesClient.post(`/transaction/detail/${transaction._id}/email`, {
-        body,
-      });
-      successCustomMsgToast(`Correo enviado con éxito a tu dirección asociada a Lkl Pay`);
+      const response = await axiosDevicesClient.post(
+        `/transaction/detail/${transaction._id}/email`,
+        {
+          body,
+        }
+      );
+      successCustomMsgToast(
+        `Correo enviado con éxito a tu dirección asociada a Lkl Pay`
+      );
       return { ...response.data?.response };
     } catch (err) {
       errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
@@ -128,8 +138,10 @@
   const cancelTransaction = async () => {
     loading = true;
     try {
-      const response = await axiosFraudPreventionManagementJSON.post(`/link/cancel`, cancel);
-      console.log(response?.data?.response);
+      const response = await axiosFraudPreventionManagementJSON.post(
+        `/link/cancel`,
+        cancel
+      );
       cancelData = {
         amount: response?.data?.response?.amount,
         url: response?.data?.response?.url,
@@ -139,7 +151,6 @@
       // formSuccess(link);
       modalCancel.show();
     } catch (err) {
-      console.log(err);
     } finally {
       loading = false;
     }
@@ -189,7 +200,12 @@
   </div>
 </Modal>
 <!-- Modal Cancel -->
-<Modal id="modalCancelLinkData" bind:transparent className={`modal-small`} bind:this={modalCancel}>
+<Modal
+  id="modalCancelLinkData"
+  bind:transparent
+  className={`modal-small`}
+  bind:this={modalCancel}
+>
   <div slot="header">
     <div class="svg">
       <p>Datos de Cancelación</p>
@@ -206,10 +222,17 @@
             <label for="copy">
               <Icons name="file-copy" width="16" height="16" />
             </label>
-            <input type="button" id="copy" name="copy" on:click={copyLinkToClipboard(link, "modalCancelLinkData")} />
+            <input
+              type="button"
+              id="copy"
+              name="copy"
+              on:click={copyLinkToClipboard(link, "modalCancelLinkData")}
+            />
           </div>
         </span>
-        <textarea readonly bind:this={link} id="link" name="link">{cancelData.url}</textarea>
+        <textarea readonly bind:this={link} id="link" name="link"
+          >{cancelData.url}</textarea
+        >
       </div>
       <div class="column-element">
         <span>Monto</span>
@@ -307,7 +330,11 @@
         </div>
       </div>
       <div class="details-center">
-        <div class={`details-card ${getCardBrand(transaction["Application PAN"]).toLowerCase()}`}>
+        <div
+          class={`details-card ${getCardBrand(
+            transaction["Application PAN"]
+          ).toLowerCase()}`}
+        >
           <div class="details-card__top">
             <b>Detalle de Venta</b>
           </div>
@@ -318,7 +345,10 @@
               </div>
               <div class="item__content first">
                 <p>
-                  <span>{"**** **** **** " + transaction["Application PAN"].substr(-4)}</span>
+                  <span
+                    >{"**** **** **** " +
+                      transaction["Application PAN"].substr(-4)}</span
+                  >
                 </p>
               </div>
             </div>
@@ -329,7 +359,9 @@
               <div class="item__content">
                 <p>
                   <Icons
-                    name={`${getCardBrand(transaction["Application PAN"]).toLowerCase()}`}
+                    name={`${getCardBrand(
+                      transaction["Application PAN"]
+                    ).toLowerCase()}`}
                     width="24"
                     height="24"
                   />
@@ -398,7 +430,13 @@
       <div class="details-right no-print responsive">
         <div class="title">Reportes</div>
         <div class="export-buttons">
-          <Input label="" id="csv-export" type="button" className="btn-plain fill-blue btn-square " icon="csv-fill" />
+          <Input
+            label=""
+            id="csv-export"
+            type="button"
+            className="btn-plain fill-blue btn-square "
+            icon="csv-fill"
+          />
           <Input
             label=""
             id="excel-export"
@@ -406,7 +444,13 @@
             className="btn-plain fill-green btn-square "
             icon="xls-fill"
           />
-          <Input label="" id="pdf-export" type="" className="btn-plain fill-red btn-square " icon="pdf-fill" />
+          <Input
+            label=""
+            id="pdf-export"
+            type=""
+            className="btn-plain fill-red btn-square "
+            icon="pdf-fill"
+          />
         </div>
       </div>
     </div>

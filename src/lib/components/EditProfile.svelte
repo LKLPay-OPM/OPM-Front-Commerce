@@ -17,7 +17,11 @@
   /* validations */
   import { checkFileSize } from "$lib/utils/validations.js";
   /* utils */
-  import { tryAgainErrorToast, successCustomMsgToast, errorCustomMsgToast } from "$lib/utils/toast.js";
+  import {
+    tryAgainErrorToast,
+    successCustomMsgToast,
+    errorCustomMsgToast,
+  } from "$lib/utils/toast.js";
   /* repos */
   import { ticketsClientFormData } from "$lib/repos/axios";
   /* controllers */
@@ -48,7 +52,9 @@
       statesArray.push({ name: key, value: key });
     });
     states = statesArray;
-    stateIndex = states.map((state) => state.value).indexOf(financialData.state);
+    stateIndex = states
+      .map((state) => state.value)
+      .indexOf(financialData.state);
     townsArray = [];
     if (financialData.state) {
       townsData[financialData.state].map(function (key, index) {
@@ -68,11 +74,11 @@
   const handleUpdateBusinessInfo = async () => {
     try {
       const response = await ticketsClientFormData.post(`/ticket/data`, user);
-      console.log(response?.data?.response);
-      successCustomMsgToast("Tu petición para cambio de datos ha sido realizada");
+      successCustomMsgToast(
+        "Tu petición para cambio de datos ha sido realizada"
+      );
     } catch (e) {
       errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
-      console.error(e);
       const handler = await appErrorResponseHandler(e);
       const code = handler?.code ?? 500;
       const message = handler?.message ?? "¡Algo salió mal!";
@@ -114,7 +120,11 @@
                 <img
                   class="avatar-img"
                   alt="imagen"
-                  src={avatar != "" ? avatar : $loggedInUser.avatar ? $loggedInUser.avatar : noUser}
+                  src={avatar != ""
+                    ? avatar
+                    : $loggedInUser.avatar
+                    ? $loggedInUser.avatar
+                    : noUser}
                 />
                 <label for="file">
                   <input
@@ -125,7 +135,9 @@
                     accept="image/jpeg, image/png"
                   />
                   <div class="avatar-content">
-                    <span class="avatar-icon"><Icons name="camera-fill" width="24" height="24" /></span>
+                    <span class="avatar-icon"
+                      ><Icons name="camera-fill" width="24" height="24" /></span
+                    >
                     <span class="avatar-text">Cambiar Foto</span>
                   </div>
                 </label>
@@ -142,7 +154,13 @@
           </div>
         </div>
         <div class="buttons">
-          <Input on:click={() => cancelEdit()} label="Cancelar" id="cancel" className="btn-plain blue" type="button" />
+          <Input
+            on:click={() => cancelEdit()}
+            label="Cancelar"
+            id="cancel"
+            className="btn-plain blue"
+            type="button"
+          />
           <Input
             on:click={handleUpdateBusinessInfo}
             label="Guardar"
@@ -190,7 +208,11 @@
             id="IneFront"
             bind:file={ineFront}
             className={`btn-plain ${
-              ineFront === "" ? "" : checkFileSize(ineFront) ? "btn-success" : "border-btn-error"
+              ineFront === ""
+                ? ""
+                : checkFileSize(ineFront)
+                ? "btn-success"
+                : "border-btn-error"
             }`}
             accept="image/jpeg, image/png, application/pdf"
           />
@@ -198,7 +220,13 @@
             label="Vuelta"
             id="IneBack"
             bind:file={ineBack}
-            className={`btn-plain ${ineBack === "" ? "" : checkFileSize(ineBack) ? "btn-success" : "border-btn-error"}`}
+            className={`btn-plain ${
+              ineBack === ""
+                ? ""
+                : checkFileSize(ineBack)
+                ? "btn-success"
+                : "border-btn-error"
+            }`}
             accept="image/jpeg, image/png, application/pdf"
           />
         </div>
@@ -241,7 +269,11 @@
             id="bankStatement"
             bind:file={bankStatement}
             className={`btn-plain ${
-              bankStatement === "" ? "" : checkFileSize(bankStatement) ? "btn-success" : "border-btn-error"
+              bankStatement === ""
+                ? ""
+                : checkFileSize(bankStatement)
+                ? "btn-success"
+                : "border-btn-error"
             }`}
             accept="application/pdf"
           />
@@ -277,7 +309,9 @@
             <Input
               label="Opinión de Cumplimiento"
               id="complianceOpinion"
-              className={complianceOpinion != "" ? "btn-success-border" : "btn-plain blue"}
+              className={complianceOpinion != ""
+                ? "btn-success-border"
+                : "btn-plain blue"}
               type="file"
               accept="application/pdf"
             />
@@ -380,7 +414,9 @@
               label="Comprobante de Domicilio"
               id="AddressProof"
               bind:value={addressProof}
-              className={addressProof != "" ? "btn-success-border" : "btn-plain blue"}
+              className={addressProof != ""
+                ? "btn-success-border"
+                : "btn-plain blue"}
               type="file"
               accept="application/pdf"
             />

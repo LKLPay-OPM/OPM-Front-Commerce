@@ -10,7 +10,6 @@ export const ssr = false;
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ params }) {
   const ticket = params.id;
-  console.log(ticket)
   try {
     const response = await ticketsClient.get(`/ticket/${ticket}`);
     return { ticket: response.data?.response };

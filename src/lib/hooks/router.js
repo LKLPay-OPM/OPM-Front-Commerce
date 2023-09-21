@@ -1,6 +1,5 @@
 const userRoutes = (role, route) => {
   /// ROUTE PERMISSION PER ROLE
-  // console.log(role+" "+route)
   const routesByRole = {
     0: {
       "/login": true,
@@ -159,7 +158,6 @@ const sidebarOptions = (accountType) => {
       { name: "Link de Pago", path: "/payment-link", icon: "qr-code" },
     ],
   };
-  // console.log(optionsList[accountType])
   return optionsList[accountType];
 };
 

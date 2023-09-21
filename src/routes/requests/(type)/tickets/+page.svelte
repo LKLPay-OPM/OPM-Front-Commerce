@@ -4,10 +4,6 @@
 
   export let data;
   let tickets = data?.tickets;
-
-  $: {
-    console.log(data);
-  }
 </script>
 
 <TicketsMenu {tickets} />
