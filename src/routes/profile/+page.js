@@ -19,7 +19,7 @@ export async function load({ url }) {
   try {
     const user = await profilesClient.get(`/user/profile`);
     const sicCatalog = await axiosDepositsAndFees.get(`/catalog/sicCodesById/${user.data.response.businessLine}`);
-    const businessLineName = sicCatalog.data.response[0].name;
+    const businessLineName = sicCatalog.data.response.name;
     const transactions = await axiosDevicesClient.get(`/transaction`, { params: { filter, start, end } });
     user.data.response.businessLine = businessLineName;
     if (validQueryFilters.includes(filter))

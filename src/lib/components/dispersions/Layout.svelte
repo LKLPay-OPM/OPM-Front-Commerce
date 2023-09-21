@@ -1,5 +1,7 @@
 <script>
+  /* svelte */
   import { error } from "@sveltejs/kit";
+  import { invalidateAll } from '$app/navigation';
   /* stores */
   import { loggedInUser, redirectUrgentDispersions, toastId } from "$lib/stores";
   /* components */
@@ -17,7 +19,6 @@
   import { onMount } from "svelte";
   import { generatePDF, generateCSV, generateXLSX } from "$lib/hooks/exportDataToFile.js";
   /* utils */
-  import { getMonthName, timeToLocalString, dateToLocalString } from "$lib/utils/date.js";
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   import { errorCustomMsgToast, successCustomMsgToast } from "$lib/utils/toast.js";
   /* client */
@@ -34,12 +35,9 @@
   let rate = data?.rate ?? {};
   let iva = 16;
   let search = [];
-  let selectedDispersion = {};
   let dispersionDetailView = false;
   let notFound = false;
-  let notFoundMessage = "No se encontraron registros";
   let loading = false;
-  let date = new Date();
   let active = "1";
   let terms = false;
   let termsDepositPreference = false;
@@ -168,6 +166,7 @@
         amount: Number(immediateDeposit.immediateDepositQty),
       });
       successCustomMsgToast("Tus solicitud se procesó con éxito");
+
     } catch (e) {
       errorCustomMsgToast("Ocurrió un error al procesar tu solicitud, vuelve a intentarlo");
       const handler = await appErrorResponseHandler(e);
@@ -183,6 +182,7 @@
         amount: Number(immediateDeposit.immediateDepositQty),
       });
       successCustomMsgToast("Tus solicitud se procesó con éxito");
+      invalidateAll();
     } catch (e) {
       errorCustomMsgToast("Ocurrió un error al procesar tu solicitud, vuelve a intentarlo");
       const handler = await appErrorResponseHandler(e);

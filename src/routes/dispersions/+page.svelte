@@ -34,7 +34,9 @@
   {#if loading == true}
     <Loader />
   {:else}
-    <Layout bind:user={$loggedInUser} {data} />
+    {#key data}
+      <Layout bind:user={$loggedInUser} {data} />
+    {/key}
   {/if}
 {:else}
   <RedirectLogin />
