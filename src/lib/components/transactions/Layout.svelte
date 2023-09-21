@@ -386,7 +386,7 @@
           icon="search"
         />
       </div>
-      <div class="export-buttons">
+      <!-- <div class="export-buttons">
         <Input
           on:click={exportDataToCSV(transactions)}
           label=""
@@ -425,10 +425,10 @@
             : 'disabled'}"
           icon="pdf-fill"
         />
-        <!-- <Input on:click={exportDataToCSV(transactions)} label="" id="csv-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="csv-fill"/> -->
-        <!-- <Input on:click={exportDataToExcel(transactions)} label="" id="excel-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="xls-fill"/> -->
-        <!-- <Input on:click={exportDataToPDF(transactions)} label="" id="pdf-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/> -->
-      </div>
+        // <Input on:click={exportDataToCSV(transactions)} label="" id="csv-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="csv-fill"/>
+        // <Input on:click={exportDataToExcel(transactions)} label="" id="excel-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="xls-fill"/>
+        // <Input on:click={exportDataToPDF(transactions)} label="" id="pdf-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/>
+      </div> -->
     </div>
   </div>
   <div class="middle">
@@ -459,7 +459,7 @@
       <div class="element">
         <InfoCard
           className={""}
-          title="Saldo a Depositar"
+          title="Depósito"
           numData={currencyFormatLocal(resume?.Deposit ?? 0)}
         />
       </div>

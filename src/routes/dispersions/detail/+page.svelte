@@ -179,8 +179,8 @@
             </p>
             <span
               >{`(${getPercentage(
-                dispersion.balance.toFixed(2),
-                dispersion.comission.toFixed(2)
+                dispersion.balance,
+                dispersion.comission
               )}%)`}</span
             >
           </div>
@@ -191,7 +191,7 @@
         </div>
       </div>
     </div>
-    <div class="details-right hide no-print">
+    <!-- <div class="details-right hide no-print">
       <div class="title">Reportes</div>
       <div class="export-buttons">
         <Input
@@ -221,32 +221,10 @@
           className="btn-plain btn-square fill-red"
           icon="pdf-fill"
         />
-        <!-- <Input on:click={
-              () => {
-                dispersionToArray.push(dispersion)
-                exportDataToCSV(dispersionToArray)
-                dispersionToArray = [];
-              }
-            } label="" id="csv-export" type="button" className="btn-plain btn-square " icon="csv-fill"/>
-            <Input on:click={
-              () => {
-                dispersionToArray.push(dispersion)
-                exportDataToCSV(dispersionToArray)
-                dispersionToArray = [];
-              }
-            } label="" id="excel-export" type="button" className="btn-plain btn-square " icon="xls-fill"/>
-            <Input on:click={
-              () => {
-                dispersionToArray.push(dispersion)
-                exportDataToCSV(dispersionToArray)
-                dispersionToArray = [];
-              }
-            } label="" id="pdf-export" type="button" className="btn-plain btn-square " icon="pdf-fill"/>
-           -->
       </div>
-    </div>
+    </div> -->
   </div>
-  <div class="details__bottom">
+  <!-- <div class="details__bottom">
     <div class="card-buttons no-print">
       <div class="clarification-button">
         <Input
@@ -280,7 +258,7 @@
         />
       </div>
     </div>
-  </div>
+  </div> -->
 </div>
 
 <style lang="scss">

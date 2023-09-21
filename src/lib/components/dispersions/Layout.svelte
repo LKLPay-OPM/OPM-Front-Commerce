@@ -536,11 +536,11 @@
       </div>
       <div class="top__middle">
         <DateTitle />
-        <ButtonGroup
+        <!-- <ButtonGroup
           {active}
           options={buttonGroupOptions}
           on:click={handleFilterClick}
-        />
+        /> -->
         <!-- <ButtonGroup bind:active options={buttonGroupOptions} /> -->
       </div>
       <div class="top__right">
@@ -562,7 +562,7 @@
             icon="search"
           />
         </div>
-        <div class="export-buttons">
+        <!-- <div class="export-buttons">
           <Input
             label=""
             id="csv-export"
@@ -599,15 +599,15 @@
               : 'disabled'}"
             icon="pdf-fill"
           />
-          <!-- <Input on:click={exportDataToCSV(dispersions)} label="" id="csv-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/> -->
-          <!-- <Input on:click={exportDataToExcel(dispersions)} label="" id="excel-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="xls-fill"/> -->
-          <!-- <Input on:click={exportDataToPDF(dispersions)} label="" id="pdf-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/> -->
-        </div>
+          //<Input on:click={exportDataToCSV(dispersions)} label="" id="csv-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/>
+          //<Input on:click={exportDataToExcel(dispersions)} label="" id="excel-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="xls-fill"/>
+          //<Input on:click={exportDataToPDF(dispersions)} label="" id="pdf-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/>
+        </div> -->
       </div>
     </div>
     <div class="middle">
       <div class="card-group">
-        <div class="button">
+        <!-- <div class="button">
           <Input
             on:click={showModal(modalClarification)}
             label="Solicitar Aclaración"
@@ -616,7 +616,7 @@
             className="btn-plain"
             icon=""
           />
-        </div>
+        </div> -->
         <div class="element">
           <InfoCard
             className={""}
@@ -624,7 +624,7 @@
             numData={currencyFormatLocal(resume?.depositBalance ?? 0)}
           />
         </div>
-        <div class="button">
+        <!-- <div class="button">
           <Input
             on:click={showModal(modalImmediateDeposit)}
             label="Depósito Urgente"
@@ -633,7 +633,7 @@
             className="btn"
             icon=""
           />
-        </div>
+        </div> -->
       </div>
     </div>
   {/if}

@@ -156,6 +156,10 @@
     }
   };
 
+  const getPercentage = (total, commission) => {
+    return ((commission * 100) / total).toFixed(2);
+  };
+
   const removeBackdrop = async () => {
     transparent = true;
     setTimeout(() => {
@@ -274,7 +278,7 @@
   </div>
   <div class="transaction-details">
     <div class="details__top">
-      <b>Recibo #{transaction._id}</b>
+      <b>Recibo #{transaction["ID Transaction"]}</b>
       <p>
         {dateToLocalString(transaction["Transaction Date"])}
         {timeToLocalString(transaction["Transaction Time"])}
@@ -398,7 +402,10 @@
                 <p>
                   {currencyFormatLocal(transaction.comission)}
                 </p>
-                <p>{`(3.5%)`}</p>
+                <p>{`(${getPercentage(
+                  transaction.Amount,
+                  transaction.comission
+                )}%)`}</p>
               </div>
             </div>
             <div class="item">
@@ -427,7 +434,7 @@
           </div>
         </div>
       </div>
-      <div class="details-right no-print responsive">
+      <!-- <div class="details-right no-print responsive">
         <div class="title">Reportes</div>
         <div class="export-buttons">
           <Input
@@ -452,7 +459,7 @@
             icon="pdf-fill"
           />
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="details__bottom">
       <div class="card-buttons no-print">
@@ -468,7 +475,7 @@
             />
           </div>
         {/if}
-        <div class="clarification-button">
+        <!-- <div class="clarification-button">
           <Input
             on:click={showModal(modalClarification)}
             label="Aclaración"
@@ -497,7 +504,7 @@
             className="btn-plain"
             icon=""
           />
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
