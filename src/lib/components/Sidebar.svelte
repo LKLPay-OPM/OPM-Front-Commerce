@@ -1,6 +1,11 @@
 <script>
   /* stores */
-  import { isLoggedIn, loggedInUser, linkSelected, sidebar } from "$lib/stores.js";
+  import {
+    isLoggedIn,
+    loggedInUser,
+    linkSelected,
+    sidebar,
+  } from "$lib/stores.js";
   /* controllers */
   import { AuthController } from "$lib/controllers/auth/auth.controller";
   /* router */
@@ -34,7 +39,10 @@
 
 <svelte:window bind:innerWidth bind:innerHeight />
 <div class="navbar no-print">
-  <i on:click={() => ($sidebar = !$sidebar)} on:keydown={() => ($sidebar = !$sidebar)}>
+  <i
+    on:click={() => ($sidebar = !$sidebar)}
+    on:keydown={() => ($sidebar = !$sidebar)}
+  >
     <Icons name="menu-lines" width="24" height="24" />
   </i>
   <div class="logo">
@@ -49,7 +57,10 @@
 <div class="sidebar no-print {$sidebar ? '' : 'close'}">
   <div class="sidebar-start">
     <div class="logo-details">
-      <i on:click={() => ($sidebar = !$sidebar)} on:keydown={() => ($sidebar = !$sidebar)}>
+      <i
+        on:click={() => ($sidebar = !$sidebar)}
+        on:keydown={() => ($sidebar = !$sidebar)}
+      >
         <Icons name="menu-lines" width="24" height="24" />
       </i>
       {#if innerWidth >= 1000}
@@ -70,7 +81,10 @@
       on:click={() => {
         $linkSelected = "Perfil";
       }}
-      on:keypress={(e) => (e.key === "Enter" ? ($linkSelected = "Perfil") : ($linkSelected = $linkSelected))}
+      on:keypress={(e) =>
+        e.key === "Enter"
+          ? ($linkSelected = "Perfil")
+          : ($linkSelected = $linkSelected)}
       href="/profile"
       class="profile-details"
     >
@@ -79,7 +93,9 @@
       </div>
       <div class="name-job">
         <div class="profile_name">
-          {$loggedInUser?.name ?? cutEmail($loggedInUser?.email.toUpperCase()) ?? ""}
+          {$loggedInUser?.name ??
+            cutEmail($loggedInUser?.email.toUpperCase()) ??
+            ""}
         </div>
         <div class="job">
           {$loggedInUser?.businessName ?? cutEmail($loggedInUser?.email) ?? ""}
@@ -92,14 +108,21 @@
           on:click={() => {
             $linkSelected = option.name;
           }}
-          on:keypress={(e) => (e.key === "Enter" ? ($linkSelected = option.name) : ($linkSelected = $linkSelected))}
+          on:keypress={(e) =>
+            e.key === "Enter"
+              ? ($linkSelected = option.name)
+              : ($linkSelected = $linkSelected)}
           class={$linkSelected === option.name ? "active-link_name" : ""}
         >
           <a href={option.path}>
             <i class={$linkSelected === option.name ? "active-link_name" : ""}>
               <Icons name={option.icon} width="24" height="24" />
             </i>
-            <span class={$linkSelected === option.name ? "active-link_name" : "link_name"}>{option.name}</span>
+            <span
+              class={$linkSelected === option.name
+                ? "active-link_name"
+                : "link_name"}>{option.name}</span
+            >
           </a>
           <ul class="sub-menu blank">
             <li><a class="link_name" href={option.path}>{option.name}</a></li>
@@ -113,7 +136,7 @@
       <div class="theme-toggle">
         <ThemeToggle />
       </div>
-      <li
+      <!-- <li
         on:click={() => {
           $linkSelected = "Ayuda";
         }}
@@ -128,7 +151,7 @@
         <ul class="sub-menu blank">
           <li><a class="link_name" href="/help">Ayuda</a></li>
         </ul>
-      </li>
+      </li> -->
       <li class="logout">
         <a
           href="/login"
