@@ -1,5 +1,5 @@
 /* environment */
-import { PUBLIC_PROFILES_ENDPOINT } from "$env/static/public";
+import { PUBLIC_PROFILES_ENDPOINT } from "$lib/constants/envs";
 /* client */
 import axios from "axios";
 /* constants */
