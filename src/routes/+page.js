@@ -16,10 +16,10 @@ export async function load() {
       const resume = await axiosDevicesClient.get(`/transaction/getPending/balance`);
       const transactions = await axiosDevicesClient.get("/transaction");
       const user = await profilesClient.get("/user/profile");
-      transactions.data.response.resume.Deposit = resume.data.response;
       return {
         transactions: transactions.data?.response,
         user: user.data?.response,
+        deposit: resume.data?.response,
       };
     } catch (err) {
       const handler = await appErrorResponseHandler(err);
