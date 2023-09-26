@@ -9,4 +9,4 @@ node_modules
 *.crt
 *.csr
 *.key
-envs.js
+src/lib/constants/envs.js
