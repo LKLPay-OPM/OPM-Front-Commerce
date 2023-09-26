@@ -1,4 +1,6 @@
 <script>
+  /* svelte */
+  import { error } from "@sveltejs/kit";
   /* stores */
   import { sessionUser } from "$lib/stores";
   /* components */
@@ -10,13 +12,22 @@
   import Icons from "$lib/components/Icons.svelte";
   /* utils */
   import { validateEmail } from "$lib/utils/input";
-  import { tryAgainErrorToast, successCustomMsgToast, errorCustomMsgToast } from "$lib/utils/toast.js";
+  import {
+    tryAgainErrorToast,
+    successCustomMsgToast,
+    errorCustomMsgToast,
+  } from "$lib/utils/toast.js";
   import { formatDecimals } from "$lib/utils/format.js";
   import { copyLinkToClipboard } from "$lib/utils/copyToClipboard.js";
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
-  /* controllers */
-  import { ProfileController } from "$lib/controllers/profile/profile.controller";
-  import { PaymentLinkController } from "$lib/controllers/payment-links/payment-link.controller";
+  /* handlers */
+  import { appErrorResponseHandler } from "$lib/handlers/error.handler";
+  /* clients */
+  import {
+    axiosFraudPreventionManagement,
+    profilesClient,
+  } from "$lib/repos/axios";
+  export const ssr = false;
 
   let token = $sessionUser?.token;
   let refreshToken = $sessionUser?.refreshToken;
@@ -67,20 +78,32 @@
   const generateLink = async () => {
     loading = true;
     try {
-      const { response } = await ProfileController.getProfile();
-      input.commerceName = response?.businessName ?? response?.name ?? "";
-      const link = await PaymentLinkController.generate(input);
-      formSuccess(link);
+      const profile = await profilesClient.get(`/user/profile`);
+      input.commerceName =
+        profile.response?.financial?.businessName ??
+        profile.response?.name ??
+        "";
+      const link = await axiosFraudPreventionManagement.post(`/link`, input);
+      formSuccess(link.data);
       showModal(modalPaymentLinkData);
     } catch (e) {
-      tryAgainErrorToast();
+      const handler = await appErrorResponseHandler(e);
+      const code = e.response.data.statusCode ?? handler?.code ?? 500;
+      const message =
+        e.response.data.name ?? handler?.message ?? "¡Algo salió mal!";
+      errorCustomMsgToast(message);
+      throw new error(code, message);
     } finally {
       loading = false;
     }
   };
 </script>
 
-<Modal id="modalPaymentLinkData" className={`modal-small`} bind:this={modalPaymentLinkData}>
+<Modal
+  id="modalPaymentLinkData"
+  className={`modal-small`}
+  bind:this={modalPaymentLinkData}
+>
   <div slot="header">
     <div class="svg">
       <p>Recibo Generado</p>
@@ -97,10 +120,17 @@
             <label for="copy">
               <Icons name="file-copy" width="16" height="16" />
             </label>
-            <input type="button" id="copy" name="copy" on:click={copyLinkToClipboard(link, "modalPaymentLinkData")} />
+            <input
+              type="button"
+              id="copy"
+              name="copy"
+              on:click={copyLinkToClipboard(link, "modalPaymentLinkData")}
+            />
           </div>
         </span>
-        <textarea readonly bind:this={link} id="link" name="link">{linkData.url}</textarea>
+        <textarea readonly bind:this={link} id="link" name="link"
+          >{linkData.url}</textarea
+        >
       </div>
       <div class="column-element">
         <span>Monto</span>
@@ -143,10 +173,18 @@
         <div class="divider-hor" />
         <form class="form" on:submit|preventDefault={generateLink}>
           <input type="hidden" id="token" name="token" value={token} />
-          <input type="hidden" id="refreshToken" name="refreshToken" value={refreshToken} />
+          <input
+            type="hidden"
+            id="refreshToken"
+            name="refreshToken"
+            value={refreshToken}
+          />
           <IconInput
             on:format={(value) => {
-              if (value.detail.includes(".") && value.detail.match(/^[0-9]+(\.{1})?(([0-9]{3})?)$/g)) {
+              if (
+                value.detail.includes(".") &&
+                value.detail.match(/^[0-9]+(\.{1})?(([0-9]{3})?)$/g)
+              ) {
                 input.amount = formatDecimals(Number(value.detail));
               }
             }}
