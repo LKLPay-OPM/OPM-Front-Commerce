@@ -98,9 +98,9 @@
                 icon=""
               />
             </div>
-            <div class="register-link">
+            <!-- <div class="register-link">
               <a href="/register">Quiero crear una cuenta</a>
-            </div>
+            </div> -->
           </form>
         </div>
       </div>
