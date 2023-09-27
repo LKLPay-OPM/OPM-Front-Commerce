@@ -179,7 +179,54 @@
 
   const exportDataToPDF = async (transactions) => {};
 
-  const exportDataToExcel = async (transactions) => {};
+  const exportDataToExcel = async () => {
+    const start = startDate;
+    const end = endDate;
+    try {
+      if (active === "day") {
+        startDate = transactions[0]["Transaction Date"];
+        endDate = transactions[0]["Transaction Date"];
+      }
+      if (active === "week") {
+        startDate = transactions[0].date;
+        endDate = "999999";
+      } else if (active === "month") {
+        if (transactions.length > 1) {
+          startDate = `${transactions[transactions.length - 1]._id}01`;
+          endDate = "999999";
+        } else {
+          startDate = `${transactions[transactions.length - 1]._id}01`;
+          endDate = `${transactions[transactions.length - 1]._id}99`;
+        }
+      }
+      // window.open(url, '_blank').focus();
+      const excel = axiosDevicesClient
+        .get(
+          `/transaction/report/transactionsReport?startDate=${startDate}&endDate=${endDate}&brand=${cardBrand}`,
+          { responseType: "blob" }
+        )
+        .then((response) => {
+          // create file link in browser's memory
+          const href = URL.createObjectURL(response.data);
+
+          // create "a" HTML element with href to file & click
+          const link = document.createElement("a");
+          link.href = href;
+          link.setAttribute("download", `ventas_${startDate}.csv`); //or any other extension
+          document.body.appendChild(link);
+          link.click();
+
+          // clean up "a" element & remove ObjectURL
+          document.body.removeChild(link);
+          URL.revokeObjectURL(href);
+        });
+    } catch (e) {
+      const handler = await appErrorResponseHandler(e);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
+    }
+  };
 
   const exportDataToCSV = async (transactions) => {};
 
@@ -386,49 +433,48 @@
           icon="search"
         />
       </div>
-      <!-- <div class="export-buttons">
-        <Input
-          on:click={exportDataToCSV(transactions)}
-          label=""
-          id="csv-export"
-          type="button"
-          className="btn-plain btn-square fill-blue {transactions?.length > 0
-            ? ''
-            : 'disabled'}"
-          icon="csv-fill"
-        />
-        <Input
-          on:click={exportDataToExcel(transactions)}
-          label=""
-          id="excel-export"
-          type="button"
-          className="btn-plain btn-square fill-green {transactions?.length > 0
-            ? ''
-            : 'disabled'}"
-          icon="xls-fill"
-        />
-        <Input
-          label=""
-          id="print"
-          type="button"
-          className="btn-plain btn-square fill-blue {transactions?.length > 0
-            ? ''
-            : 'disabled'}"
-          icon="print"
-        />
-        <Input
-          label=""
-          id="pdf-export"
-          type="button"
-          className="btn-plain btn-square fill-red {transactions?.length > 0
-            ? ''
-            : 'disabled'}"
-          icon="pdf-fill"
-        />
-        // <Input on:click={exportDataToCSV(transactions)} label="" id="csv-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="csv-fill"/>
-        // <Input on:click={exportDataToExcel(transactions)} label="" id="excel-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="xls-fill"/>
-        // <Input on:click={exportDataToPDF(transactions)} label="" id="pdf-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/>
-      </div> -->
+      <div class="export-buttons">
+        {#if transactions.length > 0}
+          <!-- <Input
+            on:click={exportDataToCSV(transactions)}
+            label=""
+            id="csv-export"
+            type="button"
+            className="btn-plain btn-square fill-blue {transactions?.length > 0
+              ? ''
+              : 'disabled'}"
+            icon="csv-fill"
+          /> -->
+          <Input
+            on:click={exportDataToExcel}
+            label=""
+            id="excel-export"
+            type="button"
+            className="btn-plain btn-square fill-green {transactions?.length > 0
+              ? ''
+              : 'disabled'}"
+            icon="xls-fill"
+          />
+          <!-- <Input
+            label=""
+            id="print"
+            type="button"
+            className="btn-plain btn-square fill-blue {transactions?.length > 0
+              ? ''
+              : 'disabled'}"
+            icon="print"
+          />
+          <Input
+            label=""
+            id="pdf-export"
+            type="button"
+            className="btn-plain btn-square fill-red {transactions?.length > 0
+              ? ''
+              : 'disabled'}"
+            icon="pdf-fill"
+          /> -->
+        {/if}
+      </div>
     </div>
   </div>
   <div class="middle">
