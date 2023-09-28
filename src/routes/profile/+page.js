@@ -19,13 +19,12 @@ export async function load({ url }) {
   try {
     const user = await profilesClient.get(`/user/profile`);
     const sicCatalog = await axiosDepositsAndFees.get(`/catalog/sicCodesById/${user.data.response.businessLine}`);
-    const businessLineName = sicCatalog.data.response[0].name;
+    const businessLineName = sicCatalog.data.response.name;
     const transactions = await axiosDevicesClient.get(`/transaction`, { params: { filter, start, end } });
     user.data.response.businessLine = businessLineName;
     if (validQueryFilters.includes(filter))
       return { user: user?.data?.response, filter, start, end, transactions: transactions.data?.response };
   } catch (err) {
-    console.error(err);
     const handler = await appErrorResponseHandler(err);
     const code = handler?.code ?? 500;
     const message = handler?.message ?? "¡Algo salió mal!";

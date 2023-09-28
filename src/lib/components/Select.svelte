@@ -11,11 +11,8 @@
   export let optionsList = [];
 
   $: {
-    // console.log(optionsList)
-    // console.log(value)
     if (optionsList[index].value) {
       value = optionsList[index].value;
-      // console.log(value)
     }
   }
 
@@ -69,7 +66,11 @@
     outline: none;
     /* background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #E6E8EF 100%);
 		box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0; */
-    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
+    background: linear-gradient(
+      91.36deg,
+      $background-light-accent-primary 0%,
+      #e6e8ef 100%
+    );
     box-shadow: -5px -5px 8px #f2f4f8, 5px 5px 7px rgba(174, 174, 192, 0.5);
     border-radius: 4px;
   }
@@ -87,7 +88,11 @@
     outline: none;
     /* background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #E6E8EF 100%);
 		box-shadow: inset -3px -3px 4px #F9FCFF, inset 3px 3px 3px #AEB8C0; */
-    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
+    background: linear-gradient(
+      91.36deg,
+      $background-light-accent-primary 0%,
+      #e6e8ef 100%
+    );
     box-shadow: -5px -5px 8px #f2f4f8, 5px 5px 7px rgba(174, 174, 192, 0.5);
     border-radius: 4px;
   }
@@ -114,7 +119,11 @@
     color: #6f7e8c;
     padding: 2rem;
     margin: 2rem;
-    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
+    background: linear-gradient(
+      91.36deg,
+      $background-light-accent-primary 0%,
+      #e6e8ef 100%
+    );
   }
   .box select option.option {
     font-weight: 700;
@@ -123,6 +132,10 @@
     color: $primary-dark;
     padding: 2rem;
     margin: 2rem;
-    background: linear-gradient(91.36deg, $background-light-accent-primary 0%, #e6e8ef 100%);
+    background: linear-gradient(
+      91.36deg,
+      $background-light-accent-primary 0%,
+      #e6e8ef 100%
+    );
   }
 </style>

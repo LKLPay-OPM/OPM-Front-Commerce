@@ -59,11 +59,19 @@
   $: {
     if (radioValue === "1") {
       installments = installmentsPreference;
-      installmentsTotal = Math.round(((sliderValue + sliderValue * (percentage / 100)) / installments) * 100) / 100;
+      installmentsTotal =
+        Math.round(
+          ((sliderValue + sliderValue * (percentage / 100)) / installments) *
+            100
+        ) / 100;
       total = sliderValue + sliderValue * percentage;
     } else if (radioValue === "2") {
       installments = installmentsPreference / 7.5;
-      installmentsTotal = Math.round(((sliderValue + sliderValue * (percentage / 100)) / installments) * 100) / 100;
+      installmentsTotal =
+        Math.round(
+          ((sliderValue + sliderValue * (percentage / 100)) / installments) *
+            100
+        ) / 100;
       total = sliderValue + sliderValue * percentage;
     }
   }
@@ -71,10 +79,6 @@
   const monthlyAveragePercentage = (qty) => {
     return qty * 0.5;
   };
-
-  onMount(() => {
-    //console.log($page)
-  });
 </script>
 
 {#if $isLoggedIn === true}
@@ -102,7 +106,9 @@
         <div>
           <Slider
             bind:value={sliderValue}
-            label={currencyFormatLocal(monthlyAveragePercentage(monthlyAverage))}
+            label={currencyFormatLocal(
+              monthlyAveragePercentage(monthlyAverage)
+            )}
             min="0"
             max={monthlyAveragePercentage(monthlyAverage)}
             step="1"
@@ -116,7 +122,12 @@
         <div class="payments-months">
           <div class="element">
             <p>Pagos</p>
-            <Radio bind:options={radioOptions} fontSize={16} legend="" bind:userSelected={radioValue} />
+            <Radio
+              bind:options={radioOptions}
+              fontSize={16}
+              legend=""
+              bind:userSelected={radioValue}
+            />
           </div>
           <div class="vertical-divider" />
           <div class="element">
@@ -189,7 +200,8 @@
     /* Fill Container */
     background: $background-light-secondary;
     /* container effect */
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 0.625rem;
   }
 
@@ -249,7 +261,12 @@
     display: flex;
     justify-content: center;
     width: 10px;
-    background: linear-gradient(138.32deg, rgba(0, 0, 0, 0.5) 8.26%, rgba(255, 255, 255, 0.5) 91.02%), #eaecf0;
+    background: linear-gradient(
+        138.32deg,
+        rgba(0, 0, 0, 0.5) 8.26%,
+        rgba(255, 255, 255, 0.5) 91.02%
+      ),
+      #eaecf0;
     background-blend-mode: soft-light, normal;
     /* n-stroke */
 

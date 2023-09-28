@@ -16,10 +16,6 @@
 
   export let data;
 
-  $: {
-    console.log(data);
-  }
-
   const dispersionFound = () => {
     if (dispersions.length <= 0) {
       notFound = true;
@@ -34,7 +30,9 @@
   {#if loading == true}
     <Loader />
   {:else}
-    <Layout bind:user={$loggedInUser} {data} />
+    {#key data}
+      <Layout bind:user={$loggedInUser} {data} />
+    {/key}
   {/if}
 {:else}
   <RedirectLogin />

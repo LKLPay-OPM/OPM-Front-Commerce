@@ -7,7 +7,11 @@
   import InfoCard from "$lib/components/InfoCard.svelte";
   import Icons from "$lib/components/Icons.svelte";
   /* utils */
-  import { getMonthName, timeToLocalString, dateToLocalString } from "$lib/utils/date";
+  import {
+    getMonthName,
+    timeToLocalString,
+    dateToLocalString,
+  } from "$lib/utils/date";
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   import { getIconStatusClass } from "$lib/utils/iconClass";
 
@@ -24,7 +28,6 @@
       notFound = true;
     } else {
       notFound = false;
-      console.log(transactions);
     }
     loading = false;
   };
@@ -44,16 +47,31 @@
   <div class="content">
     <div class="card-group">
       <div class="card">
-        <InfoCard className={""} title="Monto Total" numData={currencyFormatLocal(resume?.Amount ?? 0)} />
+        <InfoCard
+          className={""}
+          title="Monto Total"
+          numData={currencyFormatLocal(resume?.Amount ?? 0)}
+        />
       </div>
       <div class="card">
-        <InfoCard className={""} title="N° de Ventas" numData={resume?.Sold ?? "0"} />
+        <InfoCard
+          className={""}
+          title="N° de Ventas"
+          numData={resume?.Sold ?? "0"}
+        />
       </div>
       <div class="card">
-        <InfoCard className={""} title="Saldo a Depositar" numData={currencyFormatLocal(resume?.Deposit ?? 0)} />
+        <InfoCard
+          className={""}
+          title="Saldo a Depositar"
+          numData={currencyFormatLocal(data?.deposit ?? 0)}
+        />
       </div>
     </div>
-    <div class="transactions card-primary" style={transactions?.length <= 0 ? "min-height: 25rem;" : ""}>
+    <div
+      class="transactions card-primary"
+      style={transactions?.length <= 0 ? "min-height: 25rem;" : ""}
+    >
       <div class="top">
         <div class="top__left">
           <p><a href="/transactions">Últimas Transacciones</a></p>
@@ -75,15 +93,27 @@
             </thead>
             <tbody>
               {#each transactions as transaction}
-                <tr class="clickable" on:click={() => goto(`/transactions/detail?ticket=${transaction?._id}`)}>
-                  <td class="sm">{timeToLocalString(transaction["Transaction Time"])}</td>
+                <tr
+                  class="clickable"
+                  on:click={() =>
+                    goto(`/transactions/detail?ticket=${transaction?._id}`)}
+                >
+                  <td class="sm"
+                    >{timeToLocalString(transaction["Transaction Time"])}</td
+                  >
                   <td class="sm">{transaction["ID Transaction"]}</td>
                   <td>{currencyFormatLocal(transaction?.Amount)}</td>
-                  <td class="">{currencyFormatLocal(transaction?.comission)}</td>
+                  <td class="">{currencyFormatLocal(transaction?.comission)}</td
+                  >
                   <td class="sm md">{currencyFormatLocal(transaction?.iva)}</td>
-                  <td class="">{currencyFormatLocal(transaction?.toDeposit)}</td>
+                  <td class="">{currencyFormatLocal(transaction?.toDeposit)}</td
+                  >
                   <td class="">
-                    <i class={`icon ${getIconStatusClass(transaction.transactionStatus)} tooltip`}>
+                    <i
+                      class={`icon ${getIconStatusClass(
+                        transaction.transactionStatus
+                      )} tooltip`}
+                    >
                       <Icons
                         name={transaction.type === "tpv"
                           ? "terminal"

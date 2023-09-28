@@ -34,7 +34,6 @@
   afterUpdate(async () => {
     if ($isLoggedIn === true && $loggedInUser.role) {
       const userRole = $loggedInUser.role;
-      //console.log({userRole})
       await navbarOptions(userRole);
     } else {
       options = [];
@@ -57,10 +56,15 @@
         <div class="dropdown dropdown-end">
           <label for="" class="btn btn-ghost btn-circle avatar">
             <div class="w-10 rounded-full">
-              <img alt="imagen" src="https://api.lorem.space/image/face?hash=33791" />
+              <img
+                alt="imagen"
+                src="https://api.lorem.space/image/face?hash=33791"
+              />
             </div>
           </label>
-          <ul class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+          <ul
+            class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
+          >
             <!-- <li>
                 <a href="/profile" class="justify-between">
                   Profile
@@ -69,12 +73,7 @@
               </li> -->
             <!-- <li><a href="/settings">Settings</a></li> -->
             <li>
-              <a
-                href="/"
-                on:click={() => {
-                  console.log("logout");
-                }}>Logout</a
-              >
+              <a href="/" on:click={() => {}}>Logout</a>
             </li>
           </ul>
         </div>

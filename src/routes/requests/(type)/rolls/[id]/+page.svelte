@@ -32,20 +32,17 @@
   let innerWidth = 0;
   let innerHeight = 0;
 
-  $: {
-    console.log(data);
-  }
-
   const sendComment = async () => {
     try {
-      const response = await ticketsClient.post(`/ticket/${ticket._id}/comment`, { description });
+      const response = await ticketsClient.post(
+        `/ticket/${ticket._id}/comment`,
+        { description }
+      );
       description = "";
       comments.push(response?.data?.response);
       comments = comments;
-      console.log(response?.data?.response);
     } catch (err) {
       errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
-      console.error(err);
       const handler = await appErrorResponseHandler(err);
       const code = handler?.code ?? 500;
       const message = handler?.message ?? "¡Algo salió mal!";
@@ -68,7 +65,11 @@
 <div class="tickets-list" class:hidden={optionSelected !== 0}>
   <div class="ticket card-primary">
     <div class="row">
-      <CardHeader id={ticket._id} type={ticketTypeHandler(ticket.type)} status={ticket.status} />
+      <CardHeader
+        id={ticket._id}
+        type={ticketTypeHandler(ticket.type)}
+        status={ticket.status}
+      />
     </div>
     <!-- <div class="row">
       <RowElement description={ticket.description} />
@@ -76,14 +77,18 @@
     <div class="row margin-btm-1">
       <div class="col">
         <div class="element">
-          <p>Cantidad de Rollos solicitada <span>{ticket.request.quantity}</span></p>
+          <p>
+            Cantidad de Rollos solicitada <span>{ticket.request.quantity}</span>
+          </p>
         </div>
       </div>
     </div>
     <div class="row">
       {#each comments as comment}
         <Comment
-          color={comment.role === "Admin" ? "var(--primary-light)" : "var(--secondary-light)"}
+          color={comment.role === "Admin"
+            ? "var(--primary-light)"
+            : "var(--secondary-light)"}
           description={comment.description}
           date={new Date(comment.createdAt)}
         />

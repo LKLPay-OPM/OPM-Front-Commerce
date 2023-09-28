@@ -20,7 +20,6 @@ export async function load({ url, params }) {
     if (validQueryFilters.includes(filter))
       return { brand, date, filter, start, end, response: response.data?.response };
   } catch (err) {
-    console.error(err);
     throw new error(500, "Something went wrong!");
   }
 }

@@ -1,0 +1,14 @@
+.git
+node_modules
+.git*
+.npmrc
+README.md
+Dockerfile*
+docker-compose.yml
+public
+.svelte-kit
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
+.dc-back

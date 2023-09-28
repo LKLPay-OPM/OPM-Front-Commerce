@@ -18,7 +18,11 @@
   /*  */
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
-  import { generatePDF, generateCSV, generateXLSX } from "$lib/hooks/exportDataToFile.js";
+  import {
+    generatePDF,
+    generateCSV,
+    generateXLSX,
+  } from "$lib/hooks/exportDataToFile.js";
   /* icons */
   import Icons from "$lib/components/Icons.svelte";
   /* Constants */
@@ -26,7 +30,10 @@
   /* utils */
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   import { getStringDate, parseSlashDate } from "$lib/utils/date";
-  import { errorCustomMsgToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  import {
+    errorCustomMsgToast,
+    successCustomMsgToast,
+  } from "$lib/utils/toast.js";
   /* handlers */
   import { appErrorResponseHandler } from "$lib/handlers/error.handler";
   /* axios */
@@ -120,9 +127,7 @@
 
   const exportDataToCSV = async (transactions) => {};
 
-  const handleClarification = () => {
-    console.log(clarification);
-  };
+  const handleClarification = () => {};
 
   const showModal = (option) => {
     option.show();
@@ -138,7 +143,11 @@
 <div class="transactions">
   <div class="top">
     <div class="top__middle">
-      <ButtonGroup active={filter} options={filterByDateOptions} on:click={handleFilterClick} />
+      <ButtonGroup
+        active={filter}
+        options={filterByDateOptions}
+        on:click={handleFilterClick}
+      />
     </div>
     <div class="top__right">
       <div class="export-buttons">
@@ -147,7 +156,9 @@
           label=""
           id="csv-export"
           type="button"
-          className="btn-plain btn-square fill-blue {transactions?.length > 0 ? '' : 'disabled'}"
+          className="btn-plain btn-square fill-blue {transactions?.length > 0
+            ? ''
+            : 'disabled'}"
           icon="csv-fill"
         />
         <Input
@@ -155,21 +166,27 @@
           label=""
           id="excel-export"
           type="button"
-          className="btn-plain btn-square fill-green {transactions?.length > 0 ? '' : 'disabled'}"
+          className="btn-plain btn-square fill-green {transactions?.length > 0
+            ? ''
+            : 'disabled'}"
           icon="xls-fill"
         />
         <Input
           label=""
           id="print"
           type="button"
-          className="btn-plain btn-square fill-blue {transactions?.length > 0 ? '' : 'disabled'}"
+          className="btn-plain btn-square fill-blue {transactions?.length > 0
+            ? ''
+            : 'disabled'}"
           icon="print"
         />
         <Input
           label=""
           id="pdf-export"
           type="button"
-          className="btn-plain btn-square fill-red {transactions?.length > 0 ? '' : 'disabled'}"
+          className="btn-plain btn-square fill-red {transactions?.length > 0
+            ? ''
+            : 'disabled'}"
           icon="pdf-fill"
         />
         <!-- <Input on:click={exportDataToCSV(transactions)} label="" id="csv-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="csv-fill"/> -->
@@ -181,18 +198,34 @@
   <div class="middle">
     <div class="card-group">
       <div class="element">
-        <InfoCard className={""} title="Monto Total" numData={currencyFormatLocal(resume?.Amount ?? 0)} />
+        <InfoCard
+          className={""}
+          title="Monto Total"
+          numData={currencyFormatLocal(resume?.Amount ?? 0)}
+        />
       </div>
       <div class="element">
-        <InfoCard className={""} title="Comisión" numData={currencyFormatLocal(resume?.Comission ?? 0)} />
+        <InfoCard
+          className={""}
+          title="Comisión"
+          numData={currencyFormatLocal(resume?.Comission ?? 0)}
+        />
       </div>
       {#if (typeof resume?.Tips != "undefined" && resume?.Tips > 0) || typeof resume?.Tips != "undefined"}
         <div class="element">
-          <InfoCard className={""} title="Propinas" numData={currencyFormatLocal(resume?.Tips ?? 0)} />
+          <InfoCard
+            className={""}
+            title="Propinas"
+            numData={currencyFormatLocal(resume?.Tips ?? 0)}
+          />
         </div>
       {/if}
       <div class="element">
-        <InfoCard className={""} title="Saldo a Depositar" numData={currencyFormatLocal(resume?.Deposit ?? 0)} />
+        <InfoCard
+          className={""}
+          title="Saldo a Depositar"
+          numData={currencyFormatLocal(resume?.Deposit ?? 0)}
+        />
       </div>
     </div>
   </div>

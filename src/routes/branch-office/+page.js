@@ -8,7 +8,7 @@ import { profilesClient, axiosDevicesClient } from "$lib/repos/axios";
 export const ssr = false;
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({url}) {
+export async function load({ url }) {
   const regexp = new RegExp("(day|week|month)");
   let filter = url.searchParams.get("filter") ?? "day";
   const start = Number(url.searchParams.get("start") ?? 0);
@@ -18,7 +18,6 @@ export async function load({url}) {
     const transactions = await axiosDevicesClient.get(`/transaction`, { params: { filter, start, end } });
     if (validQueryFilters.includes(filter)) return { filter, start, end, transactions: transactions.data?.response };
   } catch (err) {
-    console.error(err);
     throw new error(500, "Something went wrong!");
   }
 }

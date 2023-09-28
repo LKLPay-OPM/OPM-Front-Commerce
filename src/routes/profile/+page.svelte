@@ -1,5 +1,10 @@
 <script>
-  import { isLoggedIn, loggedInUser, redirectBankProfile, toastId } from "$lib/stores";
+  import {
+    isLoggedIn,
+    loggedInUser,
+    redirectBankProfile,
+    toastId,
+  } from "$lib/stores";
   import { onMount, afterUpdate } from "svelte";
   /* components */
   import DateTitle from "$lib/components/DateTitle.svelte";
@@ -116,23 +121,17 @@
   let avatar = "";
 
   const handleChangeEmail = (currentPassword, newEmail) => {
-    // console.log(currentPassword, newEmail)
-    // changeEmail(currentPassword, newEmail);
     currPassword = "";
     newEmail = "";
   };
 
   const handleChangePassword = (currentPassword, newPassword) => {
-    // console.log(currentPassword, newPassword)
-    // changePassword(currentPassword, newPassword);
     currPassword = "";
     newPass = "";
     repeatPassword = "";
   };
 
-  const handleUpdateName = async () => {
-    console.log(user);
-  };
+  const handleUpdateName = async () => {};
 
   const getMonth = (month) => {
     const monthsArray = {
@@ -154,7 +153,6 @@
   };
 
   const openModal = (option) => {
-    // console.log(option)
     option.show();
   };
 
@@ -206,7 +204,11 @@
           id="IneFront"
           bind:file={userUpdate.ineFront}
           className={`btn-plain ${
-            userUpdate.ineFront === "" ? "" : checkFileSize(userUpdate.ineFront) ? "btn-success" : "border-btn-error"
+            userUpdate.ineFront === ""
+              ? ""
+              : checkFileSize(userUpdate.ineFront)
+              ? "btn-success"
+              : "border-btn-error"
           }`}
           accept="image/jpeg, image/png, application/pdf"
         />
@@ -215,7 +217,11 @@
           id="IneBack"
           bind:file={userUpdate.ineBack}
           className={`btn-plain ${
-            userUpdate.ineBack === "" ? "" : checkFileSize(userUpdate.ineBack) ? "btn-success" : "border-btn-error"
+            userUpdate.ineBack === ""
+              ? ""
+              : checkFileSize(userUpdate.ineBack)
+              ? "btn-success"
+              : "border-btn-error"
           }`}
           accept="image/jpeg, image/png, application/pdf"
         />
@@ -290,7 +296,9 @@
       type="button"
       className={`
         ${
-          userUpdate.clabe != "" && userUpdate.bankStatement != "" && checkFileSize(userUpdate.bankStatement)
+          userUpdate.clabe != "" &&
+          userUpdate.bankStatement != "" &&
+          checkFileSize(userUpdate.bankStatement)
             ? "btn"
             : "btn-plain disabled"
         }`}
@@ -309,14 +317,19 @@
             <div class="element">
               <div class="avatar-container">
                 <div class="avatar">
-                  <img class="avatar-img" alt="imagen" src={$loggedInUser.avatar ? $loggedInUser.avatar : noUser} />
+                  <img
+                    class="avatar-img"
+                    alt="imagen"
+                    src={$loggedInUser.avatar ? $loggedInUser.avatar : noUser}
+                  />
                 </div>
               </div>
             </div>
             <div class="element">
               <div class="title-blue">
                 {#if user.financial.businessName || user.name}
-                  {user.financial.businessName ?? `${user.name} ${user.firstLastName}`}
+                  {user.financial.businessName ??
+                    `${user.name} ${user.firstLastName}`}
                 {:else}
                   <div class="trigger">
                     <label for="nameModalTrigger">Ingresa tu Nombre</label>
@@ -384,7 +397,9 @@
                 </div>
               {:else}
                 <div class="trigger">
-                  <label class="title" for="clabeModalTrigger">Ingresa tu CLABE</label>
+                  <label class="title" for="clabeModalTrigger"
+                    >Ingresa tu CLABE</label
+                  >
                   <input
                     id="clabeModalTrigger"
                     type="button"
@@ -421,7 +436,8 @@
                   C.P. {user.financial.zipCode ?? "N/A"}
                 </div>
                 <div class="description text-left">
-                  {user.financial.town ?? "N/A"}, {user.financial.state ?? "N/A"}
+                  {user.financial.town ?? "N/A"}, {user.financial.state ??
+                    "N/A"}
                 </div>
               </div>
               <div class="divider-hor" />
@@ -451,14 +467,21 @@
                   C.P. {user.commercial.zipCode ?? "N/A"}
                 </div>
                 <div class="description text-left">
-                  {user.commercial.town ?? "N/A"}, {user.commercial.state ?? "N/A"}
+                  {user.commercial.town ?? "N/A"}, {user.commercial.state ??
+                    "N/A"}
                 </div>
               </div>
             {/if}
           </div>
         </div>
         <div class="right">
-          <Branches bind:filter {transactions} bind:selected={selectedBranch} {branches} bind:branchView />
+          <Branches
+            bind:filter
+            {transactions}
+            bind:selected={selectedBranch}
+            {branches}
+            bind:branchView
+          />
         </div>
       {:else}
         <div class="card-secondary col padding-1">
@@ -466,7 +489,8 @@
             <div
               class="element-center arrow-blue"
               on:click={() => (branchView = !branchView)}
-              on:keypress={(e) => (e.key === "Enter" ? (branchView = !branchView) : "")}
+              on:keypress={(e) =>
+                e.key === "Enter" ? (branchView = !branchView) : ""}
             >
               <Icons name={"arrow-bwd"} width="24" height="24" />
             </div>
@@ -475,7 +499,9 @@
                 <img
                   class="avatar-img"
                   alt="imagen"
-                  src={selectedBranch.manager.avatar ? $loggedInUser.avatar : noUser}
+                  src={selectedBranch.manager.avatar
+                    ? $loggedInUser.avatar
+                    : noUser}
                 />
               </div>
             </div>
@@ -521,7 +547,13 @@
           </div>
         </div>
         <div class="right">
-          <Branches {filter} {transactions} bind:selected={selectedBranch} {branches} bind:branchView />
+          <Branches
+            {filter}
+            {transactions}
+            bind:selected={selectedBranch}
+            {branches}
+            bind:branchView
+          />
         </div>
       {/if}
     </div>
@@ -627,6 +659,7 @@
     text-align: center;
     color: $primary-dark;
     margin: 0rem 0rem 0.5rem 0rem;
+    white-space: nowrap;
   }
   .description {
     font-weight: 500;

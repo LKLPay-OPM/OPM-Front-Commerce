@@ -1,8 +1,18 @@
 <script>
-  import { booleanStore, toastMsg, toastShown, toastType, toast } from "$lib/stores";
+  import {
+    booleanStore,
+    toastMsg,
+    toastShown,
+    toastType,
+    toast,
+  } from "$lib/stores";
   import Icons from "$lib/components/Icons.svelte";
   /* utils */
-  import { errorCustomMsgToast, successCustomMsgToast, tryAgainErrorToast } from "$lib/utils/toast.js";
+  import {
+    errorCustomMsgToast,
+    successCustomMsgToast,
+    tryAgainErrorToast,
+  } from "$lib/utils/toast.js";
   import { onMount } from "svelte";
 
   const store = booleanStore(false);
@@ -40,9 +50,6 @@
       successCustomMsgToast(`${text}`);
     }
   };
-  $: {
-    console.log(dialog);
-  }
 
   $: {
     if (isShown) {

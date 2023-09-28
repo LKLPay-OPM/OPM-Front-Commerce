@@ -6,10 +6,16 @@
   import Sidebar from "$lib/components/Sidebar.svelte";
   import Loader from "$lib/components/Loader.svelte";
   /* stores */
-  import { isLoggedIn, loggedInUser, darkMode, linkSelected } from "$lib/stores";
+  import {
+    isLoggedIn,
+    loggedInUser,
+    darkMode,
+    linkSelected,
+  } from "$lib/stores";
   /* sveltekit */
   import { page, navigating } from "$app/stores";
   import { browser } from "$app/environment";
+  import { goto } from "$app/navigation";
   /* utils */
   import { checkRouter } from "$lib/utils/verifyRoute";
   import { getToastType } from "$lib/utils/getToastType";
@@ -22,9 +28,15 @@
 
   $: {
     if ($isLoggedIn) {
-      const regexp = new RegExp("(profile|transactions|dispersions|requests|payment-link|help)");
+      const regexp = new RegExp(
+        "(profile|transactions|dispersions|requests|payment-link|help)"
+      );
       $linkSelected = routes($page.route.id.match(regexp)?.[0] ?? "");
       checkRouter($loggedInUser, $page);
+    } else {
+      if (browser) {
+        goto("/login");
+      }
     }
     if (browser) {
       if ($darkMode) {

@@ -5,7 +5,7 @@ import {
   PUBLIC_DEPOSITS_AND_FEES_ENDPOINT,
   PUBLIC_FRAUD_PREVENTION_MANAGEMENT_ENDPOINT,
   PUBLIC_TICKETS_ENDPOINT,
-} from "$env/static/public";
+} from "$lib/constants/envs";
 /* client */
 import axios from "axios";
 /* constants */

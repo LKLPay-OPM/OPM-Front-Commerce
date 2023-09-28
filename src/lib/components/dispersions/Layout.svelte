@@ -1,7 +1,13 @@
 <script>
+  /* svelte */
   import { error } from "@sveltejs/kit";
+  import { invalidateAll } from "$app/navigation";
   /* stores */
-  import { loggedInUser, redirectUrgentDispersions, toastId } from "$lib/stores";
+  import {
+    loggedInUser,
+    redirectUrgentDispersions,
+    toastId,
+  } from "$lib/stores";
   /* components */
   import Input from "$lib/components/Input.svelte";
   import DateTitle from "$lib/components/DateTitle.svelte";
@@ -15,11 +21,17 @@
   import ButtonGroup from "$lib/components/ButtonGroup.svelte";
   import Table from "$lib/components/dispersions/table/Dispersions.svelte";
   import { onMount } from "svelte";
-  import { generatePDF, generateCSV, generateXLSX } from "$lib/hooks/exportDataToFile.js";
+  import {
+    generatePDF,
+    generateCSV,
+    generateXLSX,
+  } from "$lib/hooks/exportDataToFile.js";
   /* utils */
-  import { getMonthName, timeToLocalString, dateToLocalString } from "$lib/utils/date.js";
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
-  import { errorCustomMsgToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  import {
+    errorCustomMsgToast,
+    successCustomMsgToast,
+  } from "$lib/utils/toast.js";
   /* client */
   import { axiosDepositsAndFees } from "$lib/repos/axios";
   /* handlers */
@@ -29,17 +41,13 @@
   export let data;
   // const uid = user.uid;
   let dispersions = data?.dispersions /* ?.dispersions */ ?? [];
-  // $:{console.log(dispersions)}
   let resume = data?.resume /* ?.dispersions */ ?? [];
   let rate = data?.rate ?? {};
   let iva = 16;
   let search = [];
-  let selectedDispersion = {};
   let dispersionDetailView = false;
   let notFound = false;
-  let notFoundMessage = "No se encontraron registros";
   let loading = false;
-  let date = new Date();
   let active = "1";
   let terms = false;
   let termsDepositPreference = false;
@@ -122,7 +130,9 @@
 
   const fetchByTicketId = async () => {
     try {
-      const response = await axiosDepositsAndFees.post(`/dispersion`, { id: ticketId });
+      const response = await axiosDepositsAndFees.post(`/dispersion`, {
+        id: ticketId,
+      });
       dispersions = response.data.response.dispersions;
     } catch (e) {
       errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
@@ -161,7 +171,6 @@
   };
 
   const handleClarification = async () => {
-    console.log(clarification);
     try {
       $toastId = "";
       const response = await axiosDepositsAndFees.post(`/dispersion/urgent`, {
@@ -169,7 +178,9 @@
       });
       successCustomMsgToast("Tus solicitud se procesó con éxito");
     } catch (e) {
-      errorCustomMsgToast("Ocurrió un error al procesar tu solicitud, vuelve a intentarlo");
+      errorCustomMsgToast(
+        "Ocurrió un error al procesar tu solicitud, vuelve a intentarlo"
+      );
       const handler = await appErrorResponseHandler(e);
       const code = handler?.code ?? 500;
       const message = handler?.message ?? "¡Algo salió mal!";
@@ -183,8 +194,11 @@
         amount: Number(immediateDeposit.immediateDepositQty),
       });
       successCustomMsgToast("Tus solicitud se procesó con éxito");
+      invalidateAll();
     } catch (e) {
-      errorCustomMsgToast("Ocurrió un error al procesar tu solicitud, vuelve a intentarlo");
+      errorCustomMsgToast(
+        "Ocurrió un error al procesar tu solicitud, vuelve a intentarlo"
+      );
       const handler = await appErrorResponseHandler(e);
       const code = handler?.code ?? 500;
       const message = handler?.message ?? "¡Algo salió mal!";
@@ -253,7 +267,10 @@
   <div slot="content">
     <div class="immediate-deposit">
       <div class="error">
-        <p>Todas tus ventas acumuladas del día hasta las 6:00pm serán depositadas a las 6:30pm.</p>
+        <p>
+          Todas tus ventas acumuladas del día hasta las 6:00pm serán depositadas
+          a las 6:30pm.
+        </p>
       </div>
       <div class="column-element">
         <div class="blue-title">
@@ -269,9 +286,10 @@
         </div>
         <p>
           He Leído, entendido y acepto los
-          <a href="/#terms">Términos y Condiciones Generales</a> de LklPay, así como su
-          <a href="/#privacy">Política de Privacidad</a> y, por lo tanto estoy de acuerdo en el uso y procesamiento de datos
-          personales.
+          <a href="/#terms">Términos y Condiciones Generales</a> de LklPay, así
+          como su
+          <a href="/#privacy">Política de Privacidad</a> y, por lo tanto estoy de
+          acuerdo en el uso y procesamiento de datos personales.
         </p>
       </div>
     </div>
@@ -309,7 +327,8 @@
       {#if resume?.depositBalance < 500}
         <div class="error">
           <p>
-            El monto mínimo para solicitar es de $500.00 mxn más el costo extra del {immediateDeposit.immediateDepositComission}%
+            El monto mínimo para solicitar es de $500.00 mxn más el costo extra
+            del {immediateDeposit.immediateDepositComission}%
           </p>
         </div>
       {:else}
@@ -348,7 +367,9 @@
           </div>
           <div class="content">
             <p>
-              {currencyFormatLocal(immediateDeposit.immediateDepositQty - getUrgentComission()) ?? "$0"}
+              {currencyFormatLocal(
+                immediateDeposit.immediateDepositQty - getUrgentComission()
+              ) ?? "$0"}
             </p>
           </div>
         </div>
@@ -358,9 +379,10 @@
           </div>
           <p>
             He Leído, entendido y acepto los
-            <a href="/#terms">Términos y Condiciones Generales</a> de LklPay, así como su
-            <a href="/#privacy">Política de Privacidad</a> y, por lo tanto estoy de acuerdo en el uso y procesamiento de
-            datos personales.
+            <a href="/#terms">Términos y Condiciones Generales</a> de LklPay,
+            así como su
+            <a href="/#privacy">Política de Privacidad</a> y, por lo tanto estoy
+            de acuerdo en el uso y procesamiento de datos personales.
           </p>
         </div>
       {/if}
@@ -385,7 +407,9 @@
         type="button"
         className={`
             ${
-              immediateDeposit.immediateDepositQty > 0 && immediateDeposit.immediateDepositQty >= 500 && terms === true
+              immediateDeposit.immediateDepositQty > 0 &&
+              immediateDeposit.immediateDepositQty >= 500 &&
+              terms === true
                 ? "btn"
                 : "btn-plain disabled"
             }`}
@@ -446,7 +470,11 @@
   </div>
   <div slot="content">
     <div class="date-range-input">
-      <DatePicker label="Del" id="date-range-start" bind:value={dateRangeStart} />
+      <DatePicker
+        label="Del"
+        id="date-range-start"
+        bind:value={dateRangeStart}
+      />
       <DatePicker label="Al" id="date-range-end" bind:value={dateRangeEnd} />
     </div>
   </div>
@@ -508,7 +536,11 @@
       </div>
       <div class="top__middle">
         <DateTitle />
-        <ButtonGroup {active} options={buttonGroupOptions} on:click={handleFilterClick} />
+        <!-- <ButtonGroup
+          {active}
+          options={buttonGroupOptions}
+          on:click={handleFilterClick}
+        /> -->
         <!-- <ButtonGroup bind:active options={buttonGroupOptions} /> -->
       </div>
       <div class="top__right">
@@ -530,44 +562,52 @@
             icon="search"
           />
         </div>
-        <div class="export-buttons">
+        <!-- <div class="export-buttons">
           <Input
             label=""
             id="csv-export"
             type="button"
-            className="btn-plain btn-square fill-blue {dispersions.length > 0 ? '' : 'disabled'}"
+            className="btn-plain btn-square fill-blue {dispersions.length > 0
+              ? ''
+              : 'disabled'}"
             icon="csv-fill"
           />
           <Input
             label=""
             id="excel-export"
             type="button"
-            className="btn-plain btn-square fill-green {dispersions.length > 0 ? '' : 'disabled'}"
+            className="btn-plain btn-square fill-green {dispersions.length > 0
+              ? ''
+              : 'disabled'}"
             icon="xls-fill"
           />
           <Input
             label=""
             id="print"
             type="button"
-            className="btn-plain btn-square fill-blue {dispersions.length > 0 ? '' : 'disabled'}"
+            className="btn-plain btn-square fill-blue {dispersions.length > 0
+              ? ''
+              : 'disabled'}"
             icon="print"
           />
           <Input
             label=""
             id="pdf-export"
             type="button"
-            className="btn-plain btn-square fill-red {dispersions.length > 0 ? '' : 'disabled'}"
+            className="btn-plain btn-square fill-red {dispersions.length > 0
+              ? ''
+              : 'disabled'}"
             icon="pdf-fill"
           />
-          <!-- <Input on:click={exportDataToCSV(dispersions)} label="" id="csv-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/> -->
-          <!-- <Input on:click={exportDataToExcel(dispersions)} label="" id="excel-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="xls-fill"/> -->
-          <!-- <Input on:click={exportDataToPDF(dispersions)} label="" id="pdf-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/> -->
-        </div>
+          //<Input on:click={exportDataToCSV(dispersions)} label="" id="csv-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/>
+          //<Input on:click={exportDataToExcel(dispersions)} label="" id="excel-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="xls-fill"/>
+          //<Input on:click={exportDataToPDF(dispersions)} label="" id="pdf-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/>
+        </div> -->
       </div>
     </div>
     <div class="middle">
       <div class="card-group">
-        <div class="button">
+        <!-- <div class="button">
           <Input
             on:click={showModal(modalClarification)}
             label="Solicitar Aclaración"
@@ -576,7 +616,7 @@
             className="btn-plain"
             icon=""
           />
-        </div>
+        </div> -->
         <div class="element">
           <InfoCard
             className={""}
@@ -584,7 +624,7 @@
             numData={currencyFormatLocal(resume?.depositBalance ?? 0)}
           />
         </div>
-        <div class="button">
+        <!-- <div class="button">
           <Input
             on:click={showModal(modalImmediateDeposit)}
             label="Depósito Urgente"
@@ -593,7 +633,7 @@
             className="btn"
             icon=""
           />
-        </div>
+        </div> -->
       </div>
     </div>
   {/if}

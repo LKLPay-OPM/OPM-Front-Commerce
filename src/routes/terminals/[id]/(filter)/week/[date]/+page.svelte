@@ -8,7 +8,6 @@
 
   /* exports */
   export let data;
-  $: console.log(data);
   /* imports */
   import { goto } from "$app/navigation";
 
@@ -114,7 +113,11 @@
       </thead>
       <tbody class="inside">
         {#each transactions as transaction}
-          <tr class="clickable number" on:click={() => goto(`/transactions/detail?ticket=${transaction?._id}`)}>
+          <tr
+            class="clickable number"
+            on:click={() =>
+              goto(`/transactions/detail?ticket=${transaction?._id}`)}
+          >
             <td class="responsive"
               >{getTransactionDate(transaction["Transaction Date"]) +
                 " - " +
@@ -126,7 +129,11 @@
             <td>{currencyFormatLocal(transaction?.iva)}</td>
             <td>{currencyFormatLocal(transaction?.toDeposit)}</td>
             <td class="responsive">
-              <i class={`icon ${getIconStatusClass(transaction.transactionStatus)} tooltip`}>
+              <i
+                class={`icon ${getIconStatusClass(
+                  transaction.transactionStatus
+                )} tooltip`}
+              >
                 <Icons
                   name={transaction.type === "tpv"
                     ? "terminal"
@@ -150,7 +157,12 @@
       </tbody>
     </table>
     {#if count > 10}
-      <Pagination bind:paginationStart bind:paginationEnd bind:count on:pagination={handleFilterClick} />
+      <Pagination
+        bind:paginationStart
+        bind:paginationEnd
+        bind:count
+        on:pagination={handleFilterClick}
+      />
     {/if}
   </div>
 </div>
