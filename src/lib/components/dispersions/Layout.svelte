@@ -3,11 +3,7 @@
   import { error } from "@sveltejs/kit";
   import { invalidateAll } from "$app/navigation";
   /* stores */
-  import {
-    loggedInUser,
-    redirectUrgentDispersions,
-    toastId,
-  } from "$lib/stores";
+  import { loggedInUser, redirectUrgentDispersions, toastId } from "$lib/stores";
   /* components */
   import Input from "$lib/components/Input.svelte";
   import DateTitle from "$lib/components/DateTitle.svelte";
@@ -21,17 +17,10 @@
   import ButtonGroup from "$lib/components/ButtonGroup.svelte";
   import Table from "$lib/components/dispersions/table/Dispersions.svelte";
   import { onMount } from "svelte";
-  import {
-    generatePDF,
-    generateCSV,
-    generateXLSX,
-  } from "$lib/hooks/exportDataToFile.js";
+  import { generatePDF, generateCSV, generateXLSX } from "$lib/hooks/exportDataToFile.js";
   /* utils */
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
-  import {
-    errorCustomMsgToast,
-    successCustomMsgToast,
-  } from "$lib/utils/toast.js";
+  import { errorCustomMsgToast, successCustomMsgToast } from "$lib/utils/toast.js";
   /* client */
   import { axiosDepositsAndFees } from "$lib/repos/axios";
   /* handlers */
@@ -178,9 +167,7 @@
       });
       successCustomMsgToast("Tus solicitud se procesó con éxito");
     } catch (e) {
-      errorCustomMsgToast(
-        "Ocurrió un error al procesar tu solicitud, vuelve a intentarlo"
-      );
+      errorCustomMsgToast("Ocurrió un error al procesar tu solicitud, vuelve a intentarlo");
       const handler = await appErrorResponseHandler(e);
       const code = handler?.code ?? 500;
       const message = handler?.message ?? "¡Algo salió mal!";
@@ -196,9 +183,7 @@
       successCustomMsgToast("Tus solicitud se procesó con éxito");
       invalidateAll();
     } catch (e) {
-      errorCustomMsgToast(
-        "Ocurrió un error al procesar tu solicitud, vuelve a intentarlo"
-      );
+      errorCustomMsgToast("Ocurrió un error al procesar tu solicitud, vuelve a intentarlo");
       const handler = await appErrorResponseHandler(e);
       const code = handler?.code ?? 500;
       const message = handler?.message ?? "¡Algo salió mal!";
@@ -267,10 +252,7 @@
   <div slot="content">
     <div class="immediate-deposit">
       <div class="error">
-        <p>
-          Todas tus ventas acumuladas del día hasta las 6:00pm serán depositadas
-          a las 6:30pm.
-        </p>
+        <p>Todas tus ventas acumuladas del día hasta las 6:00pm serán depositadas a las 6:30pm.</p>
       </div>
       <div class="column-element">
         <div class="blue-title">
@@ -286,10 +268,9 @@
         </div>
         <p>
           He Leído, entendido y acepto los
-          <a href="/#terms">Términos y Condiciones Generales</a> de LklPay, así
-          como su
-          <a href="/#privacy">Política de Privacidad</a> y, por lo tanto estoy de
-          acuerdo en el uso y procesamiento de datos personales.
+          <a href="/#terms">Términos y Condiciones Generales</a> de LklPay, así como su
+          <a href="/#privacy">Política de Privacidad</a> y, por lo tanto estoy de acuerdo en el uso y procesamiento de datos
+          personales.
         </p>
       </div>
     </div>
@@ -327,8 +308,7 @@
       {#if resume?.depositBalance < 500}
         <div class="error">
           <p>
-            El monto mínimo para solicitar es de $500.00 mxn más el costo extra
-            del {immediateDeposit.immediateDepositComission}%
+            El monto mínimo para solicitar es de $500.00 mxn más el costo extra del {immediateDeposit.immediateDepositComission}%
           </p>
         </div>
       {:else}
@@ -367,10 +347,11 @@
           </div>
           <div class="content">
             <p>
-              {currencyFormatLocal(
-                immediateDeposit.immediateDepositQty - getUrgentComission()
-              ) ?? "$0"}
+              {currencyFormatLocal(immediateDeposit.immediateDepositQty - getUrgentComission()) ?? "$0"}
             </p>
+          </div>
+          <div class="msg__error" class:opacity={immediateDeposit.immediateDepositQty >= 500}>
+            <p>El monto mínimo para solicitar es de $500</p>
           </div>
         </div>
         <div class="terms">
@@ -379,10 +360,9 @@
           </div>
           <p>
             He Leído, entendido y acepto los
-            <a href="/#terms">Términos y Condiciones Generales</a> de LklPay,
-            así como su
-            <a href="/#privacy">Política de Privacidad</a> y, por lo tanto estoy
-            de acuerdo en el uso y procesamiento de datos personales.
+            <a href="/#terms">Términos y Condiciones Generales</a> de LklPay, así como su
+            <a href="/#privacy">Política de Privacidad</a> y, por lo tanto estoy de acuerdo en el uso y procesamiento de
+            datos personales.
           </p>
         </div>
       {/if}
@@ -407,9 +387,7 @@
         type="button"
         className={`
             ${
-              immediateDeposit.immediateDepositQty > 0 &&
-              immediateDeposit.immediateDepositQty >= 500 &&
-              terms === true
+              immediateDeposit.immediateDepositQty > 0 && immediateDeposit.immediateDepositQty >= 500 && terms === true
                 ? "btn"
                 : "btn-plain disabled"
             }`}
@@ -470,11 +448,7 @@
   </div>
   <div slot="content">
     <div class="date-range-input">
-      <DatePicker
-        label="Del"
-        id="date-range-start"
-        bind:value={dateRangeStart}
-      />
+      <DatePicker label="Del" id="date-range-start" bind:value={dateRangeStart} />
       <DatePicker label="Al" id="date-range-end" bind:value={dateRangeEnd} />
     </div>
   </div>
@@ -624,7 +598,7 @@
             numData={currencyFormatLocal(resume?.depositBalance ?? 0)}
           />
         </div>
-        <!-- <div class="button">
+        <div class="button">
           <Input
             on:click={showModal(modalImmediateDeposit)}
             label="Depósito Urgente"
@@ -633,7 +607,7 @@
             className="btn"
             icon=""
           />
-        </div> -->
+        </div>
       </div>
     </div>
   {/if}
