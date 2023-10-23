@@ -29,11 +29,9 @@
 
   const goToTransaction = (date) => {
     const path = `
-      /transactions/week/${date}?filter=${active}${
-      startDate != "" ? `&startDate=${startDate}` : ""
-    }${endDate != "" ? `&endDate=${endDate}` : ""}${
-      idTicket != "" ? `&search=${idTicket}` : ""
-    }&start=${paginationStart}&end=${paginationEnd}&brand=${cardBrand}`;
+      /transactions/week/${date}?filter=${active}${startDate != "" ? `&startDate=${startDate}` : ""}${
+      endDate != "" ? `&endDate=${endDate}` : ""
+    }${idTicket != "" ? `&search=${idTicket}` : ""}&start=${paginationStart}&end=${paginationEnd}&brand=${cardBrand}`;
     goto(path);
   };
 </script>
@@ -58,14 +56,9 @@
             <tr
               class="clickable"
               on:click={() => goToTransaction(day.date)}
-              on:keypress={(e) =>
-                e.key === "Enter" ? () => goToTransaction(day.date) : ""}
+              on:keypress={(e) => (e.key === "Enter" ? () => goToTransaction(day.date) : "")}
             >
-              <td class="element"
-                >{innerWidth <= 540
-                  ? ""
-                  : `${day.day} - `}{dateToLocalStringShort(day.date)}</td
-              >
+              <td class="element">{innerWidth <= 540 ? "" : `${day.day} - `}{dateToLocalStringShort(day.date)}</td>
               <td class="element">{day.sold}</td>
               <td class="element">
                 {currencyFormatLocal(day.sales)}
