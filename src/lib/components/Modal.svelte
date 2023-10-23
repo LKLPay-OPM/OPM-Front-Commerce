@@ -137,6 +137,7 @@
     display: flex;
     justify-content: center;
     flex-direction: row;
+    padding: 0 0 1rem 0;
   }
 
   :global(body.dark-mode) {

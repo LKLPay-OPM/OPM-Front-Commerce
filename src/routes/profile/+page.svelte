@@ -121,23 +121,17 @@
   let avatar = "";
 
   const handleChangeEmail = (currentPassword, newEmail) => {
-    // console.log(currentPassword, newEmail)
-    // changeEmail(currentPassword, newEmail);
     currPassword = "";
     newEmail = "";
   };
 
   const handleChangePassword = (currentPassword, newPassword) => {
-    // console.log(currentPassword, newPassword)
-    // changePassword(currentPassword, newPassword);
     currPassword = "";
     newPass = "";
     repeatPassword = "";
   };
 
-  const handleUpdateName = async () => {
-    console.log(user);
-  };
+  const handleUpdateName = async () => {};
 
   const getMonth = (month) => {
     const monthsArray = {
@@ -159,7 +153,6 @@
   };
 
   const openModal = (option) => {
-    // console.log(option)
     option.show();
   };
 

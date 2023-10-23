@@ -25,7 +25,6 @@ export async function load({ url }) {
     if (validQueryFilters.includes(filter))
       return { user: user?.data?.response, filter, start, end, transactions: transactions.data?.response };
   } catch (err) {
-    console.error(err);
     const handler = await appErrorResponseHandler(err);
     const code = handler?.code ?? 500;
     const message = handler?.message ?? "¡Algo salió mal!";

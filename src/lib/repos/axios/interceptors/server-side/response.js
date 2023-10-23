@@ -20,7 +20,6 @@ async function refreshTokenWithCustomHeaders(token, refresh) {
     const user = jwtDecode(data.response.token);
     return { session: data.response, user };
   } catch (error) {
-    console.error("Error refreshing token:", error);
     await appErrorResponseHandler(error);
     throw error;
   }
@@ -33,7 +32,6 @@ export function axiosResponseInterceptorWithCustomHeaders(axiosInstance, token, 
   axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
-      console.log("ERROR: ", error);
       const originalRequest = error.config;
       if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
         originalRequest._retry = true;

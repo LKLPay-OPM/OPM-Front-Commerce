@@ -26,7 +26,6 @@
   let pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
 
   $: {
-    // console.log(all)
     let arr = [];
     branches.map((doc) => {
       doc.transactions.map((el) => {
@@ -34,8 +33,6 @@
       });
     });
     all = [...arr];
-    // console.log(all)
-    // console.log(branchView)
   }
 
   const getBusinessLineName = (businessLine) => {
@@ -93,14 +90,12 @@
     const month = getMonthName(extractMonth);
     let str = string.replace(pattern, `$3 de ${month}`);
     // let str = string.replace(pattern, `$3 de ${month} del 20$1`)
-    // console.log(str)
     return str;
   };
 
   const getTransactionTime = (string) => {
     var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
     let str = string.replace(pattern, `$1:$2:$3`);
-    // console.log(str)
     return str;
   };
 
@@ -116,7 +111,9 @@
       year: "2-digit",
     }).format(today);
 
-    const array = data.filter((date) => date["Transaction Date"] === strToday.replace(pattern, "$3$2$1"));
+    const array = data.filter(
+      (date) => date["Transaction Date"] === strToday.replace(pattern, "$3$2$1")
+    );
     return array;
   };
 
@@ -124,8 +121,12 @@
     active = "week";
     var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
     const curr = new Date();
-    const firstDay = new Date(curr.setDate(curr.getDate() - curr.getDay() + 1)).setHours(0, 0, 0, 0);
-    const lastDay = new Date(curr.setDate(curr.getDate() - curr.getDay() + 7)).setHours(0, 0, 0, 0);
+    const firstDay = new Date(
+      curr.setDate(curr.getDate() - curr.getDay() + 1)
+    ).setHours(0, 0, 0, 0);
+    const lastDay = new Date(
+      curr.setDate(curr.getDate() - curr.getDay() + 7)
+    ).setHours(0, 0, 0, 0);
 
     const first = new Intl.DateTimeFormat("es-MX", {
       month: "2-digit",
@@ -150,8 +151,15 @@
     var pattern = /(\d{2})\/(\d{2})\/(\d{2})/; // String pattern replace for date
     //transactions = [];
     const curr = new Date();
-    const currentMonth = new Date(curr.setMonth(curr.getMonth(), 1)).setHours(0, 0, 0, 0); // Sets Date to actual month day 1 at 00:00
-    const lastDayOfMonth = new Date(curr.setMonth(curr.getMonth() + 1, 0)).setHours(0, 0, 0, 0); // Sets Date to last day of month at 00:00
+    const currentMonth = new Date(curr.setMonth(curr.getMonth(), 1)).setHours(
+      0,
+      0,
+      0,
+      0
+    ); // Sets Date to actual month day 1 at 00:00
+    const lastDayOfMonth = new Date(
+      curr.setMonth(curr.getMonth() + 1, 0)
+    ).setHours(0, 0, 0, 0); // Sets Date to last day of month at 00:00
 
     const first = new Intl.DateTimeFormat("es-MX", {
       month: "2-digit",
@@ -177,7 +185,11 @@
 
 <div class="container">
   <div class="element text-center">
-    <ButtonGroup active={filter} options={filterByDateOptions} on:click={handleFilterClick} />
+    <ButtonGroup
+      active={filter}
+      options={filterByDateOptions}
+      on:click={handleFilterClick}
+    />
   </div>
   {#if !branchView}
     <div class="card-secondary row padding-1">
@@ -223,12 +235,17 @@
             on:click={() => (selected = branch)}
             on:keypress={(e) => (e.key === "Enter" ? (selected = branch) : "")}
             on:click={() => (branchView = !branchView)}
-            on:keypress={(e) => (e.key === "Enter" ? (branchView = !branchView) : "")}
+            on:keypress={(e) =>
+              e.key === "Enter" ? (branchView = !branchView) : ""}
           >
             <div class="element">
               <div class="avatar-container">
                 <div class="avatar">
-                  <img class="avatar-img" alt="imagen" src={branch.avatar ? branch.avatar : noUser} />
+                  <img
+                    class="avatar-img"
+                    alt="imagen"
+                    src={branch.avatar ? branch.avatar : noUser}
+                  />
                 </div>
               </div>
             </div>
@@ -545,7 +562,12 @@
   }
 
   .divider-hor {
-    background: linear-gradient(138.32deg, rgba(0, 0, 0, 0.5) 8.26%, rgba(255, 255, 255, 0.5) 91.02%), #eaecf0;
+    background: linear-gradient(
+        138.32deg,
+        rgba(0, 0, 0, 0.5) 8.26%,
+        rgba(255, 255, 255, 0.5) 91.02%
+      ),
+      #eaecf0;
     background-blend-mode: soft-light, normal;
     /* n-stroke */
 

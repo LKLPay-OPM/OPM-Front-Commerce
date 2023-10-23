@@ -164,6 +164,23 @@
   flex-direction: column;
   justify-content: space-evenly;
   gap: 1rem;
+
+  .column-element {
+    .msg__error {
+      p {
+        font-weight: 700;
+        font-size: .725rem; /* 16px */
+        line-height: 1.25rem; /* 20px */
+        /* or 100% */
+        display: flex;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        /* Text */
+        color: $error;
+      }
+    }
+  }
 }
 
 .immediate-deposit > .error > p {
@@ -369,4 +386,8 @@
   .dispersions-view {
     margin-inline: auto;
   }
+}
+
+.opacity {
+  opacity: 0;
 }

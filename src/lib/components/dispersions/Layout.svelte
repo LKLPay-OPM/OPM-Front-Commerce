@@ -1,7 +1,7 @@
 <script>
   /* svelte */
   import { error } from "@sveltejs/kit";
-  import { invalidateAll } from '$app/navigation';
+  import { invalidateAll } from "$app/navigation";
   /* stores */
   import { loggedInUser, redirectUrgentDispersions, toastId } from "$lib/stores";
   /* components */
@@ -30,7 +30,6 @@
   export let data;
   // const uid = user.uid;
   let dispersions = data?.dispersions /* ?.dispersions */ ?? [];
-  // $:{console.log(dispersions)}
   let resume = data?.resume /* ?.dispersions */ ?? [];
   let rate = data?.rate ?? {};
   let iva = 16;
@@ -120,7 +119,9 @@
 
   const fetchByTicketId = async () => {
     try {
-      const response = await axiosDepositsAndFees.post(`/dispersion`, { id: ticketId });
+      const response = await axiosDepositsAndFees.post(`/dispersion`, {
+        id: ticketId,
+      });
       dispersions = response.data.response.dispersions;
     } catch (e) {
       errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
@@ -159,14 +160,12 @@
   };
 
   const handleClarification = async () => {
-    console.log(clarification);
     try {
       $toastId = "";
       const response = await axiosDepositsAndFees.post(`/dispersion/urgent`, {
         amount: Number(immediateDeposit.immediateDepositQty),
       });
       successCustomMsgToast("Tus solicitud se procesó con éxito");
-
     } catch (e) {
       errorCustomMsgToast("Ocurrió un error al procesar tu solicitud, vuelve a intentarlo");
       const handler = await appErrorResponseHandler(e);
@@ -351,6 +350,9 @@
               {currencyFormatLocal(immediateDeposit.immediateDepositQty - getUrgentComission()) ?? "$0"}
             </p>
           </div>
+          <div class="msg__error" class:opacity={immediateDeposit.immediateDepositQty >= 500}>
+            <p>El monto mínimo para solicitar es de $500</p>
+          </div>
         </div>
         <div class="terms">
           <div class="terms-checkbox">
@@ -508,7 +510,11 @@
       </div>
       <div class="top__middle">
         <DateTitle />
-        <ButtonGroup {active} options={buttonGroupOptions} on:click={handleFilterClick} />
+        <!-- <ButtonGroup
+          {active}
+          options={buttonGroupOptions}
+          on:click={handleFilterClick}
+        /> -->
         <!-- <ButtonGroup bind:active options={buttonGroupOptions} /> -->
       </div>
       <div class="top__right">
@@ -530,44 +536,52 @@
             icon="search"
           />
         </div>
-        <div class="export-buttons">
+        <!-- <div class="export-buttons">
           <Input
             label=""
             id="csv-export"
             type="button"
-            className="btn-plain btn-square fill-blue {dispersions.length > 0 ? '' : 'disabled'}"
+            className="btn-plain btn-square fill-blue {dispersions.length > 0
+              ? ''
+              : 'disabled'}"
             icon="csv-fill"
           />
           <Input
             label=""
             id="excel-export"
             type="button"
-            className="btn-plain btn-square fill-green {dispersions.length > 0 ? '' : 'disabled'}"
+            className="btn-plain btn-square fill-green {dispersions.length > 0
+              ? ''
+              : 'disabled'}"
             icon="xls-fill"
           />
           <Input
             label=""
             id="print"
             type="button"
-            className="btn-plain btn-square fill-blue {dispersions.length > 0 ? '' : 'disabled'}"
+            className="btn-plain btn-square fill-blue {dispersions.length > 0
+              ? ''
+              : 'disabled'}"
             icon="print"
           />
           <Input
             label=""
             id="pdf-export"
             type="button"
-            className="btn-plain btn-square fill-red {dispersions.length > 0 ? '' : 'disabled'}"
+            className="btn-plain btn-square fill-red {dispersions.length > 0
+              ? ''
+              : 'disabled'}"
             icon="pdf-fill"
           />
-          <!-- <Input on:click={exportDataToCSV(dispersions)} label="" id="csv-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/> -->
-          <!-- <Input on:click={exportDataToExcel(dispersions)} label="" id="excel-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="xls-fill"/> -->
-          <!-- <Input on:click={exportDataToPDF(dispersions)} label="" id="pdf-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/> -->
-        </div>
+          //<Input on:click={exportDataToCSV(dispersions)} label="" id="csv-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="csv-fill"/>
+          //<Input on:click={exportDataToExcel(dispersions)} label="" id="excel-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="xls-fill"/>
+          //<Input on:click={exportDataToPDF(dispersions)} label="" id="pdf-export" type="button" className="btn-plain btn-square {dispersions.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/>
+        </div> -->
       </div>
     </div>
     <div class="middle">
       <div class="card-group">
-        <div class="button">
+        <!-- <div class="button">
           <Input
             on:click={showModal(modalClarification)}
             label="Solicitar Aclaración"
@@ -576,7 +590,7 @@
             className="btn-plain"
             icon=""
           />
-        </div>
+        </div> -->
         <div class="element">
           <InfoCard
             className={""}

@@ -13,7 +13,6 @@ export async function load({ url }) {
 
   try {
     const response = await axiosDevicesClient.get(`/transaction/detail/${ticket}`);
-    console.log(response.data);
     return { ticket, response: response.data?.response };
   } catch (err) {
     const handler = await appErrorResponseHandler(err);

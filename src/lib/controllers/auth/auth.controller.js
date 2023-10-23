@@ -40,7 +40,6 @@ export class AuthController {
       loggedInUser.set(user);
       sessionUser.set(session); */
     } catch (e) {
-      // console.log(e)
       isLoggedIn.update(() => false);
       loggedInUser.set({ error: true });
       sessionUser.set({ error: true });

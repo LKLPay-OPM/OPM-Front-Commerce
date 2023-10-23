@@ -16,7 +16,6 @@ const headers = {
 
 export const generatePDF = (arrayData, clientData) => {
   var client = clientData;
-  // console.log(arrayData)
   var img = document.createElement("img");
   img.src = client.avatar;
   data = arrayData;
@@ -28,7 +27,6 @@ export const generatePDF = (arrayData, clientData) => {
   });
   const d = new Date();
   const today = d.toLocaleString();
-  // console.log(data)
   var doc = new jsPDF();
 
   autoTable(doc, {
@@ -300,7 +298,6 @@ export const generateCSV = (arrayData, clientData) => {
     });
     const workBook = XLSX.utils.book_new(); //create new workbook
     const workSheetData = [...data];
-    // console.log(workSheetData)
     const workSheet = XLSX.utils.aoa_to_sheet(workSheetData);
     XLSX.utils.book_append_sheet(workBook, workSheet, "Transacciones");
     // const csv = XLSX.utils.sheet_to_csv(workSheet)
@@ -318,7 +315,6 @@ export const generateXLSX = (arrayData) => {
     });
     const workBook = XLSX.utils.book_new(); //create new workbook
     const workSheetData = [...data];
-    // console.log(workSheetData)
     const workSheet = XLSX.utils.aoa_to_sheet(workSheetData);
     XLSX.utils.book_append_sheet(workBook, workSheet, "Transacciones");
     XLSX.writeFile(workBook, fileName);

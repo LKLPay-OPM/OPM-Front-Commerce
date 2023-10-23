@@ -24,10 +24,6 @@
       dispatch("pagination");
     }
   }
-
-  $: {
-    console.log(count);
-  }
 </script>
 
 <div class="btns-pagination">

@@ -6,7 +6,10 @@
   /* repos */
   import { ticketsClient } from "$lib/repos/axios";
   /* utils */
-  import { errorCustomMsgToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  import {
+    errorCustomMsgToast,
+    successCustomMsgToast,
+  } from "$lib/utils/toast.js";
   /* controllers */
   import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 
@@ -17,13 +20,13 @@
 
   const requestRolls = async () => {
     try {
-      const response = await ticketsClient.post(`/ticket/roll`, { quantity: rollsQty });
-      console.log(response?.data?.response);
+      const response = await ticketsClient.post(`/ticket/roll`, {
+        quantity: rollsQty,
+      });
       rollsQty = 0;
       successCustomMsgToast("Tu petición de rollos ha sido realizada");
     } catch (e) {
       errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
-      console.error(e);
       const handler = await appErrorResponseHandler(e);
       const code = handler?.code ?? 500;
       const message = handler?.message ?? "¡Algo salió mal!";

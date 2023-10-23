@@ -5,6 +5,7 @@
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
 
   export let dispersions;
+  $: console.log(dispersions);
 </script>
 
 <!-- on:click={() => goto(`/dispersions/detail?ticket=${dispersion?._id}`)} -->
@@ -26,7 +27,6 @@
                 <th>Tipo</th>
                 <th class="responsive hide">Comisión</th>
                 <th class="responsive hide">IVA</th>
-                <th class="responsive hide">Interés</th>
                 <th class="responsive hide">Depósito</th>
               </tr>
             </thead>
@@ -37,11 +37,14 @@
                   on:click={type.id != null ? () => goto(`/dispersions/detail?id=${type?.id}`) : ""}
                 >
                   <td class="responsive hide">{type.id ?? "N/A"}</td>
-                  <td>{currencyFormatLocal(type.balance)}</td>
-                  <td style="text-transform:capitalize;">{type.type}</td>
-                  <td class="responsive hide">{currencyFormatLocal(type.comission)}</td>
-                  <td class="responsive hide">{currencyFormatLocal(type.iva)}</td>
-                  <td class="responsive hide">{currencyFormatLocal(type.interest)}</td>
+                  {#if type.type === "urgente"}
+                    <td>{currencyFormatLocal(type.balance - type.comission - type.iva)}</td>
+                  {:else}
+                    <td>{currencyFormatLocal(type.balance)}</td>
+                  {/if}
+                  <td style="text-transform:capitalize;">{type.type === "inmediato" ? "365" : type.type}</td>
+                  <td class="responsive hide">{currencyFormatLocal(type.extraComission ?? 0)}</td>
+                  <td class="responsive hide">{currencyFormatLocal(type.extraIva ?? 0)}</td>
                   <td class="responsive hide">{currencyFormatLocal(type.deposit)}</td>
                 </tr>
               {/each}

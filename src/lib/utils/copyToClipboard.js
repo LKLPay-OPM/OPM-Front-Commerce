@@ -24,7 +24,6 @@ export function copyLinkToClipboard(data, id) {
         // <Toast toastType="error" text={"Enlace copiado con éxito"} />;
         successCustomMsgToast(`Enlace copiado con éxito`, id);
       } catch (error) {
-        console.error(err);
         errorCustomMsgToast(`Ocurrió un error al copiar el enlace`);
       }
     }

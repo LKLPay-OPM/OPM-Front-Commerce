@@ -16,7 +16,6 @@ export async function load({ url }) {
     const response = await axiosDevicesClient.get(`/transaction`, { params: { brand, filter, start, end } });
     if (validQueryFilters.includes(filter)) return { brand, filter, start, end, response: response.data?.response };
   } catch (err) {
-    console.error(err);
     throw new error(500, "Something went wrong!");
   }
 }

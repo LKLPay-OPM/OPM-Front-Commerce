@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "next",
+    "@sveltejs/adapter-node": "^1.0.0-next.106",
     "@sveltejs/adapter-vercel": "^2.4.2",
     "@sveltejs/kit": "^1.15.7",
     "sass": "^1.53.0",

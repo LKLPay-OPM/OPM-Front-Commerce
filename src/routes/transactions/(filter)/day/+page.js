@@ -18,7 +18,6 @@ export async function load({ url }) {
   try {
     const filter = "day";
     const response = await axiosDevicesClient.get(`/transaction`, { params: { brand, filter, start, end } });
-    console.log(response);
     return { brand, filter, start, end, response: response.data?.response };
   } catch (err) {
     const handler = await appErrorResponseHandler(e);

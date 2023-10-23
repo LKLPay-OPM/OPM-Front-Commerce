@@ -22,7 +22,6 @@ async function refreshToken() {
     const user = jwtDecode(data.response.token);
     return { session: data.response, user };
   } catch (error) {
-    console.error("Error refreshing token:", error);
     await appErrorResponseHandler(error);
     throw error;
   }
@@ -40,7 +39,6 @@ async function refreshTokenWithCustomHeaders(token, refresh) {
     const user = jwtDecode(data.response.token);
     return { session: data.response, user };
   } catch (error) {
-    console.error("Error refreshing token:", error);
     await appErrorResponseHandler(error);
     throw error;
   }

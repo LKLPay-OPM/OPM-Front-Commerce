@@ -16,7 +16,6 @@ export async function load({ url }) {
   const regexNumbers = new RegExp("[0-9]+");
   let filter = url.pathname.match(regexp)[0];
   let selectedDate = url.pathname.match(regexNumbers) ?? [];
-  console.log(selectedDate[0] ?? "");
   const start = Number(url.searchParams.get("start") ?? 0);
   const end = Number(url.searchParams.get("end") ?? 10);
   const current = getStringDate(new Date(parseSlashDate(new Date().toJSON().slice(0, 10))));

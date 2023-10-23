@@ -18,7 +18,11 @@
   /*  */
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
-  import { generatePDF, generateCSV, generateXLSX } from "$lib/hooks/exportDataToFile.js";
+  import {
+    generatePDF,
+    generateCSV,
+    generateXLSX,
+  } from "$lib/hooks/exportDataToFile.js";
   /* icons */
   import Icons from "$lib/components/Icons.svelte";
   /* Constants */
@@ -26,7 +30,10 @@
   /* utils */
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   import { getStringDate, parseSlashDate } from "$lib/utils/date";
-  import { errorCustomMsgToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  import {
+    errorCustomMsgToast,
+    successCustomMsgToast,
+  } from "$lib/utils/toast.js";
   /* handlers */
   import { appErrorResponseHandler } from "$lib/handlers/error.handler";
   /* axios */
@@ -80,13 +87,7 @@
     monthView = false;
 
   $: {
-    console.log("Layout", data);
     transactionFound();
-    /* if (active === "day") {
-      transactionFound();
-    } else {
-      notFound = false;
-    } */
     if (transactions) {
       transactionsWeek = transactions;
     }
@@ -123,25 +124,37 @@
     paginationStart = 0;
     paginationEnd = 10;
     const path = `
-      /transactions/${active}?filter=${active}${startDate != "" ? `&startDate=${startDate}` : ""}${
-      endDate != "" ? `&endDate=${endDate}` : ""
-    }${idTicket != "" ? `&search=${idTicket}` : ""}&start=${paginationStart}&end=${paginationEnd}&brand=${cardBrand}`;
+      /transactions/${active}?filter=${active}${
+      startDate != "" ? `&startDate=${startDate}` : ""
+    }${endDate != "" ? `&endDate=${endDate}` : ""}${
+      idTicket != "" ? `&search=${idTicket}` : ""
+    }&start=${paginationStart}&end=${paginationEnd}&brand=${cardBrand}`;
     await goto(path);
   };
 
   const fetchByDateRange = async () => {
     paginationStart = 0;
     paginationEnd = 10;
-    if(dateRangeStart != "" && dateRangeEnd != ""){
+    if (dateRangeStart != "" && dateRangeEnd != "") {
       active = "range";
     }
     /* const start = getStringDate(new Date(parseSlashDate(dateRangeStart))) ?? "";
     const end = getStringDate(new Date(parseSlashDate(dateRangeEnd))) ?? ""; */
 
     const path = `
-      /transactions/${active}?filter=${active}${dateRangeStart != "" ? `&startDate=${getStringDate(new Date(parseSlashDate(dateRangeStart)))}` : ""}${
-      dateRangeEnd != "" ? `&endDate=${getStringDate(new Date(parseSlashDate(dateRangeEnd)))}` : ""
-    }${idTicket != "" ? `&search=${idTicket}` : ""}&start=${paginationStart}&end=${paginationEnd}${
+      /transactions/${active}?filter=${active}${
+      dateRangeStart != ""
+        ? `&startDate=${getStringDate(
+            new Date(parseSlashDate(dateRangeStart))
+          )}`
+        : ""
+    }${
+      dateRangeEnd != ""
+        ? `&endDate=${getStringDate(new Date(parseSlashDate(dateRangeEnd)))}`
+        : ""
+    }${
+      idTicket != "" ? `&search=${idTicket}` : ""
+    }&start=${paginationStart}&end=${paginationEnd}${
       cardBrand != "" ? `&brand=${cardBrand}` : ""
     }`;
     await goto(path);
@@ -153,7 +166,9 @@
   const fetchByTicketId = async () => {
     paginationStart = 0;
     paginationEnd = 10;
-    await goto(`/transactions/id?filter=id&search=${ticketId}&start=${paginationStart}&end=${paginationEnd}`);
+    await goto(
+      `/transactions/id?filter=id&search=${ticketId}&start=${paginationStart}&end=${paginationEnd}`
+    );
   };
 
   const cleanFilters = () => {
@@ -164,13 +179,58 @@
 
   const exportDataToPDF = async (transactions) => {};
 
-  const exportDataToExcel = async (transactions) => {};
+  const exportDataToExcel = async () => {
+    const start = startDate;
+    const end = endDate;
+    try {
+      if (active === "day") {
+        startDate = transactions[0]["Transaction Date"];
+        endDate = transactions[0]["Transaction Date"];
+      }
+      if (active === "week") {
+        startDate = transactions[0].date;
+        endDate = "999999";
+      } else if (active === "month") {
+        if (transactions.length > 1) {
+          startDate = `${transactions[transactions.length - 1]._id}01`;
+          endDate = "999999";
+        } else {
+          startDate = `${transactions[transactions.length - 1]._id}01`;
+          endDate = `${transactions[transactions.length - 1]._id}99`;
+        }
+      }
+      // window.open(url, '_blank').focus();
+      const excel = axiosDevicesClient
+        .get(
+          `/transaction/report/transactionsReport?startDate=${startDate}&endDate=${endDate}&brand=${cardBrand}`,
+          { responseType: "blob" }
+        )
+        .then((response) => {
+          // create file link in browser's memory
+          const href = URL.createObjectURL(response.data);
+
+          // create "a" HTML element with href to file & click
+          const link = document.createElement("a");
+          link.href = href;
+          link.setAttribute("download", `ventas_${startDate}.csv`); //or any other extension
+          document.body.appendChild(link);
+          link.click();
+
+          // clean up "a" element & remove ObjectURL
+          document.body.removeChild(link);
+          URL.revokeObjectURL(href);
+        });
+    } catch (e) {
+      const handler = await appErrorResponseHandler(e);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
+    }
+  };
 
   const exportDataToCSV = async (transactions) => {};
 
-  const handleClarification = () => {
-    console.log(clarification);
-  };
+  const handleClarification = () => {};
 
   const showModal = (option) => {
     option.show();
@@ -229,39 +289,57 @@
     <div class="modal-range">
       <p>Fechas</p>
       <div class="date-range-input">
-        <DatePicker label="Del" id="date-range-start" bind:value={dateRangeStart} />
+        <DatePicker
+          label="Del"
+          id="date-range-start"
+          bind:value={dateRangeStart}
+        />
         <DatePicker label="Al" id="date-range-end" bind:value={dateRangeEnd} />
       </div>
       <p>Marca</p>
       <div class="input-cards">
-        <div class={`icon__container ${cardBrand === "mastercard" ? "selected" : ""}`}>
+        <div
+          class={`icon__container ${
+            cardBrand === "mastercard" ? "selected" : ""
+          }`}
+        >
           <i
             on:click={() => (cardBrand = "mastercard")}
-            on:keypress={(e) => (e.key === "Enter" ? () => (cardBrand = "mastercard") : "")}
+            on:keypress={(e) =>
+              e.key === "Enter" ? () => (cardBrand = "mastercard") : ""}
           >
             <Icons name="mastercard" width="50" height="30" />
           </i>
         </div>
-        <div class={`icon__container ${cardBrand === "visa" ? "selected" : ""}`}>
+        <div
+          class={`icon__container ${cardBrand === "visa" ? "selected" : ""}`}
+        >
           <i
             on:click={() => (cardBrand = "visa")}
-            on:keypress={(e) => (e.key === "Enter" ? () => (cardBrand = "visa") : "")}
+            on:keypress={(e) =>
+              e.key === "Enter" ? () => (cardBrand = "visa") : ""}
           >
             <Icons name="visa" width="50" height="30" />
           </i>
         </div>
-        <div class={`icon__container ${cardBrand === "amex" ? "selected" : ""}`}>
+        <div
+          class={`icon__container ${cardBrand === "amex" ? "selected" : ""}`}
+        >
           <i
             on:click={() => (cardBrand = "amex")}
-            on:keypress={(e) => (e.key === "Enter" ? () => (cardBrand = "amex") : "")}
+            on:keypress={(e) =>
+              e.key === "Enter" ? () => (cardBrand = "amex") : ""}
           >
             <Icons name="amex" width="25" height="25" />
           </i>
         </div>
-        <div class={`icon__container ${cardBrand === "other" ? "selected" : ""}`}>
+        <div
+          class={`icon__container ${cardBrand === "other" ? "selected" : ""}`}
+        >
           <i
             on:click={() => (cardBrand = "other")}
-            on:keypress={(e) => (e.key === "Enter" ? () => (cardBrand = "other") : "")}
+            on:keypress={(e) =>
+              e.key === "Enter" ? () => (cardBrand = "other") : ""}
           >
             <Icons name="bank-card-line" width="25" height="25" />
           </i>
@@ -285,7 +363,11 @@
       id="buttonSaveModalDateRange"
       type="button"
       className={`
-        ${(dateRangeStart != "" && dateRangeEnd != "") || cardBrand != "" ? "btn" : "btn-plain disabled"}`}
+        ${
+          (dateRangeStart != "" && dateRangeEnd != "") || cardBrand != ""
+            ? "btn"
+            : "btn-plain disabled"
+        }`}
       icon=""
     />
   </div>
@@ -326,7 +408,11 @@
     </div>
     <div class="top__middle">
       <DateTitle />
-      <ButtonGroup active={filter} options={filterByDateOptions} on:click={handleFilterClick} />
+      <ButtonGroup
+        active={filter}
+        options={filterByDateOptions}
+        on:click={handleFilterClick}
+      />
     </div>
     <div class="top__right">
       <div class="transaction-search-bar">
@@ -348,57 +434,80 @@
         />
       </div>
       <div class="export-buttons">
-        <Input
-          on:click={exportDataToCSV(transactions)}
-          label=""
-          id="csv-export"
-          type="button"
-          className="btn-plain btn-square fill-blue {transactions?.length > 0 ? '' : 'disabled'}"
-          icon="csv-fill"
-        />
-        <Input
-          on:click={exportDataToExcel(transactions)}
-          label=""
-          id="excel-export"
-          type="button"
-          className="btn-plain btn-square fill-green {transactions?.length > 0 ? '' : 'disabled'}"
-          icon="xls-fill"
-        />
-        <Input
-          label=""
-          id="print"
-          type="button"
-          className="btn-plain btn-square fill-blue {transactions?.length > 0 ? '' : 'disabled'}"
-          icon="print"
-        />
-        <Input
-          label=""
-          id="pdf-export"
-          type="button"
-          className="btn-plain btn-square fill-red {transactions?.length > 0 ? '' : 'disabled'}"
-          icon="pdf-fill"
-        />
-        <!-- <Input on:click={exportDataToCSV(transactions)} label="" id="csv-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="csv-fill"/> -->
-        <!-- <Input on:click={exportDataToExcel(transactions)} label="" id="excel-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="xls-fill"/> -->
-        <!-- <Input on:click={exportDataToPDF(transactions)} label="" id="pdf-export" type="button" className="btn-plain btn-square {transactions?.length > 0 ? '' : 'disabled'}" icon="pdf-fill"/> -->
+        {#if transactions.length > 0}
+          <!-- <Input
+            on:click={exportDataToCSV(transactions)}
+            label=""
+            id="csv-export"
+            type="button"
+            className="btn-plain btn-square fill-blue {transactions?.length > 0
+              ? ''
+              : 'disabled'}"
+            icon="csv-fill"
+          /> -->
+          <Input
+            on:click={exportDataToExcel}
+            label=""
+            id="excel-export"
+            type="button"
+            className="btn-plain btn-square fill-green {transactions?.length > 0
+              ? ''
+              : 'disabled'}"
+            icon="xls-fill"
+          />
+          <!-- <Input
+            label=""
+            id="print"
+            type="button"
+            className="btn-plain btn-square fill-blue {transactions?.length > 0
+              ? ''
+              : 'disabled'}"
+            icon="print"
+          />
+          <Input
+            label=""
+            id="pdf-export"
+            type="button"
+            className="btn-plain btn-square fill-red {transactions?.length > 0
+              ? ''
+              : 'disabled'}"
+            icon="pdf-fill"
+          /> -->
+        {/if}
       </div>
     </div>
   </div>
   <div class="middle">
     <div class="card-group">
       <div class="element">
-        <InfoCard className={""} title="Monto Total" numData={currencyFormatLocal(resume?.Amount ?? 0)} />
+        <InfoCard
+          className={""}
+          title="Monto Total"
+          numData={currencyFormatLocal(resume?.Amount ?? 0)}
+        />
       </div>
       <div class="element">
-        <InfoCard className={""} title="Comisión" numData={currencyFormatLocal(resume?.Comission ?? 0)} />
+        <InfoCard
+          className={""}
+          title="Comisión"
+          numData={currencyFormatLocal(resume?.Comission ?? 0)}
+        />
       </div>
       {#if (typeof resume?.Tips != "undefined" && resume?.Tips > 0) || typeof resume?.Tips != "undefined"}
         <div class="element">
-          <InfoCard className={""} title="Propinas" numData={currencyFormatLocal(resume?.Tips ?? 0)} />
+          <InfoCard
+            className={""}
+            title="Propinas"
+            numData={currencyFormatLocal(resume?.Tips ?? 0)}
+          />
         </div>
       {/if}
       <div class="element">
-        <InfoCard className={""} title="Saldo a Depositar" numData={currencyFormatLocal(resume?.Deposit ?? 0)} />
+        <InfoCard
+          className={""}
+          title="Depósito"
+          numData={currencyFormatLocal(resume?.Deposit ?? 0)}
+        />
       </div>
     </div>
   </div>

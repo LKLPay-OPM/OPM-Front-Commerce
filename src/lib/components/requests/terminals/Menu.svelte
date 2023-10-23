@@ -10,7 +10,10 @@
   /* repos */
   import { ticketsClient } from "$lib/repos/axios";
   /* utils */
-  import { errorCustomMsgToast, successCustomMsgToast } from "$lib/utils/toast.js";
+  import {
+    errorCustomMsgToast,
+    successCustomMsgToast,
+  } from "$lib/utils/toast.js";
   /* controllers */
   import { appErrorResponseHandler } from "$lib/handlers/error.handler";
   export let optionSelected = 0;
@@ -31,12 +34,10 @@
     optionSelected = 0;
     try {
       const response = await ticketsClient.post(`/ticket/terminal`, terminals);
-      console.log(response?.data?.response);
       terminals = { pocket: 0, smart: 0, master: 0, max: 0 };
       successCustomMsgToast("Tu petición de terminales ha sido realizada");
     } catch (e) {
       errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
-      console.error(e);
       const handler = await appErrorResponseHandler(e);
       const code = handler?.code ?? 500;
       const message = handler?.message ?? "¡Algo salió mal!";
@@ -60,10 +61,20 @@
     <div class="element">
       <div class="col">
         <div class={innerWidth <= 540 ? "grid-row" : "grid-col"}>
-          <QuantityInput id="pocket" label="Pocket" className="label__top" bind:value={terminals.pocket} />
+          <QuantityInput
+            id="pocket"
+            label="Pocket"
+            className="label__top"
+            bind:value={terminals.pocket}
+          />
           <!-- <QuantityInput id="smart" label="Smart" className="label__top" bind:value={terminals.smart} /> -->
           <!-- <QuantityInput id="master" label="Master" className="label__top" bind:value={terminals.master} /> -->
-          <QuantityInput id="max" label="Max" className="label__top" bind:value={terminals.max} />
+          <QuantityInput
+            id="max"
+            label="Max"
+            className="label__top"
+            bind:value={terminals.max}
+          />
         </div>
         <div class="button">
           <Input
@@ -73,7 +84,9 @@
             type="button"
             className={`
               ${
-                terminals.pocket > 0 || terminals.max > 0 /* || terminals.smart > 0 || terminals.master > 0 */
+                terminals.pocket > 0 ||
+                terminals.max >
+                  0 /* || terminals.smart > 0 || terminals.master > 0 */
                   ? "btn"
                   : "btn-plain disabled"
               }`}

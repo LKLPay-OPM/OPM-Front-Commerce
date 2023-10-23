@@ -9,7 +9,6 @@
   export let data;
 
   let terminal = data?.terminal;
-  $: console.log(terminal);
   $: goto(`${terminal.id}/day`);
   /* onMount(() => {
     goto(`${terminal.id}/day`);

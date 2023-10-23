@@ -16,10 +16,6 @@
 
   export let data;
 
-  $: {
-    console.log(data);
-  }
-
   const dispersionFound = () => {
     if (dispersions.length <= 0) {
       notFound = true;

@@ -35,10 +35,11 @@
   const handleUpdatePass = async () => {
     loading = true;
     try {
-      const response = await profilesClient.post(`/user/resetPassword`, { email: registerData.email });
+      const response = await profilesClient.post(`/user/resetPassword`, {
+        email: registerData.email,
+      });
       menu = "success";
     } catch (e) {
-      console.log(e);
       menu = "error";
       const handler = await appErrorResponseHandler(e);
       const code = handler?.code ?? 500;
@@ -77,7 +78,8 @@
               className={`txt-field ${
                 registerData.email === ""
                   ? "normal"
-                  : registerData.email !== "" && registerData.email.match(emailPattern)
+                  : registerData.email !== "" &&
+                    registerData.email.match(emailPattern)
                   ? "valid"
                   : "invalid"
               }`}
@@ -87,7 +89,9 @@
                 label="Aceptar"
                 id="btnUpdatePass"
                 type="submit"
-                className={registerData.email.match(emailPattern) ? "btn" : "btn-disabled"}
+                className={registerData.email.match(emailPattern)
+                  ? "btn"
+                  : "btn-disabled"}
                 icon=""
               />
             </div>
@@ -109,7 +113,9 @@
           <Icons name="checkbox-circle-line" width="150" height="150" />
           <!-- <SuccessLogo /> -->
         </div>
-        <div class="subtitle">Ingresa a tu correo para continuar el proceso</div>
+        <div class="subtitle">
+          Ingresa a tu correo para continuar el proceso
+        </div>
       </div>
       <div class="btn-layout">
         <Input
@@ -134,7 +140,9 @@
           <!-- <ErrorLogo /> -->
         </div>
         <div class="subtitle">{customMessage}</div>
-        <div class="subtitle">Vamos a intentar realizar la petición de nuevo</div>
+        <div class="subtitle">
+          Vamos a intentar realizar la petición de nuevo
+        </div>
       </div>
       <div class="btn-layout">
         <Input
@@ -163,7 +171,8 @@
     position: absolute;
     width: 27rem;
     background: $background-light-secondary;
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     transform: matrix(1, 0, 0, 1, 0, 0);
   }
@@ -173,7 +182,8 @@
     width: 27rem;
     height: 34rem;
     background: $background-light-secondary;
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     transform: matrix(1, 0, 0, 1, 0, 0);
     display: flex;
@@ -185,7 +195,8 @@
     width: 27rem;
     height: 34rem;
     background: $background-light-secondary;
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 10px;
     transform: matrix(1, 0, 0, 1, 0, 0);
     display: flex;

@@ -16,11 +16,8 @@
   export let color = "";
   export let file;
   const onInput = (e) => {
-    console.log($toastId)
     file = e.target.files[0];
-    // console.log(file);
     value = e.target.value;
-    // console.log(value, e.target.value);
     const isValid = checkFileSize(file);
     if (!isValid) {
       toast("El documento excede los 5MB", danger, $toastId).showToast();
@@ -218,7 +215,8 @@
 
   .normal input {
     outline: none;
-    background: linear-gradient(#efeef5, #e6e8ef) padding-box, linear-gradient(187deg, #ffffff, #d6e3f3) border-box;
+    background: linear-gradient(#efeef5, #e6e8ef) padding-box,
+      linear-gradient(187deg, #ffffff, #d6e3f3) border-box;
     border-radius: 4px;
     border: 2px solid transparent;
   }
@@ -240,7 +238,8 @@
     display: flex;
     height: 100%;
     background: linear-gradient(270deg, #0478ff 0%, #50caff 100%);
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 0.625rem;
   }
 
@@ -443,7 +442,8 @@
     display: flex;
     height: 3.375rem;
     background: linear-gradient(270deg, #fd5353 0%, #ffa450 100%);
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 0.625rem;
   }
 
@@ -474,7 +474,8 @@
     display: flex;
     height: 3.375rem;
     background: linear-gradient(91.36deg, #e6e8ef 0%, #efeef5 100%);
-    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff, 4px 4px 20px rgba(111, 140, 176, 0.41);
+    box-shadow: 2px 2px 4px rgba(114, 142, 171, 0.1), -6px -6px 20px #ffffff,
+      4px 4px 20px rgba(111, 140, 176, 0.41);
     border-radius: 0.625rem;
   }
 
@@ -665,10 +666,18 @@
     }
 
     div.btn-plain {
-      background: linear-gradient(91.36deg, $background-dark-accent-primary 0%, $background-dark 100%);
+      background: linear-gradient(
+        91.36deg,
+        $background-dark-accent-primary 0%,
+        $background-dark 100%
+      );
     }
     div.btn-disabled {
-      background: linear-gradient(91.36deg, $background-dark-accent-primary 0%, $background-dark 100%);
+      background: linear-gradient(
+        91.36deg,
+        $background-dark-accent-primary 0%,
+        $background-dark 100%
+      );
       box-shadow: $dark-box-shadow-btn;
     }
     .fill-blue {
