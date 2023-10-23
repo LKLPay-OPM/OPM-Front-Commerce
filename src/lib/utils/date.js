@@ -60,6 +60,14 @@ export function getStringDate(date) {
   return `${getYearLastTwoDigits(date)}${getMonthTwoDigits(date)}${getDayTwoDigits(date)}`;
 }
 
+export const getMonthPeriod = (string) => {
+  var pattern = /(\d{2})(\d{2})/; // String pattern replace for date
+  const extractMonth = string.replace(pattern, "$2");
+  const month = getMonthName(Number(extractMonth) - 1);
+  let str = string.replace(pattern, `${month} 20$1`);
+  return str;
+};
+
 function getTimeEllapsed(time) {
   const formatter = new Intl.RelativeTimeFormat("es-MX");
   if (time < 60) {
