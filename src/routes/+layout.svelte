@@ -18,6 +18,8 @@
   import { routes } from "$lib/constants/routes";
   /* controllers */
   import { AuthController } from "$lib/controllers/auth/auth.controller";
+  /* hooks */
+  import { router } from "$lib/hooks/router.js";
 
   let innerWidth = 0;
   let innerHeight = 0;
@@ -25,7 +27,7 @@
 
   $: {
     if ($isLoggedIn) {
-      router($loggedInUser.role, $page.route.id).then((response) => {
+      router($loggedInUser.accountType, $page.route.id).then((response) => {
         if (!response) {
           $linkSelected = "Inicio";
           goto("/");
