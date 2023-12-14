@@ -3,7 +3,10 @@ import { AuthController } from "$lib/controllers/auth/auth.controller";
 
 export async function appErrorResponseHandler(error) {
   // console.log(error?.response?.data)
-  if (error?.response?.data?.code === "NO_TOKEN_OR_INACTIVE") {
+  if (
+    error?.response?.data?.code === "NO_TOKEN_OR_INACTIVE" ||
+    error?.response?.data?.code === "REFRESH_TOKEN_EXPIRED"
+  ) {
     await AuthController.logout();
   }
   if (error?.response?.data?.code === "DATABASE_ERROR") {
