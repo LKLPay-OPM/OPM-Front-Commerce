@@ -21,7 +21,6 @@ export async function load({ url }) {
       },
     });
     const threeDS = response3ds.data.response;
-    console.log(threeDS)
     if (response3ds.data.response == null) {
       data3ds = response3ds.data.response;
     } else {
