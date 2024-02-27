@@ -22,7 +22,7 @@
           <table class="table-content">
             <thead>
               <tr>
-                <th class="responsive hide">Folio</th>
+                <!-- <th class="responsive hide">Folio</th> -->
                 <th>Saldo</th>
                 <th>Tipo</th>
                 <th class="responsive hide">Comisión</th>
@@ -32,11 +32,10 @@
             </thead>
             <tbody>
               {#each dispersion?.dispersion as type}
-                <tr
-                  class={type.id != null ? "clickable-table-row" : ""}
-                  on:click={type.id != null ? () => goto(`/dispersions/detail?id=${type?.id}`) : ""}
-                >
-                  <td class="responsive hide">{type.id ?? "N/A"}</td>
+                <!-- class={type.id != null ? "clickable-table-row" : ""}
+              on:click={type.id != null ? () => goto(`/dispersions/detail?id=${type?.id}`) : ""} -->
+                <tr>
+                  <!-- <td class="responsive hide">{type.id ?? "N/A"}</td> -->
                   {#if type.type === "urgente"}
                     <td>{currencyFormatLocal(type.balance - type.comission - type.iva)}</td>
                   {:else}

@@ -12,12 +12,14 @@ export async function load({ url }) {
   // const ticket = url.searchParams.get("ticket");
 
   try {
-    const resume = await axiosDevicesClient.get(`/transaction/getPending/balance`);
+    const resume = await axiosDevicesClient.get(`/transaction/commerce/getPendingBalance`);
+    const urgentAvailable = await axiosDevicesClient.get(`/transaction/commerce/getPendingBalance?filter=urgent`);
     const response = await axiosDepositsAndFees.get(`/dispersion`);
     return {
       dispersions: response.data?.response?.dispersions,
       resume: { depositBalance: resume.data?.response },
       rate: response.data?.response?.rate,
+      urgentAvailable: urgentAvailable.data.response,
     };
   } catch (err) {
     const handler = await appErrorResponseHandler(err);

@@ -5,7 +5,7 @@
   /* svelte */
   import { goto } from "$app/navigation";
   /* utils */
-  import { timeToLocalString, dateToLocalString } from "$lib/utils/date";
+  import { timeToLocalString, dateToLocalStringShort } from "$lib/utils/date";
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   import { getIconStatusClass } from "$lib/utils/iconClass";
   /* exports */
@@ -47,7 +47,11 @@
         <tbody>
           {#each transactions as transaction}
             <tr class="clickable number" on:click={() => goto(`/transactions/detail?ticket=${transaction?._id}`)}>
-              <td class="">{timeToLocalString(transaction["Transaction Time"])}</td>
+              <td class=""
+                >{`${dateToLocalStringShort(transaction["Transaction Date"])} ${timeToLocalString(
+                  transaction["Transaction Time"]
+                )}`}</td
+              >
               <td class="sm">{transaction?.["ID Transaction"]}</td>
               <td>{currencyFormatLocal(transaction.Amount)}</td>
               <td class="">{currencyFormatLocal(transaction.comission)}</td>

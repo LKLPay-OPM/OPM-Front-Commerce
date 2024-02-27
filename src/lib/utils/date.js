@@ -35,6 +35,11 @@ export const timeToLocalString = (string) => {
   let str = string.replace(pattern, `$1:$2`);
   return str;
 };
+export const getTransactionTime = (string) => {
+  var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
+  let str = string.replace(pattern, `$1:$2:$3`);
+  return str;
+};
 
 export function parseSlashDate(str) {
   return str.replace(/-/g, "/");
@@ -59,6 +64,16 @@ export function getDayTwoDigits(date) {
 export function getStringDate(date) {
   return `${getYearLastTwoDigits(date)}${getMonthTwoDigits(date)}${getDayTwoDigits(date)}`;
 }
+
+export const getMonthPeriod = (string) => {
+  // String pattern replace for date
+  if (string.length === 4) var pattern = /(\d{2})(\d{2})/;
+  if (string.length === 6) var pattern = /(\d{2})(\d{2})(\d{2})/;
+  const extractMonth = string.replace(pattern, "$2");
+  const month = getMonthName(Number(extractMonth) - 1);
+  let str = string.replace(pattern, `${month} 20$1`);
+  return str;
+};
 
 function getTimeEllapsed(time) {
   const formatter = new Intl.RelativeTimeFormat("es-MX");

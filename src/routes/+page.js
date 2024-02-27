@@ -13,7 +13,7 @@ export const ssr = false;
 export async function load() {
   if (get(isLoggedIn)) {
     try {
-      const resume = await axiosDevicesClient.get(`/transaction/getPending/balance`);
+      const resume = await axiosDevicesClient.get(`/transaction/commerce/getPendingBalance`);
       const transactions = await axiosDevicesClient.get("/transaction");
       const user = await profilesClient.get("/user/profile");
       return {

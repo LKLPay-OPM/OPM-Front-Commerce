@@ -37,6 +37,7 @@
 
   export let data;
   let transaction = data?.response;
+  let data3ds = data?.data3ds;
   let cardIcon = "";
   let modalClarification;
   let modalCancel;
@@ -288,6 +289,12 @@
       <div class="details-left responsive">
         <div class="section">
           <div class="title">Datos</div>
+          {#if transaction.orderId}
+            <div class="item">
+              <b>ID Orden</b>
+              <p>{transaction.orderId ?? "N/A"}</p>
+            </div>
+          {/if}
           <div class="item">
             <b>Referencia</b>
             <p>{transaction.reference ?? "N/A"}</p>
@@ -434,6 +441,37 @@
           </div>
         </div>
       </div>
+      {#if data3ds != null}
+        <div class="details-right responsive">
+          <div class="section">
+            <div class="title">Datos 3D Secure</div>
+            <div class="item">
+              <b>ID</b>
+              <p>{data3ds.id ?? "N/A"}</p>
+            </div>
+            <div class="item">
+              <b>ECI</b>
+              <p>{data3ds.eci ?? "N/A"}</p>
+            </div>
+            <div class="item">
+              <b>Token</b>
+              <p>{data3ds.token ?? "N/A"}</p>
+            </div>
+            <div class="item">
+              <b>ID Transacción 3DS</b>
+              <p>{data3ds.threeDSServerTransactionId ?? "N/A"}</p>
+            </div>
+            <div class="item">
+              <b>CAVV</b>
+              <p>{data3ds.cavv ?? "N/A"}</p>
+            </div>
+            <div class="item">
+              <b>Estatus</b>
+              <p>{data3ds.status ?? "N/A"}</p>
+            </div>
+          </div>
+        </div>
+      {/if}
       <!-- <div class="details-right no-print responsive">
         <div class="title">Reportes</div>
         <div class="export-buttons">

@@ -46,4 +46,12 @@ export class AuthController {
       return { error: true, message: e };
     }
   }
+
+  static async validateUser(route) {
+    try {
+      return await authService.validateUser(route);
+    } catch (e) {
+      console.error(e)
+    }
+  }
 }

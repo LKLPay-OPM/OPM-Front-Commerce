@@ -213,35 +213,6 @@
   justify-content: space-evenly;
 }
 
-.details__middle .details-left {
-  display: flex;
-  justify-content: center;
-}
-
-.details__middle .details-left .title {
-  font-style: normal;
-  font-weight: 700;
-  font-size: 1rem;
-  line-height: 1.125rem;
-  color: $primary-dark;
-}
-
-.details__middle .details-left .item b {
-  font-style: normal;
-  font-weight: 500;
-  font-size: 0.8125rem; /* 13px */
-  line-height: 0.875rem; /* 14px */
-  color: #8c9fb1;
-}
-.details__middle .details-left .item p {
-  font-family: "Roboto";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 0.875rem; /* 14px */
-  line-height: 0.875rem; /* 14px */
-  color: #8c9fb1;
-}
-
 .details__middle .details-card {
   display: flex;
   flex-direction: column;
@@ -418,29 +389,69 @@
   width: 7.5rem; /* 120px */
 }
 
-.details__middle .details-right .title {
-  display: flex;
-  justify-content: center;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 1rem;
-  line-height: 1.125rem;
-  color: $primary-dark;
-}
-
-.details__middle .details-right .item b {
-  font-style: normal;
-  font-weight: 500;
-  font-size: 0.8125rem; /* 13px */
-  line-height: 0.875rem; /* 14px */
-  color: #8c9fb1;
-}
-.details__middle .details-right .item p {
-  font-style: normal;
-  font-weight: 700;
-  font-size: 0.875rem; /* 14px */
-  line-height: 0.875rem; /* 14px */
-  color: #8c9fb1;
+.details__middle {
+  .details-left {
+    display: flex;
+    justify-content: center;
+    .title {
+      font-style: normal;
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1.125rem;
+      color: $primary-dark;
+    }
+    .item {
+      b {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 0.8125rem; /* 13px */
+        line-height: 0.875rem; /* 14px */
+        color: #8c9fb1;
+      }
+      p {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 0.875rem; /* 14px */
+        line-height: 0.875rem; /* 14px */
+        color: #8c9fb1;
+      }
+    }
+  }
+  .details-right {
+    display: flex;
+    justify-content: center;
+    word-wrap: break-word;
+    .section {
+      max-width: 16rem;
+    }
+    .title {
+      display: flex;
+      justify-content: end;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1.125rem;
+      color: $primary-dark;
+    }
+    .item {
+      text-align: end;
+      b {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 0.8125rem; /* 13px */
+        line-height: 0.875rem; /* 14px */
+        color: #8c9fb1;
+      }
+  
+      p {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 0.875rem; /* 14px */
+        line-height: 0.875rem; /* 14px */
+        color: #8c9fb1;
+      }
+    }
+  }
 }
 
 .hidden {

@@ -72,7 +72,7 @@
   };
 
   let immediateDeposit = {
-    availableBalance: resume.toDepositBalance ?? 0,
+    availableBalance: data.urgentAvailable ?? 0,
     immediateDepositComission: 0,
     immediateDepositQty: 0,
     toDeposit: 0,
@@ -194,7 +194,7 @@
       immediateDeposit.immediateDepositComission
     );
     immediateDeposit = {
-      availableBalance: resume.toDepositBalance,
+      availableBalance: data.urgentAvailable,
       immediateDepositQty: 0,
       toDeposit: 0,
     };
@@ -305,7 +305,7 @@
   </div>
   <div slot="content">
     <div class="immediate-deposit">
-      {#if resume?.depositBalance < 500}
+      {#if data?.urgentAvailable < 500}
         <div class="error">
           <p>
             El monto mínimo para solicitar es de $500.00 mxn más el costo extra del {immediateDeposit.immediateDepositComission}%
@@ -317,7 +317,7 @@
             icon="dollar"
             label="Saldo Disponible"
             id="availableAmountTxtField"
-            value={resume.depositBalance.toFixed(2)}
+            value={data.urgentAvailable.toFixed(2)}
             disabled={true}
             className="disabled-txt-field"
             type="number"
@@ -369,7 +369,7 @@
     </div>
   </div>
   <div class="modal-buttons" slot="footer">
-    {#if resume.depositBalance < 500}
+    {#if data.urgentAvailable < 500}
       <Input
         on:click={closeModal(modalImmediateDeposit)}
         label="Entendido"
@@ -378,7 +378,7 @@
         className="btn-plain btn-orange"
         icon=""
       />
-    {:else if resume.depositBalance > 500 && immediateDeposit.immediateDepositQty <= resume.depositBalance && terms}
+    {:else if data.urgentAvailable > 500 && immediateDeposit.immediateDepositQty <= data.urgentAvailable && terms}
       <Input
         on:click={closeModal(modalImmediateDeposit)}
         on:click={() => handleImmediateDeposit()}
@@ -406,7 +406,7 @@
       <div class="title">Cantidad</div>
       <div class="description">
         <p>
-          {currencyFormatLocal(resume.depositBalance)}
+          {currencyFormatLocal(data.urgentAvailable)}
         </p>
       </div>
     </div>
