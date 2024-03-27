@@ -24,7 +24,7 @@ export async function load({ url }) {
     if (response3ds.data.response == null) {
       data3ds = response3ds.data.response;
     } else {
-      if(threeDS.checkEnrollmentData.status == "PENDING_AUTHENTICATION"){
+      if(threeDS.validation){
         data3ds = {
           _id: threeDS._id,
           eci: threeDS.validation.consumerAuthenticationInformation.eciRaw,
