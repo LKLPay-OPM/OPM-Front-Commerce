@@ -338,6 +338,10 @@
               </i>
             </p>
           </div>
+          <div class="item">
+            <b>Descripción</b>
+            <p>{transaction["ISO CODE DESCRIPTION"] ?? "N/A"}</p>
+          </div>
         </div>
       </div>
       <div class="details-center">
