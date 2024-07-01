@@ -43,7 +43,7 @@
       });
       menu = "success";
     } catch (e) {
-      console.log(e)
+      // console.log(e)
       menu = "error";
       const handler = await appErrorResponseHandler(e);
       const code = handler?.code ?? 500;
