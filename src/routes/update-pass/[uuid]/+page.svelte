@@ -167,8 +167,8 @@
           <Icons name="close-circle-line" width="150" height="150" />
           <!-- <ErrorLogo /> -->
         </div>
-        <!-- <div class="subtitle">{customMessage}</div> -->
         <div class="subtitle">Ocurrió un error, vuelve a intentarlo</div>
+        <div class="subtitle" class:hidden={customMessage == ""}>{customMessage}</div>
       </div>
       <div class="btn-layout">
         <Input
