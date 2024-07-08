@@ -11,15 +11,36 @@ export const ssr = false;
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ url }) {
-  const start = Number(url.searchParams.get("start") ?? 0);
-  const end = Number(url.searchParams.get("end") ?? 10);
-  const brand = url.searchParams.get("brand") ?? "";
+  const filters = {
+    branch: url.searchParams.get("branch") ?? "all",
+    brand: url.searchParams.get("brand") ?? "",
+    end: Number(url.searchParams.get("end") ?? 10),
+    endDate: url.searchParams.get("endDate") ?? "",
+    filter: "day",
+    start: Number(url.searchParams.get("start") ?? 0),
+    startDate: url.searchParams.get("startDate") ?? "",
+    terminal: url.searchParams.get("terminal") ?? "all",
+    ticketId: url.searchParams.get("search") ?? "",
+    type: url.searchParams.get("type") ?? "all",
+    status: url.searchParams.get("status") ?? "all",
+  }
 
   try {
-    const filter = "day";
-    const response = await axiosDevicesClient.get(`/transaction`, { params: { brand, filter, start, end } });
-    return { brand, filter, start, end, response: response.data?.response };
-  } catch (err) {
+    const response = await axiosDevicesClient.get(`/transaction`, { params: { 
+      branch: filters.branch,
+      brand: filters.brand,
+      end: filters.end,
+      endDate: filters.endDate,
+      filter: filters.filter,
+      start: filters.start,
+      startDate: filters.startDate,
+      serialNumber: filters.terminal,
+      ticketId: filters.ticketId,
+      type: filters.type,
+      status: filters.status,
+    }});
+    return { filters, response: response.data?.response };
+  } catch (e) {
     const handler = await appErrorResponseHandler(e);
     const code = handler?.code ?? 500;
     const message = handler?.message ?? "¡Algo salió mal!";

@@ -58,7 +58,7 @@
     email: "",
   };
 
-  /* let cancel = {
+  let cancel = {
     amount: data?.response?.Amount,
     ["SIC Code"]: data?.response?.["SIC Code"],
     ["Application PAN"]: data?.response?.["Application PAN"],
@@ -80,12 +80,15 @@
     MSI: data?.response?.MSI,
     commerce: data?.response?.commerce,
     commerceName: data?.response?.commerceName ?? "",
-  }; */
+    /* For the later version */
+    description: "Link de Cancelación",
+    transactionId: data?.response?.transaction,
+  };
 
-  let cancel = {
+  /* let cancel = {
     description: "Link de Cancelación",
     transactionId: data?.response?.transaction
-  }
+  } */
 
   const returnToPreviousPage = () => {
     history.back();
@@ -635,7 +638,7 @@
             />
           </div>
         {/if}
-        <div class="reverse-button">
+          <!-- <div class="reverse-button">
             <Input
               on:click={refundModal.show()}
               label="Devolución"
@@ -644,7 +647,7 @@
               className="border-btn-error"
               icon=""
             />
-          </div>
+          </div> -->
         <!-- <div class="clarification-button">
           <Input
             on:click={showModal(modalClarification)}

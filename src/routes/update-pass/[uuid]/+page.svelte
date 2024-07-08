@@ -53,7 +53,6 @@
     } finally {
       loading = false;
     }
-    setTimeout(async () => {}, 3000);
   };
 </script>
 

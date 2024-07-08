@@ -6,24 +6,22 @@
   /* utils */
   import { getMonthPeriod } from "$lib/utils/date";
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
+  import { createFilterUrl } from "$lib/utils/string";
   /* exports */
   export let data;
 
   let transactionsMonth = data?.response?.transactions ?? [];
   let count = data?.response?.count ?? 0;
-  let paginationStart = data?.start ?? 0;
-  let paginationEnd = data?.end ?? 10;
-  let active = data?.filter ?? "month";
-  let cardBrand = data?.brand ?? "";
-  let startDate = data.startDate ?? "";
-  let endDate = data.endDate ?? "";
-  let idTicket = data.ticket ?? "";
+  let paginationStart = data?.filters.start ?? 0;
+  let paginationEnd = data?.filters.end ?? 10;
+  let active = data?.filters.filter ?? "month";
+  let cardBrand = data?.filters.brand ?? "";
+  let startDate = data.filters.startDate ?? "";
+  let endDate = data.filters.endDate ?? "";
+  let idTicket = data.filters.ticket ?? "";
 
   const goToTransaction = (date) => {
-    const path = `
-      /transactions/month/${date}?filter=${active}${startDate != "" ? `&startDate=${startDate}` : ""}${
-      endDate != "" ? `&endDate=${endDate}` : ""
-    }${idTicket != "" ? `&search=${idTicket}` : ""}&start=${paginationStart}&end=${paginationEnd}&brand=${cardBrand}`;
+    const path = `/transactions/month/${date}?filter=${active}${createFilterUrl(data.filters)}`;
     goto(path);
   };
 </script>
