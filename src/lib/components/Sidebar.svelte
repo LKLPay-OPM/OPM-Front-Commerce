@@ -77,6 +77,7 @@
         </a>
       {/if}
     </div>
+    <!-- //TODO Return href to /profile when profile page is done -->
     <a
       on:click={() => {
         $linkSelected = "Perfil";
@@ -85,7 +86,7 @@
         e.key === "Enter"
           ? ($linkSelected = "Perfil")
           : ($linkSelected = $linkSelected)}
-      href="/profile"
+      href="/#"
       class="profile-details"
     >
       <div class="profile-content">
