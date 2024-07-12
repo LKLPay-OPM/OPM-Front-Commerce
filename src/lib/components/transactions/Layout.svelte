@@ -15,6 +15,7 @@
   import ViewDay from "$lib/components/transactions/day/Table.svelte";
   import ViewWeek from "$lib/components/transactions/week/View.svelte";
   import ViewMonth from "$lib/components/transactions/month/View.svelte";
+  import FilterFeedback from "$lib/components/transactions/FilterFeedback.svelte";
   /*  */
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
@@ -28,8 +29,10 @@
   /* Constants */
   import { filterByDateOptions } from "$lib/constants/filter";
   /* utils */
+  import { getIndex } from "$lib/utils/indexes";
+  import { createFilterUrl } from "$lib/utils/string";
+  import { getStringDate, parseSlashDate, stringDateToDatePickerFormat } from "$lib/utils/date";
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
-  import { getStringDate, parseSlashDate } from "$lib/utils/date";
   import {
     errorCustomMsgToast,
     successCustomMsgToast,
@@ -40,15 +43,32 @@
   import { axiosDevicesClient } from "$lib/repos/axios";
   /* variables */
   export let data;
-  let active = data.filter;
-  let paginationStart = data.start ?? 0;
-  let paginationEnd = data.end ?? 10;
-  let startDate = data.startDate ?? "";
-  let endDate = data.endDate ?? "";
-  let idTicket = data.ticketId ?? "";
+  // $:console.log(data)
+  let active = data.filters?.filter;
+  let branches = data.branches;
+  let terminals = data.terminals;
+  let transactionStatus = data.transactionStatus;
+  let status = data.filters?.status ?? "";
+  let transactionType = data.transactionType;
+  let paginationStart = data.filters?.start ?? 0;
+  let paginationEnd = data.filters?.end ?? 10;
+  let startDate = data.filters?.startDate ?? "";
+  let endDate = data.filters?.endDate ?? "";
+  let idTicket = data.filters?.ticketId ?? "";
   let count = data.response?.count ?? 0;
+  let terminal = data.filters?.terminal;
+  let type = data.filters?.type;
+  let branch = data.filters?.branch;
+  let cardBrand = data.filters?.brand;
+  let indexSelect = {
+    branch: getIndex(branches, branch),
+    terminal: getIndex(terminals, terminal),
+    type: getIndex(transactionType, type),
+    status: getIndex(transactionStatus, status),
+  }
+  
 
-  const filter = data.filter;
+  const filter = data.filters.filter;
 
   function handleFilterClick({ detail }) {
     const value = detail?.value;
@@ -56,48 +76,32 @@
     goto(`/transactions/${value}`);
   }
 
-  export let user;
-  const dbCollection = "users-client";
-  const uid = user.uid;
   let transactions = data.response?.transactions ?? [];
   let resume = data.response?.resume;
   let transactionsWeek = [];
-  let transactionsMonth = [];
-  let selectedTransaction = {};
-  let transactionToArray = [];
   let transactionDetailView = false;
   let notFound = false;
-  let notFoundMessage = "No se encontraron registros";
   let loading = false;
-  let date = new Date();
-  let toggleWeek = "";
-  let toggleWeekDetails = "";
-  let selectedDay;
 
-  let dateRangeStart = "",
-    dateRangeEnd = "",
+  let dateRangeStart = stringDateToDatePickerFormat(startDate) ?? "",
+    dateRangeEnd = stringDateToDatePickerFormat(endDate) ?? "",
     ticketId = "",
     modalDateFilter,
-    modalClarification,
-    cardBrand = "",
-    cardIcon = "";
+    modalClarification;
   let pdfData,
-    print = true,
-    dayView = false,
-    monthView = false;
+    print = true;
 
   $: {
     transactionFound();
-    if (transactions) {
-      transactionsWeek = transactions;
-    }
+    if (transactions) {transactionsWeek = transactions;}
   }
-  let clarificationsList = [
+
+  /* let clarificationsList = [
     { name: "Opción 1", value: "option1" },
     { name: "Opción 2", value: "option2" },
     { name: "Opción 3", value: "option3" },
     { name: "Opción 4", value: "option4" },
-  ];
+  ]; */
 
   let clarification = {
     ticket: "",
@@ -113,54 +117,15 @@
     loading = false;
   };
 
-  let das = {
-    url: $page.url.pathname,
-    active,
-    paginationStart,
-    paginationEnd,
-  };
-
-  const fetchByCardBrand = async (cardBrand) => {
-    paginationStart = 0;
-    paginationEnd = 10;
-    const path = `
-      /transactions/${active}?filter=${active}${
-      startDate != "" ? `&startDate=${startDate}` : ""
-    }${endDate != "" ? `&endDate=${endDate}` : ""}${
-      idTicket != "" ? `&search=${idTicket}` : ""
-    }&start=${paginationStart}&end=${paginationEnd}&brand=${cardBrand}`;
-    await goto(path);
-  };
-
   const fetchByDateRange = async () => {
     paginationStart = 0;
     paginationEnd = 10;
-    if (dateRangeStart != "" && dateRangeEnd != "") {
-      active = "range";
-    }
+    if (dateRangeStart != "" && dateRangeEnd != "") {active = "range";}
     /* const start = getStringDate(new Date(parseSlashDate(dateRangeStart))) ?? "";
     const end = getStringDate(new Date(parseSlashDate(dateRangeEnd))) ?? ""; */
-
-    const path = `
-      /transactions/${active}?filter=${active}${
-      dateRangeStart != ""
-        ? `&startDate=${getStringDate(
-            new Date(parseSlashDate(dateRangeStart))
-          )}`
-        : ""
-    }${
-      dateRangeEnd != ""
-        ? `&endDate=${getStringDate(new Date(parseSlashDate(dateRangeEnd)))}`
-        : ""
-    }${
-      idTicket != "" ? `&search=${idTicket}` : ""
-    }&start=${paginationStart}&end=${paginationEnd}${
-      cardBrand != "" ? `&brand=${cardBrand}` : ""
-    }`;
+    const stringValues = {active, startDate: dateRangeStart, endDate: dateRangeEnd, idTicket, paginationStart, paginationEnd, cardBrand, type, branch, terminal, status}
+    const path = `/transactions/${active}?filter=${active}${createFilterUrl(stringValues)}`;
     await goto(path);
-    /* await goto(
-      `/transactions/range?filter=range&startDate=${start}&endDate=${end}&start=${paginationStart}&end=${paginationEnd}`
-    ); */
   };
 
   const fetchByTicketId = async () => {
@@ -175,6 +140,12 @@
     dateRangeStart = "";
     dateRangeEnd = "";
     cardBrand = "";
+    indexSelect = {
+      branch: 0,
+      terminal: 0,
+      type: 0,
+      status: 0,
+    }
   };
 
   const exportDataToPDF = async (transactions) => {};
@@ -296,50 +267,54 @@
         />
         <DatePicker label="Al" id="date-range-end" bind:value={dateRangeEnd} />
       </div>
+      <p>Sucursales</p>
+      <div style="padding: 1rem 0;">
+        <Select bind:optionsList={branches} defaultText={""} label="" id="selectFilterByBranches" bind:value={branch} index={indexSelect.branch}/>
+      </div>
+      <p>Terminales</p>
+      <div style="padding: 1rem 0;">
+        <Select bind:optionsList={terminals} defaultText={""} label="" id="selectFilterByTerminals" bind:value={terminal} index={indexSelect.terminal}/>
+      </div>
+      <p>Tipo de Transacción</p>
+      <div style="padding: 1rem 0;">
+        <Select bind:optionsList={transactionType} defaultText={""} label="" id="selectFilterByTypes" bind:value={type} index={indexSelect.type}/>
+      </div>
+      <p>Estatus de Transacción</p>
+      <div style="padding: 1rem 0;">
+        <Select bind:optionsList={transactionStatus} defaultText={""} label="" id="selectFilterByStatus" bind:value={status} index={indexSelect.status}/>
+      </div>
       <p>Marca</p>
       <div class="input-cards">
-        <div
-          class={`icon__container ${
-            cardBrand === "mastercard" ? "selected" : ""
-          }`}
-        >
+        <div class={`icon__container`} class:selected={cardBrand === "mastercard"}>
           <i
-            on:click={() => (cardBrand = "mastercard")}
-            on:keypress={(e) =>
-              e.key === "Enter" ? () => (cardBrand = "mastercard") : ""}
+            on:click={() => (cardBrand == "mastercard" ? cardBrand = "" : cardBrand = "mastercard")}
+            on:keypress={(e) => e.key === "Enter" ? () => (cardBrand == "mastercard" ? cardBrand = "" : cardBrand = "mastercard") : ""}
           >
             <Icons name="mastercard" width="50" height="30" />
           </i>
         </div>
-        <div
-          class={`icon__container ${cardBrand === "visa" ? "selected" : ""}`}
-        >
+        <div class={`icon__container`} class:selected={cardBrand === "visa"}>
           <i
-            on:click={() => (cardBrand = "visa")}
-            on:keypress={(e) =>
-              e.key === "Enter" ? () => (cardBrand = "visa") : ""}
+            on:click={() => (cardBrand == "visa" ? cardBrand = "" : cardBrand = "visa")}
+            on:keypress={(e) => e.key === "Enter" ? () => (cardBrand == "visa" ? cardBrand = "" : cardBrand = "visa") : ""}
           >
             <Icons name="visa" width="50" height="30" />
           </i>
         </div>
-        <div
-          class={`icon__container ${cardBrand === "amex" ? "selected" : ""}`}
-        >
+        <div class={`icon__container`} class:selected={cardBrand === "amex"}>
           <i
-            on:click={() => (cardBrand = "amex")}
-            on:keypress={(e) =>
-              e.key === "Enter" ? () => (cardBrand = "amex") : ""}
+            on:click={() => (cardBrand == "amex" ? cardBrand = "" : cardBrand = "amex")}
+            on:keypress={(e) => e.key === "Enter" ? () => (cardBrand == "amex" ? cardBrand = "" : cardBrand = "amex") : ""}
           >
             <Icons name="amex" width="25" height="25" />
           </i>
         </div>
         <div
-          class={`icon__container ${cardBrand === "other" ? "selected" : ""}`}
+          class={`icon__container`} class:selected={cardBrand === "other"}
         >
           <i
-            on:click={() => (cardBrand = "other")}
-            on:keypress={(e) =>
-              e.key === "Enter" ? () => (cardBrand = "other") : ""}
+            on:click={() => (cardBrand == "other" ? cardBrand = "" : cardBrand = "other")}
+            on:keypress={(e) => e.key === "Enter" ? () => (cardBrand == "other" ? cardBrand = "" : cardBrand = "other") : ""}
           >
             <Icons name="bank-card-line" width="25" height="25" />
           </i>
@@ -362,12 +337,7 @@
       label="Filtrar"
       id="buttonSaveModalDateRange"
       type="button"
-      className={`
-        ${
-          (dateRangeStart != "" && dateRangeEnd != "") || cardBrand != ""
-            ? "btn"
-            : "btn-plain disabled"
-        }`}
+      className={`btn`}
       icon=""
     />
   </div>
@@ -512,6 +482,7 @@
     </div>
   </div>
   <div class="transactions-view">
+    <FilterFeedback filters={data.filters} {branches} {terminals} {indexSelect}/> 
     {#if notFound}
       <div class="message card-primary">
         <div class="msg">

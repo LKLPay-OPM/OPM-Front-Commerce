@@ -138,4 +138,26 @@
       #e6e8ef 100%
     );
   }
+
+  :global(body.dark-mode) {
+    .box select.option {
+      color: $font-dark-primary;
+      background: linear-gradient(
+        91.36deg,
+        $background-dark-accent-primary 0%,
+        $background-dark-secondary 100%
+      );
+      box-shadow: $dark-box-shadow-btn;
+    }
+
+    .box select option.option {
+      color: $font-dark-primary;
+      /* background: linear-gradient(
+        91.36deg,
+        $background-dark-accent-primary 0%,
+        $background-dark-secondary 100%
+      ); */
+      background: $background-dark-accent-primary;
+    }
+  }
 </style>

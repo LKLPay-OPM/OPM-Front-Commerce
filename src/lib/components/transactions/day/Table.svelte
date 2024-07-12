@@ -8,18 +8,23 @@
   import { timeToLocalString, dateToLocalString } from "$lib/utils/date";
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   import { getIconStatusClass } from "$lib/utils/iconClass";
+  import { createFilterUrl } from "$lib/utils/string";
   /* exports */
   export let data;
   let transactions = data?.response?.transactions ?? [];
   let count = data?.response?.count ?? 0;
-  let paginationStart = data?.start ?? 0;
-  let paginationEnd = data?.end ?? 10;
-  let active = data?.filter ?? "day";
+  let paginationStart = data?.filters?.start ?? 0;
+  let paginationEnd = data?.filters?.end ?? 10;
+  let active = data?.filters?.filter ?? "day";
 
   function handleFilterClick({ detail }) {
     // const value = detail?.value;
     // active = value;
-    goto(`?filter=${active ?? "day"}&start=${paginationStart}&end=${paginationEnd}`);
+    data.filters.paginationEnd = paginationEnd;
+    data.filters.paginationStart = paginationStart;
+    const url = `?filter=${active}${createFilterUrl(data.filters)}`;
+    goto(url);
+    // goto(`?filter=${active ?? "day"}&start=${paginationStart}&end=${paginationEnd}`);
   }
 </script>
 

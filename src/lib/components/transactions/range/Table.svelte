@@ -12,20 +12,22 @@
   export let data;
   let transactions = data?.response?.transactions ?? [];
   let count = data?.response?.count ?? 0;
-  let paginationStart = data?.start ?? 0;
-  let paginationEnd = data?.end ?? 10;
-  let startDate = data?.startDate ?? "";
-  let endDate = data?.endDate ?? "";
-  let active = data?.filter ?? "range";
+  let paginationStart = data?.filters?.start ?? 0;
+  let paginationEnd = data?.filters?.end ?? 10;
+  let startDate = data?.filters?.startDate ?? "";
+  let endDate = data?.filters?.endDate ?? "";
+  let active = data?.filters?.filter ?? "range";
 
   function handleFilterClick({ detail }) {
     // const value = detail?.value;
     // active = value;
-    goto(
-      `?filter=${
-        active ?? "range"
-      }&startDate=${startDate}&endDate=${endDate}&start=${paginationStart}&end=${paginationEnd}`
-    );
+    data.filters.paginationEnd = paginationEnd;
+    data.filters.paginationStart = paginationStart;
+    const url = `?filter=${data.filters.filter}${createFilterUrl(data.filters)}`;
+    goto(url);
+    /* goto(
+      `?filter=${active ?? "range"}&startDate=${startDate}&endDate=${endDate}&start=${paginationStart}&end=${paginationEnd}`
+    ); */
   }
 </script>
 

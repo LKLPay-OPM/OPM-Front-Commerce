@@ -40,6 +40,8 @@
   let data3ds = data?.data3ds;
   let cardIcon = "";
   let modalClarification;
+  let cancelModal;
+  let refundModal;
   let modalCancel;
   let link;
   let loading = false;
@@ -78,7 +80,15 @@
     MSI: data?.response?.MSI,
     commerce: data?.response?.commerce,
     commerceName: data?.response?.commerceName ?? "",
+    /* For the later version */
+    description: "Link de Cancelación",
+    transactionId: data?.response?.transaction,
   };
+
+  /* let cancel = {
+    description: "Link de Cancelación",
+    transactionId: data?.response?.transaction
+  } */
 
   const returnToPreviousPage = () => {
     history.back();
@@ -137,6 +147,7 @@
 
   /* Función cancelar transacción */
   const cancelTransaction = async () => {
+    cancelModal.closeModal()
     loading = true;
     try {
       const response = await axiosFraudPreventionManagementJSON.post(
@@ -152,6 +163,11 @@
       // formSuccess(link);
       modalCancel.show();
     } catch (err) {
+      errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
+      const handler = await appErrorResponseHandler(err);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
     } finally {
       loading = false;
     }
@@ -160,6 +176,30 @@
   const getPercentage = (total, commission) => {
     return ((commission * 100) / total).toFixed(2);
   };
+
+  const refundTransaction = async () => {
+    console.log(data.response.transaction)
+    loading = true;
+    try {
+      const response = await axiosFraudPreventionManagementJSON.post(
+        `/e/refund`, {
+          transactionId: data.response.transaction,
+          // card: data.response["Application PAN"],
+        }
+      );
+      refundModal.closeModal();
+      successCustomMsgToast(`La devolución se realizó con éxito`);
+    } catch (err) {
+      refundModal.closeModal();
+      errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
+      const handler = await appErrorResponseHandler(err);
+      const code = handler?.code ?? 500;
+      const message = handler?.message ?? "¡Algo salió mal!";
+      throw new error(code, message);
+    } finally {
+      loading = false;
+    }
+  }
 
   const removeBackdrop = async () => {
     transparent = true;
@@ -204,6 +244,7 @@
     />
   </div>
 </Modal>
+
 <!-- Modal Cancel -->
 <Modal
   id="modalCancelLinkData"
@@ -264,6 +305,90 @@
     />
   </div>
 </Modal>
+
+<!-- Modal Confirm Cancel -->
+<Modal
+  id="modalConfirmCancel"
+  bind:transparent
+  className={`modal-small`}
+  bind:this={cancelModal}
+>
+  <div slot="header">
+    <div class="svg">
+      <p>Cancelación</p>
+    </div>
+  </div>
+  <div slot="content">
+    <div class="thin-divider" />
+    <div class="modal-content">
+      <div class="column-element">
+      </div>
+      <div class="column-element">
+        <p style="text-align:center;">¿Deseas solicitar una cancelación de la transacción?</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-buttons" slot="footer">
+    <Input
+      on:click={cancelTransaction}
+      label="Sí, aceptar"
+      id="buttonAcceptModalConfirmCancel"
+      type="button"
+      className="btn-success"
+      icon=""
+    />
+    <Input
+      on:click={cancelModal.closeModal()}
+      label="No, cerrar"
+      id="buttonCloseModalConfirmCancel"
+      type="button"
+      className="border-btn-error"
+      icon=""
+    />
+  </div>
+</Modal>
+<!-- Modal Confirm Refund -->
+<Modal
+  id="modalConfirmRefund"
+  bind:transparent
+  className={`modal-small`}
+  bind:this={refundModal}
+>
+  <div slot="header">
+    <div class="svg">
+      <p>Devolución</p>
+    </div>
+  </div>
+  <div slot="content">
+    <div class="thin-divider" />
+    <div class="modal-content">
+      <div class="column-element">
+      </div>
+      <div class="column-element">
+        <p style="text-align:center;">¿Deseas solicitar una devolución de la transacción?</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-buttons" slot="footer">
+    <Input
+      on:click={refundTransaction}
+      label="Sí, aceptar"
+      id="buttonAcceptModalConfirmRefund"
+      type="button"
+      className="btn-success"
+      icon=""
+    />
+    <Input
+      on:click={refundModal.closeModal()}
+      label="No, cerrar"
+      id="buttonCloseModalConfirmRefund"
+      type="button"
+      className="border-btn-error"
+      icon=""
+    />
+  </div>
+</Modal>
+
 {#if loading}
   <Loader />
 {:else}
@@ -508,7 +633,7 @@
         {#if transactionCancelValidation(transaction.transactionStatus, transaction["Transaction Date"], transaction.type)}
           <div class="reverse-button">
             <Input
-              on:click={cancelTransaction}
+              on:click={cancelModal.show()}
               label="Cancelar"
               id="reverseTransaction"
               type="button"
@@ -517,6 +642,16 @@
             />
           </div>
         {/if}
+          <!-- <div class="reverse-button">
+            <Input
+              on:click={refundModal.show()}
+              label="Devolución"
+              id="refundTransaction"
+              type="button"
+              className="border-btn-error"
+              icon=""
+            />
+          </div> -->
         <!-- <div class="clarification-button">
           <Input
             on:click={showModal(modalClarification)}

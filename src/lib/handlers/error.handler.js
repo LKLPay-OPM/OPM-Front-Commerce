@@ -21,6 +21,9 @@ export async function appErrorResponseHandler(error) {
   if (error?.response?.status === 404) {
     return { code: error?.response?.status, message: "No se encontró el recurso solicitado" };
   }
+  if (error?.response?.data?.name) {
+    return { code: error?.response?.status, message: error?.response?.data?.name };
+  }
   /* axios errors */
   /* if(error?.code === "ERR_BAD_RESPONSE"){
     return { code: error?.response?.data?.statusCode, message: error?.response?.data ?? "Problemas de conexión con la Base de Datos"}

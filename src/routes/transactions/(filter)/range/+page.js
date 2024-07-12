@@ -13,26 +13,39 @@ export const ssr = false;
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ url }) {
-  const filter = "range";
-  const start = Number(url.searchParams.get("start") ?? 0);
-  const end = Number(url.searchParams.get("end") ?? 10);
   const current = getStringDate(new Date(parseSlashDate(new Date().toJSON().slice(0, 10))));
-  const startDate = url.searchParams.get("startDate") ?? current;
-  const endDate = url.searchParams.get("endDate") ?? current;
-  const brand = url.searchParams.get("brand") ?? "";
+  const filters = {
+    branch: url.searchParams.get("branch") ?? "all",
+    brand: url.searchParams.get("brand") ?? "",
+    end: Number(url.searchParams.get("end") ?? 10),
+    endDate: url.searchParams.get("endDate") ?? "",
+    filter: "range",
+    start: Number(url.searchParams.get("start") ?? 0),
+    startDate: url.searchParams.get("startDate") ?? "",
+    serialNumber: url.searchParams.get("terminal") ?? "all",
+    ticketId: url.searchParams.get("search") ?? "",
+    type: url.searchParams.get("type") ?? "all",
+    status: url.searchParams.get("status") ?? "all",
+  }
 
   try {
-    const response = await axiosDevicesClient.post(`/transaction/dateRange`, {
-      startDate: startDate,
-      endDate: endDate,
-      start,
-      end,
-      brand,
-    });
+    const response = await axiosDevicesClient.get(`/transaction`, { params: { 
+      branch: filters.branch,
+      brand: filters.brand,
+      end: filters.end,
+      endDate: filters.endDate,
+      filter: filters.filter,
+      start: filters.start,
+      startDate: filters.startDate,
+      terminal: filters.terminal,
+      ticketId: filters.ticketId,
+      type: filters.type,
+      status: filters.status,
+    }});
     /* const response = await axiosDevicesClient.get(`/transaction/dateRanges`, {
       params: { startDate: startDate, endDate: endDate, start, end, brand },
     }); */
-    return { brand, filter, startDate, endDate, start, end, response: response.data?.response };
+    return { filters, response: response.data?.response };
   } catch (e) {
     const handler = await appErrorResponseHandler(e);
     const code = handler?.code ?? 500;

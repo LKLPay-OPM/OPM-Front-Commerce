@@ -10,18 +10,22 @@
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   import { getIconStatusClass } from "$lib/utils/iconClass.js";
   import { getMonthPeriod, getTransactionTime, dateToLocalStringShort } from "$lib/utils/date";
+  import { createFilterUrl } from "$lib/utils/string.js";
 
   let resume = data?.response?.resume;
   let yearMonth = data?.response?.yearMonth;
   let transactions = data?.response?.transactions ?? [];
   let count = data?.response?.count ?? 0;
-  let paginationStart = data?.start ?? 0;
-  let paginationEnd = data?.end ?? 10;
+  let paginationStart = data?.filters.start ?? 0;
+  let paginationEnd = data?.filters.end ?? 10;
 
   function handleFilterClick({ detail }) {
     // const value = detail?.value;
     // active = value;
-    goto(`?start=${paginationStart}&end=${paginationEnd}`);
+    data.filters.paginationEnd = paginationEnd;
+    data.filters.paginationStart = paginationStart;
+    const url = `?filter=${data.filters.filter}${createFilterUrl(data.filters)}`;
+    goto(url);
   }
 
   const returnToMonthView = () => {

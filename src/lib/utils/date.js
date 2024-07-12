@@ -16,6 +16,12 @@ export function getMonthName(month) {
   return monthsArray[month];
 }
 
+export const stringDateToDatePickerFormat = (string) => {
+  var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
+  const formattedDate = string.replace(pattern, `20$1-$2-$3`);
+  return formattedDate;
+}
+
 export const dateToLocalString = (string) => {
   var pattern = /(\d{2})(\d{2})(\d{2})/; // String pattern replace for date
   const extractMonth = string.replace(pattern, "$2");

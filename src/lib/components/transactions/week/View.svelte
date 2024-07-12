@@ -7,6 +7,7 @@
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   /* svelte */
   import { goto } from "$app/navigation";
+  import { createFilterUrl } from "$lib/utils/string";
   /* exports */
   export let data;
   let transactionsWeek = data?.response?.transactions ?? [];
@@ -24,14 +25,13 @@
   function handleFilterClick({ detail }) {
     // const value = detail?.value;
     // active = value;
-    goto(`?filter=${active}&start=${paginationStart}&end=${paginationEnd}`);
+    const url = `?filter=${active}${createFilterUrl(data.filters)}`;
+    goto(url);
+    // goto(`?filter=${active}&start=${paginationStart}&end=${paginationEnd}`);
   }
 
   const goToTransaction = (date) => {
-    const path = `
-      /transactions/week/${date}?filter=${active}${startDate != "" ? `&startDate=${startDate}` : ""}${
-      endDate != "" ? `&endDate=${endDate}` : ""
-    }${idTicket != "" ? `&search=${idTicket}` : ""}&start=${paginationStart}&end=${paginationEnd}&brand=${cardBrand}`;
+    const path = `/transactions/week/${date}?filter=${active}${createFilterUrl(data.filters)}`;
     goto(path);
   };
 </script>

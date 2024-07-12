@@ -43,6 +43,7 @@
       });
       menu = "success";
     } catch (e) {
+      // console.log(e)
       menu = "error";
       const handler = await appErrorResponseHandler(e);
       const code = handler?.code ?? 500;
@@ -52,7 +53,6 @@
     } finally {
       loading = false;
     }
-    setTimeout(async () => {}, 3000);
   };
 </script>
 
@@ -166,8 +166,8 @@
           <Icons name="close-circle-line" width="150" height="150" />
           <!-- <ErrorLogo /> -->
         </div>
-        <!-- <div class="subtitle">{customMessage}</div> -->
         <div class="subtitle">Ocurrió un error, vuelve a intentarlo</div>
+        <div class="subtitle" class:hidden={customMessage == ""}>{customMessage}</div>
       </div>
       <div class="btn-layout">
         <Input
