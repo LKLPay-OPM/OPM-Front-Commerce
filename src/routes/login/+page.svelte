@@ -55,8 +55,8 @@
       <div class="logo">
         <img src={Logo} alt="Company Logo" />
         <div class="text">
-          <p>LKL Pay</p>
-          <small>Financial Technology</small>
+          <p>BAZ</p>
+          <small>Sueñas, Decides, Logras</small>
         </div>
       </div>
       <div class="form">

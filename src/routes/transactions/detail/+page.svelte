@@ -133,7 +133,7 @@
         }
       );
       successCustomMsgToast(
-        `Correo enviado con éxito a tu dirección asociada a Lkl Pay`
+        `Correo enviado con éxito a tu dirección asociada a BAZ`
       );
       return { ...response.data?.response };
     } catch (err) {

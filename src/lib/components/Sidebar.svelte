@@ -67,10 +67,10 @@
         <a href="/">
           <div class="text-logo">
             <div class="title">
-              <p>LKL Pay</p>
+              <p>BAZ</p>
             </div>
             <div class="subtitle">
-              <small>Financial Technology</small>
+              <small>Sueñas, Decides, Logras</small>
             </div>
           </div>
           <img src={logo} alt="Company Logo" />

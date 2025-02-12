@@ -1,7 +1,7 @@
 
 export const firstSteps = [
   {
-    question: "¿Cómo iniciar a usar TPV Lkl Pay Max?",
+    question: "¿Cómo iniciar a usar TPV Max?",
     answer: `Presiona el botton de encendido ubicado a la derecha de la TPV y espera de 2 a 4 segundos`,
   },
   {
