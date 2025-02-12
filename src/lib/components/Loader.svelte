@@ -1,5 +1,5 @@
 <script>
-  import Logo from "$lib/assets/Logo RGB.svg";
+  import Logo from "$lib/assets/Logo.png";
   import Circulo from "$lib/assets/Circulo.png";
   export let text = "";
 </script>
