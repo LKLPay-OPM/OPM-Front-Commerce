@@ -141,21 +141,21 @@ const sidebarOptions = (accountType) => {
       /// ACCOUNT TYPE BASIC, PRO, E-COMMERCE
       { name: "Inicio", path: "/", icon: "home" },
       { name: "Mis Ventas", path: "/transactions", icon: "terminal" },
-      { name: "Depósitos", path: "/dispersions", icon: "deposits" },
-      { name: "Solicitudes", path: "/requests", icon: "adviser" },
+      // { name: "Depósitos", path: "/dispersions", icon: "deposits" },
+      // { name: "Solicitudes", path: "/requests", icon: "adviser" },
       // { name: "Sucursales", path: "/branch-office", icon: "franchise" }, // TODO: Sprint 2 Sucursales
       // { name: "Terminales", path: "/terminals", icon: "terminal" }, // TODO: Sprint 2 Terminales
-      { name: "Link de Pago", path: "/payment-link", icon: "qr-code" },
+      // { name: "Link de Pago", path: "/payment-link", icon: "qr-code" },
     ],
     3: [
       /// ACCOUNT TYPE BUSINESS
       { name: "Inicio", path: "/", icon: "home" },
       { name: "Mis Ventas", path: "/transactions", icon: "transactions" },
-      { name: "Depósitos", path: "/dispersions", icon: "deposits" },
-      { name: "Solicitudes", path: "/requests", icon: "adviser" },
+      // { name: "Depósitos", path: "/dispersions", icon: "deposits" },
+      // { name: "Solicitudes", path: "/requests", icon: "adviser" },
       // { name: "Sucursales", path: "/branch-office", icon: "franchise" }, // TODO: Sprint 2 Sucursales
       // { name: "Terminales", path: "/terminals", icon: "terminal" }, // TODO: Sprint 2 Terminales
-      { name: "Link de Pago", path: "/payment-link", icon: "qr-code" },
+      // { name: "Link de Pago", path: "/payment-link", icon: "qr-code" },
     ],
   };
   return optionsList[accountType];
