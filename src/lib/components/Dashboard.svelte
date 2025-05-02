@@ -43,13 +43,10 @@
   <div class="content">
     <div class="card-group">
       <div class="card">
-        <InfoCard className={""} title="Monto Total" numData={currencyFormatLocal(resume?.Amount ?? 0)} />
-      </div>
-      <div class="card">
         <InfoCard className={""} title="N° de Ventas" numData={resume?.Sold ?? "0"} />
       </div>
       <div class="card">
-        <InfoCard className={""} title="Saldo a Depositar" numData={currencyFormatLocal(data?.deposit ?? 0)} />
+        <InfoCard className={""} title="Monto Total" numData={currencyFormatLocal(data?.deposit ?? 0)} />
       </div>
     </div>
     <div class="transactions card-primary" style={transactions?.length <= 0 ? "min-height: 25rem;" : ""}>
@@ -66,11 +63,7 @@
                 <th class="sm">Hora</th>
                 <th class="sm">Ticket</th>
                 <th>Cobro</th>
-                <th class="">Comisión</th>
-                <th class="sm md">IVA</th>
-                <th class="">Dispersión</th>
                 <th class="">Tipo</th>
-                <!-- <th class="">Estatus Depósito</th> -->
               </tr>
             </thead>
             <tbody>
@@ -79,9 +72,6 @@
                   <td class="sm">{timeToLocalString(transaction["Transaction Time"])}</td>
                   <td class="sm">{transaction["ID Transaction"]}</td>
                   <td>{currencyFormatLocal(transaction?.Amount)}</td>
-                  <td class="">{currencyFormatLocal(transaction?.comission)}</td>
-                  <td class="sm md">{currencyFormatLocal(transaction?.iva)}</td>
-                  <td class="">{currencyFormatLocal(transaction?.toDeposit)}</td>
                   <td class="">
                     <i class={`icon ${getIconStatusClass(transaction.transactionStatus)} tooltip`}>
                       <Icons
@@ -102,7 +92,6 @@
                       >
                     </i>
                   </td>
-                  <!-- <td>{transaction.depositStatus}</td> -->
                 </tr>
               {/each}
             </tbody>

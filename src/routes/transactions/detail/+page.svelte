@@ -425,16 +425,12 @@
             <p>{transaction.reference ?? "N/A"}</p>
           </div>
           <div class="item">
-            <b>TVR</b>
+            <b>TPV</b>
             <p>{transaction["ID Terminal"] ?? "N/A"}</p>
           </div>
           <div class="item">
-            <b>AID</b>
-            <p>{transaction["Terminal Capabilities"] ?? "N/A"}</p>
-          </div>
-          <div class="item">
-            <b>Autorización</b>
-            <p>{transaction.authorization ?? "N/A"}</p>
+            <b>IFD Serial Number</b>
+            <p>{transaction["IFD Serial Number"] ?? "N/A"}</p>
           </div>
           <div class="item">
             <b>Tipo de Tarjeta</b>
@@ -532,40 +528,13 @@
             </div>
             <div class="item">
               <div class="item__title">
-                <b>Comisión</b>
+                <b>Autorización</b>
               </div>
               <div class="item__content">
                 <p>
-                  {currencyFormatLocal(transaction.comission)}
-                </p>
-                <p>{`(${getPercentage(
-                  transaction.Amount,
-                  transaction.comission
-                )}%)`}</p>
-              </div>
-            </div>
-            <div class="item">
-              <div class="item__title">
-                <b>IVA</b>
-              </div>
-              <div class="item__content">
-                <p>
-                  {currencyFormatLocal(transaction.iva)}
-                </p>
-                <p>{`(16%)`}</p>
-              </div>
-              <span />
-            </div>
-            <div class="item">
-              <div class="item__title">
-                <b>Total a Depositar</b>
-              </div>
-              <div class="item__content last">
-                <p>
-                  {currencyFormatLocal(transaction.toDeposit)}
+                  {transaction.authorization ?? "N/A"}
                 </p>
               </div>
-              <span />
             </div>
           </div>
         </div>

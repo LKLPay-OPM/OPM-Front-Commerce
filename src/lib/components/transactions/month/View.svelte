@@ -35,9 +35,6 @@
             <th class="title">Día</th>
             <th class="title">N° Ventas</th>
             <th class="title">Vendido</th>
-            <th class="title responsive">Comisión</th>
-            <th class="title responsive">IVA</th>
-            <th class="title responsive">Depósito</th>
           </tr>
         </thead>
         <tbody>
@@ -51,15 +48,6 @@
               <td class="element">{month?.Sold ?? 0}</td>
               <td class="element">
                 {currencyFormatLocal(month?.Amount)}
-              </td>
-              <td class="element responsive">
-                {currencyFormatLocal(month?.Comission)}
-              </td>
-              <td class="element responsive">
-                {currencyFormatLocal(month?.iva)}
-              </td>
-              <td class="element responsive">
-                {currencyFormatLocal(month?.Deposit)}
               </td>
               <i class="responsive arrow arrow-blue">
                 <Icons name="arrow-fwd" width="24" height="24" />

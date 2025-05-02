@@ -40,9 +40,6 @@
             <th class="">Hora</th>
             <th class="sm">N° Ticket</th>
             <th>Monto</th>
-            <th class="">Comisión</th>
-            <th class="sm md">IVA</th>
-            <th class="">Depósito</th>
             <th class="sm">Tipo</th>
           </tr>
         </thead>
@@ -56,9 +53,6 @@
               >
               <td class="sm">{transaction?.["ID Transaction"]}</td>
               <td>{currencyFormatLocal(transaction.Amount)}</td>
-              <td class="">{currencyFormatLocal(transaction.comission)}</td>
-              <td class="sm md">{currencyFormatLocal(transaction.iva)}</td>
-              <td class="">{currencyFormatLocal(transaction.toDeposit)}</td>
               <td class="sm">
                 <i class={`icon ${getIconStatusClass(transaction.transactionStatus)} tooltip`}>
                   <Icons
