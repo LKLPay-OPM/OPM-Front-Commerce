@@ -52,7 +52,7 @@
         `/transaction/detail/${transaction._id}/email`
       );
       successCustomMsgToast(
-        `Correo enviado con éxito a tu dirección asociada a BAZ`
+        `Correo enviado con éxito a tu dirección asociada a OPM`
       );
       return { ...response.data?.response };
     } catch (e) {

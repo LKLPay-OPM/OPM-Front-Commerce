@@ -55,8 +55,7 @@
       <div class="logo">
         <img src={Logo} alt="Company Logo" />
         <div class="text">
-          <p>BAZ</p>
-          <small>Sueñas, Decides, Logras</small>
+          <p>Payment Nexus</p>
         </div>
       </div>
       <div class="form">

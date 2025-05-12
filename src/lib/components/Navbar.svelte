@@ -44,7 +44,7 @@
 <div class="navbar bg-base-100 noPrint z-50">
   <div class="navbar-start">
     <a href={$isLoggedIn ? "/home" : "/"} class="btn btn-ghost navbarText"
-      ><img src={logo} alt="Company Logo" class="navbarLogo" />| BAZ</a
+      ><img src={logo} alt="Company Logo" class="navbarLogo" />| OPM</a
     >
   </div>
   <div class="navbar-end">

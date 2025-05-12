@@ -51,7 +51,7 @@
 </script>
 
 <svelte:head>
-  <title>BAZ Boost</title>
+  <title>OPM Boost</title>
 </svelte:head>
 <svelte:window bind:innerWidth bind:innerHeight />
 

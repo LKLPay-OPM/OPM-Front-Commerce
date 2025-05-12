@@ -67,10 +67,7 @@
         <a href="/">
           <div class="text-logo">
             <div class="title">
-              <p>BAZ</p>
-            </div>
-            <div class="subtitle">
-              <small>Sueñas, Decides, Logras</small>
+              <p>Payment Nexus</p>
             </div>
           </div>
           <img src={logo} alt="Company Logo" />
