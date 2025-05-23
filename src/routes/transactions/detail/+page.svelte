@@ -147,8 +147,8 @@
     loading = true;
     try {
       const response = await axiosFraudPreventionManagementJSON.post(
-        `/e/ecommerce/cancel`,
-        cancel
+        `/e/cancel`,
+        {transactionId: cancel.transactionId}
       );
       cancelData = {
         amount: response?.data?.response?.amount,
