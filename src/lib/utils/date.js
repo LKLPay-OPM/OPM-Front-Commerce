@@ -123,3 +123,12 @@ export function validateSameDay(date) {
   if (today === Number(getDayFromDateString(date))) return true;
   else return false;
 }
+
+export function validateNextDay(date) {
+  const d = new Date();
+  const today = d.getDate();
+  const testDate = new Date(date);
+  const testDay = testDate.getDate();
+  if (today !== testDay) return true;
+  else return false;
+}

@@ -5,8 +5,6 @@
   import Modal from "$lib/components/Modal.svelte";
   import TextArea from "$lib/components/TextArea.svelte";
   import Loader from "$lib/components/Loader.svelte";
-  /* navigation */
-  import { goto } from "$app/navigation";
   /* utils */
   import { dateToLocalString, timeToLocalString } from "$lib/utils/date.js";
   import { getCardBrand } from "$lib/utils/brands.js";
@@ -16,10 +14,7 @@
   } from "$lib/utils/toast.js";
   import { copyLinkToClipboard } from "$lib/utils/copyToClipboard.js";
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
-  /* stores */
-  import { previousPage } from "$lib/stores";
   /* svelte */
-  import { onMount } from "svelte";
   import { error } from "@sveltejs/kit";
   /* client */
   import {
@@ -33,6 +28,7 @@
   import {
     transactionStatus,
     transactionCancelValidation,
+    transactionRefundValidation
   } from "$lib/handlers/transaction-status.handler";
 
   export let data;
@@ -151,7 +147,7 @@
     loading = true;
     try {
       const response = await axiosFraudPreventionManagementJSON.post(
-        `/link/cancel`,
+        `/e/ecommerce/cancel`,
         cancel
       );
       cancelData = {
@@ -610,17 +606,18 @@
               icon=""
             />
           </div>
-        {/if}
-          <!-- <div class="reverse-button">
-            <Input
-              on:click={refundModal.show()}
-              label="Devolución"
-              id="refundTransaction"
-              type="button"
-              className="border-btn-error"
-              icon=""
-            />
-          </div> -->
+          {:else if transactionRefundValidation(transaction.transactionStatus, transaction["Transaction Date"], transaction.type)}
+            <div class="reverse-button">
+              <Input
+                on:click={refundModal.show()}
+                label="Devolución"
+                id="refundTransaction"
+                type="button"
+                className="border-btn-error"
+                icon=""
+              />
+            </div>
+          {/if}
         <!-- <div class="clarification-button">
           <Input
             on:click={showModal(modalClarification)}
