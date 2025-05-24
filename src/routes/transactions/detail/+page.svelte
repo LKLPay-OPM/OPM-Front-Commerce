@@ -143,7 +143,7 @@
 
   /* Función cancelar transacción */
   const cancelTransaction = async () => {
-    cancelModal.closeModal()
+    cancelModal.closeModal();
     loading = true;
     try {
       const response = await axiosFraudPreventionManagementJSON.post(
@@ -156,8 +156,6 @@
         description: response?.data?.response?.description,
         email: response?.data?.response?.email,
       };
-      // formSuccess(link);
-      modalCancel.show();
     } catch (err) {
       errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
       const handler = await appErrorResponseHandler(err);
