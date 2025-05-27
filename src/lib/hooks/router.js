@@ -145,7 +145,7 @@ const sidebarOptions = (accountType) => {
       // { name: "Solicitudes", path: "/requests", icon: "adviser" },
       // { name: "Sucursales", path: "/branch-office", icon: "franchise" }, // TODO: Sprint 2 Sucursales
       // { name: "Terminales", path: "/terminals", icon: "terminal" }, // TODO: Sprint 2 Terminales
-      // { name: "Link de Pago", path: "/payment-link", icon: "qr-code" },
+      { name: "Link de Pago", path: "/payment-link", icon: "qr-code" },
     ],
     3: [
       /// ACCOUNT TYPE BUSINESS
@@ -155,7 +155,7 @@ const sidebarOptions = (accountType) => {
       // { name: "Solicitudes", path: "/requests", icon: "adviser" },
       // { name: "Sucursales", path: "/branch-office", icon: "franchise" }, // TODO: Sprint 2 Sucursales
       // { name: "Terminales", path: "/terminals", icon: "terminal" }, // TODO: Sprint 2 Terminales
-      // { name: "Link de Pago", path: "/payment-link", icon: "qr-code" },
+      { name: "Link de Pago", path: "/payment-link", icon: "qr-code" },
     ],
   };
   return optionsList[accountType];
