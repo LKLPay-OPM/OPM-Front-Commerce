@@ -1,4 +1,4 @@
-import { validateSameDay } from "$lib/utils/date";
+import { validateSameDay, validateNextDay } from "$lib/utils/date";
 export function transactionStatus(status) {
   if (status === "approved") {
     return "APROBADA";
@@ -14,6 +14,13 @@ export function transactionStatus(status) {
 
 export function transactionCancelValidation(status, date, type) {
   if (status === "approved" && validateSameDay(date) && type === "e-commerce") {
+    return true;
+  }
+  return false;
+}
+
+export function transactionRefundValidation(status, date, type) {
+  if (status === "approved" && validateNextDay(date) && type === "e-commerce") {
     return true;
   }
   return false;

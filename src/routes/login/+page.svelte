@@ -55,8 +55,7 @@
       <div class="logo">
         <img src={Logo} alt="Company Logo" />
         <div class="text">
-          <p>LKL Pay</p>
-          <small>Financial Technology</small>
+          <p>Payment Nexus</p>
         </div>
       </div>
       <div class="form">

@@ -268,7 +268,7 @@
         </div>
         <p>
           He Leído, entendido y acepto los
-          <a href="/#terms">Términos y Condiciones Generales</a> de LklPay, así como su
+          <a href="/#terms">Términos y Condiciones Generales</a> de OPM, así como su
           <a href="/#privacy">Política de Privacidad</a> y, por lo tanto estoy de acuerdo en el uso y procesamiento de datos
           personales.
         </p>
@@ -360,7 +360,7 @@
           </div>
           <p>
             He Leído, entendido y acepto los
-            <a href="/#terms">Términos y Condiciones Generales</a> de LklPay, así como su
+            <a href="/#terms">Términos y Condiciones Generales</a> de OPM, así como su
             <a href="/#privacy">Política de Privacidad</a> y, por lo tanto estoy de acuerdo en el uso y procesamiento de
             datos personales.
           </p>

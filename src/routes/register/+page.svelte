@@ -70,7 +70,7 @@
         <img src={Logo} alt="Company Logo" />
       </div>
       <div class="form">
-        <div class="title">Regístrate en Lkl Pay</div>
+        <div class="title">Regístrate en OPM</div>
         <div class="subtitle">Simple y rápido</div>
         <div class="form-inputs">
           <form on:submit|preventDefault={handleRegister}>
@@ -137,7 +137,7 @@
               <p>
                 He Leído, entendido y acepto los <br />
                 <a href="/register#terms">Términos y Condiciones Generales</a>
-                de Lkl Pay, <br />
+                de OPM, <br />
                 así como su
                 <a href="/register#privacy">Política de Privacidad</a>
                 y, por lo tanto <br />
@@ -173,7 +173,7 @@
         <img src={Logo} alt="Company Logo" />
       </div>
       <div class="form">
-        <div class="title">Bienvenido a LKL Pay</div>
+        <div class="title">Bienvenido a OPM</div>
         <div class="svg success">
           <Icons name="checkbox-circle-line" width="150" height="150" />
           <!-- <SuccessLogo /> -->

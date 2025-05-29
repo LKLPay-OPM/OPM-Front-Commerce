@@ -25,14 +25,17 @@
 
   $: {
     if ($isLoggedIn) {
-      optionsSidebar($loggedInUser.accountType).then((response) => {
+      optionsSidebar().then((response) => {
         options = response;
       });
-      if (innerWidth <= 1000) {
-        $sidebar = false;
-      } else {
-        $sidebar = true;
-      }
+    }
+  }
+
+  $: {
+    if (innerWidth <= 1000) {
+      $sidebar = false;
+    } else {
+      $sidebar = true;
     }
   }
 </script>
@@ -67,10 +70,7 @@
         <a href="/">
           <div class="text-logo">
             <div class="title">
-              <p>LKL Pay</p>
-            </div>
-            <div class="subtitle">
-              <small>Financial Technology</small>
+              <p>Payment Nexus</p>
             </div>
           </div>
           <img src={logo} alt="Company Logo" />

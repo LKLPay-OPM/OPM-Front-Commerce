@@ -137,7 +137,7 @@
         <img src={Logo} alt="Company Logo" />
       </div>
       <div class="form">
-        <div class="title">LKL Pay</div>
+        <div class="title">OPM</div>
         <div class="subtitle">Inicia Sesión con tu nueva contraseña</div>
         <div class="svg success">
           <Icons name="checkbox-circle-line" width="150" height="150" />

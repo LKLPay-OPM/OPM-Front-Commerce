@@ -1,3 +1,8 @@
+/* lib */
+import moment from 'moment/moment'
+/* locale */
+import "moment/locale/es-mx"
+
 export function getMonthName(month) {
   const monthsArray = [
     "Enero",
@@ -67,6 +72,13 @@ export function getDayTwoDigits(date) {
   return `${day}`;
 }
 
+export function getStringDateTime(date) {
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const seconds = date.getSeconds().toString().padStart(2, "0");
+  return `${getYearLastTwoDigits(date)}${getMonthTwoDigits(date)}${getDayTwoDigits(date)}${hours}${minutes}${seconds}`;
+}
+
 export function getStringDate(date) {
   return `${getYearLastTwoDigits(date)}${getMonthTwoDigits(date)}${getDayTwoDigits(date)}`;
 }
@@ -122,4 +134,17 @@ export function validateSameDay(date) {
   const today = d.getDate();
   if (today === Number(getDayFromDateString(date))) return true;
   else return false;
+}
+
+export function validateNextDay(date) {
+  const d = new Date();
+  const today = d.getDate();
+  const testDate = new Date(date);
+  const testDay = testDate.getDate();
+  if (today !== testDay) return true;
+  else return false;
+}
+
+export function getFullMomentDate(input, format = "YYYY-MM-DD") {
+  return moment(input, format).locale('es').format("dddd D MMMM YYYY - hh:mmA")
 }

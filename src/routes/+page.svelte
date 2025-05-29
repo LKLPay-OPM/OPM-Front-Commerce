@@ -4,6 +4,7 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import { isLoggedIn, linkSelected, toastId } from "$lib/stores";
+  import { invalidateAll } from "$app/navigation";
   /* components */
   import Loader from "$lib/components/Loader.svelte";
   import Dashboard from "$lib/components/Dashboard.svelte";
@@ -28,6 +29,12 @@
   let loading = true;
   let user = data?.user;
   let modalUserData;
+
+  let filter = "day";
+  let dateStart = data.dateStart;
+  let dateEnd = data.dateEnd;
+  let start = data.start;
+  let end = data.end;
 
   let modalValidation = user?.name || user?.clabe;
   let userData = {
@@ -70,6 +77,17 @@
   const closeModal = (option) => {
     option.closeModal();
   };
+
+  async function handlePagination({ detail }) {
+    loading = true;
+    console.log("dateStart", dateStart);
+    console.log("dateEnd", dateEnd);
+    console.log("start", start);
+    console.log("end", end);
+    window.history.replaceState(history.state, '', `?filter=${filter}${dateStart != "" ? `&dateStart=${dateStart}`:""}${dateEnd != "" ? `&dateEnd=${dateEnd}`:""}&start=${start}&end=${end}`)
+    await invalidateAll();
+    loading = false;
+  }
 
   onMount(async () => {
     if (!$isLoggedIn) {
@@ -204,7 +222,12 @@
   {#if loading}
     <Loader />
   {:else}
-    <Dashboard bind:data />
+    <Dashboard
+    bind:data
+    bind:start
+    bind:end
+    handlePagination={handlePagination}
+  />
   {/if}
 {:else}
   <RedirectLogin />

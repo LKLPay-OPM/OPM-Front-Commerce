@@ -10,3 +10,14 @@ export const routes = (route) => {
   };
   return routeName[route];
 };
+
+export const allroutes = {
+  "/": true,
+  "/login": true,
+  "/profile": true,
+  "/transactions": true,
+  "/requests": true,
+  "/dispersions": true,
+  "/branch-office": false,
+  "/terminals": false,
+}

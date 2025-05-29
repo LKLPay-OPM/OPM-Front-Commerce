@@ -27,6 +27,7 @@
 
   $: {
     if ($isLoggedIn) {
+      console.log($loggedInUser)
       router($loggedInUser.accountType, $page.route.id).then((response) => {
         if (!response) {
           $linkSelected = "Inicio";
@@ -51,7 +52,7 @@
 </script>
 
 <svelte:head>
-  <title>Lkl Pay Boost</title>
+  <title>OPM Boost</title>
 </svelte:head>
 <svelte:window bind:innerWidth bind:innerHeight />
 

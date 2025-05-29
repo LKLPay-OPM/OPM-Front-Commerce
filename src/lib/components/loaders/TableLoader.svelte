@@ -1,5 +1,5 @@
 <script>
-  import Logo from "$lib/assets/Logo.png";
+  import Logo from "$lib/assets/Logo RGB.svg";
   import Circulo from "$lib/assets/Circulo.png";
   export let text = "";
 </script>
@@ -24,13 +24,13 @@
   }
 
   .container {
-    background: var(--light);
+    // background: var(--light);
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100vh;
     display: flex;
+    width: 100%;
+    height: 100%;
     justify-content: center;
     align-items: center;
 
@@ -39,7 +39,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 1rem;
+      // gap: 1rem;
 
       .text {
         font-weight: 600;
@@ -53,15 +53,15 @@
 
   .loader {
     position: relative;
-    height: 200px;
-    width: 200px;
+    height: 150px;
+    width: 150px;
     .logo {
       top: 50%;
       left: 50%;
       // transform: translate(-50%, -50%);
       position: absolute;
-      width: 48px;
-      height: 48px;
+      width: 32px;
+      height: 32px;
       animation: logo 2s linear infinite;
     }
     .circle {
@@ -69,8 +69,8 @@
       left: 50%;
       // transform: translate(-50%, -50%);
       position: absolute;
-      width: 200px;
-      height: 200px;
+      width: 150px;
+      height: 150px;
       filter: invert(20%);
       animation: circle 10s linear infinite;
     }
