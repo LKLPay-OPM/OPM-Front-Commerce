@@ -27,6 +27,7 @@
 
   $: {
     if ($isLoggedIn) {
+      console.log($loggedInUser)
       router($loggedInUser.accountType, $page.route.id).then((response) => {
         if (!response) {
           $linkSelected = "Inicio";

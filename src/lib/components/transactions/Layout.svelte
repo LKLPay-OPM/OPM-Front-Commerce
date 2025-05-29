@@ -453,7 +453,14 @@
         <InfoCard
           className={""}
           title="Monto Total"
-          numData={currencyFormatLocal(resume?.Deposit ?? 0)}
+          numData={currencyFormatLocal(resume?.Amount ?? 0)}
+        />
+      </div>
+      <div class="element">
+        <InfoCard
+          className={""}
+          title="Comisión"
+          numData={currencyFormatLocal(resume?.Comission ?? 0)}
         />
       </div>
       {#if (typeof resume?.Tips != "undefined" && resume?.Tips > 0) || typeof resume?.Tips != "undefined"}
@@ -465,6 +472,13 @@
           />
         </div>
       {/if}
+      <div class="element">
+        <InfoCard
+          className={""}
+          title="Depósito"
+          numData={currencyFormatLocal(resume?.Deposit ?? 0)}
+        />
+      </div>
     </div>
   </div>
   <div class="transactions-view">

@@ -25,14 +25,17 @@
 
   $: {
     if ($isLoggedIn) {
-      optionsSidebar($loggedInUser.accountType).then((response) => {
+      optionsSidebar().then((response) => {
         options = response;
       });
-      if (innerWidth <= 1000) {
-        $sidebar = false;
-      } else {
-        $sidebar = true;
-      }
+    }
+  }
+
+  $: {
+    if (innerWidth <= 1000) {
+      $sidebar = false;
+    } else {
+      $sidebar = true;
     }
   }
 </script>

@@ -3,8 +3,8 @@
   import Input from "$lib/components/Input.svelte";
   import Icons from "$lib/components/Icons.svelte";
   import Modal from "$lib/components/Modal.svelte";
-  import TextArea from "$lib/components/TextArea.svelte";
   import Loader from "$lib/components/Loader.svelte";
+  import Map from "$lib/components/Map.svelte";
   /* utils */
   import { dateToLocalString, timeToLocalString } from "$lib/utils/date.js";
   import { getCardBrand } from "$lib/utils/brands.js";
@@ -15,25 +15,22 @@
   import { copyLinkToClipboard } from "$lib/utils/copyToClipboard.js";
   import { currencyFormatLocal } from "$lib/utils/currencyFormatLocal";
   /* svelte */
+  import { onMount } from "svelte";
   import { error } from "@sveltejs/kit";
-  /* client */
-  import {
-    axiosDevicesClient,
-    ticketsClient,
-    axiosFraudPreventionManagementJSON,
-    profilesClient,
-  } from "$lib/repos/axios";
+  import { axiosFraudPreventionManagementJSON } from "$lib/repos/axios";
   /* controllers */
   import { appErrorResponseHandler } from "$lib/handlers/error.handler";
   import {
     transactionStatus,
     transactionCancelValidation,
-    transactionRefundValidation
+    transactionRefundValidation,
   } from "$lib/handlers/transaction-status.handler";
+  /* utils */
+  import { formatCardType } from "$lib/utils/format.js";
+  import { getTransactionIconStatus } from "$lib/utils/iconClass.js";
 
   export let data;
   let transaction = data?.response;
-  let data3ds = data?.data3ds;
   let cardIcon = "";
   let modalClarification;
   let cancelModal;
@@ -81,11 +78,6 @@
     transactionId: data?.response?.transaction,
   };
 
-  /* let cancel = {
-    description: "Link de Cancelación",
-    transactionId: data?.response?.transaction
-  } */
-
   const returnToPreviousPage = () => {
     history.back();
   };
@@ -96,59 +88,14 @@
   const closeModal = (option) => {
     option.closeModal();
   };
-  const handleClarification = async () => {
-    try {
-      const response = await ticketsClient.post(
-        `/ticket/clarification/transaction`,
-        clarification
-      );
-      successCustomMsgToast(`Tu ticket de aclaración se ha generado con éxito`);
-      return { ...response.data?.response };
-    } catch (err) {
-      errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
-      const handler = await appErrorResponseHandler(err);
-      const code = handler?.code ?? 500;
-      const message = handler?.message ?? "¡Algo salió mal!";
-      throw new error(code, message);
-    }
-  };
-
-  const sendTransactionByEmail = async () => {
-    try {
-      const user = await profilesClient.get(`/user/profile`);
-      const body = {
-        address: user.address ?? undefined,
-        scheme: getCardBrand(transaction["Application PAN"]),
-        commerceName: user.businessName ?? undefined,
-        authorization: transaction.authorization,
-      };
-      const response = await axiosDevicesClient.post(
-        `/transaction/detail/${transaction._id}/email`,
-        {
-          body,
-        }
-      );
-      successCustomMsgToast(
-        `Correo enviado con éxito a tu dirección asociada a OPM`
-      );
-      return { ...response.data?.response };
-    } catch (err) {
-      errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
-      const handler = await appErrorResponseHandler(err);
-      const code = handler?.code ?? 500;
-      const message = handler?.message ?? "¡Algo salió mal!";
-      throw new error(code, message);
-    }
-  };
-
   /* Función cancelar transacción */
   const cancelTransaction = async () => {
     cancelModal.closeModal();
     loading = true;
     try {
       const response = await axiosFraudPreventionManagementJSON.post(
-        `/e/cancel`,
-        {transactionId: cancel.transactionId}
+        `/link/cancel`,
+        cancel,
       );
       cancelData = {
         amount: response?.data?.response?.amount,
@@ -156,6 +103,8 @@
         description: response?.data?.response?.description,
         email: response?.data?.response?.email,
       };
+      // formSuccess(link);
+      modalCancel.show();
     } catch (err) {
       errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
       const handler = await appErrorResponseHandler(err);
@@ -172,18 +121,20 @@
   };
 
   const refundTransaction = async () => {
-    console.log(data.response.transaction)
+    console.log(data.response.transaction);
     loading = true;
     try {
       const response = await axiosFraudPreventionManagementJSON.post(
-        `/e/refund`, {
+        `/e/refund`,
+        {
           transactionId: data.response.transaction,
           // card: data.response["Application PAN"],
-        }
+        },
       );
       refundModal.closeModal();
       successCustomMsgToast(`La devolución se realizó con éxito`);
     } catch (err) {
+      console.log("refundTransaction:", err);
       refundModal.closeModal();
       errorCustomMsgToast(`Ocurrió un error, intenta de nuevo`);
       const handler = await appErrorResponseHandler(err);
@@ -193,7 +144,7 @@
     } finally {
       loading = false;
     }
-  }
+  };
 
   const removeBackdrop = async () => {
     transparent = true;
@@ -202,42 +153,6 @@
     }, 3000);
   };
 </script>
-
-<Modal className={`modal-medium`} bind:this={modalClarification}>
-  <div slot="header">
-    <p>Solicitar Aclaración</p>
-  </div>
-  <div slot="content">
-    <div class="clarifications">
-      <div class="title">Recibo N°</div>
-      <div class="description">
-        <p>{clarification.transaction}</p>
-      </div>
-      <!-- <Select bind:optionsList={clarificationsList} defaultText={"Elige una opción"} label="Tipo de Aclaración" id="clarificationType" bind:value={clarification.type}/> -->
-    </div>
-    <div class="clarification-description">
-      <TextArea
-        bind:value={clarification.description}
-        label="Descripción"
-        placeholder="¿Qué problema hay con esta transacción?"
-        id="clarificationDescription"
-        name="clarificationDescription"
-      />
-    </div>
-  </div>
-  <div class="modal-buttons" slot="footer">
-    <Input
-      on:click={() => handleClarification()}
-      on:click={closeModal(modalClarification)}
-      label="Enviar Aclaración"
-      id="buttonSaveModalClarification"
-      type="button"
-      className={`
-        ${clarification.description != "" ? "btn" : "btn-plain disabled"}`}
-      icon=""
-    />
-  </div>
-</Modal>
 
 <!-- Modal Cancel -->
 <Modal
@@ -315,10 +230,11 @@
   <div slot="content">
     <div class="thin-divider" />
     <div class="modal-content">
+      <div class="column-element"></div>
       <div class="column-element">
-      </div>
-      <div class="column-element">
-        <p style="text-align:center;">¿Deseas solicitar una cancelación de la transacción?</p>
+        <p style="text-align:center;">
+          ¿Deseas solicitar una cancelación de la transacción?
+        </p>
       </div>
     </div>
   </div>
@@ -356,10 +272,11 @@
   <div slot="content">
     <div class="thin-divider" />
     <div class="modal-content">
+      <div class="column-element"></div>
       <div class="column-element">
-      </div>
-      <div class="column-element">
-        <p style="text-align:center;">¿Deseas solicitar una devolución de la transacción?</p>
+        <p style="text-align:center;">
+          ¿Deseas solicitar una devolución de la transacción?
+        </p>
       </div>
     </div>
   </div>
@@ -399,6 +316,12 @@
   <div class="transaction-details">
     <div class="details__top">
       <b>Recibo #{transaction["ID Transaction"]}</b>
+      <b
+        >{transaction.commerceName ? transaction.commerceName : ""}{transaction
+          .branchInfo?.branchName
+          ? ` - Sucursal ${transaction.branchInfo.branchName}`
+          : ""}</b
+      >
       <p>
         {dateToLocalString(transaction["Transaction Date"])}
         {timeToLocalString(transaction["Transaction Time"])}
@@ -408,27 +331,31 @@
       <div class="details-left responsive">
         <div class="section">
           <div class="title">Datos</div>
-          {#if transaction.orderId}
-            <div class="item">
-              <b>ID Orden</b>
-              <p>{transaction.orderId ?? "N/A"}</p>
-            </div>
-          {/if}
           <div class="item">
             <b>Referencia</b>
             <p>{transaction.reference ?? "N/A"}</p>
           </div>
           <div class="item">
-            <b>TPV</b>
+            <b>TVR</b>
             <p>{transaction["ID Terminal"] ?? "N/A"}</p>
           </div>
           <div class="item">
-            <b>IFD Serial Number</b>
-            <p>{transaction["IFD Serial Number"] ?? "N/A"}</p>
+            <b>AID</b>
+            <p>{transaction["Terminal Capabilities"] ?? "N/A"}</p>
+          </div>
+          <div class="item">
+            <b>Autorización</b>
+            <p>{transaction.authorization ?? "N/A"}</p>
           </div>
           <div class="item">
             <b>Tipo de Tarjeta</b>
-            <p>{getCardBrand(transaction["Application PAN"]) ?? "N/A"}</p>
+            <p>{transaction.scheme?.toUpperCase() ?? "N/A"}</p>
+          </div>
+          <div class="item">
+            <b>Estaus</b>
+            <p>
+              {getTransactionIconStatus(transaction.transactionStatus) ?? "N/A"}
+            </p>
           </div>
           <div class="item">
             <b>Medio de Pago</b>
@@ -438,8 +365,8 @@
                   name={transaction.type === "tpv"
                     ? "terminal"
                     : transaction.type === "e-commerce"
-                    ? "qr-code"
-                    : "terminal"}
+                      ? "qr-code"
+                      : "terminal"}
                   width="24"
                   height="24"
                 />
@@ -447,24 +374,16 @@
                   >{transaction.type === "tpv"
                     ? "Terminal Punto de Venta"
                     : transaction.type === "e-commerce"
-                    ? "Link de Pago"
-                    : ""}</span
+                      ? "Link de Pago"
+                      : ""}</span
                 >
               </i>
             </p>
           </div>
-          <div class="item">
-            <b>Descripción</b>
-            <p>{transaction["ISO CODE DESCRIPTION"] ?? "N/A"}</p>
-          </div>
         </div>
       </div>
       <div class="details-center">
-        <div
-          class={`details-card ${getCardBrand(
-            transaction["Application PAN"]
-          ).toLowerCase()}`}
-        >
+        <div class={`details-card ${transaction.scheme.replace(/ /g, "")}`}>
           <div class="details-card__top">
             <b>Detalle de Venta</b>
           </div>
@@ -476,8 +395,12 @@
               <div class="item__content first">
                 <p>
                   <span
-                    >{"**** **** **** " +
-                      transaction["Application PAN"].substr(-4)}</span
+                    >{`${transaction["Application PAN"].substr(0, 4)} ${transaction[
+                      "Application PAN"
+                    ].substr(
+                      4,
+                      2,
+                    )}** **** ${transaction["Application PAN"].substr(-4)}`}</span
                   >
                 </p>
               </div>
@@ -489,11 +412,9 @@
               <div class="item__content">
                 <p>
                   <Icons
-                    name={`${getCardBrand(
-                      transaction["Application PAN"]
-                    ).toLowerCase()}`}
-                    width="24"
-                    height="24"
+                    name={`${getCardBrand(transaction.scheme).toLowerCase()}`}
+                    width="32"
+                    height="32"
                   />
                 </p>
               </div>
@@ -522,76 +443,95 @@
             </div>
             <div class="item">
               <div class="item__title">
-                <b>Autorización</b>
+                <b>Comisión</b>
               </div>
               <div class="item__content">
                 <p>
-                  {transaction.authorization ?? "N/A"}
+                  {currencyFormatLocal(
+                    transaction.comission + transaction.fixedComission,
+                  )}
+                </p>
+                {#if transaction.type === "e-commerce"}
+                  <p>
+                    {`(${getPercentage(transaction.Amount, transaction.comission)}% + ${currencyFormatLocal(
+                      transaction.fixedComission,
+                    )})`}
+                  </p>
+                {:else}
+                  <p>
+                    {`(${getPercentage(transaction.Amount, transaction.comission)}%)`}
+                  </p>
+                {/if}
+              </div>
+            </div>
+            <div class="item">
+              <div class="item__title">
+                <b>IVA</b>
+              </div>
+              <div class="item__content">
+                <p>
+                  {currencyFormatLocal(transaction.iva)}
+                </p>
+                <p>{`(16%)`}</p>
+              </div>
+              <span />
+            </div>
+            <div class="item">
+              <div class="item__title">
+                <b>Total a Depositar</b>
+              </div>
+              <div class="item__content last">
+                <p>
+                  {currencyFormatLocal(transaction.toDeposit)}
                 </p>
               </div>
+              <span />
             </div>
           </div>
         </div>
       </div>
-      {#if data3ds != null}
-        <div class="details-right responsive">
-          <div class="section">
-            <div class="title">Datos 3D Secure</div>
-            <div class="item">
-              <b>ID</b>
-              <p>{data3ds.id ?? "N/A"}</p>
-            </div>
-            <div class="item">
-              <b>ECI</b>
-              <p>{data3ds.eci ?? "N/A"}</p>
-            </div>
-            <div class="item">
-              <b>Token</b>
-              <p>{data3ds.token ?? "N/A"}</p>
-            </div>
-            <div class="item">
-              <b>ID Transacción 3DS</b>
-              <p>{data3ds.threeDSServerTransactionId ?? "N/A"}</p>
-            </div>
-            <div class="item">
-              <b>CAVV</b>
-              <p>{data3ds.cavv ?? "N/A"}</p>
-            </div>
-            <div class="item">
-              <b>Estatus</b>
-              <p>{data3ds.status ?? "N/A"}</p>
-            </div>
+      <div class="details-right responsive">
+        <div class="section">
+          <div class="title">Relevante</div>
+          <div class="item">
+            <b>Código de Respuesta</b>
+            <p>{transaction["ISO CODE RESPONSE"] ?? "N/A"}</p>
+          </div>
+          <div class="item">
+            <b>Descripción</b>
+            <p>{transaction["ISO CODE DESCRIPTION"] ?? "N/A"}</p>
+          </div>
+          <div class="item">
+            <b>ID Agregador</b>
+            <p>{transaction["ID Aggregator"] ?? "N/A"}</p>
+          </div>
+          <div class="item">
+            <b>ID Afiliado</b>
+            <p>{transaction["ID Afiliate"] ?? "N/A"}</p>
+          </div>
+          <div class="item">
+            <b>Institución</b>
+            <p>{transaction.bank.toUpperCase() ?? "N/A"}</p>
+          </div>
+          <div class="item">
+            <b>Procesador</b>
+            <p>{transaction.processor.toUpperCase() ?? "N/A"}</p>
+          </div>
+          <div class="item">
+            <b>Tipo</b>
+            <p>{formatCardType(transaction["Card Type"]) ?? "N/A"}</p>
+          </div>
+          <div class="item">
+            <b>Marca</b>
+            <p>{transaction.bankProduct.toUpperCase() ?? "N/A"}</p>
           </div>
         </div>
-      {/if}
-      <!-- <div class="details-right no-print responsive">
-        <div class="title">Reportes</div>
-        <div class="export-buttons">
-          <Input
-            label=""
-            id="csv-export"
-            type="button"
-            className="btn-plain fill-blue btn-square "
-            icon="csv-fill"
-          />
-          <Input
-            label=""
-            id="excel-export"
-            type="button"
-            className="btn-plain fill-green btn-square "
-            icon="xls-fill"
-          />
-          <Input
-            label=""
-            id="pdf-export"
-            type=""
-            className="btn-plain fill-red btn-square "
-            icon="pdf-fill"
-          />
-        </div>
-      </div> -->
+      </div>
     </div>
     <div class="details__bottom">
+      <div class="container__map">
+        <Map lat={transaction.latitude} lon={transaction.longitude} />
+      </div>
       <div class="card-buttons no-print">
         {#if transactionCancelValidation(transaction.transactionStatus, transaction["Transaction Date"], transaction.type)}
           <div class="reverse-button">
@@ -604,48 +544,18 @@
               icon=""
             />
           </div>
-          {:else if transactionRefundValidation(transaction.transactionStatus, transaction["Transaction Date"], transaction.type)}
-            <div class="reverse-button">
-              <Input
-                on:click={refundModal.show()}
-                label="Devolución"
-                id="refundTransaction"
-                type="button"
-                className="border-btn-error"
-                icon=""
-              />
-            </div>
-          {/if}
-        <!-- <div class="clarification-button">
-          <Input
-            on:click={showModal(modalClarification)}
-            label="Aclaración"
-            id="transactionClarification"
-            type="button"
-            className="btn-plain"
-            icon=""
-          />
-        </div>
-        <div class="email-button">
-          <Input
-            on:click={sendTransactionByEmail}
-            label="Enviar por e-mail"
-            id="emailTransaction"
-            type="button"
-            className="btn-plain"
-            icon=""
-          />
-        </div>
-        <div class="print-button">
-          <Input
-            on:click={() => window.print()}
-            label="Imprimir Recibo"
-            id="printTransaction"
-            type="button"
-            className="btn-plain"
-            icon=""
-          />
-        </div> -->
+        {:else if transactionRefundValidation(transaction.transactionStatus, transaction["Transaction Date"], transaction.type)}
+          <div class="reverse-button">
+            <Input
+              on:click={refundModal.show()}
+              label="Devolución"
+              id="refundTransaction"
+              type="button"
+              className="border-btn-error"
+              icon=""
+            />
+          </div>
+        {/if}
       </div>
     </div>
   </div>
@@ -745,6 +655,13 @@
         display: flex;
         width: 7.5rem; /* 120px */
       }
+    }
+
+    .container__map {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 2rem;
     }
   }
 
