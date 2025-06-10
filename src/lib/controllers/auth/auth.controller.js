@@ -17,7 +17,7 @@ export class AuthController {
       isLoggedIn.update(() => false);
       loggedInUser.set({ error: true });
       sessionUser.set({ error: true });
-      return { error: true };
+      return { error: true, status: e.status, message: e.response?.data };
     }
   }
 

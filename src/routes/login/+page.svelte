@@ -24,8 +24,11 @@
     password: "",
   };
 
+  const intialErrorMessage = "Verifica que tus datos sean correctos";
+
   /* dynamic vars */
   let error = false;
+  let errorMessage = intialErrorMessage;
   let loading = true;
 
   /* handlers & functions */
@@ -33,12 +36,14 @@
     loading = true;
     const data = await AuthController.login(input);
     loading = false;
-    if (data?.error) error = data.error;
+    if (data?.error) {
+      error = data.error;
+      errorMessage = intialErrorMessage;
+      if (data.status === 429) {
+        errorMessage = data.message;
+      }
+    }
   }
-
-  /* async function amexNewCommerce() {
-    const data = await AmexController.newCommerce(amexData, amexAuthorization);
-  } */
 
   onMount(async () => {
     // amexNewCommerce();
@@ -61,7 +66,7 @@
       <div class="form">
         <div class="title">Inicio de Sesión</div>
         <div class={`subtitle ${!error ? "hidden" : ""}`}>
-          Verifica que tus datos sean correctos
+          {errorMessage}
         </div>
         <div class="form-inputs">
           <form on:submit|preventDefault={handleLogin}>
