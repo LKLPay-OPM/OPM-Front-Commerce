@@ -55,7 +55,7 @@
     try {
       $toastId = "";
       const response = await profilesFormDataClient.patch(
-        `/onboarding/aggregator`,
+        `/onboarding`,
         formData
       );
       successCustomMsgToast("Tus datos se procesaron con éxito");
