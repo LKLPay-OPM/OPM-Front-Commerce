@@ -26,8 +26,11 @@
 
   /* dynamic vars */
   export let data;
+
   $: transactions = data.transactions ?? [];
-  $: terminals = data.terminals ?? []; 
+  $: terminals = data.terminals ?? [];
+  $: resume = data.summary ?? [];
+
   let filter = data.filter ?? "day";
   let start = data.start;
   let end = data.end;
@@ -37,12 +40,6 @@
   let selectedTerminal = data.serialNumber;
   let loading = false;
   let tableLoading = false;
-  $: resume = {
-    sells: data.salesCount ?? 0,
-    total: data.salesAmount ?? 0,
-    comission: data.comissionAmount ?? 0,
-    iva: data.ivaAmount ?? 0,
-  };
 
   async function handlePagination({ detail }) {
     tableLoading = true;
@@ -71,10 +68,10 @@
           <p>Tu Información al día de hoy</p>
         </div> -->
         <CardContainer>
-          <Card title="Nº Ventas" value={resume.sells ?? "0"} />
-          <Card title="Monto Total" value={currencyFormatLocal(resume.total)} />
-          <Card title="Comisión" value={currencyFormatLocal(resume.comission)} />
-          <Card title="IVA" value={currencyFormatLocal(resume.iva)} />
+          <Card title="Nº Ventas" value={resume.Sold ?? "0"} />
+          <Card title="Monto Total" value={currencyFormatLocal(resume?.Amount ?? 0)} />
+          <Card title="Comisión" value={currencyFormatLocal(resume?.Comission ?? 0)} />
+          <Card title="IVA" value={currencyFormatLocal(resume.iva ?? 0)} />
         </CardContainer>
         {#if transactions.length <= 0}
           <EmptyTransactionsMessage />

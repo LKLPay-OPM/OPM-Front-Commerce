@@ -112,7 +112,7 @@
     }).format(today);
 
     const array = data.filter(
-      (date) => date["Transaction Date"] === strToday.replace(pattern, "$3$2$1")
+      (date) => date["Transaction_Date"] === strToday.replace(pattern, "$3$2$1")
     );
     return array;
   };
@@ -141,8 +141,8 @@
 
     const array = data.filter(
       (date) =>
-        date["Transaction Date"] >= first.replace(pattern, "$3$2$1") &&
-        date["Transaction Date"] <= last.replace(pattern, "$3$2$1")
+        date["Transaction_Date"] >= first.replace(pattern, "$3$2$1") &&
+        date["Transaction_Date"] <= last.replace(pattern, "$3$2$1")
     );
     return array;
   };
@@ -174,8 +174,8 @@
 
     const array = data.filter(
       (date) =>
-        date["Transaction Date"] >= first.replace(pattern, "$3$2$1") &&
-        date["Transaction Date"] <= lastDayMonth.replace(pattern, "$3$2$1")
+        date["Transaction_Date"] >= first.replace(pattern, "$3$2$1") &&
+        date["Transaction_Date"] <= lastDayMonth.replace(pattern, "$3$2$1")
     );
     return array;
   };
@@ -296,15 +296,15 @@
         <div class="description text-center">
           <!-- {#if active === "day"}
             {fetchByDayButton(selected.transactions)
-              .reduce((prev, curr) => prev + curr.Amount / 100, 0)
+              .reduce((prev, curr) => prev + curr.amount / 100, 0)
               .toLocaleString(localeParam.language, localeParam.currency)}
           {:else if active === "week"}
             {fetchByWeekButton(selected.transactions)
-              .reduce((prev, curr) => prev + curr.Amount / 100, 0)
+              .reduce((prev, curr) => prev + curr.amount / 100, 0)
               .toLocaleString(localeParam.language, localeParam.currency)}
           {:else if active === "month"}
             {fetchByMonthButton(selected.transactions)
-              .reduce((prev, curr) => prev + curr.Amount / 100, 0)
+              .reduce((prev, curr) => prev + curr.amount / 100, 0)
               .toLocaleString(localeParam.language, localeParam.currency)}
           {/if} -->
         </div>
@@ -314,15 +314,15 @@
         <div class="description text-center">
           <!-- {#if active === "day"}
             {fetchByDayButton(selected.transactions)
-              .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.035, 0)
+              .reduce((prev, curr) => prev + (curr.amount / 100) * 0.035, 0)
               .toLocaleString(localeParam.language, localeParam.currency)}
           {:else if active === "week"}
             {fetchByWeekButton(selected.transactions)
-              .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.035, 0)
+              .reduce((prev, curr) => prev + (curr.amount / 100) * 0.035, 0)
               .toLocaleString(localeParam.language, localeParam.currency)}
           {:else if active === "month"}
             {fetchByMonthButton(selected.transactions)
-              .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.035, 0)
+              .reduce((prev, curr) => prev + (curr.amount / 100) * 0.035, 0)
               .toLocaleString(localeParam.language, localeParam.currency)}
           {/if} -->
         </div>
@@ -332,15 +332,15 @@
         <div class="description text-center">
           <!-- {#if active === "day"}
             {fetchByDayButton(selected.transactions)
-              .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.965, 0)
+              .reduce((prev, curr) => prev + (curr.amount / 100) * 0.965, 0)
               .toLocaleString(localeParam.language, localeParam.currency)}
           {:else if active === "week"}
             {fetchByWeekButton(selected.transactions)
-              .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.965, 0)
+              .reduce((prev, curr) => prev + (curr.amount / 100) * 0.965, 0)
               .toLocaleString(localeParam.language, localeParam.currency)}
           {:else if active === "month"}
             {fetchByMonthButton(selected.transactions)
-              .reduce((prev, curr) => prev + (curr.Amount / 100) * 0.965, 0)
+              .reduce((prev, curr) => prev + (curr.amount / 100) * 0.965, 0)
               .toLocaleString(localeParam.language, localeParam.currency)}
           {/if} -->
         </div>
@@ -364,25 +364,25 @@
                 {#each fetchByDayButton(selected.transactions) as transaction}
                   <tr class="">
                     <td
-                      >{getTransactionDate(transaction["Transaction Date"]) +
+                      >{getTransactionDate(transaction["Transaction_Date"]) +
                         " - " +
-                        getTransactionTime(transaction["Transaction Time"])}</td
+                        getTransactionTime(transaction["Transaction_Time"])}</td
                     >
-                    <td class="r425 r540 r768">{transaction["Transaction Time"]}</td>
+                    <td class="r425 r540 r768">{transaction["Transaction_Time"]}</td>
                     <td
-                      >{parseFloat(transaction.Amount / 100)?.toLocaleString(
+                      >{parseFloat(transaction.amount / 100)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
                     >
                     <td class="r425 r540 r768"
-                      >{parseFloat((transaction.Amount / 100) * 0.035)?.toLocaleString(
+                      >{parseFloat((transaction.amount / 100) * 0.035)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
                     >
                     <td class="r425 r540 r768"
-                      >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
+                      >{parseFloat((transaction.amount / 100) * 0.965)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
@@ -393,25 +393,25 @@
                 {#each fetchByWeekButton(selected.transactions) as transaction}
                   <tr class="">
                     <td
-                      >{getTransactionDate(transaction["Transaction Date"]) +
+                      >{getTransactionDate(transaction["Transaction_Date"]) +
                         " - " +
-                        getTransactionTime(transaction["Transaction Time"])}</td
+                        getTransactionTime(transaction["Transaction_Time"])}</td
                     >
-                    <td class="r425 r540 r768">{transaction["Transaction Time"]}</td>
+                    <td class="r425 r540 r768">{transaction["Transaction_Time"]}</td>
                     <td
-                      >{parseFloat(transaction.Amount / 100)?.toLocaleString(
+                      >{parseFloat(transaction.amount / 100)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
                     >
                     <td class="r425 r540 r768"
-                      >{parseFloat((transaction.Amount / 100) * 0.035)?.toLocaleString(
+                      >{parseFloat((transaction.amount / 100) * 0.035)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
                     >
                     <td class="r425 r540 r768"
-                      >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
+                      >{parseFloat((transaction.amount / 100) * 0.965)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
@@ -422,25 +422,25 @@
                 {#each fetchByMonthButton(selected.transactions) as transaction}
                   <tr class="">
                     <td
-                      >{getTransactionDate(transaction["Transaction Date"]) +
+                      >{getTransactionDate(transaction["Transaction_Date"]) +
                         " - " +
-                        getTransactionTime(transaction["Transaction Time"])}</td
+                        getTransactionTime(transaction["Transaction_Time"])}</td
                     >
-                    <td class="r425">{transaction["Transaction Time"]}</td>
+                    <td class="r425">{transaction["Transaction_Time"]}</td>
                     <td
-                      >{parseFloat(transaction.Amount / 100)?.toLocaleString(
+                      >{parseFloat(transaction.amount / 100)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
                     >
                     <td class="r425"
-                      >{parseFloat((transaction.Amount / 100) * 0.035)?.toLocaleString(
+                      >{parseFloat((transaction.amount / 100) * 0.035)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td
                     >
                     <td class="r425"
-                      >{parseFloat((transaction.Amount / 100) * 0.965)?.toLocaleString(
+                      >{parseFloat((transaction.amount / 100) * 0.965)?.toLocaleString(
                         localeParam.language,
                         localeParam.currency
                       )}</td

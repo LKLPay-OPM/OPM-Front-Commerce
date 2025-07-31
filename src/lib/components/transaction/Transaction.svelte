@@ -41,15 +41,15 @@
 
 <tr class="clickable" on:click={() => goto(`/transactions/detail?ticket=${transaction?._id}`)}>
   <td class="text-center"
-    >{`${dateToLocalStringShort(transaction?.["Transaction Date"])} ${timeToLocalString(
-      transaction?.["Transaction Time"]
+    >{`${dateToLocalStringShort(transaction?.["Transaction_Date"])} ${timeToLocalString(
+      transaction?.["Transaction_Time"]
     )}` ?? "-"}</td
   >
   <td class="text-center">{transaction?.["IFD Serial Number"] ?? "-"}</td>
   <td class="text-center">{transaction?.["ID Transaction"] ?? "-"}</td>
-  <td class="text-center">{currencyFormatLocal(transaction?.Amount) ?? "-"}</td>
-  <td class="text-center">{currencyFormatLocal(transaction?.comission) ?? "-"}</td>
-  <td class="text-center">{currencyFormatLocal(transaction?.iva) ?? "-"}</td>
+  <td class="text-center">{currencyFormatLocal(transaction?.amount ?? 0) ?? "-"}</td>
+  <td class="text-center">{currencyFormatLocal(transaction?.comission ?? 0) ?? "-"}</td>
+  <td class="text-center">{currencyFormatLocal(transaction?.iva ?? 0) ?? "-"}</td>
   <td class="text-center">
     <i class={`icon ${getIconStatusClass(transaction.transactionStatus)} tooltip`}>
       {#if getDepositIconStatus(transaction.transactionStatus) != "muted"}

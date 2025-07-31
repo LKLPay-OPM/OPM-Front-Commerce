@@ -111,7 +111,7 @@
           <th class="responsive" />
           <th class="responsive" />
           <th class="amount">
-            {currencyFormatLocal(resume?.Amount)}
+            {currencyFormatLocal(resume?.amount)}
           </th>
           <th class="amount">
             {currencyFormatLocal(resume?.Comission)}
@@ -133,12 +133,12 @@
               goto(`/transactions/detail?ticket=${transaction?._id}`)}
           >
             <td class="responsive"
-              >{getTransactionDate(transaction["Transaction Date"]) +
+              >{getTransactionDate(transaction["Transaction_Date"]) +
                 " - " +
-                getTransactionTime(transaction["Transaction Time"])}</td
+                getTransactionTime(transaction["Transaction_Time"])}</td
             >
-            <td class="responsive">{transaction?.["ID Transaction"]}</td>
-            <td>{currencyFormatLocal(transaction.Amount)}</td>
+            <td class="responsive">{transaction?.["ID_Transaction"]}</td>
+            <td>{currencyFormatLocal(transaction.amount)}</td>
             <td>{currencyFormatLocal(transaction.comission)}</td>
             <td class="responsive">{currencyFormatLocal(transaction?.iva)}</td>
             <td>{currencyFormatLocal(transaction.toDeposit)}</td>

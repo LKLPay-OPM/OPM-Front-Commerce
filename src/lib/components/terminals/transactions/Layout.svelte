@@ -201,7 +201,7 @@
         <InfoCard
           className={""}
           title="Monto Total"
-          numData={currencyFormatLocal(resume?.Amount ?? 0)}
+          numData={currencyFormatLocal(resume?.amount ?? 0)}
         />
       </div>
       <div class="element">

@@ -67,13 +67,13 @@
       },
       transactions: [
         {
-          "Transaction Date": "230214",
-          "Transaction Time": "234234",
+          "Transaction_Date": "230214",
+          "Transaction_Time": "234234",
           Amount: "000000001500",
         },
         {
-          "Transaction Date": "230214",
-          "Transaction Time": "234233",
+          "Transaction_Date": "230214",
+          "Transaction_Time": "234233",
           Amount: "000000011500",
         },
       ],

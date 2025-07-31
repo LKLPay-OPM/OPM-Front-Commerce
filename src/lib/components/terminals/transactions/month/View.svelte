@@ -88,7 +88,7 @@
               <td class="element">{getMonthPeriod(month._id)}</td>
               <td class="element">{month?.Sold ?? 0}</td>
               <td class="element">
-                {currencyFormatLocal(month?.Amount)}
+                {currencyFormatLocal(month?.amount)}
               </td>
               <td class="element responsive">
                 {currencyFormatLocal(month?.Comission)}

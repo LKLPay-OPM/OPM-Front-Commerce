@@ -50,12 +50,12 @@
           {#each transactions as transaction}
             <tr class="clickable number" on:click={() => goto(`/transactions/detail?ticket=${transaction?._id}`)}>
               <td class=""
-                >{`${dateToLocalStringShort(transaction["Transaction Date"])} ${timeToLocalString(
-                  transaction["Transaction Time"]
+                >{`${dateToLocalStringShort(transaction["Transaction_Date"])} ${timeToLocalString(
+                  transaction["Transaction_Time"]
                 )}`}</td
               >
               <td class="sm">{transaction?.["ID Transaction"]}</td>
-              <td>{currencyFormatLocal(transaction.Amount)}</td>
+              <td>{currencyFormatLocal(transaction.amount)}</td>
               <td class="">{currencyFormatLocal(transaction.comission)}</td>
               <td class="sm md">{currencyFormatLocal(transaction.iva)}</td>
               <td class="">{currencyFormatLocal(transaction.toDeposit)}</td>

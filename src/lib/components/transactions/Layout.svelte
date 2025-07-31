@@ -155,8 +155,8 @@
     const end = endDate;
     try {
       if (active === "day") {
-        startDate = transactions[0]["Transaction Date"];
-        endDate = transactions[0]["Transaction Date"];
+        startDate = transactions[0]["Transaction_Date"];
+        endDate = transactions[0]["Transaction_Date"];
       }
       if (active === "week") {
         startDate = transactions[0].date;
@@ -453,7 +453,7 @@
         <InfoCard
           className={""}
           title="Monto Total"
-          numData={currencyFormatLocal(resume?.Amount ?? 0)}
+          numData={currencyFormatLocal(resume?.amount ?? 0)}
         />
       </div>
       <div class="element">

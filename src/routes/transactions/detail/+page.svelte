@@ -52,24 +52,24 @@
   };
 
   let cancel = {
-    amount: data?.response?.Amount,
-    ["SIC Code"]: data?.response?.["SIC Code"],
-    ["Application PAN"]: data?.response?.["Application PAN"],
+    amount: data?.response?.amount,
+    ["SIC_Code"]: data?.response?.["SIC_Code"],
+    ["Application_PAN"]: data?.response?.["Application_PAN"],
     expirationDate: "",
-    ["ID Transaction"]: data?.response?.["ID Transaction"],
-    ["ID Afiliate"]: data?.response?.["ID Afiliate"],
-    ["Afiliate Number"]: data?.response?.["Afiliate Number"],
-    ["ID Aggregator"]: data?.response?.["ID Aggregator"],
+    ["ID_Transaction"]: data?.response?.["ID_Transaction"],
+    ["ID_Afiliate"]: data?.response?.["ID_Afiliate"],
+    ["Afiliate_Number"]: data?.response?.["Afiliate_Number"],
+    ["ID_Aggregator"]: data?.response?.["ID_Aggregator"],
     authorization: data?.response?.authorization,
     POS: data?.response?.POS,
-    ["ID Terminal"]: data?.response?.["ID Terminal"],
+    ["ID_Terminal"]: data?.response?.["ID_Terminal"],
     originalElements: data?.response?.originalElements,
-    email: data?.response?.["Cardholder Email"],
-    ["Cardholder Name"]: data?.response?.["Cardholder Name"],
-    ["Cardholder Phone"]: data?.response?.["Cardholder Phone"],
-    ["Transaction Date"]: data?.response?.["Transaction Date"],
-    ["Transaction Time"]: data?.response?.["Transaction Time"],
-    ["Points BBVA"]: data?.response?.["Points BBVA"],
+    email: data?.response?.["Cardholder_Email"],
+    ["Cardholder_Name"]: data?.response?.["Cardholder_Name"],
+    ["Cardholder_Phone"]: data?.response?.["Cardholder_Phone"],
+    ["Transaction_Date"]: data?.response?.["Transaction_Date"],
+    ["Transaction_Time"]: data?.response?.["Transaction_Time"],
+    ["Points_BBVA"]: data?.response?.["Points_BBVA"],
     MSI: data?.response?.MSI,
     commerce: data?.response?.commerce,
     commerceName: data?.response?.commerceName ?? "",
@@ -323,8 +323,8 @@
           : ""}</b
       >
       <p>
-        {dateToLocalString(transaction["Transaction Date"])}
-        {timeToLocalString(transaction["Transaction Time"])}
+        {dateToLocalString(transaction["Transaction_Date"])}
+        {timeToLocalString(transaction["Transaction_Time"])}
       </p>
     </div>
     <div class="details__middle">
@@ -337,11 +337,11 @@
           </div>
           <div class="item">
             <b>TVR</b>
-            <p>{transaction["ID Terminal"] ?? "N/A"}</p>
+            <p>{transaction["ID_Terminal"] ?? "N/A"}</p>
           </div>
           <div class="item">
             <b>AID</b>
-            <p>{transaction["Terminal Capabilities"] ?? "N/A"}</p>
+            <p>{transaction["Terminal_Capabilities"] ?? "N/A"}</p>
           </div>
           <div class="item">
             <b>Autorización</b>
@@ -395,12 +395,12 @@
               <div class="item__content first">
                 <p>
                   <span
-                    >{`${transaction["Application PAN"].substr(0, 4)} ${transaction[
-                      "Application PAN"
+                    >{`${transaction["Application_PAN"].substr(0, 4)} ${transaction[
+                      "Application_PAN"
                     ].substr(
                       4,
                       2,
-                    )}** **** ${transaction["Application PAN"].substr(-4)}`}</span
+                    )}** **** ${transaction["Application_PAN"].substr(-4)}`}</span
                   >
                 </p>
               </div>
@@ -426,7 +426,7 @@
               <div class="item__content last">
                 <p>
                   <span>
-                    {currencyFormatLocal(transaction.Amount)}
+                    {currencyFormatLocal(transaction.amount)}
                   </span>
                 </p>
               </div>
@@ -453,13 +453,13 @@
                 </p>
                 {#if transaction.type === "e-commerce"}
                   <p>
-                    {`(${getPercentage(transaction.Amount, transaction.comission)}% + ${currencyFormatLocal(
+                    {`(${getPercentage(transaction.amount, transaction.comission)}% + ${currencyFormatLocal(
                       transaction.fixedComission,
                     )})`}
                   </p>
                 {:else}
                   <p>
-                    {`(${getPercentage(transaction.Amount, transaction.comission)}%)`}
+                    {`(${getPercentage(transaction.amount, transaction.comission)}%)`}
                   </p>
                 {/if}
               </div>
@@ -495,19 +495,19 @@
           <div class="title">Relevante</div>
           <div class="item">
             <b>Código de Respuesta</b>
-            <p>{transaction["ISO CODE RESPONSE"] ?? "N/A"}</p>
+            <p>{transaction["ISO_CODE_RESPONSE"] ?? "N/A"}</p>
           </div>
           <div class="item">
             <b>Descripción</b>
-            <p>{transaction["ISO CODE DESCRIPTION"] ?? "N/A"}</p>
+            <p>{transaction["ISO_CODE_DESCRIPTION"] ?? "N/A"}</p>
           </div>
           <div class="item">
             <b>ID Agregador</b>
-            <p>{transaction["ID Aggregator"] ?? "N/A"}</p>
+            <p>{transaction["ID_Aggregator"] ?? "N/A"}</p>
           </div>
           <div class="item">
             <b>ID Afiliado</b>
-            <p>{transaction["ID Afiliate"] ?? "N/A"}</p>
+            <p>{transaction["ID_Afiliate"] ?? "N/A"}</p>
           </div>
           <div class="item">
             <b>Institución</b>
@@ -533,7 +533,7 @@
         <Map lat={transaction.latitude} lon={transaction.longitude} />
       </div>
       <div class="card-buttons no-print">
-        {#if transactionCancelValidation(transaction.transactionStatus, transaction["Transaction Date"], transaction.type)}
+        {#if transactionCancelValidation(transaction.transactionStatus, transaction["Transaction_Date"], transaction.type)}
           <div class="reverse-button">
             <Input
               on:click={cancelModal.show()}
@@ -544,7 +544,7 @@
               icon=""
             />
           </div>
-        {:else if transactionRefundValidation(transaction.transactionStatus, transaction["Transaction Date"], transaction.type)}
+        {:else if transactionRefundValidation(transaction.transactionStatus, transaction["Transaction_Date"], transaction.type)}
           <div class="reverse-button">
             <Input
               on:click={refundModal.show()}

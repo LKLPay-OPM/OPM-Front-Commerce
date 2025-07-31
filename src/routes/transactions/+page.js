@@ -44,6 +44,7 @@ export async function load({ url, params }) {
 
     return {
       transactions: transactions.data?.response.records,
+      summary: transactions.data?.response.summary,
       salesCount: transactions.data?.response.summary.approvedCount,
       salesAmount: transactions.data?.response.summary.approvedAmount,
       comissionAmount: transactions.data?.response.summary.comission,
