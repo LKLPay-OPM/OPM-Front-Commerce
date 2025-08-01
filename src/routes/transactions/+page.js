@@ -6,6 +6,7 @@ import { axiosDevicesClient } from "$lib/repos/axios";
 import { appErrorResponseHandler } from "$lib/handlers/error.handler";
 /* utils */
 import { getStringDate } from "$lib/utils/date";
+import { createQueryString } from "$lib/utils/query";
 
 export const ssr = false;
 
@@ -24,22 +25,26 @@ export async function load({ url, params }) {
 
   } */
   if (filter === "day") {
-    dateStart = `${getStringDate(date)}000000`;
-    dateEnd = `${getStringDate(date)}235959`;
+    dateStart = `${getStringDate(date)}`;
+    dateEnd = `${getStringDate(date)}`;
   }
   if (filter === "week") {
-    dateStart = `${getStringDate(new Date(new Date(date.setDate(date.getDate() - date.getDay()+1))))}000000`;
-    dateEnd = `${getStringDate(new Date(new Date(date.setDate(date.getDate() - date.getDay()+7))))}235959`;
+    dateStart = `${getStringDate(new Date(new Date(date.setDate(date.getDate() - date.getDay()+1))))}`;
+    dateEnd = `${getStringDate(new Date(new Date(date.setDate(date.getDate() - date.getDay()+7))))}`;
   }
   if (filter === "month") {
-    dateStart = `${getStringDate(new Date(new Date(date.getFullYear(), date.getMonth(), 1)))}000000`;
-    dateEnd = `${getStringDate(new Date(new Date(date.getFullYear(), date.getMonth() + 1, 0)))}235959`;
+    dateStart = `${getStringDate(new Date(new Date(date.getFullYear(), date.getMonth(), 1)))}`;
+    dateEnd = `${getStringDate(new Date(new Date(date.getFullYear(), date.getMonth() + 1, 0)))}`;
   }
   try {
-    const transactions = await axiosDevicesClient.get(
-      `transaction/commerce/getTransactions?${serialNumber ? `serialNumber=${serialNumber}&` : ""}startDate=${dateStart}&endDate=${dateEnd}&start=${start}&end=${end}`
-    );
-
+    const query = createQueryString({
+      serialNumber,
+      startDate: dateStart,
+      endDate: dateEnd,
+      start,
+      end
+    })
+    const transactions = await axiosDevicesClient.get(`transaction/commerce/getTransactions?${query}`);
     const terminals = await axiosDevicesClient.get('terminal/commerce/getTerminals?start=0&end=999');
 
     return {

@@ -315,7 +315,7 @@
   </div>
   <div class="transaction-details">
     <div class="details__top">
-      <b>Recibo #{transaction["ID Transaction"]}</b>
+      <b>Recibo #{transaction["ID_Transaction"]}</b>
       <b
         >{transaction.commerceName ? transaction.commerceName : ""}{transaction
           .branchInfo?.branchName
@@ -523,7 +523,7 @@
           </div>
           <div class="item">
             <b>Marca</b>
-            <p>{transaction.bankProduct.toUpperCase() ?? "N/A"}</p>
+            <p>{transaction.bankProduct?.toUpperCase?.() ?? "N/A"}</p>
           </div>
         </div>
       </div>

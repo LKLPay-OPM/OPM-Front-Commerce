@@ -20,12 +20,11 @@
   import ExportButtonGroup from "$lib/components/ExportButtonGroup.svelte";
   import EmptyTransactionsMessage from "$lib/components/transaction/EmptyTransactionsMessage.svelte";
   import TransactionTable from "$lib/components/transaction/TransactionTable.svelte";
+  import Select from "$lib/components/Select.svelte";
   /* constants */
   import { filterByDateOptions } from "$lib/constants/filter";
   /* utils */
-  import { getStringDateTime, getFullMomentDate } from "$lib/utils/date";
-    import DateTimePicker from "../DateTimePicker.svelte";
-    import Select from "../Select.svelte";
+  import { getStringDate, getFullMomentDate } from "$lib/utils/date";
 
   /* dynamic vars */
   export let filter = "day";
@@ -64,8 +63,8 @@
   const fetchByDateRange = async () => {
     start = 0;
     end = 10;
-    dateStart = getStringDateTime(new Date(dateRangeStart));
-    dateEnd = getStringDateTime(new Date(dateRangeEnd));
+    dateStart = getStringDate(new Date(dateRangeStart));
+    dateEnd = getStringDate(new Date(dateRangeEnd));
     goto(`?filter=range&dateStart=${dateStart}&dateEnd=${dateEnd}&serialNumber=${selectedTerminal}&start=${start}&end=${end}`);
   };
 </script>
@@ -79,8 +78,8 @@
     <div class="modal-range">
       <p>Filtro</p>
       <div class="date-range-input">
-        <DateTimePicker label="Del" id="date-range-start" bind:value={dateRangeStart} />
-        <DateTimePicker label="Al" id="date-range-end" bind:value={dateRangeEnd} />
+        <DatePicker label="Del" id="date-range-start" bind:value={dateRangeStart} />
+        <DatePicker label="Al" id="date-range-end" bind:value={dateRangeEnd} />
       </div>
       <Select
         bind:optionsList={terminalOptions}
@@ -89,67 +88,9 @@
         id="terminal"
         bind:value={selectedTerminal}
       />
-    
-      <!-- <p>Marca</p>
-      <div class="input-cards">
-        <div
-          class={`icon__container ${
-            cardBrand === "mastercard" ? "selected" : ""
-          }`}
-        >
-          <i
-            on:click={() => (cardBrand = "mastercard")}
-            on:keypress={(e) =>
-              e.key === "Enter" ? () => (cardBrand = "mastercard") : ""}
-          >
-            <Icons name="mastercard" width="50" height="30" />
-          </i>
-        </div>
-        <div
-          class={`icon__container ${cardBrand === "visa" ? "selected" : ""}`}
-        >
-          <i
-            on:click={() => (cardBrand = "visa")}
-            on:keypress={(e) =>
-              e.key === "Enter" ? () => (cardBrand = "visa") : ""}
-          >
-            <Icons name="visa" width="50" height="30" />
-          </i>
-        </div>
-        <div
-          class={`icon__container ${cardBrand === "amex" ? "selected" : ""}`}
-        >
-          <i
-            on:click={() => (cardBrand = "amex")}
-            on:keypress={(e) =>
-              e.key === "Enter" ? () => (cardBrand = "amex") : ""}
-          >
-            <Icons name="amex" width="25" height="25" />
-          </i>
-        </div>
-        <div
-          class={`icon__container ${cardBrand === "other" ? "selected" : ""}`}
-        >
-          <i
-            on:click={() => (cardBrand = "other")}
-            on:keypress={(e) =>
-              e.key === "Enter" ? () => (cardBrand = "other") : ""}
-          >
-            <Icons name="bank-card-line" width="25" height="25" />
-          </i>
-        </div>
-      </div> -->
     </div>
   </div>
   <div class="modal-buttons" slot="footer">
-    <!-- <Input
-      on:click={cleanFilters}
-      label="Limpiar Filtros"
-      id="buttonCloseModalDateRange"
-      type="button"
-      className="btn-plain"
-      icon=""
-    /> -->
     <Input
       on:click={modalDateFilter.closeModal()}
       on:click={() => fetchByDateRange()}

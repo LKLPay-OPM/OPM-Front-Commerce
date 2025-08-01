@@ -146,5 +146,5 @@ export function validateNextDay(date) {
 }
 
 export function getFullMomentDate(input, format = "YYYY-MM-DD") {
-  return moment(input, format).locale('es').format("dddd D MMMM YYYY - hh:mmA")
+  return moment(input, format).locale('es').format("dddd D MMMM YYYY")
 }

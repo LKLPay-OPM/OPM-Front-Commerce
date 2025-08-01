@@ -16,8 +16,8 @@ export async function load({ url, params }) {
     const start = Number(url.searchParams.get("start") ?? 0);
     const end = Number(url.searchParams.get("end") ?? 10);
     const date = new Date();
-    let dateStart = `${getStringDate(date)}070000`;
-    let dateEnd = `${getStringDate(new Date(date.setDate(date.getDate() + 1)))}065959`;
+    let dateStart = `${getStringDate(date)}`;
+    let dateEnd = `${getStringDate(new Date(date.setDate(date.getDate() + 1)))}`;
     try {
       const response = await axiosDevicesClient.get(
         `transaction/commerce/getTransactions?startDate=${dateStart}&endDate=${dateEnd}&start=${start}&end=${end}`
