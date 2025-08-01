@@ -41,8 +41,6 @@
     loading = false;
   };
 
-  export let handlePagination;
-
   onMount(() => {
     transactionFound();
   });
@@ -64,13 +62,13 @@
   <div class="content" style="margin-top: 20px;">
     <div class="card-group">
       <div class="card">
-        <InfoCard className={""} title="Monto Total" numData={currencyFormatLocal(resume?.approvedAmount ?? 0)} />
+        <InfoCard className={""} title="Monto Total" numData={currencyFormatLocal(resume?.Amount ?? 0)} />
       </div>
       <div class="card">
-        <InfoCard className={""} title="N° de Ventas" numData={resume?.approvedCount ?? "0"} />
+        <InfoCard className={""} title="N° de Ventas" numData={resume?.Sold ?? "0"} />
       </div>
       <div class="card">
-        <InfoCard className={""} title="Saldo a Depositar" numData={currencyFormatLocal(resume?.toDeposit ?? 0)} />
+        <InfoCard className={""} title="Saldo a Depositar" numData={currencyFormatLocal(resume?.Deposit ?? 0)} />
       </div>
     </div>
     <div class="transactions" style={transactions?.length <= 0 ? "min-height: 25rem;" : ""}>
@@ -86,7 +84,6 @@
           bind:start
           bind:end
           bind:selected={pageSelected}
-          on:pagination={handlePagination}
           bind:loading={loading}
         />
       {:else}

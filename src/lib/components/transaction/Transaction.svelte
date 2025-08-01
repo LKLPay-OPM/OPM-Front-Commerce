@@ -45,8 +45,8 @@
       transaction?.["Transaction_Time"]
     )}` ?? "-"}</td
   >
-  <td class="text-center">{transaction?.["IFD Serial Number"] ?? "-"}</td>
-  <td class="text-center">{transaction?.["ID Transaction"] ?? "-"}</td>
+  <td class="text-center">{transaction?.["IFD_Serial_Number"] ?? "-"}</td>
+  <td class="text-center">{transaction?.["ID_Transaction"] ?? "-"}</td>
   <td class="text-center">{currencyFormatLocal(transaction?.amount ?? 0) ?? "-"}</td>
   <td class="text-center">{currencyFormatLocal(transaction?.comission ?? 0) ?? "-"}</td>
   <td class="text-center">{currencyFormatLocal(transaction?.iva ?? 0) ?? "-"}</td>
