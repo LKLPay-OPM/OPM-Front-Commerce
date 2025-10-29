@@ -532,7 +532,7 @@
       <div class="container__map">
         <Map lat={transaction.latitude} lon={transaction.longitude} />
       </div>
-      <div class="card-buttons no-print">
+      <!-- <div class="card-buttons no-print"></div>
         {#if transactionCancelValidation(transaction.transactionStatus, transaction["Transaction_Date"], transaction.type)}
           <div class="reverse-button">
             <Input
@@ -556,7 +556,7 @@
             />
           </div>
         {/if}
-      </div>
+      </div> -->
     </div>
   </div>
 {/if}
