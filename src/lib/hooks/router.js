@@ -40,6 +40,7 @@ const userRoutes = (role, route) => {
       "/credits": false,
       "/payment-link": true,
       "/help": true,
+      "/settings": true,
     }
 
   return routesByRole[route];
@@ -51,6 +52,7 @@ const sidebarOptions = (role) => {
       /// ACCOUNT TYPE BASIC, PRO, E-COMMERCE
       { name: "Inicio", path: "/", icon: "home" },
       { name: "Mis Ventas", path: "/transactions", icon: "terminal" },
+      { name: "Configuración", path: "/settings", icon: "settings" },
       //{ name: "Depósitos", path: "/dispersions", icon: "deposits" },
       // { name: "Solicitudes", path: "/requests", icon: "adviser" },
       // { name: "Sucursales", path: "/branch-office", icon: "franchise" }, // TODO: Sprint 2 Sucursales
@@ -63,6 +65,7 @@ const sidebarOptions = (role) => {
       /// ACCOUNT TYPE BUSINESS
       { name: "Inicio", path: "/", icon: "home" },
       { name: "Mis Ventas", path: "/transactions", icon: "transactions" },
+      { name: "Configuración", path: "/settings", icon: "settings" },
       //{ name: "Depósitos", path: "/dispersions", icon: "deposits" },
       // { name: "Solicitudes", path: "/requests", icon: "adviser" },
       // { name: "Sucursales", path: "/branch-office", icon: "franchise" }, // TODO: Sprint 2 Sucursales
